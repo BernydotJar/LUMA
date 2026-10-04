@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "f57a7460-a7c3-42d6-91f2-ba33d5d2c8f9",
-  "event_count": 64,
+  "last_event_id": "6b02b0d0-51eb-4ec2-9c84-ab50e8d2fb6d",
+  "event_count": 89,
   "ready_nodes": [],
   "nodes": [
     {
@@ -153,8 +153,56 @@
         "d66dcf5d-224b-472d-bc1d-7c2f03a35db0"
       ],
       "approval_count": 0
+    },
+    {
+      "id": "LUMA-008-learner-ux-v2",
+      "kind": "product-surface",
+      "title": "Learner-first experience UI v2 with adaptive-action hierarchy",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-007-reflection-showcase-release"
+      ],
+      "capability": "learner-experience-design",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "486f581a-33c2-4335-9309-6caa9826fe42",
+        "51ce58f1-50ae-403d-9ed7-bb49dc862a5a",
+        "58542ee9-41d8-4ac1-b7f1-fa1cd45181b9",
+        "6e420e6e-a176-4d58-8530-5a31ea501c46",
+        "946d8f2b-acc5-4f6a-acf0-34562ebb36ea"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-009-ui-v2-firebase-release",
+      "kind": "release",
+      "title": "Learner UX v2 Firebase client-showcase release gate",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-008-learner-ux-v2"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "0adef937-8741-412c-84ca-1703e954542b",
+        "1640da8a-0b32-4b62-8bd0-3e2fdecef68b",
+        "2bdc7f57-ea8b-4527-9271-f2762241deb3",
+        "322e42fd-4a18-4c02-b22e-5198c50b3acb",
+        "3849624d-3c44-4c6b-a963-9c45524dde82",
+        "51a8d3df-80aa-4b7b-835e-0412bba00c23",
+        "835b6e6b-c317-41f8-9008-6ec25fefb369",
+        "a42bb47b-e6af-466a-bea8-445583516595"
+      ],
+      "approval_count": 0
     }
   ],
-  "checkpoint_count": 2,
+  "checkpoint_count": 3,
   "repair_plan_count": 0
 }

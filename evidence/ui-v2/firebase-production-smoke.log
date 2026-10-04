@@ -1,0 +1,82 @@
+== FIREBASE DEPLOY ==
+
+=== Deploying to 'luma-learning-intelligence'...
+
+i  deploying apphosting
+i  apphosting: Found backend(s) luma
+i  apphosting: Zipped source for backend luma
+i  apphosting: Uploading source for backend luma...
+i  apphosting: Uploaded at gs://firebaseapphosting-sources-161313706596-us-central1/luma--66779-8oOPnhh5BKJx-.zip
+i  apphosting: You may also track the rollout(s) at:
+	https://console.firebase.google.com/project/luma-learning-intelligence/apphosting
+- Starting rollout(s) for backend(s) luma; this may take a few minutes. It's safe to exit now.
+
+✔  apphosting: Rollout for backend luma complete!
+✔  apphosting: Your backend is now deployed at:
+	https://luma--luma-learning-intelligence.us-central1.hosted.app
+
+✔  Deploy complete!
+
+Project Console: https://console.firebase.google.com/project/luma-learning-intelligence/overview
+
+== HTTP ROOT (FOLLOW REDIRECT) ==
+status=200 final=https://luma--luma-learning-intelligence.us-central1.hosted.app/
+<title>LUMA · Learning Intelligence
+
+== LEARN ==
+status=200
+
+== TUTOR API ==
+status=200
+trust=GROUNDED
+has_answer=True
+
+== REFLECTIONS API ==
+status=200
+has_artifact=True
+
+== BROWSER ==
+✓ LUMA · Learning Intelligence
+  https://luma--luma-learning-intelligence.us-central1.hosted.app/
+✓ Done
+https://luma--luma-learning-intelligence.us-central1.hosted.app/learn
+LUMA · Learning Intelligence
+"HAS_CONTENT"
+"OK"
+"HERO_OK"
+- link "LUMA inicio" [ref=e1]
+- navigation "Navegación de aprendizaje" [ref=e2]
+  - link "Hoy" [ref=e5]
+  - link "Journey" [ref=e6]
+  - link "Twin" [ref=e7]
+  - link "Biblioteca" [ref=e8]
+- link "Recalibrar" [ref=e3]
+- link "Cambiar experiencia" [ref=e4]
+- heading "Hoy" [level=1, ref=e9]
+- button "Buscar" [ref=e10]
+- button "Notificaciones" [ref=e11]
+- button "Abrir menú de Mariana" [ref=e12]
+- heading "Hoy no necesitas otra lección. Necesitas probarlo." [level=2, ref=e23]
+- link "Continuar mi journey" [ref=e24]
+- region "Detecta un P.A.S. en una situación real" [ref=e13]
+  - heading "Detecta un P.A.S. en una situación real" [level=2, ref=e17]
+  - link "Continuar · 12 min" [ref=e18]
+  - button "¿Por qué cambió mi ruta?" [expanded=false, ref=e19]
+- link "Abrir Learning Twin" [ref=e25]
+- heading "Sabes más de lo que logras aplicar." [level=2, ref=e20]
+- region "Por qué cambió la ruta" [ref=e14]
+- region "No sigues módulos. Avanzas por evidencia." [ref=e15]
+  - heading "No sigues módulos. Avanzas por evidencia." [level=2, ref=e21]
+  - heading "Meta definida" [level=3, ref=e26]
+  - heading "Comunicación emocional" [level=3, ref=e27]
+  - heading "Pensamientos saboteadores" [level=3, ref=e28]
+  - heading "Niveles lógicos" [level=3, ref=e29]
+  - heading "Creencias e identidad" [level=3, ref=e30]
+- region "Pregunta a LUMA" [ref=e16]
+  - heading "Pregunta a LUMA" [level=2, ref=e22]
+  - button "Ayúdame a identificar un P.A.S." [ref=e31]
+  - button "¿Por qué me recomiendas esta práctica?" [ref=e32]
+  - button "Dame un ejemplo de niveles lógicos" [ref=e33]
+  - textbox "Pregunta a LUMA" [ref=e34]
+  - button "Enviar pregunta" [disabled, ref=e35]
+✓ Browser closed

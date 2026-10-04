@@ -178,6 +178,36 @@ def main() -> int:
         actor="build-verifier",
         metadata={"unit_tests": 10, "production_build": "PASS"},
     )
+    release_test_id = evidence(
+        runtime,
+        release,
+        kind="test",
+        path="evidence/ui-v2/e2e.log",
+        command="env -u CI npm run test:e2e",
+        commit=args.commit,
+        actor="browser-verifier",
+        metadata={"passed": 15, "skipped": 1, "desktop_mobile": True, "wcag": "PASS"},
+    )
+    release_visual_id = evidence(
+        runtime,
+        release,
+        kind="visual",
+        path="evidence/ui-v2/visual-audit.log",
+        command="node scripts/visual-audit.mjs",
+        commit=args.commit,
+        actor="visual-verifier",
+        metadata={"route_viewport_checks": 16, "semantic_layout_findings": 0},
+    )
+    release_a11y_id = evidence(
+        runtime,
+        release,
+        kind="a11y",
+        path="evidence/ui-v2/e2e.log",
+        command="Playwright axe WCAG 2 A/AA sweep",
+        commit=args.commit,
+        actor="accessibility-verifier",
+        metadata={"wcag": "A/AA", "result": "PASS"},
+    )
     security_id = evidence(
         runtime,
         release,
@@ -238,7 +268,7 @@ def main() -> int:
         actor="release-gate",
         gate_id="release-quality",
         result=GateResult.PASS,
-        evidence_ids=[build_id, security_id, production_id, test_id, visual_id],
+        evidence_ids=[build_id, security_id, production_id, release_test_id, release_visual_id, release_a11y_id],
         note="Build, tests, accessibility, layout, security, and Firebase production smoke all pass.",
     )
     move(runtime, release, NodeStatus.DONE, "Learner UX v2 Firebase showcase release passed.", "release-gate")
