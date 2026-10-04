@@ -1,0 +1,51 @@
+== FIREBASE DEPLOY ==
+
+=== Deploying to 'luma-learning-intelligence'...
+
+i  deploying apphosting
+i  apphosting: Found backend(s) luma
+i  apphosting: Zipped source for backend luma
+i  apphosting: Uploading source for backend luma...
+i  apphosting: Uploaded at gs://firebaseapphosting-sources-161313706596-us-central1/luma--140905-hwZQggh9PeEh-.zip
+i  apphosting: You may also track the rollout(s) at:
+	https://console.firebase.google.com/project/luma-learning-intelligence/apphosting
+- Starting rollout(s) for backend(s) luma; this may take a few minutes. It's safe to exit now.
+
+✔  apphosting: Rollout for backend luma complete!
+✔  apphosting: Your backend is now deployed at:
+	https://luma--luma-learning-intelligence.us-central1.hosted.app
+
+✔  Deploy complete!
+
+Project Console: https://console.firebase.google.com/project/luma-learning-intelligence/overview
+
+== HTTP SURFACES ==
+/ status=200 final=https://luma--luma-learning-intelligence.us-central1.hosted.app/
+/learn status=200 final=https://luma--luma-learning-intelligence.us-central1.hosted.app/learn
+/studio status=200 final=https://luma--luma-learning-intelligence.us-central1.hosted.app/studio
+/experience status=200 final=https://luma--luma-learning-intelligence.us-central1.hosted.app/experience
+/iconography status=200 final=https://luma--luma-learning-intelligence.us-central1.hosted.app/iconography
+/library status=200 final=https://luma--luma-learning-intelligence.us-central1.hosted.app/library
+
+== STATIC ASSETS ==
+/audio/seres-coach-prototype-01.mp3 status=200 type=audio/mpeg
+/iconography/review/practice-se-candidate.png status=200 type=image/png
+/media/seres-paso-58.jpg status=200 type=image/jpeg
+
+== API SMOKE ==
+tutor_status=200
+reflections_status=200
+tutor_trust=GROUNDED
+tutor_answer=True
+reflection_artifact=True
+
+== BROWSER SUPERUSER ==
+✓ Experience Console · LUMA
+  https://luma--luma-learning-intelligence.us-central1.hosted.app/experience
+✓ Done
+"REVIEW_LAB_OK"
+"VOICE_ASSET_OK"
+"ICON_CANDIDATE_OK"
+"VIDEO_GATE_OK"
+"OK"
+✓ Browser closed
