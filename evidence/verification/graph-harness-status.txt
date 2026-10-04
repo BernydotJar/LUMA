@@ -1,0 +1,114 @@
+{
+  "checkpoint_count": 1,
+  "event_count": 42,
+  "last_event_id": "36ade287-bc9e-4f9c-a9be-0cb6b44b53a5",
+  "mode": "SHIP",
+  "nodes": [
+    {
+      "active_evidence_ids": [
+        "04942c6d-f120-4674-b705-46f5fa7f55d4",
+        "a3aab404-6462-4986-b9b0-7e5a657a23d5"
+      ],
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "approval_count": 0,
+      "capability": "product-architecture",
+      "depends_on": [],
+      "id": "LUMA-001-foundation",
+      "kind": "product-foundation",
+      "revision": 0,
+      "status": "done",
+      "title": "Product thesis, architecture, research, and specifications"
+    },
+    {
+      "active_evidence_ids": [
+        "488a7654-0a81-4423-b662-1c9fc7516455",
+        "d8560c33-c1b8-4aa8-b126-7bae5453283e"
+      ],
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "approval_count": 0,
+      "capability": "full-stack-product",
+      "depends_on": [
+        "LUMA-001-foundation"
+      ],
+      "id": "LUMA-002-learner-experience",
+      "kind": "product-surface",
+      "revision": 0,
+      "status": "done",
+      "title": "Marketing, onboarding, learner home, and guided practice"
+    },
+    {
+      "active_evidence_ids": [
+        "09507b77-2ab3-4468-a4d1-19e734914361",
+        "a499c22c-8bc7-4313-b2ae-528352e618dc"
+      ],
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "approval_count": 0,
+      "capability": "ai-orchestration-and-trust",
+      "depends_on": [
+        "LUMA-001-foundation"
+      ],
+      "id": "LUMA-003-twin-tutor",
+      "kind": "ai-learning-capability",
+      "revision": 0,
+      "status": "done",
+      "title": "Explainable Learning Twin and grounded tutor experience"
+    },
+    {
+      "active_evidence_ids": [
+        "b922328c-8c7c-4f97-9662-e94ccb8fc241",
+        "f8e51db6-6949-4ff1-8729-87c24e933e8b"
+      ],
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "approval_count": 0,
+      "capability": "learning-intelligence",
+      "depends_on": [
+        "LUMA-001-foundation"
+      ],
+      "id": "LUMA-004-studio-content",
+      "kind": "product-surface",
+      "revision": 0,
+      "status": "done",
+      "title": "Content Intelligence library and instructor Learning Studio"
+    },
+    {
+      "active_evidence_ids": [
+        "0a37cc93-ac76-4925-836a-c6d3b02a4cdc",
+        "398e2cea-e7c7-4210-b3c6-4526457161b6",
+        "551f73e0-0311-46d7-b821-7739546b9785",
+        "769f445d-873d-43df-9359-5370eaeb1edc",
+        "7fd31645-acf7-4563-8b1a-fd0cd3a726d4",
+        "85967ab2-f7a8-48c0-b4c0-8058c49750f6",
+        "cd3eec72-9653-4050-9ab7-04f25e005aac",
+        "cefe99db-ae30-493a-8c26-58867e0fec67"
+      ],
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "approval_count": 0,
+      "capability": "release-engineering",
+      "depends_on": [
+        "LUMA-002-learner-experience",
+        "LUMA-003-twin-tutor",
+        "LUMA-004-studio-content"
+      ],
+      "id": "LUMA-005-showcase-release",
+      "kind": "release",
+      "revision": 0,
+      "status": "done",
+      "title": "Independent verification and Product Showcase release"
+    }
+  ],
+  "project_id": "luma-product-showcase-0.1.0",
+  "ready_nodes": [],
+  "repair_plan_count": 0,
+  "schema_version": "graph-harness.state.v1"
+}

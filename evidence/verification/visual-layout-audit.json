@@ -1,0 +1,1086 @@
+[
+  {
+    "route": "/",
+    "viewportName": "desktop",
+    "title": "LUMA · Learning Intelligence",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "documentWidth": 1440,
+    "documentHeight": 3752,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 100,
+          "y": 27,
+          "width": 183,
+          "height": 38
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Producto",
+        "rect": {
+          "x": 566,
+          "y": 39,
+          "width": 69,
+          "height": 15
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Learning Twin",
+        "rect": {
+          "x": 664,
+          "y": 39,
+          "width": 106,
+          "height": 15
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Confianza",
+        "rect": {
+          "x": 800,
+          "y": 39,
+          "width": 75,
+          "height": 15
+        }
+      },
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 100,
+          "y": 3649,
+          "width": 183,
+          "height": 38
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/learn",
+    "viewportName": "desktop",
+    "title": "LUMA · Learning Intelligence",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "documentWidth": 1440,
+    "documentHeight": 1627,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 33,
+          "y": 39,
+          "width": 183,
+          "height": 38
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Ajustar",
+        "rect": {
+          "x": 1301,
+          "y": 137,
+          "width": 62,
+          "height": 13
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir mi Twin y su evidencia",
+        "rect": {
+          "x": 1055,
+          "y": 758,
+          "width": 300,
+          "height": 34
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Ayúdame a identificar un P.A.S.",
+        "rect": {
+          "x": 768,
+          "y": 1313,
+          "width": 174,
+          "height": 27
+        }
+      },
+      {
+        "tag": "button",
+        "text": "¿Por qué me recomiendas esta práctica?",
+        "rect": {
+          "x": 948,
+          "y": 1313,
+          "width": 220,
+          "height": 27
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Dame un ejemplo de niveles lógicos",
+        "rect": {
+          "x": 1174,
+          "y": 1313,
+          "width": 199,
+          "height": 27
+        }
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "rect": {
+          "x": 785,
+          "y": 1366,
+          "width": 523,
+          "height": 16
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/twin",
+    "viewportName": "desktop",
+    "title": "Mi Learning Twin · LUMA",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "documentWidth": 1440,
+    "documentHeight": 1775,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 33,
+          "y": 39,
+          "width": 183,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Todo",
+        "rect": {
+          "x": 310,
+          "y": 977,
+          "width": 52,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Observado",
+        "rect": {
+          "x": 369,
+          "y": 977,
+          "width": 88,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Inferido",
+        "rect": {
+          "x": 464,
+          "y": 977,
+          "width": 71,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Auto-reportado",
+        "rect": {
+          "x": 542,
+          "y": 977,
+          "width": 116,
+          "height": 30
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/library",
+    "viewportName": "desktop",
+    "title": "Contenido inteligente · LUMA",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "documentWidth": 1440,
+    "documentHeight": 2225,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 33,
+          "y": 39,
+          "width": 183,
+          "height": 38
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/studio",
+    "viewportName": "desktop",
+    "title": "Learning Studio · LUMA",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "documentWidth": 1440,
+    "documentHeight": 1745,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 33,
+          "y": 39,
+          "width": 183,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Módulo 3",
+        "rect": {
+          "x": 1083,
+          "y": 118,
+          "width": 123,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Últimos 7 días",
+        "rect": {
+          "x": 1215,
+          "y": 118,
+          "width": 152,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 1249,
+          "y": 1388,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 1249,
+          "y": 1448,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 1249,
+          "y": 1508,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 1249,
+          "y": 1568,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir un learner context pack",
+        "rect": {
+          "x": 1171,
+          "y": 1632,
+          "width": 183,
+          "height": 15
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/studio/reflections",
+    "viewportName": "desktop",
+    "title": "Curriculum Reflection · LUMA",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "documentWidth": 1440,
+    "documentHeight": 1953,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 33,
+          "y": 39,
+          "width": 183,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Todo",
+        "rect": {
+          "x": 304,
+          "y": 959,
+          "width": 44,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "RAW",
+        "rect": {
+          "x": 353,
+          "y": 959,
+          "width": 43,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Reflexión",
+        "rect": {
+          "x": 401,
+          "y": 959,
+          "width": 67,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Síntesis",
+        "rect": {
+          "x": 304,
+          "y": 994,
+          "width": 60,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "QA",
+        "rect": {
+          "x": 369,
+          "y": 994,
+          "width": 35,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Factual",
+        "rect": {
+          "x": 1105,
+          "y": 935,
+          "width": 81,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Conceptual",
+        "rect": {
+          "x": 1192,
+          "y": 935,
+          "width": 81,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Revisión",
+        "rect": {
+          "x": 1278,
+          "y": 935,
+          "width": 81,
+          "height": 30
+        }
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "rect": {
+          "x": 1142,
+          "y": 1048,
+          "width": 205,
+          "height": 14
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/onboarding",
+    "viewportName": "desktop",
+    "title": "Construye tu Learning Twin · LUMA",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "documentWidth": 1440,
+    "documentHeight": 1000,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 60,
+          "y": 25,
+          "width": 183,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar perfil de showcase",
+        "rect": {
+          "x": 1213,
+          "y": 36,
+          "width": 167,
+          "height": 16
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/learn/session/pas",
+    "viewportName": "desktop",
+    "title": "Práctica guiada · LUMA",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "documentWidth": 1440,
+    "documentHeight": 1051,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "Salir de la práctica",
+        "rect": {
+          "x": 60,
+          "y": 29,
+          "width": 147,
+          "height": 17
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir material original",
+        "rect": {
+          "x": 1080,
+          "y": 322,
+          "width": 275,
+          "height": 29
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/",
+    "viewportName": "mobile",
+    "title": "LUMA · Learning Intelligence",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentWidth": 390,
+    "documentHeight": 5208,
+    "horizontalOverflow": 0,
+    "outOfBounds": [
+      {
+        "tag": "div",
+        "text": "",
+        "rect": {
+          "x": -5,
+          "y": 809,
+          "width": 401,
+          "height": 401
+        }
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 12,
+          "y": 19,
+          "width": 108,
+          "height": 38
+        }
+      },
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 12,
+          "y": 5048,
+          "width": 108,
+          "height": 38
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/learn",
+    "viewportName": "mobile",
+    "title": "LUMA · Learning Intelligence",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentWidth": 390,
+    "documentHeight": 3222,
+    "horizontalOverflow": 0,
+    "outOfBounds": [
+      {
+        "tag": "div",
+        "text": "",
+        "rect": {
+          "x": 237,
+          "y": 462,
+          "width": 220,
+          "height": 220
+        }
+      },
+      {
+        "tag": "button",
+        "text": "¿Por qué me recomiendas esta práctica?",
+        "rect": {
+          "x": 211,
+          "y": 2954,
+          "width": 220,
+          "height": 27
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Dame un ejemplo de niveles lógicos",
+        "rect": {
+          "x": 437,
+          "y": 2954,
+          "width": 199,
+          "height": 27
+        }
+      }
+    ],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 14,
+          "y": 22,
+          "width": 38,
+          "height": 38
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Ajustar",
+        "rect": {
+          "x": 89,
+          "y": 181,
+          "width": 62,
+          "height": 13
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir mi Twin y su evidencia",
+        "rect": {
+          "x": 31,
+          "y": 1759,
+          "width": 328,
+          "height": 34
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Ayúdame a identificar un P.A.S.",
+        "rect": {
+          "x": 31,
+          "y": 2954,
+          "width": 174,
+          "height": 27
+        }
+      },
+      {
+        "tag": "button",
+        "text": "¿Por qué me recomiendas esta práctica?",
+        "rect": {
+          "x": 211,
+          "y": 2954,
+          "width": 220,
+          "height": 27
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Dame un ejemplo de niveles lógicos",
+        "rect": {
+          "x": 437,
+          "y": 2954,
+          "width": 199,
+          "height": 27
+        }
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "rect": {
+          "x": 48,
+          "y": 3008,
+          "width": 264,
+          "height": 16
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/twin",
+    "viewportName": "mobile",
+    "title": "Mi Learning Twin · LUMA",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentWidth": 390,
+    "documentHeight": 2979,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 14,
+          "y": 22,
+          "width": 38,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Todo",
+        "rect": {
+          "x": 31,
+          "y": 1482,
+          "width": 52,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Observado",
+        "rect": {
+          "x": 90,
+          "y": 1482,
+          "width": 88,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Inferido",
+        "rect": {
+          "x": 185,
+          "y": 1482,
+          "width": 71,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Auto-reportado",
+        "rect": {
+          "x": 263,
+          "y": 1482,
+          "width": 116,
+          "height": 30
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/library",
+    "viewportName": "mobile",
+    "title": "Contenido inteligente · LUMA",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentWidth": 390,
+    "documentHeight": 3839,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 14,
+          "y": 22,
+          "width": 38,
+          "height": 38
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/studio",
+    "viewportName": "mobile",
+    "title": "Learning Studio · LUMA",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentWidth": 390,
+    "documentHeight": 3612,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 14,
+          "y": 22,
+          "width": 38,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Módulo 3",
+        "rect": {
+          "x": 27,
+          "y": 159,
+          "width": 164,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Últimos 7 días",
+        "rect": {
+          "x": 200,
+          "y": 159,
+          "width": 164,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 46,
+          "y": 3076,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 46,
+          "y": 3173,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 46,
+          "y": 3270,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 46,
+          "y": 3367,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir un learner context pack",
+        "rect": {
+          "x": 31,
+          "y": 3465,
+          "width": 183,
+          "height": 15
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/studio/reflections",
+    "viewportName": "mobile",
+    "title": "Curriculum Reflection · LUMA",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentWidth": 390,
+    "documentHeight": 4412,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 14,
+          "y": 22,
+          "width": 38,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Todo",
+        "rect": {
+          "x": 31,
+          "y": 1407,
+          "width": 44,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "RAW",
+        "rect": {
+          "x": 80,
+          "y": 1407,
+          "width": 43,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Reflexión",
+        "rect": {
+          "x": 128,
+          "y": 1407,
+          "width": 67,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Síntesis",
+        "rect": {
+          "x": 200,
+          "y": 1407,
+          "width": 60,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "QA",
+        "rect": {
+          "x": 265,
+          "y": 1407,
+          "width": 35,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Factual",
+        "rect": {
+          "x": 31,
+          "y": 3416,
+          "width": 106,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Conceptual",
+        "rect": {
+          "x": 142,
+          "y": 3416,
+          "width": 106,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Revisión",
+        "rect": {
+          "x": 253,
+          "y": 3416,
+          "width": 106,
+          "height": 30
+        }
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "rect": {
+          "x": 68,
+          "y": 3530,
+          "width": 278,
+          "height": 14
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/onboarding",
+    "viewportName": "mobile",
+    "title": "Construye tu Learning Twin · LUMA",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentWidth": 390,
+    "documentHeight": 1724,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA inicio",
+        "rect": {
+          "x": 10,
+          "y": 19,
+          "width": 183,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar perfil de showcase",
+        "rect": {
+          "x": 234,
+          "y": 32,
+          "width": 146,
+          "height": 13
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/learn/session/pas",
+    "viewportName": "mobile",
+    "title": "Práctica guiada · LUMA",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentWidth": 390,
+    "documentHeight": 1704,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "Salir de la práctica",
+        "rect": {
+          "x": 10,
+          "y": 29,
+          "width": 147,
+          "height": 17
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir material original",
+        "rect": {
+          "x": 36,
+          "y": 1325,
+          "width": 318,
+          "height": 29
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  }
+]

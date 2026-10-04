@@ -1,0 +1,713 @@
+.dashboard {
+  display: grid;
+  gap: 14px;
+}
+
+.controlBar {
+  min-height: 62px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 19px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: rgba(255,255,255,.03);
+}
+
+.controlBar > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.controlBar > div:first-child > span:last-child {
+  color: var(--muted);
+  font-size: .65rem;
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.controlBar button {
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted-strong);
+  background: rgba(255,255,255,.045);
+  cursor: pointer;
+  font-size: .65rem;
+  font-weight: 700;
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: 1.65fr repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.metricGrid article {
+  min-height: 158px;
+  padding: 20px;
+  border-radius: 22px;
+  position: relative;
+  overflow: hidden;
+}
+
+.metricGrid article:not(.heroMetric) {
+  display: flex;
+  flex-direction: column;
+}
+
+.metricGrid article:not(.heroMetric) > span {
+  width: 38px;
+  height: 38px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  color: var(--mint);
+  background: rgba(117,223,194,.09);
+}
+
+.metricGrid small {
+  margin-top: auto;
+  color: var(--muted);
+  font-size: .57rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.metricGrid article:not(.heroMetric) strong {
+  margin-top: 6px;
+  font-size: 1.65rem;
+  letter-spacing: -.06em;
+}
+
+.metricGrid article:not(.heroMetric) p {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: .57rem;
+}
+
+.heroMetric {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 13px;
+  background:
+    radial-gradient(circle at 90% 0%, rgba(201,241,90,.14), transparent 34%),
+    linear-gradient(145deg, rgba(255,255,255,.09), rgba(255,255,255,.025)),
+    var(--glass);
+}
+
+.metricIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: #102015;
+  background: var(--accent);
+}
+
+.heroMetric > div:nth-child(2) {
+  display: grid;
+  align-content: start;
+}
+
+.heroMetric small {
+  margin: 0;
+}
+
+.heroMetric strong {
+  margin-top: 4px;
+  color: var(--accent);
+  font-size: 2.4rem;
+  letter-spacing: -.07em;
+}
+
+.heroMetric p {
+  color: var(--muted);
+  font-size: .58rem;
+}
+
+.metricDelta {
+  align-self: end;
+  color: var(--mint);
+  font-size: .57rem;
+}
+
+.sparkline {
+  height: 48px;
+  position: absolute;
+  right: 17px;
+  bottom: 13px;
+  left: 55%;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.sparkline i {
+  flex: 1;
+  border-radius: 4px 4px 2px 2px;
+  background: linear-gradient(to top, rgba(117,223,194,.2), var(--accent));
+}
+
+.signalGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 9px;
+}
+
+.signalGrid article {
+  min-height: 110px;
+  padding: 17px;
+  border-radius: 19px;
+  display: flex;
+  flex-direction: column;
+}
+
+.signalGrid span {
+  color: var(--muted);
+  font-size: .57rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.signalGrid strong {
+  margin-top: auto;
+  font-size: 1.1rem;
+  letter-spacing: -.04em;
+}
+
+.signalGrid p {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: .57rem;
+  line-height: 1.35;
+}
+
+.signalGrid article[data-trend="up"] strong {
+  color: var(--accent);
+}
+
+.signalGrid article[data-trend="down"] strong {
+  color: var(--peach);
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.48fr) minmax(310px, .52fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.bottleneckCard,
+.qualityCard,
+.questionCard,
+.interventionQueue {
+  padding: 27px;
+  border-radius: var(--radius-lg);
+}
+
+.cardHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.cardHeading h2 {
+  margin-top: 11px;
+  font-size: clamp(1.55rem, 3vw, 2.9rem);
+  font-weight: 620;
+  line-height: 1;
+}
+
+.bottleneckLayout {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 13px;
+}
+
+.bottleneckChart {
+  display: grid;
+  gap: 8px;
+}
+
+.bottleneckChart button {
+  min-height: 82px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  display: grid;
+  grid-template-columns: 150px minmax(80px, 1fr) 35px;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  background: rgba(255,255,255,.035);
+  cursor: pointer;
+  text-align: left;
+}
+
+.bottleneckChart button[data-selected="true"] {
+  border-color: rgba(201,241,90,.28);
+  background: var(--accent-soft);
+}
+
+.bottleneckChart button > span {
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+.bottleneckChart button > div {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,.07);
+}
+
+.bottleneckChart button i {
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--peach), var(--accent));
+}
+
+.bottleneckChart button > strong {
+  font-size: .7rem;
+  text-align: right;
+}
+
+.bottleneckChart button > small {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: .54rem;
+}
+
+.insightPanel {
+  min-height: 350px;
+  padding: 22px;
+  border: 1px solid rgba(201,241,90,.16);
+  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(201,241,90,.1), transparent 34%),
+    rgba(0,0,0,.15);
+}
+
+.insightPanel[data-severity="high"] {
+  border-color: rgba(241,163,108,.2);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(241,163,108,.1), transparent 34%),
+    rgba(0,0,0,.15);
+}
+
+.insightPanel > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--accent);
+  font-size: .61rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.insightPanel h3 {
+  margin-top: 20px;
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.insightPanel > p {
+  margin-top: 13px;
+  color: var(--muted-strong);
+  font-size: .72rem;
+  line-height: 1.55;
+}
+
+.insightPanel dl {
+  margin: 20px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.insightPanel dl div {
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.04);
+}
+
+.insightPanel dt {
+  color: var(--muted);
+  font-size: .51rem;
+  text-transform: uppercase;
+}
+
+.insightPanel dd {
+  margin: 5px 0 0;
+  font-size: .62rem;
+  font-weight: 700;
+}
+
+.insightPanel :global(.button-secondary) {
+  width: 100%;
+  margin-top: auto;
+}
+
+.interventionEffect {
+  margin-top: 13px;
+  padding: 15px;
+  border: 1px solid rgba(117,223,194,.15);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: rgba(117,223,194,.06);
+}
+
+.interventionEffect > div {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.effectIcon {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  color: var(--mint);
+  background: rgba(117,223,194,.1);
+}
+
+.interventionEffect strong {
+  font-size: .7rem;
+}
+
+.interventionEffect p,
+.interventionEffect > span {
+  color: var(--muted);
+  font-size: .56rem;
+}
+
+.interventionEffect p {
+  margin-top: 4px;
+}
+
+.sideColumn {
+  display: grid;
+  gap: 14px;
+}
+
+.qualityCard {
+  min-height: 390px;
+}
+
+.qualityRing {
+  width: 66px;
+  height: 66px;
+  border: 8px solid rgba(255,255,255,.08);
+  border-top-color: var(--accent);
+  border-right-color: var(--accent);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  font-size: .78rem;
+  font-weight: 800;
+  transform: rotate(-20deg);
+}
+
+.qualityRing::first-letter {
+  transform: rotate(20deg);
+}
+
+.qualityList {
+  margin-top: 27px;
+  display: grid;
+  gap: 15px;
+}
+
+.qualityList > div {
+  display: grid;
+  grid-template-columns: 125px 1fr 26px;
+  align-items: center;
+  gap: 8px;
+}
+
+.qualityList span {
+  color: var(--muted-strong);
+  font-size: .61rem;
+}
+
+.qualityList > div > div {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,.07);
+}
+
+.qualityList i {
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--mint), var(--accent));
+}
+
+.qualityList strong {
+  font-size: .61rem;
+  text-align: right;
+}
+
+.qualityCard > p {
+  margin-top: 26px;
+  padding-top: 17px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  color: var(--muted);
+  font-size: .57rem;
+  line-height: 1.45;
+}
+
+.qualityCard > p svg {
+  flex: 0 0 auto;
+  color: var(--accent);
+}
+
+.questionCard blockquote {
+  margin: 22px 0 0;
+  font-family: Georgia, serif;
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+.questionCard > p {
+  margin-top: 13px;
+  color: var(--muted);
+  font-size: .58rem;
+}
+
+.questionCard :global(.button-secondary) {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.interventionQueue .cardHeading > span {
+  color: var(--muted);
+  font-size: .61rem;
+}
+
+.table {
+  margin-top: 22px;
+  border: 1px solid var(--line);
+  border-radius: 19px;
+  overflow: hidden;
+}
+
+.tableHead,
+.tableRow {
+  min-height: 60px;
+  padding: 9px 14px;
+  display: grid;
+  grid-template-columns: 1.05fr 1.35fr .65fr 1.05fr 90px;
+  align-items: center;
+  gap: 12px;
+}
+
+.tableHead {
+  min-height: 42px;
+  color: var(--muted);
+  background: rgba(0,0,0,.14);
+  font-size: .53rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.tableRow {
+  border-top: 1px solid var(--line);
+  color: var(--muted-strong);
+  font-size: .64rem;
+}
+
+.tableRow[data-urgency="high"] {
+  background: linear-gradient(90deg, rgba(241,163,108,.06), transparent 22%);
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.person i {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: #102015;
+  background: linear-gradient(145deg, var(--accent), var(--mint));
+  font-size: .59rem;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.tableRow button {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: var(--ink);
+  background: rgba(255,255,255,.05);
+  cursor: pointer;
+  font-size: .59rem;
+  font-weight: 700;
+}
+
+.tableRow button[data-assigned="true"] {
+  color: #102015;
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.interventionQueue footer {
+  margin-top: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.interventionQueue footer p {
+  color: var(--muted);
+  font-size: .58rem;
+}
+
+.interventionQueue footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-size: .61rem;
+  font-weight: 700;
+}
+
+@media (max-width: 1350px) {
+  .metricGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .heroMetric {
+    grid-column: 1 / -1;
+  }
+
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sideColumn {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 980px) {
+  .signalGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bottleneckLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .tableHead {
+    display: none;
+  }
+
+  .tableRow {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .tableRow > span:nth-child(3),
+  .tableRow > span:nth-child(4) {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .controlBar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .controlBar > div:last-child {
+    width: 100%;
+  }
+
+  .controlBar button {
+    flex: 1;
+  }
+
+  .metricGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .heroMetric {
+    grid-column: 1 / -1;
+  }
+
+  .signalGrid,
+  .sideColumn {
+    grid-template-columns: 1fr;
+  }
+
+  .bottleneckCard,
+  .qualityCard,
+  .questionCard,
+  .interventionQueue {
+    padding: 21px 18px;
+  }
+
+  .bottleneckChart button {
+    grid-template-columns: 120px minmax(50px, 1fr) 33px;
+  }
+
+  .interventionEffect {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .interventionQueue .cardHeading {
+    flex-direction: column;
+  }
+
+  .tableRow {
+    grid-template-columns: 1fr auto;
+  }
+
+  .interventionQueue footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

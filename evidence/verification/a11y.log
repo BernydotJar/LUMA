@@ -1,0 +1,6 @@
+
+Running 1 test using 1 worker
+
+  ✓  1 [chromium] › e2e/showcase.spec.ts:70:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks (5.3s)
+
+  1 passed (9.0s)

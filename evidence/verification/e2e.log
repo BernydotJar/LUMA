@@ -1,0 +1,22 @@
+
+> luma-learning-intelligence@0.1.0 test:e2e
+> playwright test
+
+
+Running 12 tests using 6 workers
+
+  ✓   1 [chromium] › e2e/showcase.spec.ts:62:3 › LUMA product showcase › studio lets an instructor assign human intervention (2.5s)
+  ✓   2 [chromium] › e2e/showcase.spec.ts:10:3 › LUMA product showcase › marketing experience leads into the real product (3.0s)
+  ✓   4 [chromium] › e2e/showcase.spec.ts:48:3 › LUMA product showcase › practice produces a real evidence receipt (3.1s)
+  ✓   3 [chromium] › e2e/showcase.spec.ts:38:3 › LUMA product showcase › learner can inspect recommendation and ask the grounded tutor (3.6s)
+  ✓   6 [chromium] › e2e/showcase.spec.ts:19:3 › LUMA product showcase › onboarding calibrates a learner and enters the journey (3.8s)
+  ✓   7 [mobile] › e2e/showcase.spec.ts:10:3 › LUMA product showcase › marketing experience leads into the real product (2.4s)
+  ✓   9 [mobile] › e2e/showcase.spec.ts:38:3 › LUMA product showcase › learner can inspect recommendation and ask the grounded tutor (2.1s)
+  -  12 [mobile] › e2e/showcase.spec.ts:70:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks
+  ✓  10 [mobile] › e2e/showcase.spec.ts:48:3 › LUMA product showcase › practice produces a real evidence receipt (2.1s)
+  ✓  11 [mobile] › e2e/showcase.spec.ts:62:3 › LUMA product showcase › studio lets an instructor assign human intervention (2.0s)
+  ✓   8 [mobile] › e2e/showcase.spec.ts:19:3 › LUMA product showcase › onboarding calibrates a learner and enters the journey (2.9s)
+  ✓   5 [chromium] › e2e/showcase.spec.ts:70:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks (8.4s)
+
+  1 skipped
+  11 passed (12.4s)

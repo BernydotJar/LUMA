@@ -1,0 +1,224 @@
+.demoBadge {
+  padding: 7px 10px;
+  border: 1px solid rgba(201, 241, 90, 0.18);
+  border-radius: 999px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-size: 0.64rem;
+  font-weight: 750;
+}
+
+.goalBar {
+  min-height: 74px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.goalIcon {
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(201,241,90,.2);
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.goalBar > div:nth-child(2) {
+  display: grid;
+  gap: 5px;
+}
+
+.goalBar > div:nth-child(2) span {
+  color: var(--muted);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.goalBar > div:nth-child(2) strong {
+  font-size: 0.88rem;
+}
+
+.goalMeta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--muted);
+  font-size: 0.66rem;
+}
+
+.goalMeta span,
+.goalMeta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.goalMeta a {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.metrics {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(230px, 1.25fr);
+  gap: 10px;
+}
+
+.metrics article {
+  min-height: 94px;
+  padding: 16px;
+  border-radius: 19px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.metrics article > span {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  color: var(--mint);
+  background: rgba(117,223,194,.09);
+}
+
+.metrics article > div:first-of-type {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.metrics small {
+  color: var(--muted);
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.metrics strong {
+  font-size: 1.2rem;
+  letter-spacing: -0.04em;
+}
+
+.metrics p {
+  color: var(--muted);
+  font-size: 0.58rem;
+}
+
+.masteryMetric {
+  justify-content: space-between;
+}
+
+.masteryMetric strong span {
+  color: var(--muted);
+  font-size: 0.64rem;
+  font-weight: 500;
+}
+
+.masteryDots {
+  display: grid;
+  grid-template-columns: repeat(3, 12px);
+  gap: 5px;
+}
+
+.masteryDots span {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  background: rgba(255,255,255,.08);
+}
+
+.masteryDots span[data-complete="true"] {
+  background: var(--accent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
+}
+
+.primaryGrid,
+.secondaryGrid {
+  margin-top: 14px;
+  display: grid;
+  gap: 14px;
+  align-items: start;
+}
+
+.primaryGrid {
+  grid-template-columns: minmax(0, 1.55fr) minmax(340px, 0.75fr);
+}
+
+.nextActionArea {
+  min-width: 0;
+}
+
+.secondaryGrid {
+  grid-template-columns: minmax(360px, 0.82fr) minmax(470px, 1.18fr);
+}
+
+@media (max-width: 1260px) {
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .primaryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .secondaryGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .secondaryGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .demoBadge {
+    display: none;
+  }
+
+  .goalBar {
+    grid-template-columns: auto 1fr;
+  }
+
+  .goalMeta {
+    grid-column: 2;
+    justify-content: space-between;
+  }
+
+  .goalMeta > span {
+    display: none;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .metrics article {
+    min-height: 104px;
+    align-items: flex-start;
+  }
+
+  .metrics article > span {
+    display: none;
+  }
+
+  .masteryMetric {
+    grid-column: 1 / -1;
+    min-height: 86px !important;
+    align-items: center !important;
+  }
+}

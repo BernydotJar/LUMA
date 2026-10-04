@@ -1,0 +1,332 @@
+.shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 256px minmax(0, 1fr);
+  background:
+    radial-gradient(circle at 90% -10%, rgba(201, 241, 90, 0.08), transparent 28rem),
+    radial-gradient(circle at 10% 80%, rgba(117, 223, 194, 0.06), transparent 32rem),
+    var(--bg);
+}
+
+.sidebar {
+  width: 236px;
+  height: calc(100vh - 28px);
+  margin: 14px 0 14px 14px;
+  padding: 24px 18px;
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 14px;
+  z-index: 30;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.workspaceLabel {
+  margin-top: 30px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  display: grid;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.workspaceLabel span {
+  color: var(--muted);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.workspaceLabel strong {
+  font-size: 0.82rem;
+}
+
+.navigation {
+  margin-top: 24px;
+  display: grid;
+  gap: 6px;
+}
+
+.navigation a,
+.sidebarBottom a {
+  min-height: 46px;
+  padding: 0 13px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  position: relative;
+  color: var(--muted-strong);
+  font-size: 0.82rem;
+  font-weight: 650;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.navigation a:hover,
+.sidebarBottom a:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(2px);
+}
+
+.navigation .activeNav {
+  color: #102015;
+  background: var(--accent);
+  box-shadow: 0 9px 28px rgba(201, 241, 90, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.activeDot {
+  width: 5px;
+  height: 5px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: #102015;
+}
+
+.sidebarBottom {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 3px;
+}
+
+.sidebarBottom a {
+  min-height: 40px;
+  font-size: 0.74rem;
+}
+
+.workspace {
+  min-width: 0;
+  min-height: 100vh;
+}
+
+.topbar {
+  min-height: 92px;
+  padding: 18px clamp(24px, 4vw, 58px) 12px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: linear-gradient(to bottom, rgba(7, 18, 15, 0.96) 55%, rgba(7, 18, 15, 0));
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.pageTitle {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pageTitle h1 {
+  font-size: clamp(1.55rem, 2.5vw, 2.25rem);
+  font-weight: 650;
+  line-height: 1;
+}
+
+.pageTitle p {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.mobileBrand {
+  display: none;
+}
+
+.topbarActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.iconButton,
+.profileButton {
+  border: 1px solid var(--line);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.055);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  cursor: pointer;
+}
+
+.iconButton {
+  width: 43px;
+  height: 43px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+}
+
+.notificationDot {
+  width: 6px;
+  height: 6px;
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  border-radius: 50%;
+  background: var(--peach);
+  box-shadow: 0 0 0 3px var(--bg);
+}
+
+.profileButton {
+  min-height: 48px;
+  padding: 5px 10px 5px 5px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: #102015;
+  background: linear-gradient(145deg, var(--accent), var(--mint));
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.profileButton > span:nth-child(2) {
+  min-width: 90px;
+  display: grid;
+  gap: 2px;
+  text-align: left;
+}
+
+.profileButton strong {
+  font-size: 0.75rem;
+}
+
+.profileButton small {
+  color: var(--muted);
+  font-size: 0.61rem;
+}
+
+.content {
+  max-width: 1540px;
+  margin: 0 auto;
+  padding: 14px clamp(24px, 4vw, 58px) 70px 26px;
+}
+
+.mobileNav {
+  display: none;
+}
+
+@media (max-width: 1050px) {
+  .shell {
+    grid-template-columns: 92px minmax(0, 1fr);
+  }
+
+  .sidebar {
+    width: 72px;
+    padding-inline: 10px;
+    align-items: center;
+  }
+
+  .sidebar :global(.brand-mark__copy),
+  .workspaceLabel,
+  .navigation a span:not(.activeDot),
+  .sidebarBottom a span,
+  .sidebarBottom a:last-child {
+    display: none;
+  }
+
+  .navigation a,
+  .sidebarBottom a {
+    width: 48px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .activeDot {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+  }
+}
+
+@media (max-width: 760px) {
+  .shell {
+    display: block;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .topbar {
+    min-height: 78px;
+    padding: 12px 14px 8px;
+  }
+
+  .pageTitle h1 {
+    font-size: 1.25rem;
+  }
+
+  .pageTitle p {
+    display: none;
+  }
+
+  .mobileBrand {
+    display: block;
+  }
+
+  .topbarActions > .iconButton:first-of-type,
+  .profileButton > span:nth-child(2),
+  .profileButton > svg {
+    display: none;
+  }
+
+  .profileButton {
+    min-height: auto;
+    padding: 3px;
+    border: 0;
+    background: transparent;
+  }
+
+  .content {
+    padding: 10px 12px 110px;
+  }
+
+  .mobileNav {
+    height: 72px;
+    padding: 8px 9px;
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: 80;
+    border-radius: 22px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  .mobileNav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border-radius: 15px;
+    color: var(--muted);
+    font-size: 0.58rem;
+    font-weight: 700;
+  }
+
+  .mobileNav .mobileActive {
+    color: #102015;
+    background: var(--accent);
+  }
+}

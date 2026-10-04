@@ -1,0 +1,26 @@
+
+> luma-learning-intelligence@0.1.0 test:e2e
+> playwright test
+
+
+Running 16 tests using 6 workers
+
+  ✓   6 [chromium] › e2e/showcase.spec.ts:61:3 › LUMA product showcase › curriculum reflection creates a reviewable artifact without updating learner state (2.5s)
+  ✓   1 [chromium] › e2e/showcase.spec.ts:79:3 › LUMA product showcase › practice produces a real evidence receipt (2.5s)
+  ✓   2 [chromium] › e2e/showcase.spec.ts:38:3 › LUMA product showcase › learner can inspect recommendation and ask the grounded tutor (2.6s)
+  ✓   5 [chromium] › e2e/showcase.spec.ts:49:3 › LUMA product showcase › tutor blocks unsupported high-stakes course claims (2.6s)
+  ✓   3 [chromium] › e2e/showcase.spec.ts:10:3 › LUMA product showcase › marketing experience leads into the real product (2.8s)
+  ✓   4 [chromium] › e2e/showcase.spec.ts:19:3 › LUMA product showcase › onboarding calibrates a learner and enters the journey (3.0s)
+  ✓   8 [chromium] › e2e/showcase.spec.ts:93:3 › LUMA product showcase › studio lets an instructor assign human intervention (1.5s)
+  ✓  10 [mobile] › e2e/showcase.spec.ts:10:3 › LUMA product showcase › marketing experience leads into the real product (1.6s)
+  ✓   9 [mobile] › e2e/showcase.spec.ts:19:3 › LUMA product showcase › onboarding calibrates a learner and enters the journey (2.7s)
+  ✓  13 [mobile] › e2e/showcase.spec.ts:61:3 › LUMA product showcase › curriculum reflection creates a reviewable artifact without updating learner state (1.6s)
+  -  16 [mobile] › e2e/showcase.spec.ts:101:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks
+  ✓  14 [mobile] › e2e/showcase.spec.ts:79:3 › LUMA product showcase › practice produces a real evidence receipt (1.5s)
+  ✓  12 [mobile] › e2e/showcase.spec.ts:49:3 › LUMA product showcase › tutor blocks unsupported high-stakes course claims (3.5s)
+  ✓  11 [mobile] › e2e/showcase.spec.ts:38:3 › LUMA product showcase › learner can inspect recommendation and ask the grounded tutor (3.8s)
+  ✓  15 [mobile] › e2e/showcase.spec.ts:93:3 › LUMA product showcase › studio lets an instructor assign human intervention (1.3s)
+  ✓   7 [chromium] › e2e/showcase.spec.ts:101:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks (6.7s)
+
+  1 skipped
+  15 passed (10.1s)

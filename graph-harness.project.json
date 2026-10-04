@@ -1,0 +1,207 @@
+{
+  "schema_version": "graph-harness.project.v1",
+  "project_id": "luma-product-showcase-0.1.0",
+  "mode": "SHIP",
+  "gate_definitions": [
+    {
+      "id": "independent-review",
+      "required_evidence_kinds": [
+        "critic"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "release-quality",
+      "required_evidence_kinds": [
+        "test",
+        "build",
+        "a11y",
+        "security",
+        "visual"
+      ],
+      "blocking": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "LUMA-001-foundation",
+      "kind": "product-foundation",
+      "title": "Product thesis, architecture, research, and specifications",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "product-architecture",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "README.md",
+        "docs/**",
+        "architecture/**",
+        "specs/**",
+        "graph-harness.project.json"
+      ],
+      "metadata": {
+        "release": "0.1.0",
+        "mode": "Product Showcase Release"
+      }
+    },
+    {
+      "id": "LUMA-002-learner-experience",
+      "kind": "product-surface",
+      "title": "Marketing, onboarding, learner home, and guided practice",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-001-foundation"
+      ],
+      "capability": "full-stack-product",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/page.tsx",
+        "src/app/onboarding/**",
+        "src/app/learn/**",
+        "src/components/onboarding-experience*",
+        "src/components/next-action-card*",
+        "src/components/practice-session*",
+        "src/lib/learning-engine*",
+        "src/types/**"
+      ]
+    },
+    {
+      "id": "LUMA-003-twin-tutor",
+      "kind": "ai-learning-capability",
+      "title": "Explainable Learning Twin and grounded tutor experience",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-001-foundation"
+      ],
+      "capability": "ai-orchestration-and-trust",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/twin/**",
+        "src/app/api/tutor/**",
+        "src/components/twin-*",
+        "src/components/tutor-panel*",
+        "architecture/digital-twin.md",
+        "architecture/ai-orchestration.md"
+      ]
+    },
+    {
+      "id": "LUMA-004-studio-content",
+      "kind": "product-surface",
+      "title": "Content Intelligence library and instructor Learning Studio",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-001-foundation"
+      ],
+      "capability": "learning-intelligence",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/library/**",
+        "src/app/studio/**",
+        "src/components/studio-dashboard*",
+        "architecture/knowledge-graph.md",
+        "architecture/content-intelligence.md",
+        "docs/content-inventory.md"
+      ]
+    },
+    {
+      "id": "LUMA-005-showcase-release",
+      "kind": "release",
+      "title": "Independent verification and Product Showcase release",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-002-learner-experience",
+        "LUMA-003-twin-tutor",
+        "LUMA-004-studio-content"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        ".github/**",
+        "e2e/**",
+        "evidence/**",
+        "scripts/**",
+        "package.json",
+        "package-lock.json",
+        "playwright.config.ts",
+        "vitest.config.ts",
+        "eslint.config.mjs",
+        "next.config.ts"
+      ]
+    },
+    {
+      "id": "LUMA-006-knowledge-reflection",
+      "kind": "ai-learning-capability",
+      "title": "Inspectable Knowledge Reflection with gated retrieval and trust controls",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-003-twin-tutor",
+        "LUMA-004-studio-content"
+      ],
+      "capability": "knowledge-reflection-and-trust",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/008-knowledge-reflection.md",
+        "src/app/api/reflections/**",
+        "src/app/studio/reflections/**",
+        "src/app/api/tutor/route.ts",
+        "src/components/reflection-workbench*",
+        "src/components/tutor-panel*",
+        "src/components/app-shell.tsx",
+        "src/components/learner-components.module.css",
+        "src/lib/reflection-*",
+        "src/types/reflection.ts"
+      ]
+    },
+    {
+      "id": "LUMA-007-reflection-showcase-release",
+      "kind": "release",
+      "title": "Knowledge Reflection client-showcase release gate",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-006-knowledge-reflection"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "README.md",
+        "graph-harness.project.json",
+        "e2e/**",
+        "evidence/**",
+        "scripts/**"
+      ]
+    }
+  ]
+}

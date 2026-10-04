@@ -1,0 +1,40 @@
+desktop /                    overflow=0 out=0 small=5 clipped=0 heading=true
+desktop /learn               overflow=0 out=0 small=7 clipped=0 heading=true
+desktop /twin                overflow=0 out=0 small=5 clipped=0 heading=true
+desktop /library             overflow=0 out=0 small=1 clipped=0 heading=true
+desktop /studio              overflow=0 out=0 small=8 clipped=0 heading=true
+desktop /studio/reflections  overflow=0 out=0 small=10 clipped=0 heading=true
+desktop /onboarding          overflow=0 out=0 small=2 clipped=0 heading=true
+desktop /learn/session/pas   overflow=0 out=0 small=2 clipped=0 heading=true
+mobile  /                    overflow=0 out=1 small=2 clipped=0 heading=true
+  out: [
+  {
+    tag: 'div',
+    text: '',
+    rect: { x: -5, y: 809, width: 401, height: 401 }
+  }
+]
+mobile  /learn               overflow=0 out=3 small=7 clipped=0 heading=true
+  out: [
+  {
+    tag: 'div',
+    text: '',
+    rect: { x: 237, y: 462, width: 220, height: 220 }
+  },
+  {
+    tag: 'button',
+    text: '¿Por qué me recomiendas esta práctica?',
+    rect: { x: 211, y: 2954, width: 220, height: 27 }
+  },
+  {
+    tag: 'button',
+    text: 'Dame un ejemplo de niveles lógicos',
+    rect: { x: 437, y: 2954, width: 199, height: 27 }
+  }
+]
+mobile  /twin                overflow=0 out=0 small=5 clipped=0 heading=true
+mobile  /library             overflow=0 out=0 small=1 clipped=0 heading=true
+mobile  /studio              overflow=0 out=0 small=8 clipped=0 heading=true
+mobile  /studio/reflections  overflow=0 out=0 small=10 clipped=0 heading=true
+mobile  /onboarding          overflow=0 out=0 small=2 clipped=0 heading=true
+mobile  /learn/session/pas   overflow=0 out=0 small=2 clipped=0 heading=true

@@ -1,0 +1,91 @@
+.statePage {
+  min-height: 100vh;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+}
+
+.stateIcon,
+.loadingMark {
+  width: 82px;
+  height: 82px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255,255,255,.32);
+  border-radius: 31px;
+  display: grid;
+  place-items: center;
+  color: #102015;
+  background:
+    radial-gradient(circle at 28% 18%, rgba(255,255,255,.9), transparent 22%),
+    linear-gradient(145deg, var(--accent), var(--mint));
+  box-shadow: 0 24px 55px rgba(0,0,0,.3), inset -8px -10px 22px rgba(5,62,47,.17);
+}
+
+.loadingMark {
+  animation: float 2.2s ease-in-out infinite;
+}
+
+.loadingMark span {
+  font-size: 2.1rem;
+  font-weight: 900;
+  letter-spacing: -.1em;
+}
+
+.statePage h1 {
+  max-width: 760px;
+  margin-top: 17px;
+  font-size: clamp(3rem, 7vw, 7rem);
+  font-weight: 620;
+  line-height: .9;
+}
+
+.statePage > p {
+  max-width: 580px;
+  margin-top: 20px;
+  color: var(--muted-strong);
+  font-size: .92rem;
+  line-height: 1.6;
+}
+
+.stateActions {
+  margin-top: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.statePage > a {
+  margin-top: 25px;
+}
+
+.loadingBar {
+  width: min(260px, 80vw);
+  height: 5px;
+  margin-top: 22px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+}
+
+.loadingBar span {
+  width: 45%;
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--mint), var(--accent));
+  animation: load 1.4s ease-in-out infinite;
+}
+
+@keyframes load {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(250%); }
+}
+
+@keyframes float {
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
