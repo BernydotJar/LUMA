@@ -1,0 +1,8 @@
+# Firebase App Hosting configuration for LUMA.
+# Keep demo infrastructure intentionally small while preserving Next.js SSR/API routes.
+runConfig:
+  cpu: 1
+  memoryMiB: 512
+  minInstances: 0
+  maxInstances: 2
+  concurrency: 80
