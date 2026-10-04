@@ -112,10 +112,10 @@ export default function LibraryPage() {
           </section>
 
           <section className={`${styles.authoringCard} glass`}>
-            <span className="eyebrow"><Sparkles size={14} /> AI-native authoring</span>
-            <h2>La IA propone. El experto publica.</h2>
-            <p>Objetivos, capítulos, conceptos, ejercicios y relaciones se generan como borradores con fuente. Cada publicación conserva procedencia y revisión experta.</p>
-            <div><span><Check size={14} /> 18 conceptos aprobados</span><span>6 pendientes de revisión</span></div>
+            <span className="eyebrow"><Sparkles size={14} /> Inteligencia de aprendizaje</span>
+            <h2>De contenido experto a inteligencia de aprendizaje.</h2>
+            <p>Cada concepto conserva su fuente, contexto y criterio de calidad para convertirse en experiencias de aprendizaje precisas.</p>
+            <div><span><Check size={14} /> Revisión experta</span><span>Procedencia preservada · cambios trazables</span></div>
           </section>
         </aside>
       </div>

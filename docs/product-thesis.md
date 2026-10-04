@@ -131,3 +131,48 @@ Learning and commerce are separate bounded contexts. LUMA can support subscripti
 The observation that small niche apps can compound into meaningful recurring revenue is captured as a **later product-studio strategy**, not mixed into the current LUMA scope. LUMA's reusable Learning Twin, content ingestion, grounded tutor, and analytics capabilities can later power focused vertical learning products with simpler positioning and independent monetization.
 
 See `docs/strategy/niche-learning-app-portfolio.md`.
+
+## Surface value vs. product moat
+
+LUMA does not lead client-facing experiences by explaining its internal AI operating model.
+
+### Coachee surface
+
+The person should experience:
+
+- a relevant next action;
+- visible progress;
+- a journey that adapts;
+- contextual help.
+
+### Coach surface
+
+The coach may inspect:
+
+- Learning Twin;
+- evidence;
+- bounded inference;
+- confidence;
+- provenance;
+- intervention context.
+
+### Buyer surface
+
+The commercial transformation is:
+
+> LUMA convierte conocimiento experto en aprendizaje individualizado y medible.
+
+### Internal moat
+
+The underlying mechanisms can include:
+
+- Learning Twin;
+- knowledge graph;
+- grounded retrieval;
+- curriculum reflection;
+- evidence ledger;
+- human governance.
+
+These mechanisms support the product promise; they are not the primary headline.
+
+See `docs/product-messaging-boundaries.md` and `docs/design/source-guided-premium-system.md`.

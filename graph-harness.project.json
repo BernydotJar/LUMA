@@ -344,6 +344,106 @@
         "apphosting.yaml",
         "firebase.json"
       ]
+    },
+    {
+      "id": "LUMA-013-premium-adult-intelligence",
+      "kind": "product-surface",
+      "title": "Premium adult intelligence and source-guided product messaging",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-012-role-separated-showcase-release"
+      ],
+      "capability": "premium-adult-experience",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/011-premium-adult-intelligence.md",
+        "docs/design/source-guided-premium-system.md",
+        "docs/product-messaging-boundaries.md",
+        "src/app/layout.tsx",
+        "src/app/library/**",
+        "src/components/**",
+        "src/lib/experience-themes.ts",
+        "e2e/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-014-semantic-3d-system",
+      "kind": "product-surface",
+      "title": "Premium semantic 3D system for practice, progress, coach insight, and human intervention",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-013-premium-adult-intelligence"
+      ],
+      "capability": "semantic-visual-language",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "docs/design/source-guided-premium-system.md",
+        "src/components/semantic-object*",
+        "src/components/learning-pulse*",
+        "src/components/next-action-card*",
+        "src/components/studio-dashboard*",
+        "src/lib/experience-themes.ts",
+        "e2e/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-015-voice-modality-evaluation",
+      "kind": "product-research",
+      "title": "Voice as a pedagogical modality, provider-neutral evaluation",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-014-semantic-3d-system"
+      ],
+      "capability": "voice-learning-modality",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "docs/design/voice-modality-evaluation.md",
+        "specs/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-016-premium-showcase-release",
+      "kind": "release",
+      "title": "Premium adult intelligence client-showcase release",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-013-premium-adult-intelligence",
+        "LUMA-014-semantic-3d-system",
+        "LUMA-015-voice-modality-evaluation"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "e2e/**",
+        "evidence/**",
+        "scripts/**",
+        "firebase.json",
+        "apphosting.yaml"
+      ]
     }
   ]
 }

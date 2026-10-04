@@ -276,7 +276,7 @@
       "height": 1000
     },
     "documentWidth": 1440,
-    "documentHeight": 2250,
+    "documentHeight": 2318,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
@@ -601,7 +601,7 @@
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 4114,
+    "documentHeight": 4132,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
@@ -620,7 +620,7 @@
         "text": "Ayúdame a identificar un P.A.S.",
         "rect": {
           "x": 31,
-          "y": 3771,
+          "y": 3789,
           "width": 174,
           "height": 27
         }
@@ -630,7 +630,7 @@
         "text": "¿Por qué me recomiendas esta práctica?",
         "rect": {
           "x": 211,
-          "y": 3771,
+          "y": 3789,
           "width": 220,
           "height": 27
         }
@@ -640,7 +640,7 @@
         "text": "Dame un ejemplo de niveles lógicos",
         "rect": {
           "x": 437,
-          "y": 3771,
+          "y": 3789,
           "width": 199,
           "height": 27
         }
@@ -650,7 +650,7 @@
         "text": "",
         "rect": {
           "x": 48,
-          "y": 3825,
+          "y": 3843,
           "width": 264,
           "height": 16
         }
@@ -668,7 +668,7 @@
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 4114,
+    "documentHeight": 4132,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
@@ -687,7 +687,7 @@
         "text": "Ayúdame a identificar un P.A.S.",
         "rect": {
           "x": 31,
-          "y": 3771,
+          "y": 3789,
           "width": 174,
           "height": 27
         }
@@ -697,7 +697,7 @@
         "text": "¿Por qué me recomiendas esta práctica?",
         "rect": {
           "x": 211,
-          "y": 3771,
+          "y": 3789,
           "width": 220,
           "height": 27
         }
@@ -707,7 +707,7 @@
         "text": "Dame un ejemplo de niveles lógicos",
         "rect": {
           "x": 437,
-          "y": 3771,
+          "y": 3789,
           "width": 199,
           "height": 27
         }
@@ -717,7 +717,7 @@
         "text": "",
         "rect": {
           "x": 48,
-          "y": 3825,
+          "y": 3843,
           "width": 264,
           "height": 16
         }
@@ -869,7 +869,7 @@
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 3965,
+    "documentHeight": 4022,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
@@ -896,7 +896,7 @@
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 3785,
+    "documentHeight": 3897,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
@@ -935,7 +935,7 @@
         "text": "Abrir",
         "rect": {
           "x": 46,
-          "y": 3152,
+          "y": 3264,
           "width": 67,
           "height": 34
         }
@@ -945,7 +945,7 @@
         "text": "Asignar",
         "rect": {
           "x": 46,
-          "y": 3249,
+          "y": 3361,
           "width": 55,
           "height": 34
         }
@@ -955,7 +955,7 @@
         "text": "Asignar",
         "rect": {
           "x": 46,
-          "y": 3346,
+          "y": 3458,
           "width": 55,
           "height": 34
         }
@@ -965,7 +965,7 @@
         "text": "Asignar",
         "rect": {
           "x": 46,
-          "y": 3443,
+          "y": 3555,
           "width": 55,
           "height": 34
         }
@@ -975,7 +975,7 @@
         "text": "Asignar",
         "rect": {
           "x": 46,
-          "y": 3540,
+          "y": 3652,
           "width": 55,
           "height": 34
         }
@@ -985,7 +985,7 @@
         "text": "Abrir Learning Twin de Mariana",
         "rect": {
           "x": 31,
-          "y": 3638,
+          "y": 3750,
           "width": 193,
           "height": 15
         }

@@ -1,0 +1,36 @@
+
+> luma-learning-intelligence@0.1.0 test:e2e
+> playwright test
+
+
+Running 26 tests using 6 workers
+
+  ✓   4 [chromium] › e2e/showcase.spec.ts:38:3 › LUMA product showcase › coachee navigation keeps internal intelligence out of the learning surface (1.5s)
+  ✓   2 [chromium] › e2e/showcase.spec.ts:56:3 › LUMA product showcase › coach view exposes proprietary Learning Twin evidence (1.6s)
+  ✓   3 [chromium] › e2e/showcase.spec.ts:10:3 › LUMA product showcase › showcase root enters the learner product immediately (1.9s)
+  ✓   1 [chromium] › e2e/showcase.spec.ts:64:3 › LUMA product showcase › learner can inspect recommendation and ask the grounded tutor (2.0s)
+  ✓   5 [chromium] › e2e/showcase.spec.ts:50:3 › LUMA product showcase › legacy Twin route opens the coach intelligence view (2.0s)
+  ✓   6 [chromium] › e2e/showcase.spec.ts:17:3 › LUMA product showcase › onboarding calibrates a learner and enters the journey (2.5s)
+  ✓   8 [chromium] › e2e/showcase.spec.ts:87:3 › LUMA product showcase › curriculum reflection creates a reviewable artifact without updating learner state (1.3s)
+  ✓  11 [chromium] › e2e/showcase.spec.ts:131:3 › LUMA product showcase › Content Intelligence leads with transformation, not the AI operating model (1.2s)
+  ✓   7 [chromium] › e2e/showcase.spec.ts:75:3 › LUMA product showcase › tutor blocks unsupported high-stakes course claims (2.2s)
+  ✓  10 [chromium] › e2e/showcase.spec.ts:121:3 › LUMA product showcase › premium semantic objects appear in the intended product moments (2.0s)
+  ✓   9 [chromium] › e2e/showcase.spec.ts:105:3 › LUMA product showcase › practice produces a real evidence receipt (2.1s)
+  ✓  12 [chromium] › e2e/showcase.spec.ts:142:3 › LUMA product showcase › studio lets an instructor assign human intervention (1.6s)
+  ✓  16 [mobile] › e2e/showcase.spec.ts:38:3 › LUMA product showcase › coachee navigation keeps internal intelligence out of the learning surface (1.8s)
+  ✓  18 [mobile] › e2e/showcase.spec.ts:56:3 › LUMA product showcase › coach view exposes proprietary Learning Twin evidence (2.0s)
+  ✓  17 [mobile] › e2e/showcase.spec.ts:50:3 › LUMA product showcase › legacy Twin route opens the coach intelligence view (2.2s)
+  ✓  15 [mobile] › e2e/showcase.spec.ts:10:3 › LUMA product showcase › showcase root enters the learner product immediately (2.5s)
+  ✓  14 [mobile] › e2e/showcase.spec.ts:17:3 › LUMA product showcase › onboarding calibrates a learner and enters the journey (3.1s)
+  ✓  22 [mobile] › e2e/showcase.spec.ts:87:3 › LUMA product showcase › curriculum reflection creates a reviewable artifact without updating learner state (1.9s)
+  ✓  21 [mobile] › e2e/showcase.spec.ts:105:3 › LUMA product showcase › practice produces a real evidence receipt (2.1s)
+  ✓  23 [mobile] › e2e/showcase.spec.ts:121:3 › LUMA product showcase › premium semantic objects appear in the intended product moments (1.9s)
+  -  26 [mobile] › e2e/showcase.spec.ts:150:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks
+  ✓  24 [mobile] › e2e/showcase.spec.ts:131:3 › LUMA product showcase › Content Intelligence leads with transformation, not the AI operating model (1.2s)
+  ✓  19 [mobile] › e2e/showcase.spec.ts:64:3 › LUMA product showcase › learner can inspect recommendation and ask the grounded tutor (3.8s)
+  ✓  25 [mobile] › e2e/showcase.spec.ts:142:3 › LUMA product showcase › studio lets an instructor assign human intervention (1.7s)
+  ✓  20 [mobile] › e2e/showcase.spec.ts:75:3 › LUMA product showcase › tutor blocks unsupported high-stakes course claims (3.9s)
+  ✓  13 [chromium] › e2e/showcase.spec.ts:150:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks (9.8s)
+
+  1 skipped
+  25 passed (14.6s)

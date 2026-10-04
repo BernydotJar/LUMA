@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     template: "%s · LUMA",
   },
   description:
-    "LUMA convierte contenido educativo en una experiencia adaptativa guiada por un Learning Twin explicable.",
+    "LUMA convierte conocimiento experto en aprendizaje individualizado y medible.",
   applicationName: "LUMA",
   category: "education",
   icons: {

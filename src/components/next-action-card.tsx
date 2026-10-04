@@ -8,10 +8,10 @@ import {
   Check,
   ChevronDown,
   ExternalLink,
-  Play,
   Sparkles,
   Timer,
 } from "lucide-react";
+import { SemanticObject } from "@/components/semantic-object";
 import type { RankedLearningAction } from "@/types/learning";
 import styles from "./learner-components.module.css";
 
@@ -30,8 +30,8 @@ export function NextActionCard({ action }: { action: RankedLearningAction }) {
       </div>
 
       <div className={styles.nextActionContent}>
-        <span className={styles.actionIcon} aria-hidden="true">
-          <span className={styles.actionIconCore}><Play size={25} fill="currentColor" /></span>
+        <span className={styles.actionObject} aria-hidden="true">
+          <SemanticObject variant="prism" size="md" />
         </span>
         <div>
           <p className={styles.kicker}>Práctica guiada · aplicación real</p>

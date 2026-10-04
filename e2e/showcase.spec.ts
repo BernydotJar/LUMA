@@ -116,6 +116,29 @@ test.describe("LUMA product showcase", () => {
     expect(event).toContain("SIMULATION_COMPLETED");
   });
 
+
+
+  test("premium semantic objects appear in the intended product moments", async ({ page }) => {
+    await page.goto("/learn");
+    await expect(page.locator('[data-variant="prism"]').first()).toBeVisible();
+    await expect(page.locator('[data-variant="orbit"]').first()).toBeVisible();
+
+    await page.goto("/studio");
+    await expect(page.locator('[data-variant="strata"]').first()).toBeVisible();
+    await expect(page.locator('[data-variant="bridge"]').first()).toBeVisible();
+  });
+
+  test("Content Intelligence leads with transformation, not the AI operating model", async ({ page }) => {
+    await page.goto("/library");
+    await expect(
+      page.getByRole("heading", { name: /De contenido experto a inteligencia de aprendizaje/i }),
+    ).toBeVisible();
+    await expect(page.getByText(/La IA propone. El experto publica/i)).toHaveCount(0);
+    await expect(page.getByText(/AI-native authoring/i)).toHaveCount(0);
+    await expect(page.getByText(/Revisión experta/i)).toBeVisible();
+    await expect(page.getByText(/Procedencia preservada/i)).toBeVisible();
+  });
+
   test("studio lets an instructor assign human intervention", async ({ page }) => {
     await page.goto("/studio");
     await expect(page.getByRole("heading", { name: /Coach Studio/i })).toBeVisible();

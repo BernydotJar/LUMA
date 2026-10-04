@@ -1,4 +1,5 @@
 import { Check, Sparkles, TrendingUp } from "lucide-react";
+import { SemanticObject } from "@/components/semantic-object";
 import type { TwinDimension } from "@/types/learning";
 import styles from "./learning-pulse.module.css";
 
@@ -24,12 +25,11 @@ export function LearningPulse({ dimensions }: { dimensions: TwinDimension[] }) {
       </header>
 
       <div className={styles.stage} aria-hidden="true">
-        <div className={styles.sun}>
-          <span className={styles.sunCore}><Sparkles size={30} /></span>
-          <span className={styles.orbitOne} />
-          <span className={styles.orbitTwo} />
-          <span className={styles.orbitThree} />
-        </div>
+        <SemanticObject
+          variant="orbit"
+          size="lg"
+          className={styles.progressObject}
+        />
         {focus.map((item, index) => {
           const signal = signalLabel[item.id];
           return (

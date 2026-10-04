@@ -731,3 +731,57 @@
 .openTwin:hover {
   background: rgba(239,200,106,.13);
 }
+
+
+.insightPanel {
+  position: relative;
+  overflow: hidden;
+  padding-right: 94px;
+}
+
+.insightObject {
+  position: absolute;
+  right: 16px;
+  top: 12px;
+  opacity: .88;
+}
+
+.interventionQueue {
+  position: relative;
+  overflow: hidden;
+}
+
+.interventionQueue > .cardHeading {
+  padding-right: 82px;
+}
+
+.interventionObject {
+  position: absolute;
+  right: 22px;
+  top: 17px;
+  opacity: .76;
+}
+
+@media (max-width: 760px) {
+  .insightPanel {
+    padding-right: 22px;
+    padding-top: 94px;
+  }
+
+  .insightObject {
+    left: 18px;
+    right: auto;
+    top: 18px;
+  }
+
+  .interventionQueue > .cardHeading {
+    padding-right: 0;
+    padding-top: 68px;
+  }
+
+  .interventionObject {
+    left: 24px;
+    right: auto;
+    top: 18px;
+  }
+}

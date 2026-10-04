@@ -20,6 +20,7 @@ import {
   Users,
 } from "lucide-react";
 import { studioSignals } from "@/lib/luma-data";
+import { SemanticObject } from "@/components/semantic-object";
 import styles from "./studio-dashboard.module.css";
 
 const bottlenecks = [
@@ -109,6 +110,7 @@ export function StudioDashboard() {
               ))}
             </div>
             <div className={styles.insightPanel} data-severity={selected.severity}>
+              <SemanticObject variant="strata" size="sm" className={styles.insightObject} />
               <span><Sparkles size={17} /> Lectura de LUMA</span>
               <h3>{selected.label}</h3>
               <p>{selected.insight}</p>
@@ -147,6 +149,7 @@ export function StudioDashboard() {
       </div>
 
       <section className={`${styles.interventionQueue} glass`}>
+        <SemanticObject variant="bridge" size="sm" className={styles.interventionObject} />
         <div className={styles.cardHeading}>
           <div><span className="eyebrow"><CircleUserRound size={14} /> Coach-in-the-loop</span><h2>Coachees con oportunidad de acompañamiento</h2></div>
           <span>7 activas · 5 mostradas</span>

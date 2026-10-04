@@ -1034,3 +1034,29 @@
   .nextAction h2 { font-size: clamp(2.8rem, 14vw, 4.3rem); }
   .explanationFooter { align-items: flex-start; flex-direction: column; }
 }
+
+
+.actionObject {
+  width: 108px;
+  min-height: 108px;
+  border: 1px solid rgba(91,55,39,.08);
+  border-radius: 34px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 26% 18%, rgba(255,255,255,.82), transparent 22%),
+    linear-gradient(145deg, rgba(255,255,255,.45), rgba(232,214,182,.18));
+  box-shadow:
+    0 22px 46px rgba(92,48,31,.10),
+    inset 0 1px 0 rgba(255,255,255,.8);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+@media (max-width: 760px) {
+  .actionObject {
+    width: 94px;
+    min-height: 94px;
+    border-radius: 29px;
+  }
+}
