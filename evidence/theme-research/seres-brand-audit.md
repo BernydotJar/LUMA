@@ -18,11 +18,10 @@ Frequently observed institutional colors:
 
 ## Logo extraction
 
-- source: `public/brand/seres-de-excelencia/logo-source.png`;
-- optimized: `public/brand/seres-de-excelencia/logo.png`;
-- source size: 672 × 160;
-- source SHA-256: `4a1d40693b3bb8315c4a9ad9b4f548edf5e12f7916cfb82067194d2496de39e0`;
-- optimized SHA-256: `a574595c38c3932f3bac9f9a6b1f2c774cc668c58e3cac4f10f1b3f34b552c60`.
+- official public source: `https://seresdeexcelencia.com/wp-content/uploads/2021/05/Recurso-1ic_.png`;
+- optimized product asset: `public/brand/seres-de-excelencia/logo.png`;
+- optimized display width: 420 px;
+- optimized SHA-256 is recorded by the release evidence step.
 
 ## Product interpretation
 
