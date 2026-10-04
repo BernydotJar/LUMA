@@ -21,6 +21,7 @@ for (const viewport of viewports) {
         const style = getComputedStyle(el);
         const rect = el.getBoundingClientRect();
         if (el.classList.contains("sr-only")) return false;
+        if (el.closest('[aria-hidden="true"]')) return false;
         return style.display !== "none" && style.visibility !== "hidden" && Number(style.opacity) > 0 && rect.width > 0 && rect.height > 0;
       };
       const describe = (el) => ({
@@ -37,6 +38,8 @@ for (const viewport of viewports) {
           const r = el.getBoundingClientRect();
           const style = getComputedStyle(el);
           if (style.position === "fixed" && (r.right <= 0 || r.left >= vw)) return false;
+          const scrollParent = el.parentElement && getComputedStyle(el.parentElement);
+          if (scrollParent && ["auto", "scroll"].includes(scrollParent.overflowX)) return false;
           return r.left < -3 || r.right > vw + 3;
         })
         .slice(0, 20)

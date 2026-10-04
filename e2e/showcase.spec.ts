@@ -7,13 +7,11 @@ async function expectNoA11yViolations(page: Page) {
 }
 
 test.describe("LUMA product showcase", () => {
-  test("marketing experience leads into the real product", async ({ page }) => {
+  test("showcase root enters the learner product immediately", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { name: /Tu curso no debería decidir/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Construir mi Learning Twin/i })).toBeVisible();
-    await page.getByRole("link", { name: /Ver experiencia de cliente/i }).click();
     await expect(page).toHaveURL(/\/learn$/);
-    await expect(page.getByRole("heading", { name: /Buenas noches, Mariana/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Hoy no necesitas otra lección/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Continuar · 12 min/i })).toBeVisible();
   });
 
   test("onboarding calibrates a learner and enters the journey", async ({ page }) => {
@@ -37,9 +35,9 @@ test.describe("LUMA product showcase", () => {
 
   test("learner can inspect recommendation and ask the grounded tutor", async ({ page }) => {
     await page.goto("/learn");
-    await page.getByRole("button", { name: /¿Por qué esto/i }).click();
-    await expect(page.getByText(/Dos intentos fallidos seguidos/i)).toBeVisible();
-    await page.getByLabel("Pregunta al Tutor LUMA").fill("¿Qué es un P.A.S.?");
+    await page.getByRole("button", { name: /¿Por qué cambió mi ruta/i }).click();
+    await expect(page.getByText(/Lo que LUMA observó/i)).toBeVisible();
+    await page.getByRole("textbox", { name: "Pregunta a LUMA" }).fill("¿Qué es un P.A.S.?");
     await page.getByRole("button", { name: "Enviar pregunta" }).click();
     await expect(page.getByText(/pensamiento automático saboteador/i)).toBeVisible();
     await expect(page.getByText(/Módulo 3 · sección Comunicación emocional/i)).toBeVisible();
@@ -49,7 +47,7 @@ test.describe("LUMA product showcase", () => {
   test("tutor blocks unsupported high-stakes course claims", async ({ page }) => {
     await page.goto("/learn");
     await page
-      .getByLabel("Pregunta al Tutor LUMA")
+      .getByRole("textbox", { name: "Pregunta a LUMA" })
       .fill("¿Las emociones enferman un órgano como el riñón?");
     await page.getByRole("button", { name: "Enviar pregunta" }).click();
     await expect(

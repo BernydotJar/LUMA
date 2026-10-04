@@ -21,9 +21,9 @@ import styles from "./app-shell.module.css";
 
 const learnerNavigation = [
   { href: "/learn", label: "Hoy", icon: Home },
-  { href: "/twin", label: "Mi Learning Twin", icon: BrainCircuit },
-  { href: "/library", label: "Contenido", icon: BookOpen },
-  { href: "/learn#journey", label: "Mi ruta", icon: Compass },
+  { href: "/learn#journey", label: "Journey", icon: Compass },
+  { href: "/twin", label: "Twin", icon: BrainCircuit },
+  { href: "/library", label: "Biblioteca", icon: BookOpen },
 ];
 
 const studioNavigation = [
@@ -50,18 +50,22 @@ export function AppShell({
   const navigation = mode === "studio" ? studioNavigation : learnerNavigation;
 
   return (
-    <div className={styles.shell}>
+    <div className={styles.shell} data-mode={mode}>
       <div className="page-noise" />
       <aside className={`${styles.sidebar} glass`}>
         <BrandMark />
         <div className={styles.workspaceLabel}>
-          <span>{mode === "studio" ? "Espacio instructor" : "Mi espacio"}</span>
-          <strong>{mode === "studio" ? "Practitioner 2026" : "Mariana"}</strong>
+          <span>{mode === "studio" ? "Espacio instructor" : "Journey activo"}</span>
+          <strong>{mode === "studio" ? "Practitioner 2026" : "Practitioner · Poder"}</strong>
         </div>
         <nav className={styles.navigation} aria-label={mode === "studio" ? "Navegación del instructor" : "Navegación de aprendizaje"}>
           {navigation.map(({ href, label, icon: Icon }) => {
             const pathOnly = href.split("#")[0];
-            const active = pathname === pathOnly || (pathOnly !== "/learn" && pathname.startsWith(pathOnly));
+            const hasHash = href.includes("#");
+            const active =
+              !hasHash &&
+              (pathname === pathOnly ||
+                (pathOnly !== "/learn" && pathname.startsWith(pathOnly)));
             return (
               <Link href={href} key={href} className={active ? styles.activeNav : undefined}>
                 <Icon size={19} strokeWidth={1.8} />
@@ -72,8 +76,8 @@ export function AppShell({
           })}
         </nav>
         <div className={styles.sidebarBottom}>
-          <Link href="/onboarding"><HelpCircle size={18} /> Recalibrar mi Twin</Link>
-          <Link href="/"><LogOut size={18} /> Salir del showcase</Link>
+          <Link href="/onboarding"><HelpCircle size={18} /> Recalibrar</Link>
+          <Link href="/"><LogOut size={18} /> Cambiar experiencia</Link>
         </div>
       </aside>
 
@@ -108,7 +112,11 @@ export function AppShell({
       <nav className={`${styles.mobileNav} glass`} aria-label="Navegación móvil">
         {navigation.slice(0, 4).map(({ href, label, icon: Icon }) => {
           const pathOnly = href.split("#")[0];
-          const active = pathname === pathOnly || (pathOnly !== "/learn" && pathname.startsWith(pathOnly));
+          const hasHash = href.includes("#");
+          const active =
+            !hasHash &&
+            (pathname === pathOnly ||
+              (pathOnly !== "/learn" && pathname.startsWith(pathOnly)));
           return (
             <Link href={href} key={href} className={active ? styles.mobileActive : undefined}>
               <Icon size={20} />

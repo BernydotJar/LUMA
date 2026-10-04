@@ -8,7 +8,7 @@
       "height": 1000
     },
     "documentWidth": 1440,
-    "documentHeight": 3752,
+    "documentHeight": 2610,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
@@ -16,50 +16,60 @@
         "tag": "a",
         "text": "LUMA inicio",
         "rect": {
-          "x": 100,
-          "y": 27,
+          "x": 33,
+          "y": 40,
           "width": 183,
           "height": 38
         }
       },
       {
         "tag": "a",
-        "text": "Producto",
+        "text": "Abrir Learning Twin",
         "rect": {
-          "x": 566,
-          "y": 39,
-          "width": 69,
-          "height": 15
+          "x": 1320,
+          "y": 908,
+          "width": 39,
+          "height": 39
         }
       },
       {
-        "tag": "a",
-        "text": "Learning Twin",
+        "tag": "button",
+        "text": "Ayúdame a identificar un P.A.S.",
         "rect": {
-          "x": 664,
-          "y": 39,
-          "width": 106,
-          "height": 15
+          "x": 699,
+          "y": 2059,
+          "width": 174,
+          "height": 27
         }
       },
       {
-        "tag": "a",
-        "text": "Confianza",
+        "tag": "button",
+        "text": "¿Por qué me recomiendas esta práctica?",
         "rect": {
-          "x": 800,
-          "y": 39,
-          "width": 75,
-          "height": 15
+          "x": 879,
+          "y": 2059,
+          "width": 220,
+          "height": 27
         }
       },
       {
-        "tag": "a",
-        "text": "LUMA inicio",
+        "tag": "button",
+        "text": "Dame un ejemplo de niveles lógicos",
         "rect": {
-          "x": 100,
-          "y": 3649,
-          "width": 183,
-          "height": 38
+          "x": 1105,
+          "y": 2059,
+          "width": 199,
+          "height": 27
+        }
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "rect": {
+          "x": 716,
+          "y": 2113,
+          "width": 593,
+          "height": 16
         }
       }
     ],
@@ -75,7 +85,7 @@
       "height": 1000
     },
     "documentWidth": 1440,
-    "documentHeight": 1627,
+    "documentHeight": 2610,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
@@ -84,37 +94,27 @@
         "text": "LUMA inicio",
         "rect": {
           "x": 33,
-          "y": 39,
+          "y": 40,
           "width": 183,
           "height": 38
         }
       },
       {
         "tag": "a",
-        "text": "Ajustar",
+        "text": "Abrir Learning Twin",
         "rect": {
-          "x": 1301,
-          "y": 137,
-          "width": 62,
-          "height": 13
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir mi Twin y su evidencia",
-        "rect": {
-          "x": 1055,
-          "y": 758,
-          "width": 300,
-          "height": 34
+          "x": 1320,
+          "y": 908,
+          "width": 39,
+          "height": 39
         }
       },
       {
         "tag": "button",
         "text": "Ayúdame a identificar un P.A.S.",
         "rect": {
-          "x": 768,
-          "y": 1313,
+          "x": 699,
+          "y": 2059,
           "width": 174,
           "height": 27
         }
@@ -123,8 +123,8 @@
         "tag": "button",
         "text": "¿Por qué me recomiendas esta práctica?",
         "rect": {
-          "x": 948,
-          "y": 1313,
+          "x": 879,
+          "y": 2059,
           "width": 220,
           "height": 27
         }
@@ -133,8 +133,8 @@
         "tag": "button",
         "text": "Dame un ejemplo de niveles lógicos",
         "rect": {
-          "x": 1174,
-          "y": 1313,
+          "x": 1105,
+          "y": 2059,
           "width": 199,
           "height": 27
         }
@@ -143,9 +143,9 @@
         "tag": "input",
         "text": "",
         "rect": {
-          "x": 785,
-          "y": 1366,
-          "width": 523,
+          "x": 716,
+          "y": 2113,
+          "width": 593,
           "height": 16
         }
       }
@@ -162,7 +162,7 @@
       "height": 1000
     },
     "documentWidth": 1440,
-    "documentHeight": 1775,
+    "documentHeight": 1759,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
@@ -171,7 +171,7 @@
         "text": "LUMA inicio",
         "rect": {
           "x": 33,
-          "y": 39,
+          "y": 40,
           "width": 183,
           "height": 38
         }
@@ -180,8 +180,8 @@
         "tag": "button",
         "text": "Todo",
         "rect": {
-          "x": 310,
-          "y": 977,
+          "x": 284,
+          "y": 961,
           "width": 52,
           "height": 30
         }
@@ -190,8 +190,8 @@
         "tag": "button",
         "text": "Observado",
         "rect": {
-          "x": 369,
-          "y": 977,
+          "x": 343,
+          "y": 961,
           "width": 88,
           "height": 30
         }
@@ -200,8 +200,8 @@
         "tag": "button",
         "text": "Inferido",
         "rect": {
-          "x": 464,
-          "y": 977,
+          "x": 438,
+          "y": 961,
           "width": 71,
           "height": 30
         }
@@ -210,8 +210,8 @@
         "tag": "button",
         "text": "Auto-reportado",
         "rect": {
-          "x": 542,
-          "y": 977,
+          "x": 516,
+          "y": 961,
           "width": 116,
           "height": 30
         }
@@ -229,7 +229,7 @@
       "height": 1000
     },
     "documentWidth": 1440,
-    "documentHeight": 2225,
+    "documentHeight": 2209,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
@@ -238,7 +238,7 @@
         "text": "LUMA inicio",
         "rect": {
           "x": 33,
-          "y": 39,
+          "y": 40,
           "width": 183,
           "height": 38
         }
@@ -544,39 +544,68 @@
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 5208,
+    "documentHeight": 4239,
     "horizontalOverflow": 0,
-    "outOfBounds": [
-      {
-        "tag": "div",
-        "text": "",
-        "rect": {
-          "x": -5,
-          "y": 809,
-          "width": 401,
-          "height": 401
-        }
-      }
-    ],
+    "outOfBounds": [],
     "smallTargets": [
       {
         "tag": "a",
         "text": "LUMA inicio",
         "rect": {
-          "x": 12,
-          "y": 19,
-          "width": 108,
+          "x": 14,
+          "y": 28,
+          "width": 38,
           "height": 38
         }
       },
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "Abrir Learning Twin",
         "rect": {
-          "x": 12,
-          "y": 5048,
-          "width": 108,
-          "height": 38
+          "x": 320,
+          "y": 1844,
+          "width": 39,
+          "height": 39
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Ayúdame a identificar un P.A.S.",
+        "rect": {
+          "x": 31,
+          "y": 3896,
+          "width": 174,
+          "height": 27
+        }
+      },
+      {
+        "tag": "button",
+        "text": "¿Por qué me recomiendas esta práctica?",
+        "rect": {
+          "x": 211,
+          "y": 3896,
+          "width": 220,
+          "height": 27
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Dame un ejemplo de niveles lógicos",
+        "rect": {
+          "x": 437,
+          "y": 3896,
+          "width": 199,
+          "height": 27
+        }
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "rect": {
+          "x": 48,
+          "y": 3950,
+          "width": 264,
+          "height": 16
         }
       }
     ],
@@ -592,69 +621,28 @@
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 3222,
+    "documentHeight": 4239,
     "horizontalOverflow": 0,
-    "outOfBounds": [
-      {
-        "tag": "div",
-        "text": "",
-        "rect": {
-          "x": 237,
-          "y": 462,
-          "width": 220,
-          "height": 220
-        }
-      },
-      {
-        "tag": "button",
-        "text": "¿Por qué me recomiendas esta práctica?",
-        "rect": {
-          "x": 211,
-          "y": 2954,
-          "width": 220,
-          "height": 27
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Dame un ejemplo de niveles lógicos",
-        "rect": {
-          "x": 437,
-          "y": 2954,
-          "width": 199,
-          "height": 27
-        }
-      }
-    ],
+    "outOfBounds": [],
     "smallTargets": [
       {
         "tag": "a",
         "text": "LUMA inicio",
         "rect": {
           "x": 14,
-          "y": 22,
+          "y": 28,
           "width": 38,
           "height": 38
         }
       },
       {
         "tag": "a",
-        "text": "Ajustar",
+        "text": "Abrir Learning Twin",
         "rect": {
-          "x": 89,
-          "y": 181,
-          "width": 62,
-          "height": 13
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir mi Twin y su evidencia",
-        "rect": {
-          "x": 31,
-          "y": 1759,
-          "width": 328,
-          "height": 34
+          "x": 320,
+          "y": 1844,
+          "width": 39,
+          "height": 39
         }
       },
       {
@@ -662,7 +650,7 @@
         "text": "Ayúdame a identificar un P.A.S.",
         "rect": {
           "x": 31,
-          "y": 2954,
+          "y": 3896,
           "width": 174,
           "height": 27
         }
@@ -672,7 +660,7 @@
         "text": "¿Por qué me recomiendas esta práctica?",
         "rect": {
           "x": 211,
-          "y": 2954,
+          "y": 3896,
           "width": 220,
           "height": 27
         }
@@ -682,7 +670,7 @@
         "text": "Dame un ejemplo de niveles lógicos",
         "rect": {
           "x": 437,
-          "y": 2954,
+          "y": 3896,
           "width": 199,
           "height": 27
         }
@@ -692,7 +680,7 @@
         "text": "",
         "rect": {
           "x": 48,
-          "y": 3008,
+          "y": 3950,
           "width": 264,
           "height": 16
         }
@@ -710,7 +698,7 @@
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 2979,
+    "documentHeight": 2981,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
@@ -719,7 +707,7 @@
         "text": "LUMA inicio",
         "rect": {
           "x": 14,
-          "y": 22,
+          "y": 28,
           "width": 38,
           "height": 38
         }
@@ -729,7 +717,7 @@
         "text": "Todo",
         "rect": {
           "x": 31,
-          "y": 1482,
+          "y": 1484,
           "width": 52,
           "height": 30
         }
@@ -739,7 +727,7 @@
         "text": "Observado",
         "rect": {
           "x": 90,
-          "y": 1482,
+          "y": 1484,
           "width": 88,
           "height": 30
         }
@@ -749,7 +737,7 @@
         "text": "Inferido",
         "rect": {
           "x": 185,
-          "y": 1482,
+          "y": 1484,
           "width": 71,
           "height": 30
         }
@@ -759,7 +747,7 @@
         "text": "Auto-reportado",
         "rect": {
           "x": 263,
-          "y": 1482,
+          "y": 1484,
           "width": 116,
           "height": 30
         }
@@ -777,7 +765,7 @@
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 3839,
+    "documentHeight": 3841,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
@@ -786,7 +774,7 @@
         "text": "LUMA inicio",
         "rect": {
           "x": 14,
-          "y": 22,
+          "y": 28,
           "width": 38,
           "height": 38
         }
@@ -1026,7 +1014,7 @@
         "tag": "a",
         "text": "LUMA inicio",
         "rect": {
-          "x": 10,
+          "x": 12,
           "y": 19,
           "width": 183,
           "height": 38
@@ -1036,7 +1024,7 @@
         "tag": "button",
         "text": "Usar perfil de showcase",
         "rect": {
-          "x": 234,
+          "x": 232,
           "y": 32,
           "width": 146,
           "height": 13

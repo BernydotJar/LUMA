@@ -43,7 +43,7 @@ export function TutorPanel() {
     {
       role: "tutor",
       content:
-        "Estoy dentro de tu contexto de aprendizaje. Puedo explicar, hacerte una pregunta, buscar el segmento exacto o proponerte práctica. ¿Qué te está costando?",
+        "Estoy contigo en esta parte del journey. Puedo explicarlo distinto, darte un ejemplo, probarte o llevarte al momento exacto del material. ¿Qué necesitas?",
     },
   ]);
 
@@ -109,12 +109,12 @@ export function TutorPanel() {
         <div className={styles.tutorIdentity}>
           <span><Bot size={20} /></span>
           <div>
-            <h2 id="tutor-title">Tutor LUMA</h2>
-            <p>Curso + Twin + Curriculum Reflection</p>
+            <h2 id="tutor-title">Pregunta a LUMA</h2>
+            <p>Tu contexto de aprendizaje, aquí mismo</p>
           </div>
         </div>
         <span className="status-pill" data-tone="positive">
-          <span className={styles.liveDot} /> En contexto
+          <span className={styles.liveDot} /> Lista
         </span>
       </div>
       <div className={styles.chat} aria-live="polite">
@@ -169,7 +169,7 @@ export function TutorPanel() {
         {loading && (
           <div className={styles.typing}>
             <LoaderCircle size={15} className={styles.spin} />
-            Buscando en el curso, el Twin y reflexiones aprobadas…
+            Buscando la mejor ayuda para este momento…
           </div>
         )}
       </div>
@@ -186,13 +186,13 @@ export function TutorPanel() {
       </div>
       <form className={styles.tutorComposer} onSubmit={submit}>
         <label className="sr-only" htmlFor="tutor-message">
-          Pregunta al Tutor LUMA
+          Pregunta a LUMA
         </label>
         <input
           id="tutor-message"
           value={message}
           onChange={(event) => setMessage(event.target.value)}
-          placeholder="Pregúntame sobre lo que estás aprendiendo…"
+          placeholder="Explícamelo distinto, ponme a prueba…"
           autoComplete="off"
         />
         <button
@@ -204,7 +204,7 @@ export function TutorPanel() {
         </button>
       </form>
       <p className={styles.tutorDisclaimer}>
-        LUMA puede equivocarse. Las fuentes, reflexiones y claims bloqueados se muestran por separado; ninguna respuesta modifica directamente tu Twin.
+        Las respuestas importantes muestran su fuente. Tu progreso cambia sólo cuando aparece evidencia.
       </p>
     </section>
   );

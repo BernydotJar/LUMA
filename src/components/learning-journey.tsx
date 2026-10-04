@@ -9,10 +9,10 @@ export function LearningJourney({ steps }: { steps: JourneyStep[] }) {
     <section className={`${styles.journeyCard} glass`} id="journey" aria-labelledby="journey-title">
       <div className={styles.cardHeading}>
         <div>
-          <span className="eyebrow"><span className="eyebrow-dot" /> Tu ruta adaptativa</span>
-          <h2 id="journey-title">De tu meta a evidencia real</h2>
+          <span className="eyebrow"><span className="eyebrow-dot" /> Tu journey</span>
+          <h2 id="journey-title">No sigues módulos. Avanzas por evidencia.</h2>
         </div>
-        <span className="status-pill" data-tone="positive">Ruta viva</span>
+        <span className="status-pill" data-tone="positive">Se adapta</span>
       </div>
       <div className={styles.journeyRail}>
         {steps.map((step, index) => (
@@ -30,7 +30,7 @@ export function LearningJourney({ steps }: { steps: JourneyStep[] }) {
           </article>
         ))}
       </div>
-      <p className={styles.journeyNote}>Esta no es una secuencia fija. LUMA puede adelantar, pausar o volver a un prerrequisito cuando cambia la evidencia.</p>
+      <p className={styles.journeyNote}>Si demuestras algo antes, LUMA lo salta. Si aparece un vacío, vuelve sólo a lo que necesitas.</p>
     </section>
   );
 }

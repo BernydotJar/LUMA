@@ -552,3 +552,67 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* Learner workspace v2 */
+.page {
+  color: #3b2419;
+  background:
+    radial-gradient(circle at 92% 5%, rgba(196,91,56,.11), transparent 28rem),
+    radial-gradient(circle at 5% 90%, rgba(99,114,71,.12), transparent 34rem),
+    #e9e0cc;
+}
+
+.header > a { color: #725c4a; }
+.header > div span {
+  border-color: rgba(91,55,39,.1);
+  color: #806958;
+  background: rgba(255,250,239,.48);
+}
+
+.session {
+  border-color: rgba(91,55,39,.08);
+  color: #352117;
+  background:
+    radial-gradient(circle at 86% 7%, rgba(217,144,81,.1), transparent 24rem),
+    #f6f0e2;
+  box-shadow: 0 34px 90px rgba(78,45,28,.11), inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+.scenario h1 { color: #3a2419; }
+.scenario :global(.eyebrow),
+.question :global(.eyebrow) { color: #8f4c38; }
+
+.progress > div[data-status="complete"]::after,
+.progress > div[data-status="current"]::after { background: #667349; }
+.progress > div[data-status="complete"] > span { border-color: #667349; background: #667349; }
+.progress > div[data-status="current"] { color: #9f4938; }
+.progress > div[data-status="current"] > span { border-color: #9f4938; }
+
+.questionHeading > span { background: #653239; }
+.choices button:hover { border-color: rgba(159,73,56,.35); }
+.choices button[data-selected="true"] {
+  border-color: #667349;
+  background: #edf0dc;
+}
+.choices button > span { color: #667349; background: rgba(102,115,73,.09); }
+.feedback[data-correct="true"] { color: #56643d; border-color: rgba(102,115,73,.2); background: #edf0dc; }
+.questionFooter :global(.button-primary) { background: #653239; box-shadow: 0 12px 28px rgba(82,35,40,.2); }
+
+.contextCard,
+.twinImpact {
+  border-color: rgba(255,255,255,.18);
+  color: #fff7e7;
+  background:
+    radial-gradient(circle at 88% 5%, rgba(216,131,71,.2), transparent 18rem),
+    linear-gradient(145deg, rgba(255,255,255,.1), rgba(255,255,255,.025)),
+    #5b3035;
+  box-shadow: 0 28px 65px rgba(78,38,38,.16), inset 0 1px 0 rgba(255,255,255,.15);
+}
+.contextCard :global(.eyebrow),
+.twinImpact :global(.eyebrow) { color: #f0d577; }
+.contextCard > p,
+.twinImpact li,
+.twinImpact > p { color: rgba(255,247,231,.72); }
+.contextCard a { color: #f0d577; border-color: rgba(255,255,255,.12); }
+.twinImpact li svg { color: #d7df9d; }
+.twinImpact li strong { color: #fff7e7; }

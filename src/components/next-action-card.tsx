@@ -8,7 +8,6 @@ import {
   Check,
   ChevronDown,
   ExternalLink,
-  Lightbulb,
   Play,
   Sparkles,
   Timer,
@@ -21,50 +20,67 @@ export function NextActionCard({ action }: { action: RankedLearningAction }) {
 
   return (
     <section className={`${styles.nextAction} glass`} aria-labelledby="next-action-title">
-      <div className={styles.nextActionGlow} />
+      <div className={styles.nextActionGlow} aria-hidden="true" />
       <div className={styles.nextActionTop}>
-        <span className="eyebrow"><span className="eyebrow-dot" /> Tu mejor siguiente acción</span>
+        <span className="eyebrow"><span className="eyebrow-dot" /> Tu siguiente movimiento</span>
         <div className={styles.nextActionMeta}>
           <span><Timer size={14} /> {action.minutes} min</span>
-          <span><Sparkles size={14} /> {Math.round(action.confidence * 100)}% confianza</span>
+          <span><Sparkles size={14} /> Adaptado hoy</span>
         </div>
       </div>
+
       <div className={styles.nextActionContent}>
-        <span className={styles.actionIcon}><Lightbulb size={28} /></span>
+        <span className={styles.actionIcon} aria-hidden="true">
+          <span className={styles.actionIconCore}><Play size={25} fill="currentColor" /></span>
+        </span>
         <div>
-          <p className={styles.kicker}>Práctica guiada · Pensamientos automáticos</p>
+          <p className={styles.kicker}>Práctica guiada · aplicación real</p>
           <h2 id="next-action-title">{action.title}</h2>
           <p className={styles.actionDescription}>{action.description}</p>
         </div>
       </div>
+
       <div className={styles.actionReasonStrip}>
-        <span><Check size={15} /> 2 intentos recientes</span>
-        <span><Check size={15} /> Se ajusta a tus 12 minutos</span>
-        <span><Check size={15} /> Prerrequisito dominado</span>
+        <span><Check size={15} /> Ya dominas el prerrequisito</span>
+        <span><Check size={15} /> La teoría no es el problema</span>
+        <span><Check size={15} /> Cabe en tus {action.minutes} minutos</span>
       </div>
+
       <div className={styles.nextActionFooter}>
         <Link className="button-primary" href="/learn/session/pas">
-          <Play size={17} fill="currentColor" /> Comenzar ahora <ArrowRight size={17} />
+          Continuar · {action.minutes} min <ArrowRight size={17} />
         </Link>
-        <button className="button-secondary" type="button" onClick={() => setShowReason((current) => !current)} aria-expanded={showReason}>
-          ¿Por qué esto? <ChevronDown size={16} style={{ transform: showReason ? "rotate(180deg)" : undefined }} />
+        <button
+          className={styles.whyButton}
+          type="button"
+          onClick={() => setShowReason((current) => !current)}
+          aria-expanded={showReason}
+        >
+          ¿Por qué cambió mi ruta?
+          <ChevronDown
+            size={16}
+            style={{ transform: showReason ? "rotate(180deg)" : undefined }}
+          />
         </button>
-        <a className="button-ghost" href={action.sourceUrl} target="_blank" rel="noreferrer">
-          <BookOpenCheck size={16} /> Ver fuente <ExternalLink size={13} />
-        </a>
       </div>
+
       {showReason && (
         <div className={styles.explanationPanel}>
-          <div>
-            <strong>La decisión de LUMA</strong>
+          <div className={styles.explanationLead}>
+            <strong>Lo que LUMA observó</strong>
             <p>{action.reason}</p>
           </div>
           <dl>
-            <div><dt>Señal observada</dt><dd>Fallaste dos veces al transferir el concepto a una situación concreta.</dd></div>
-            <div><dt>Hipótesis</dt><dd>El concepto está reconocido, pero todavía no se recupera con fluidez bajo presión.</dd></div>
-            <div><dt>Qué cambiaría la ruta</dt><dd>Una respuesta correcta sin ayuda movería el Twin hacia práctica de creencias.</dd></div>
+            <div><dt>Hecho</dt><dd>Fallaste dos veces al transferir el concepto a una situación concreta.</dd></div>
+            <div><dt>Inferencia</dt><dd>Reconoces el concepto, pero todavía no aparece con fluidez bajo presión.</dd></div>
+            <div><dt>Siguiente señal</dt><dd>Resolver este caso sin ayuda movería el journey hacia creencias.</dd></div>
           </dl>
-          <p className={styles.inferenceNote}>La hipótesis es una inferencia con 68% de confianza, no un diagnóstico.</p>
+          <div className={styles.explanationFooter}>
+            <p className={styles.inferenceNote}>La inferencia tiene 68% de confianza; no es un diagnóstico.</p>
+            <a href={action.sourceUrl} target="_blank" rel="noreferrer">
+              <BookOpenCheck size={14} /> Ver evidencia fuente <ExternalLink size={12} />
+            </a>
+          </div>
         </div>
       )}
     </section>

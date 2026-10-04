@@ -202,6 +202,64 @@
         "evidence/**",
         "scripts/**"
       ]
+    },
+    {
+      "id": "LUMA-008-learner-ux-v2",
+      "kind": "product-surface",
+      "title": "Learner-first experience UI v2 with adaptive-action hierarchy",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-007-reflection-showcase-release"
+      ],
+      "capability": "learner-experience-design",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/009-learner-experience-ui-v2.md",
+        "docs/design/**",
+        "src/app/page.tsx",
+        "src/app/learn/**",
+        "src/components/app-shell*",
+        "src/components/learning-pulse*",
+        "src/components/next-action-card*",
+        "src/components/learning-journey*",
+        "src/components/tutor-panel*",
+        "src/components/learner-components.module.css",
+        "src/components/onboarding-experience.module.css",
+        "src/components/practice-session.module.css",
+        "e2e/**",
+        "scripts/visual-audit.mjs",
+        "evidence/ui-v2/**"
+      ]
+    },
+    {
+      "id": "LUMA-009-ui-v2-firebase-release",
+      "kind": "release",
+      "title": "Learner UX v2 Firebase client-showcase release gate",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-008-learner-ux-v2"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "evidence/**",
+        "scripts/record-ui-v2-release.py",
+        "apphosting.yaml",
+        "firebase.json"
+      ]
     }
   ]
 }
