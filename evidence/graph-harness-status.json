@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "068f7731-6da1-49a8-aa73-ce72f38533e6",
-  "event_count": 124,
+  "last_event_id": "12a868bb-c56e-4b8b-a602-7466241e4d5a",
+  "event_count": 166,
   "ready_nodes": [],
   "nodes": [
     {
@@ -272,8 +272,99 @@
         "f62e1292-8049-4eca-99b1-000a69d16f45"
       ],
       "approval_count": 0
+    },
+    {
+      "id": "LUMA-013-premium-adult-intelligence",
+      "kind": "product-surface",
+      "title": "Premium adult intelligence and source-guided product messaging",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-012-role-separated-showcase-release"
+      ],
+      "capability": "premium-adult-experience",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "030e2167-f719-4b05-9caa-f498bf2ef660",
+        "18d351a9-24af-4f98-9e2b-a69ac70a4c36",
+        "7319d2f6-a294-4830-a580-c2b34c534a8e",
+        "dd584d43-82e9-46e9-9981-03bfec8ae406",
+        "f7e00245-7fdb-4e8e-aace-18f2688ee1e8"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-014-semantic-3d-system",
+      "kind": "product-surface",
+      "title": "Premium semantic 3D system for practice, progress, coach insight, and human intervention",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-013-premium-adult-intelligence"
+      ],
+      "capability": "semantic-visual-language",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "24bb8e39-ed54-4976-a4fe-df1339ed1a36",
+        "2c1ca157-948d-40ed-877d-4bbfe80522cd",
+        "99016695-e354-461b-803e-994c87dbb1ae",
+        "bdca9a7e-e33f-4ac1-b0af-a6e5c60430cd"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-015-voice-modality-evaluation",
+      "kind": "product-research",
+      "title": "Voice as a pedagogical modality, provider-neutral evaluation",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-014-semantic-3d-system"
+      ],
+      "capability": "voice-learning-modality",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "5f336e07-b95b-45a4-bfe0-d7f5a4980ff1",
+        "9a491cf4-1ecb-4b06-a281-60d9f634c757",
+        "e23945f9-bab8-4e4d-8c70-59f608745dcf"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-016-premium-showcase-release",
+      "kind": "release",
+      "title": "Premium adult intelligence client-showcase release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-013-premium-adult-intelligence",
+        "LUMA-014-semantic-3d-system",
+        "LUMA-015-voice-modality-evaluation"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "31b6ba2d-a87a-4a5c-b613-7e047197dff1",
+        "3a2699fb-3a4a-4b6d-b341-e7cf0a5dfd80",
+        "501a9a24-774f-48f2-92e7-820fb54df0c7",
+        "7e1799cc-0158-4aa0-ba3f-0cf0aa619091",
+        "b3e701b4-6d34-44f7-bdf7-9ba5a20af705",
+        "dbdbd0b1-57df-4431-9b9b-8e41a057642c",
+        "eccfc24c-6339-4658-9cd2-36ef324088b6",
+        "fb6dde64-cbf2-4cdb-9064-5ceca82285b5"
+      ],
+      "approval_count": 0
     }
   ],
-  "checkpoint_count": 4,
+  "checkpoint_count": 5,
   "repair_plan_count": 0
 }

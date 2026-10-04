@@ -1,0 +1,57 @@
+== FIREBASE DEPLOY ==
+
+=== Deploying to 'luma-learning-intelligence'...
+
+i  deploying apphosting
+i  apphosting: Found backend(s) luma
+i  apphosting: Zipped source for backend luma
+i  apphosting: Uploading source for backend luma...
+i  apphosting: Uploaded at gs://firebaseapphosting-sources-161313706596-us-central1/luma--95559-Kk1Zoegm6hyH-.zip
+i  apphosting: You may also track the rollout(s) at:
+	https://console.firebase.google.com/project/luma-learning-intelligence/apphosting
+- Starting rollout(s) for backend(s) luma; this may take a few minutes. It's safe to exit now.
+
+✔  apphosting: Rollout for backend luma complete!
+✔  apphosting: Your backend is now deployed at:
+	https://luma--luma-learning-intelligence.us-central1.hosted.app
+
+✔  Deploy complete!
+
+Project Console: https://console.firebase.google.com/project/luma-learning-intelligence/overview
+
+== LEARNER ==
+status=200 final=https://luma--luma-learning-intelligence.us-central1.hosted.app/
+backstage_copy=PASS
+
+== CONTENT INTELLIGENCE ==
+status=200
+transformation_headline=PASS
+operating_model_leak=PASS
+
+== COACH STUDIO ==
+status=200
+
+== APIS ==
+tutor_status=200
+reflections_status=200
+tutor_trust=GROUNDED
+tutor_answer=True
+reflection_artifact=True
+
+== BROWSER LEARNER ==
+✓ LUMA · Learning Intelligence
+  https://luma--luma-learning-intelligence.us-central1.hosted.app/learn
+✓ Done
+"PRACTICE_OBJECT_OK"
+"PROGRESS_OBJECT_OK"
+"OK"
+✓ Browser closed
+
+== BROWSER COACH ==
+✓ Coach Studio · LUMA
+  https://luma--luma-learning-intelligence.us-central1.hosted.app/studio
+✓ Done
+"COACH_INSIGHT_OBJECT_OK"
+"HUMAN_INTERVENTION_OBJECT_OK"
+"OK"
+✓ Browser closed
