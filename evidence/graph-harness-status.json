@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "6b02b0d0-51eb-4ec2-9c84-ab50e8d2fb6d",
-  "event_count": 89,
+  "last_event_id": "068f7731-6da1-49a8-aa73-ce72f38533e6",
+  "event_count": 124,
   "ready_nodes": [],
   "nodes": [
     {
@@ -201,8 +201,79 @@
         "a42bb47b-e6af-466a-bea8-445583516595"
       ],
       "approval_count": 0
+    },
+    {
+      "id": "LUMA-010-coachee-language-separation",
+      "kind": "product-surface",
+      "title": "Positive coachee language and internal-model separation",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-009-ui-v2-firebase-release"
+      ],
+      "capability": "coachee-experience-design",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "0900be29-5ba8-4ed2-87ff-b75f604290d3",
+        "879ccd3d-b2b4-43f4-afe9-3f0d5b47fc9c",
+        "c89fa0bc-fbcf-4d29-ab52-8ec39bf7fe11",
+        "ccd653c0-0ea8-4ed6-9d2b-ae4d26c181d3"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-011-coach-intelligence-ui",
+      "kind": "product-surface",
+      "title": "Coach Intelligence, proprietary Learning Twin, and visual parity",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-010-coachee-language-separation"
+      ],
+      "capability": "coach-intelligence-experience",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "26c015ec-dbc9-4f01-85c1-59dc495b6727",
+        "3d74bb8e-d8f5-4ac6-ad43-b8280a647053",
+        "7f975217-8c82-45bb-8f5a-ba284a182a08",
+        "8d1321e5-e9d0-4b68-955a-67b7a3beee29",
+        "a6ade6e1-280d-4258-af22-d8dfcc498fb4",
+        "eda66169-1d9e-4bca-a947-baeb75c3a6e2"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-012-role-separated-showcase-release",
+      "kind": "release",
+      "title": "Role-separated coachee and coach client-showcase release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-010-coachee-language-separation",
+        "LUMA-011-coach-intelligence-ui"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "08a3ef8a-4c7e-47d2-bc16-5ab0dae6473c",
+        "4c2dafa6-bb7a-413b-a66d-4117f3e12a2f",
+        "a1f2cdb4-2542-4ecc-bdf3-4957548d68b0",
+        "bdc2a972-9cda-429d-89e8-09ce4c57063e",
+        "e0415ab8-e0ac-4835-8ab5-395f7f3d2008",
+        "eadbd918-3b45-4e4b-a393-b4c3b1194b5d",
+        "f073ea24-d974-430f-bbba-497911dc2a32",
+        "f62e1292-8049-4eca-99b1-000a69d16f45"
+      ],
+      "approval_count": 0
     }
   ],
-  "checkpoint_count": 3,
+  "checkpoint_count": 4,
   "repair_plan_count": 0
 }

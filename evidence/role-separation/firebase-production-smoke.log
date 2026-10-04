@@ -1,0 +1,61 @@
+== FIREBASE DEPLOY ==
+
+=== Deploying to 'luma-learning-intelligence'...
+
+i  deploying apphosting
+i  apphosting: Found backend(s) luma
+i  apphosting: Zipped source for backend luma
+i  apphosting: Uploading source for backend luma...
+i  apphosting: Uploaded at gs://firebaseapphosting-sources-161313706596-us-central1/luma--88734-N9u4irEPyFXn-.zip
+i  apphosting: You may also track the rollout(s) at:
+	https://console.firebase.google.com/project/luma-learning-intelligence/apphosting
+- Starting rollout(s) for backend(s) luma; this may take a few minutes. It's safe to exit now.
+
+✔  apphosting: Rollout for backend luma complete!
+✔  apphosting: Your backend is now deployed at:
+	https://luma--luma-learning-intelligence.us-central1.hosted.app
+
+✔  Deploy complete!
+
+Project Console: https://console.firebase.google.com/project/luma-learning-intelligence/overview
+
+== HTTP ROUTES ==
+learn_status=200
+coach_status=200
+studio_status=200
+content_intelligence_status=200
+
+== TUTOR API ==
+tutor_status=200
+trust=GROUNDED
+has_answer=True
+
+== REFLECTION API ==
+reflections_status=200
+has_artifact=True
+
+== LEARNER BROWSER ==
+✓ LUMA · Learning Intelligence
+  https://luma--luma-learning-intelligence.us-central1.hosted.app/
+✓ Done
+https://luma--luma-learning-intelligence.us-central1.hosted.app/learn
+"HERO_OK"
+"NO_TWIN_COPY"
+"OK"
+✓ Browser closed
+
+== LEGACY TWIN BROWSER ==
+✓ LUMA · Learning Intelligence
+  https://luma--luma-learning-intelligence.us-central1.hosted.app/twin
+✓ Done
+https://luma--luma-learning-intelligence.us-central1.hosted.app/studio/learners/mariana
+✓ Browser closed
+
+== COACH BROWSER ==
+✓ Coach Intelligence · Mariana · LUMA
+  https://luma--luma-learning-intelligence.us-central1.hosted.app/studio/learners/mariana
+✓ Done
+"COPYRIGHT_OK"
+"EVIDENCE_OK"
+"OK"
+✓ Browser closed
