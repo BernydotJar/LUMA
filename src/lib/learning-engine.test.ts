@@ -56,7 +56,7 @@ describe("best next learning action", () => {
       action("guided-practice", "beliefs", "practice"),
     ]);
     expect(result?.id).toBe("guided-practice");
-    expect(result?.reason).toContain("intentos fallidos");
+    expect(result?.reason).toContain("práctica guiada de transferencia");
   });
 
   it("treats content completion as different from mastery", () => {
@@ -66,7 +66,7 @@ describe("best next learning action", () => {
       action("transfer-practice", "beliefs", "simulation"),
     ]);
     expect(ranked[0].id).toBe("transfer-practice");
-    expect(ranked[0].reason).toContain("no demuestra dominio");
+    expect(ranked[0].reason).toContain("práctica de transferencia");
   });
 
   it("prefers actions that fit the learner's available time", () => {

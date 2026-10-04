@@ -1,5 +1,3 @@
-"use client";
-
 import { Check, Flag, LockKeyhole, Sparkles } from "lucide-react";
 import type { JourneyStep } from "@/types/learning";
 import styles from "./learner-components.module.css";
@@ -10,7 +8,7 @@ export function LearningJourney({ steps }: { steps: JourneyStep[] }) {
       <div className={styles.cardHeading}>
         <div>
           <span className="eyebrow"><span className="eyebrow-dot" /> Tu journey</span>
-          <h2 id="journey-title">No sigues módulos. Avanzas por evidencia.</h2>
+          <h2 id="journey-title">Tu journey avanza con lo que demuestras.</h2>
         </div>
         <span className="status-pill" data-tone="positive">Se adapta</span>
       </div>
@@ -30,7 +28,7 @@ export function LearningJourney({ steps }: { steps: JourneyStep[] }) {
           </article>
         ))}
       </div>
-      <p className={styles.journeyNote}>Si demuestras algo antes, LUMA lo salta. Si aparece un vacío, vuelve sólo a lo que necesitas.</p>
+      <p className={styles.journeyNote}>Cada nueva señal puede adelantar tu journey o activar una práctica específica para fortalecer el siguiente paso.</p>
     </section>
   );
 }

@@ -61,7 +61,7 @@
   color: #7e3b2d;
 }
 
-.panel header a {
+.progressMark {
   width: 39px;
   height: 39px;
   border: 1px solid rgba(91,55,39,.12);
@@ -135,8 +135,9 @@
 }
 
 .floatingMetric {
-  width: 76px;
-  height: 76px;
+  width: 104px;
+  min-height: 76px;
+  padding: 10px;
   position: absolute;
   border: 1px solid rgba(91,55,39,.12);
   border-radius: 23px;
@@ -159,8 +160,10 @@
 
 .floatingMetric strong {
   margin-top: 2px;
-  font-size: 1.35rem;
-  line-height: 1;
+  max-width: 90px;
+  font-size: .86rem;
+  line-height: 1.02;
+  text-align: center;
 }
 
 .floatingMetric[data-index="0"] { left: 7%; top: 12%; animation: floatA 5.5s ease-in-out infinite; }
@@ -214,5 +217,6 @@
   .panel { min-height: 470px; padding: 18px; border-radius: 30px; }
   .stage { height: 250px; }
   .sun { width: 150px; height: 150px; }
-  .floatingMetric { width: 68px; height: 68px; border-radius: 20px; }
+  .floatingMetric { width: 94px; min-height: 68px; border-radius: 20px; }
+  .floatingMetric strong { font-size: .77rem; }
 }

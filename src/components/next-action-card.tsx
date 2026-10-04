@@ -41,8 +41,8 @@ export function NextActionCard({ action }: { action: RankedLearningAction }) {
       </div>
 
       <div className={styles.actionReasonStrip}>
-        <span><Check size={15} /> Ya dominas el prerrequisito</span>
-        <span><Check size={15} /> La teoría no es el problema</span>
+        <span><Check size={15} /> Prerrequisito demostrado</span>
+        <span><Check size={15} /> Base conceptual lista</span>
         <span><Check size={15} /> Cabe en tus {action.minutes} minutos</span>
       </div>
 
@@ -56,7 +56,7 @@ export function NextActionCard({ action }: { action: RankedLearningAction }) {
           onClick={() => setShowReason((current) => !current)}
           aria-expanded={showReason}
         >
-          ¿Por qué cambió mi ruta?
+          ¿Por qué esta práctica?
           <ChevronDown
             size={16}
             style={{ transform: showReason ? "rotate(180deg)" : undefined }}
@@ -71,14 +71,14 @@ export function NextActionCard({ action }: { action: RankedLearningAction }) {
             <p>{action.reason}</p>
           </div>
           <dl>
-            <div><dt>Hecho</dt><dd>Fallaste dos veces al transferir el concepto a una situación concreta.</dd></div>
-            <div><dt>Inferencia</dt><dd>Reconoces el concepto, pero todavía no aparece con fluidez bajo presión.</dd></div>
-            <div><dt>Siguiente señal</dt><dd>Resolver este caso sin ayuda movería el journey hacia creencias.</dd></div>
+            <div><dt>Señal</dt><dd>En dos intentos recientes, una pista ayudó a convertir reconocimiento en aplicación.</dd></div>
+            <div><dt>Lectura</dt><dd>El concepto está reconocido y la transferencia práctica está en desarrollo.</dd></div>
+            <div><dt>Siguiente señal</dt><dd>Resolver este caso con autonomía abre el siguiente tramo: creencias.</dd></div>
           </dl>
           <div className={styles.explanationFooter}>
-            <p className={styles.inferenceNote}>La inferencia tiene 68% de confianza; no es un diagnóstico.</p>
+            <p className={styles.inferenceNote}>Hipótesis de aprendizaje: 68% de confianza. Se actualiza con cada nueva señal.</p>
             <a href={action.sourceUrl} target="_blank" rel="noreferrer">
-              <BookOpenCheck size={14} /> Ver evidencia fuente <ExternalLink size={12} />
+              <BookOpenCheck size={14} /> Ver fuente <ExternalLink size={12} />
             </a>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { chromium } from "playwright";
 import { writeFile } from "node:fs/promises";
 
-const routes = ["/", "/learn", "/twin", "/library", "/studio", "/studio/reflections", "/onboarding", "/learn/session/pas"];
+const routes = ["/", "/learn", "/twin", "/studio/learners/mariana", "/library", "/studio", "/studio/reflections", "/onboarding", "/learn/session/pas"];
 const viewports = [
   { name: "desktop", width: 1440, height: 1000 },
   { name: "mobile", width: 390, height: 844 },

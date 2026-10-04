@@ -74,7 +74,7 @@
   display: grid;
   place-items: center;
   color: var(--mint);
-  background: rgba(117,223,194,.09);
+  background: rgba(157,172,120,.09);
 }
 
 .metricGrid small {
@@ -102,7 +102,7 @@
   grid-template-columns: auto 1fr;
   gap: 13px;
   background:
-    radial-gradient(circle at 90% 0%, rgba(201,241,90,.14), transparent 34%),
+    radial-gradient(circle at 90% 0%, rgba(239,200,106,.14), transparent 34%),
     linear-gradient(145deg, rgba(255,255,255,.09), rgba(255,255,255,.025)),
     var(--glass);
 }
@@ -113,7 +113,7 @@
   border-radius: 16px;
   display: grid;
   place-items: center;
-  color: #102015;
+  color: #2d1b1d;
   background: var(--accent);
 }
 
@@ -158,7 +158,7 @@
 .sparkline i {
   flex: 1;
   border-radius: 4px 4px 2px 2px;
-  background: linear-gradient(to top, rgba(117,223,194,.2), var(--accent));
+  background: linear-gradient(to top, rgba(157,172,120,.2), var(--accent));
 }
 
 .signalGrid {
@@ -260,7 +260,7 @@
 }
 
 .bottleneckChart button[data-selected="true"] {
-  border-color: rgba(201,241,90,.28);
+  border-color: rgba(239,200,106,.28);
   background: var(--accent-soft);
 }
 
@@ -297,19 +297,19 @@
 .insightPanel {
   min-height: 350px;
   padding: 22px;
-  border: 1px solid rgba(201,241,90,.16);
+  border: 1px solid rgba(239,200,106,.16);
   border-radius: 22px;
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(circle at 100% 0%, rgba(201,241,90,.1), transparent 34%),
+    radial-gradient(circle at 100% 0%, rgba(239,200,106,.1), transparent 34%),
     rgba(0,0,0,.15);
 }
 
 .insightPanel[data-severity="high"] {
-  border-color: rgba(241,163,108,.2);
+  border-color: rgba(217,123,75,.2);
   background:
-    radial-gradient(circle at 100% 0%, rgba(241,163,108,.1), transparent 34%),
+    radial-gradient(circle at 100% 0%, rgba(217,123,75,.1), transparent 34%),
     rgba(0,0,0,.15);
 }
 
@@ -370,13 +370,13 @@
 .interventionEffect {
   margin-top: 13px;
   padding: 15px;
-  border: 1px solid rgba(117,223,194,.15);
+  border: 1px solid rgba(157,172,120,.15);
   border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  background: rgba(117,223,194,.06);
+  background: rgba(157,172,120,.06);
 }
 
 .interventionEffect > div {
@@ -393,7 +393,7 @@
   display: grid;
   place-items: center;
   color: var(--mint);
-  background: rgba(117,223,194,.1);
+  background: rgba(157,172,120,.1);
 }
 
 .interventionEffect strong {
@@ -548,7 +548,7 @@
 }
 
 .tableRow[data-urgency="high"] {
-  background: linear-gradient(90deg, rgba(241,163,108,.06), transparent 22%);
+  background: linear-gradient(90deg, rgba(217,123,75,.06), transparent 22%);
 }
 
 .person {
@@ -563,7 +563,7 @@
   border-radius: 12px;
   display: grid;
   place-items: center;
-  color: #102015;
+  color: #2d1b1d;
   background: linear-gradient(145deg, var(--accent), var(--mint));
   font-size: .59rem;
   font-style: normal;
@@ -586,7 +586,7 @@
 }
 
 .tableRow button[data-assigned="true"] {
-  color: #102015;
+  color: #2d1b1d;
   border-color: var(--accent);
   background: var(--accent);
 }
@@ -710,4 +710,24 @@
     align-items: flex-start;
     flex-direction: column;
   }
+}
+
+
+.openTwin {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid rgba(239,200,106,.24);
+  border-radius: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #efc86a;
+  background: rgba(239,200,106,.08);
+  font-size: .59rem;
+  font-weight: 760;
+}
+
+.openTwin:hover {
+  background: rgba(239,200,106,.13);
 }

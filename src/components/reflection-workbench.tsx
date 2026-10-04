@@ -110,7 +110,7 @@ export function ReflectionWorkbench() {
       setSelectedId(data.artifact.id);
       setReceipt(data.receipt);
       setFilter("all");
-      setNotice("Borrador generado. Aún no participa en respuestas al learner.");
+      setNotice("Borrador generado. Estado: revisión humana antes de participar en respuestas al coachee.");
     } catch (error) {
       setNotice(
         error instanceof Error
@@ -168,7 +168,7 @@ export function ReflectionWorkbench() {
           <span className="eyebrow">
             <span className="eyebrow-dot" /> Knowledge Reflection
           </span>
-          <h2>El corpus aprende sin reescribir la verdad.</h2>
+          <h2>El corpus aprende con trazabilidad y revisión.</h2>
           <p>
             LUMA detecta conexiones, contradicciones y vacíos entre fuentes; los guarda
             como artefactos derivados, versionados y revisables. La fuente original sigue
@@ -177,7 +177,7 @@ export function ReflectionWorkbench() {
           <div className={styles.policyRow} aria-label="Políticas de reflexión">
             <span><Database size={14} /> RAW inmutable</span>
             <span><BadgeCheck size={14} /> Aprobación humana</span>
-            <span><LockKeyhole size={14} /> Sin autoridad sobre el Twin</span>
+            <span><LockKeyhole size={14} /> Autoridad: reflexión curricular</span>
           </div>
         </div>
         <div className={styles.heroAction}>
@@ -292,7 +292,7 @@ export function ReflectionWorkbench() {
             <div className={styles.reflectionTriptych}>
               <article>
                 <span>01 · Qué agrega</span>
-                <p>{selected.novelty ?? "No aplica a una fuente original."}</p>
+                <p>{selected.novelty ?? "Fuente original: opcional en este caso."}</p>
               </article>
               <article>
                 <span>02 · Cómo conecta</span>
@@ -300,7 +300,7 @@ export function ReflectionWorkbench() {
               </article>
               <article data-gap="true">
                 <span>03 · Qué falta</span>
-                <p>{selected.gap ?? "Sin gap declarado."}</p>
+                <p>{selected.gap ?? "Gap declarado: ninguno."}</p>
               </article>
             </div>
           )}
@@ -413,7 +413,7 @@ export function ReflectionWorkbench() {
             <div className={styles.guardrailIcon}><ShieldCheck size={22} /></div>
             <div>
               <span className="eyebrow">Autoridad explícita</span>
-              <h2>Reflexionar no es aprender por el learner.</h2>
+              <h2>La reflexión mejora el sistema; el coachee demuestra el aprendizaje.</h2>
               <p>Estos artefactos pueden mejorar búsqueda, tutor y revisión curricular. Solo eventos aceptados de interacción actualizan dominio, confianza o recomendaciones.</p>
             </div>
             <ul>

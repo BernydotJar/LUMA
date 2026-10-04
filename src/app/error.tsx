@@ -11,7 +11,7 @@ export default function GlobalError({ reset }: { error: Error & { digest?: strin
       <span className={styles.stateIcon}><ShieldAlert size={30} /></span>
       <span className="eyebrow"><span className="eyebrow-dot" /> Estado recuperable</span>
       <h1>Tu progreso está seguro.</h1>
-      <p>No pudimos cargar esta vista. LUMA no registró evidencia incompleta ni alteró tu Twin.</p>
+      <p>Esta vista tuvo un problema al cargar. Tu sesión conserva el último estado válido.</p>
       <div className={styles.stateActions}>
         <button className="button-primary" type="button" onClick={reset}><RotateCcw size={16} /> Reintentar</button>
         <Link className="button-secondary" href="/learn">Volver a Hoy</Link>

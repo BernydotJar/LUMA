@@ -19,19 +19,19 @@ export default function LearnPage() {
   return (
     <AppShell
       title="Hoy"
-      subtitle="LUMA ajustó tu ruta con la evidencia más reciente."
+      subtitle="LUMA ajustó tu sesión con la evidencia más reciente."
     >
       <section className={styles.intro}>
         <div className={styles.introCopy}>
           <span className={styles.datePill}><CalendarDays size={14} /> Tu sesión de hoy</span>
           <p className={styles.greeting}>Buenas noches, Mariana.</p>
           <h2>
-            Hoy no necesitas otra lección.
-            <em> Necesitas probarlo.</em>
+            Hoy llevas lo que sabes
+            <em> a la práctica.</em>
           </h2>
           <p className={styles.introBody}>
-            Ya entiendes la idea. Lo que todavía no aparece con consistencia es
-            aplicarla bajo presión, así que LUMA cambió tu ruta.
+            Ya reconoces la idea. La sesión de hoy fortalece cómo la aplicas
+            cuando aparece presión y necesitas responder con claridad.
           </p>
           <div className={styles.goalLine}>
             <Target size={16} />
@@ -41,7 +41,7 @@ export default function LearnPage() {
 
         <div className={styles.sessionBrief}>
           <span><Clock3 size={15} /> Tienes 12 minutos</span>
-          <strong>Una práctica. Sin contenido de relleno.</strong>
+          <strong>Una práctica enfocada en transferencia.</strong>
           <Link href="/learn/session/pas">
             Continuar mi journey <ArrowRight size={17} />
           </Link>
@@ -53,11 +53,11 @@ export default function LearnPage() {
         <LearningPulse dimensions={twinDimensions} />
       </div>
 
-      <section className={styles.proofStrip} aria-label="Por qué cambió la ruta">
-        <div><span>01</span><strong>Ya demostrado</strong><p>Comunicación emocional base.</p></div>
-        <div><span>02</span><strong>Señal actual</strong><p>2 fallos al transferir el concepto.</p></div>
-        <div><span>03</span><strong>Decisión LUMA</strong><p>Práctica antes de más teoría.</p></div>
-        <div className={styles.proofResult}><Check size={17} /><strong>Ruta adaptada</strong><p>La siguiente lección quedó en pausa.</p></div>
+      <section className={styles.proofStrip} aria-label="Cómo se adapta tu journey">
+        <div><span>01</span><strong>Base demostrada</strong><p>Comunicación emocional con evidencia consistente.</p></div>
+        <div><span>02</span><strong>Capacidad en desarrollo</strong><p>Aplicar P.A.S. en situaciones concretas.</p></div>
+        <div><span>03</span><strong>Práctica de hoy</strong><p>Detectar, nombrar y reformular.</p></div>
+        <div className={styles.proofResult}><Check size={17} /><strong>Siguiente paso preparado</strong><p>Creencias se activa con la próxima señal de transferencia.</p></div>
       </section>
 
       <div className={styles.secondaryGrid}>
@@ -66,7 +66,7 @@ export default function LearnPage() {
       </div>
 
       <section className={styles.endNote}>
-        <span><Sparkles size={14} /> LUMA observa evidencia, no tiempo mirando una pantalla.</span>
+        <span><Sparkles size={14} /> LUMA ajusta tu journey con lo que demuestras en práctica.</span>
       </section>
     </AppShell>
   );

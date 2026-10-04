@@ -472,3 +472,186 @@
     background: #653239;
   }
 }
+
+
+/* Coach intelligence skin — related visual DNA, denser internal workspace */
+.shell[data-mode="studio"] {
+  --bg: #24181a;
+  --bg-elevated: #342124;
+  --bg-soft: #40292b;
+  --ink: #f7edd8;
+  --ink-strong: #fff8e8;
+  --muted: #b7a18c;
+  --muted-strong: #dbcbb6;
+  --line: rgba(255, 238, 210, .12);
+  --line-strong: rgba(255, 238, 210, .2);
+  --glass: rgba(255, 244, 222, .065);
+  --glass-strong: rgba(255, 244, 222, .1);
+  --accent: #efc86a;
+  --accent-soft: rgba(239, 200, 106, .12);
+  --mint: #9dac78;
+  --peach: #d97b4b;
+  --danger: #e78472;
+  --shadow: 0 30px 80px rgba(9, 4, 5, .28);
+  grid-template-columns: 238px minmax(0, 1fr);
+  background:
+    radial-gradient(circle at 91% 1%, rgba(217,123,75,.12), transparent 31rem),
+    radial-gradient(circle at 8% 86%, rgba(157,172,120,.09), transparent 36rem),
+    #24181a;
+}
+
+.shell[data-mode="studio"] .sidebar {
+  width: 218px;
+  height: calc(100vh - 34px);
+  margin: 17px 0 17px 17px;
+  border-color: rgba(255,238,210,.11);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(239,200,106,.08), transparent 18rem),
+    linear-gradient(155deg, rgba(255,244,222,.075), rgba(255,244,222,.025)),
+    rgba(48,29,32,.8);
+  box-shadow: 0 28px 72px rgba(8,3,4,.3), inset 0 1px 0 rgba(255,255,255,.09);
+}
+
+.shell[data-mode="studio"] .workspaceLabel {
+  border-color: rgba(255,238,210,.1);
+  background: rgba(0,0,0,.14);
+}
+
+.shell[data-mode="studio"] .navigation a,
+.shell[data-mode="studio"] .sidebarBottom a {
+  color: #baa792;
+}
+
+.shell[data-mode="studio"] .navigation a:hover,
+.shell[data-mode="studio"] .sidebarBottom a:hover {
+  color: #fff4df;
+  background: rgba(255,244,222,.065);
+}
+
+.shell[data-mode="studio"] .navigation .activeNav {
+  color: #2d1b1d;
+  background: #efc86a;
+  box-shadow: 0 13px 32px rgba(239,200,106,.16), inset 0 1px 0 rgba(255,255,255,.58);
+}
+
+.shell[data-mode="studio"] .activeDot {
+  background: #5b3036;
+}
+
+.shell[data-mode="studio"] .topbar {
+  min-height: 86px;
+  background: linear-gradient(to bottom, rgba(36,24,26,.96) 58%, rgba(36,24,26,0));
+}
+
+.shell[data-mode="studio"] .pageTitle h1 {
+  color: #fff1da;
+  font-size: 1.08rem;
+  font-weight: 820;
+  letter-spacing: -.02em;
+}
+
+.shell[data-mode="studio"] .pageTitle p {
+  color: #b9a48e;
+}
+
+.shell[data-mode="studio"] .iconButton,
+.shell[data-mode="studio"] .profileButton {
+  border-color: rgba(255,238,210,.11);
+  color: #f7edd8;
+  background: rgba(255,244,222,.06);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.shell[data-mode="studio"] .avatar {
+  color: #2d1b1d;
+  background: linear-gradient(145deg, #efc86a, #d97b4b);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.48);
+}
+
+.shell[data-mode="studio"] .notificationDot {
+  background: #d97b4b;
+  box-shadow: 0 0 0 3px #24181a;
+}
+
+.shell[data-mode="studio"] .content {
+  max-width: 1620px;
+  padding-top: 4px;
+}
+
+@media (max-width: 1050px) {
+  .shell[data-mode="studio"] {
+    grid-template-columns: 88px minmax(0, 1fr);
+  }
+
+  .shell[data-mode="studio"] .sidebar {
+    width: 68px;
+  }
+}
+
+@media (max-width: 760px) {
+  .shell[data-mode="studio"] {
+    display: block;
+  }
+
+  .shell[data-mode="studio"] .topbar {
+    background: linear-gradient(to bottom, rgba(36,24,26,.98) 76%, rgba(36,24,26,0));
+  }
+
+  .shell[data-mode="studio"] .mobileNav {
+    border-color: rgba(255,238,210,.13);
+    background:
+      linear-gradient(145deg, rgba(255,244,222,.1), rgba(255,244,222,.035)),
+      rgba(48,29,32,.9);
+    box-shadow: 0 20px 52px rgba(8,3,4,.36), inset 0 1px 0 rgba(255,255,255,.1);
+  }
+
+  .shell[data-mode="studio"] .mobileNav a {
+    color: #b9a48e;
+  }
+
+  .shell[data-mode="studio"] .mobileNav .mobileActive {
+    color: #2d1b1d;
+    background: #efc86a;
+  }
+}
+
+
+.modeSwitch {
+  min-height: 40px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted-strong);
+  background: rgba(255,255,255,.045);
+  font-size: .68rem;
+  font-weight: 750;
+  transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.modeSwitch:hover {
+  transform: translateY(-1px);
+  color: var(--ink);
+  background: rgba(255,255,255,.075);
+}
+
+.shell[data-mode="studio"] .modeSwitch {
+  color: #efc86a;
+  border-color: rgba(239,200,106,.18);
+  background: rgba(239,200,106,.065);
+}
+
+@media (max-width: 760px) {
+  .modeSwitch {
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .modeSwitch span {
+    display: none;
+  }
+}

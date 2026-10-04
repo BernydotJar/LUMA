@@ -12,7 +12,8 @@ import {
   Compass,
   HelpCircle,
   Home,
-  LogOut,
+  MessageCircle,
+  PlayCircle,
   Search,
   Sparkles,
 } from "lucide-react";
@@ -22,15 +23,16 @@ import styles from "./app-shell.module.css";
 const learnerNavigation = [
   { href: "/learn", label: "Hoy", icon: Home },
   { href: "/learn#journey", label: "Journey", icon: Compass },
-  { href: "/twin", label: "Twin", icon: BrainCircuit },
-  { href: "/library", label: "Biblioteca", icon: BookOpen },
+  { href: "/learn/session/pas", label: "Práctica", icon: PlayCircle },
+  { href: "/learn#luma", label: "LUMA", icon: MessageCircle },
 ];
 
 const studioNavigation = [
-  { href: "/studio", label: "Learning Studio", icon: ChartNoAxesCombined },
-  { href: "/studio/reflections", label: "Curriculum Reflection", icon: GitBranch },
+  { href: "/studio", label: "Coach Studio", icon: ChartNoAxesCombined },
+  { href: "/studio/learners/mariana", label: "Learning Twin", icon: BrainCircuit },
   { href: "/library", label: "Content Intelligence", icon: BookOpen },
-  { href: "/learn", label: "Vista estudiante", icon: Sparkles },
+  { href: "/studio/reflections", label: "Curriculum Reflection", icon: GitBranch },
+  { href: "/learn", label: "Vista coachee", icon: Sparkles },
 ];
 
 export function AppShell({
@@ -48,6 +50,7 @@ export function AppShell({
 }) {
   const pathname = usePathname();
   const navigation = mode === "studio" ? studioNavigation : learnerNavigation;
+  const studio = mode === "studio";
 
   return (
     <div className={styles.shell} data-mode={mode}>
@@ -55,10 +58,13 @@ export function AppShell({
       <aside className={`${styles.sidebar} glass`}>
         <BrandMark />
         <div className={styles.workspaceLabel}>
-          <span>{mode === "studio" ? "Espacio instructor" : "Journey activo"}</span>
-          <strong>{mode === "studio" ? "Practitioner 2026" : "Practitioner · Poder"}</strong>
+          <span>{studio ? "Coach intelligence" : "Journey activo"}</span>
+          <strong>{studio ? "Practitioner 2026" : "Practitioner · Poder"}</strong>
         </div>
-        <nav className={styles.navigation} aria-label={mode === "studio" ? "Navegación del instructor" : "Navegación de aprendizaje"}>
+        <nav
+          className={styles.navigation}
+          aria-label={studio ? "Navegación del coach" : "Navegación de aprendizaje"}
+        >
           {navigation.map(({ href, label, icon: Icon }) => {
             const pathOnly = href.split("#")[0];
             const hasHash = href.includes("#");
@@ -75,9 +81,13 @@ export function AppShell({
             );
           })}
         </nav>
+
         <div className={styles.sidebarBottom}>
-          <Link href="/onboarding"><HelpCircle size={18} /> Recalibrar</Link>
-          <Link href="/"><LogOut size={18} /> Cambiar experiencia</Link>
+          {studio ? (
+            <Link href="/learn"><Sparkles size={18} /> Abrir vista coachee</Link>
+          ) : (
+            <Link href="/onboarding"><HelpCircle size={18} /> Ajustar mi perfil</Link>
+          )}
         </div>
       </aside>
 
@@ -91,6 +101,11 @@ export function AppShell({
             </div>
           </div>
           <div className={styles.topbarActions}>
+            {studio && (
+              <Link className={styles.modeSwitch} href="/learn">
+                <Sparkles size={15} /> <span>Vista coachee</span>
+              </Link>
+            )}
             {actions}
             <button className={styles.iconButton} type="button" aria-label="Buscar">
               <Search size={19} />
@@ -99,9 +114,16 @@ export function AppShell({
               <Bell size={19} />
               <span className={styles.notificationDot} />
             </button>
-            <button className={styles.profileButton} type="button" aria-label="Abrir menú de Mariana">
-              <span className={styles.avatar}>M</span>
-              <span><strong>Mariana</strong><small>Plan Practitioner</small></span>
+            <button
+              className={styles.profileButton}
+              type="button"
+              aria-label={studio ? "Abrir menú del coach" : "Abrir menú de Mariana"}
+            >
+              <span className={styles.avatar}>{studio ? "C" : "M"}</span>
+              <span>
+                <strong>{studio ? "Coach" : "Mariana"}</strong>
+                <small>{studio ? "Vista interna" : "Plan Practitioner"}</small>
+              </span>
               <ChevronDown size={15} />
             </button>
           </div>
@@ -120,7 +142,7 @@ export function AppShell({
           return (
             <Link href={href} key={href} className={active ? styles.mobileActive : undefined}>
               <Icon size={20} />
-              <span>{label.replace("Mi ", "")}</span>
+              <span>{label}</span>
             </Link>
           );
         })}

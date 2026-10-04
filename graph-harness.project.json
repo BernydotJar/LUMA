@@ -260,6 +260,90 @@
         "apphosting.yaml",
         "firebase.json"
       ]
+    },
+    {
+      "id": "LUMA-010-coachee-language-separation",
+      "kind": "product-surface",
+      "title": "Positive coachee language and internal-model separation",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-009-ui-v2-firebase-release"
+      ],
+      "capability": "coachee-experience-design",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/010-coachee-coach-separation.md",
+        "src/app/learn/**",
+        "src/app/onboarding/**",
+        "src/components/app-shell*",
+        "src/components/learning-pulse*",
+        "src/components/next-action-card*",
+        "src/components/learning-journey*",
+        "src/components/onboarding-experience*",
+        "src/components/practice-session*",
+        "src/components/tutor-panel*",
+        "e2e/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-011-coach-intelligence-ui",
+      "kind": "product-surface",
+      "title": "Coach Intelligence, proprietary Learning Twin, and visual parity",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-010-coachee-language-separation"
+      ],
+      "capability": "coach-intelligence-experience",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/twin/**",
+        "src/app/studio/**",
+        "src/app/library/**",
+        "src/components/app-shell*",
+        "src/components/twin-detail*",
+        "src/components/studio-dashboard*",
+        "src/lib/luma-data.ts",
+        "e2e/**",
+        "scripts/visual-audit.mjs",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-012-role-separated-showcase-release",
+      "kind": "release",
+      "title": "Role-separated coachee and coach client-showcase release",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-010-coachee-language-separation",
+        "LUMA-011-coach-intelligence-ui"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "e2e/**",
+        "evidence/**",
+        "scripts/**",
+        "apphosting.yaml",
+        "firebase.json"
+      ]
     }
   ]
 }

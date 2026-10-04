@@ -75,7 +75,7 @@ export function TutorPanel() {
           content:
             data.answer ??
             data.error ??
-            "No pude responder con suficiente evidencia.",
+            "Puedo sostener mejor esta respuesta con una fuente clara. Prueba reformulando la pregunta o abre el material relacionado.",
           evidence: data.evidence,
           reflection: data.reflection,
           trust: data.trust,
@@ -87,7 +87,7 @@ export function TutorPanel() {
         {
           role: "tutor",
           content:
-            "Perdí conexión por un momento. Tu pregunta sigue aquí; vuelve a enviarla cuando estés listo.",
+            "Tu pregunta sigue aquí. Reintenta cuando vuelva la conexión.",
         },
       ]);
     } finally {
@@ -103,6 +103,7 @@ export function TutorPanel() {
   return (
     <section
       className={`${styles.tutorPanel} glass`}
+      id="luma"
       aria-labelledby="tutor-title"
     >
       <div className={styles.tutorHeader}>

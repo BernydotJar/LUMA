@@ -39,7 +39,7 @@ const modules = [
 
 export default function LibraryPage() {
   return (
-    <AppShell title="Contenido inteligente" subtitle="El curso es una fuente; la experiencia se construye alrededor de la persona.">
+    <AppShell mode="studio" title="Content Intelligence" subtitle="El corpus aporta estructura; LUMA lo conecta con capacidades, evidencia y decisiones de aprendizaje.">
       <section className={`${styles.hero} glass`}>
         <div>
           <span className="eyebrow"><span className="eyebrow-dot" /> Corpus conectado</span>
@@ -54,7 +54,7 @@ export default function LibraryPage() {
           <span>Learning Quality</span>
           <strong>86</strong>
           <div><i style={{ width: "86%" }} /></div>
-          <p>Alta cobertura conceptual; falta completar la alineación de evaluaciones en 2 objetivos.</p>
+          <p>Alta cobertura conceptual; 2 objetivos están en revisión de alineación.</p>
         </div>
       </section>
 
@@ -80,7 +80,7 @@ export default function LibraryPage() {
       <div className={styles.mainGrid}>
         <section className={`${styles.graphCard} glass`}>
           <div className={styles.cardHeading}>
-            <div><span className="eyebrow"><GitFork size={14} /> Mapa de aprendizaje</span><h2>No son archivos. Son relaciones.</h2></div>
+            <div><span className="eyebrow"><GitFork size={14} /> Mapa de aprendizaje</span><h2>El contenido se convierte en relaciones.</h2></div>
             <span className="status-pill" data-tone="positive">47 relaciones</span>
           </div>
           <div className={styles.graphCanvas} aria-label="Vista del grafo de conocimiento">
@@ -114,14 +114,14 @@ export default function LibraryPage() {
           <section className={`${styles.authoringCard} glass`}>
             <span className="eyebrow"><Sparkles size={14} /> AI-native authoring</span>
             <h2>La IA propone. El experto publica.</h2>
-            <p>Objetivos, capítulos, conceptos, ejercicios y relaciones se generan como borradores con fuente. Nada entra silenciosamente al currículo.</p>
+            <p>Objetivos, capítulos, conceptos, ejercicios y relaciones se generan como borradores con fuente. Cada publicación conserva procedencia y revisión experta.</p>
             <div><span><Check size={14} /> 18 conceptos aprobados</span><span>6 pendientes de revisión</span></div>
           </section>
         </aside>
       </div>
 
       <section className={styles.moduleSection}>
-        <div className={styles.sectionHeading}><div><span className="eyebrow"><BookOpen size={14} /> Vista secundaria del currículo</span><h2>Los módulos existen, pero no gobiernan el journey.</h2></div><span>7 módulos detectados</span></div>
+        <div className={styles.sectionHeading}><div><span className="eyebrow"><BookOpen size={14} /> Vista secundaria del currículo</span><h2>Los módulos conservan la estructura editorial; el journey se organiza por capacidades y evidencia.</h2></div><span>7 módulos detectados</span></div>
         <div className={styles.moduleGrid}>
           {modules.map((module) => (
             <article className="glass-subtle" key={module.id} data-active={module.id === 3}>

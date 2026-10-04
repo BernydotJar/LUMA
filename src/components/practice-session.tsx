@@ -95,8 +95,8 @@ export function PracticeSession() {
         <section className={`${styles.completeCard} glass`}>
           <div className={styles.completeOrb}><Check size={54} /></div>
           <span className="eyebrow"><span className="eyebrow-dot" /> Evidencia registrada</span>
-          <h1>No solo terminaste. Demostraste transferencia.</h1>
-          <p>Separaste acontecimiento, pensamiento y emoción; luego formulaste una alternativa comprobable. LUMA usará esta evidencia para recalibrar “Aplicación”.</p>
+          <h1>Demostraste transferencia.</h1>
+          <p>Separaste acontecimiento, pensamiento y emoción; luego formulaste una alternativa comprobable. LUMA usará esta señal para ajustar tu progreso de aplicación.</p>
           <div className={styles.evidenceReceipt}>
             <div><span>Evento</span><strong>SIMULATION_COMPLETED</strong></div>
             <div><span>Concepto</span><strong>Pensamientos saboteadores</strong></div>
@@ -107,7 +107,7 @@ export function PracticeSession() {
             <Link className="button-primary" href="/learn">Volver a mi ruta <ArrowRight size={17} /></Link>
             <button className="button-secondary" type="button" onClick={reset}><RotateCcw size={16} /> Repetir con este caso</button>
           </div>
-          <p className={styles.receiptNote}>El incremento es una estimación pendiente de una comprobación diferida. Finalización no equivale automáticamente a dominio.</p>
+          <p className={styles.receiptNote}>La siguiente comprobación será diferida para confirmar retención y aplicación.</p>
         </section>
       </main>
     );
@@ -157,7 +157,7 @@ export function PracticeSession() {
             {selectedChoice && (
               <div className={styles.feedback} data-correct={selectedChoice.correct}>
                 {selectedChoice.correct ? <Sparkles size={18} /> : <Lightbulb size={18} />}
-                <div><strong>{selectedChoice.correct ? "Evidencia útil" : "Pista, no penalización"}</strong><p>{selectedChoice.feedback}</p></div>
+                <div><strong>{selectedChoice.correct ? "Evidencia útil" : "Pista útil"}</strong><p>{selectedChoice.feedback}</p></div>
               </div>
             )}
             <div className={styles.questionFooter}>
@@ -175,13 +175,13 @@ export function PracticeSession() {
             <a href={moduleThreeSource.url} target="_blank" rel="noreferrer">Abrir material original <ExternalLink size={13} /></a>
           </section>
           <section className={`${styles.twinImpact} glass`}>
-            <span className="eyebrow"><Sparkles size={14} /> Qué observará el Twin</span>
+            <span className="eyebrow"><Sparkles size={14} /> Tu práctica fortalece</span>
             <ul>
               <li><CircleHelp size={15} /><span><strong>Distinción</strong> Acontecimiento vs. interpretación</span></li>
               <li><CircleHelp size={15} /><span><strong>Transferencia</strong> Aplicar el concepto a un caso nuevo</span></li>
-              <li><CircleHelp size={15} /><span><strong>Autonomía</strong> Resolver sin pista directa</span></li>
+              <li><CircleHelp size={15} /><span><strong>Autonomía</strong> Resolver con autonomía</span></li>
             </ul>
-            <p>LUMA no usará velocidad de respuesta como prueba aislada de dominio.</p>
+            <p>Tu progreso se basa en cómo aplicas el concepto a situaciones concretas.</p>
           </section>
         </aside>
       </div>

@@ -23,7 +23,7 @@ export function scoreLearningAction(
     return {
       ...action,
       score: -100,
-      reason: "La acción no corresponde a un concepto del Twin actual.",
+      reason: "Esta acción pertenece a otro contexto de aprendizaje.",
       confidence: 0,
     };
   }
@@ -62,13 +62,13 @@ export function scoreLearningAction(
   if (unmetPrerequisites.length > 0) {
     reason = `Primero conviene reforzar ${unmetPrerequisites.length} prerrequisito(s).`;
   } else if (concept.consecutiveFailures >= 2) {
-    reason = "Dos intentos fallidos seguidos indican que avanzar ahora aumentaría la confusión.";
+    reason = "Dos intentos recientes muestran que una práctica guiada de transferencia es el mejor siguiente paso.";
   } else if (completionMismatch) {
-    reason = "Terminaste el contenido, pero la evidencia todavía no demuestra dominio.";
+    reason = "El contenido está completado y la siguiente señal útil es una práctica de transferencia.";
   } else if (concept.mastery >= 0.82) {
-    reason = "La evidencia es suficiente para evitar repetición y avanzar.";
+    reason = "La evidencia permite avanzar al siguiente reto.";
   } else if (concept.confidence < 0.5) {
-    reason = "El conocimiento emergente y la baja confianza hacen útil una práctica breve.";
+    reason = "El conocimiento está emergiendo y una práctica breve puede consolidar confianza y aplicación.";
   }
 
   return {

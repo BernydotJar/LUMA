@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
-  BrainCircuit,
   Check,
   Clock3,
   Compass,
@@ -19,7 +18,7 @@ import styles from "./onboarding-experience.module.css";
 
 const goals = [
   { id: "emotions", icon: HeartHandshake, title: "Gestionar mejor mis emociones", copy: "Reconocer patrones y responder con más intención." },
-  { id: "beliefs", icon: BrainCircuit, title: "Transformar creencias que me frenan", copy: "Identificar filtros, probar alternativas y transferirlas." },
+  { id: "beliefs", icon: Sparkles, title: "Transformar creencias que me frenan", copy: "Identificar filtros, probar alternativas y transferirlas." },
   { id: "communication", icon: Compass, title: "Comunicarme con más claridad", copy: "Comprender estados, intención y efectos en otras personas." },
 ];
 
@@ -47,27 +46,27 @@ export function OnboardingExperience() {
       <div className="page-noise" />
       <header className={styles.header}>
         <BrandMark />
-        <span>Construyendo tu Learning Twin</span>
+        <span>Preparando tu experiencia</span>
         <button type="button" onClick={() => router.push("/learn")}>Usar perfil de showcase</button>
       </header>
 
       <div className={styles.layout}>
         <aside className={`${styles.context} glass`}>
           <span className="eyebrow"><span className="eyebrow-dot" /> Antes de empezar</span>
-          <h1>LUMA no necesita saberlo todo sobre ti.</h1>
-          <p>Solo necesita suficiente evidencia para no obligarte a recorrer una ruta genérica. Tú podrás inspeccionar y corregir el Twin en cualquier momento.</p>
+          <h1>LUMA empieza con lo esencial sobre tu objetivo.</h1>
+          <p>Con unas pocas señales iniciales construye un journey que se ajusta a lo que quieres lograr. Puedes actualizar tu perfil de aprendizaje en cualquier momento.</p>
           <div className={styles.twinPreview}>
-            <div className={styles.previewOrb}><BrainCircuit size={40} /></div>
+            <div className={styles.previewOrb}><Sparkles size={40} /></div>
             <div>
-              <span>Learning Twin inicial</span>
-              <strong>{Math.round(((step + 1) / 4) * 100)}% calibrado</strong>
+              <span>Perfil de aprendizaje</span>
+              <strong>{Math.round(((step + 1) / 4) * 100)}% preparado</strong>
               <div><span style={{ width: `${((step + 1) / 4) * 100}%` }} /></div>
             </div>
           </div>
           <ul>
-            <li><Check size={15} /> Observado ≠ inferido</li>
-            <li><Check size={15} /> Tus respuestas son corregibles</li>
-            <li><Check size={15} /> No inferimos características protegidas</li>
+            <li><Check size={15} /> Personalización basada en tu actividad de aprendizaje</li>
+            <li><Check size={15} /> Perfil editable en cualquier momento</li>
+            <li><Check size={15} /> Señales relevantes para tu objetivo</li>
           </ul>
         </aside>
 
@@ -81,7 +80,7 @@ export function OnboardingExperience() {
             <div className={styles.stepContent}>
               <span className="eyebrow"><Target size={14} /> Tu dirección</span>
               <h2>¿Qué quieres ser capaz de hacer?</h2>
-              <p>Elige el resultado más importante ahora. No estás comprando un curso; estás definiendo una capacidad objetivo.</p>
+              <p>Elige la capacidad que quieres fortalecer ahora. Esta meta guía las prácticas que LUMA selecciona para ti.</p>
               <div className={styles.goalGrid}>
                 {goals.map(({ id, icon: Icon, title, copy }) => (
                   <button type="button" key={id} data-selected={goal === id} onClick={() => setGoal(id)}>
@@ -98,7 +97,7 @@ export function OnboardingExperience() {
           {step === 1 && (
             <div className={styles.stepContent}>
               <span className="eyebrow"><Gauge size={14} /> Diagnóstico breve</span>
-              <h2>No confundamos familiaridad con dominio.</h2>
+              <h2>Vamos a comprobar lo que ya puedes aplicar.</h2>
               <p>Elige la respuesta que mejor representa un pensamiento automático saboteador.</p>
               <div className={styles.questionCard}>
                 <strong>Situación: recibes una observación crítica en una reunión.</strong>
@@ -115,7 +114,7 @@ export function OnboardingExperience() {
               <div className={styles.confidence}>
                 <div><strong>¿Qué tan seguro estás?</strong><span>{confidence}/5</span></div>
                 <input aria-label="Confianza" type="range" min="1" max="5" value={confidence} onChange={(event) => setConfidence(Number(event.target.value))} />
-                <div><small>Adiviné</small><small>Muy seguro</small></div>
+                <div><small>Explorando</small><small>Muy seguro</small></div>
               </div>
             </div>
           )}
@@ -124,7 +123,7 @@ export function OnboardingExperience() {
             <div className={styles.stepContent}>
               <span className="eyebrow"><Clock3 size={14} /> Tu contexto real</span>
               <h2>¿Cuánto tiempo tienes en una sesión normal?</h2>
-              <p>LUMA prefiere una acción útil de 8 minutos antes que recomendarte una clase de dos horas que no vas a comenzar.</p>
+              <p>Tu tiempo disponible define la práctica más útil para esta sesión.</p>
               <div className={styles.timeGrid}>
                 {timeOptions.map((option) => (
                   <button type="button" key={option} data-selected={minutes === option} onClick={() => setMinutes(option)}>
@@ -142,11 +141,11 @@ export function OnboardingExperience() {
           {step === 3 && (
             <div className={styles.stepContent}>
               <span className="eyebrow"><Sparkles size={14} /> Tu punto de partida</span>
-              <h2>Tu Twin inicial está listo para aprender contigo.</h2>
-              <p>No es un diagnóstico permanente. Es una primera hipótesis que cambiará con tus acciones y resultados.</p>
+              <h2>Tu punto de partida está listo.</h2>
+              <p>Este perfil evoluciona con tus acciones, resultados y nuevas metas.</p>
               <div className={`${styles.summaryCard} glass`}>
                 <div><span>Objetivo</span><strong>{selectedGoal.title}</strong></div>
-                <div><span>Señal diagnóstica</span><strong>{diagnostic === "b" ? "Reconocimiento correcto" : "Requiere comprobación"}</strong></div>
+                <div><span>Señal diagnóstica</span><strong>{diagnostic === "b" ? "Reconocimiento correcto" : "Práctica recomendada"}</strong></div>
                 <div><span>Confianza reportada</span><strong>{confidence}/5</strong></div>
                 <div><span>Formato recomendado</span><strong>Sesiones de {minutes} min</strong></div>
                 <div className={styles.firstAction}><Sparkles size={18} /><span><small>Primera acción sugerida</small><strong>Detectar un P.A.S. en una situación real</strong></span></div>

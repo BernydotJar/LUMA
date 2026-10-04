@@ -286,9 +286,9 @@ export const twinDimensions: TwinDimension[] = [
 export const studioSignals: StudioSignal[] = [
   {
     id: "bottleneck",
-    label: "Mayor cuello de botella",
+    label: "Mayor oportunidad de refuerzo",
     value: "P.A.S. → aplicación",
-    detail: "41% reconoce la definición, pero falla al identificarla en contexto.",
+    detail: "59% ya lo aplica en contexto; la práctica adaptativa se concentra en el siguiente 41%.",
     trend: "down",
   },
   {
@@ -307,9 +307,9 @@ export const studioSignals: StudioSignal[] = [
   },
   {
     id: "human",
-    label: "Requieren apoyo humano",
+    label: "Acompañamiento humano",
     value: "7 personas",
-    detail: "Fallo repetido, confianza baja o evidencia contradictoria.",
+    detail: "Señales que justifican revisión del coach, evidencia adicional o un check-in.",
     trend: "steady",
   },
 ];

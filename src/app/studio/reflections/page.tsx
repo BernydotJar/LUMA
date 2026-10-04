@@ -13,7 +13,7 @@ export default function CurriculumReflectionPage() {
     <AppShell
       mode="studio"
       title="Curriculum Reflection"
-      subtitle="Conexiones, vacíos y claims revisables sin contaminar la fuente original."
+      subtitle="Conexiones, vacíos y claims revisables con procedencia y control editorial."
     >
       <ReflectionWorkbench />
     </AppShell>

@@ -23,17 +23,18 @@ import { studioSignals } from "@/lib/luma-data";
 import styles from "./studio-dashboard.module.css";
 
 const bottlenecks = [
-  { id: "pas", label: "P.A.S. en contexto", mastery: 49, affected: 41, severity: "high", insight: "Reconocen la definición, pero confunden acontecimiento, pensamiento y emoción en escenarios nuevos." },
-  { id: "levels", label: "Niveles lógicos", mastery: 62, affected: 28, severity: "medium", insight: "La mayoría recuerda los niveles, pero no elige dónde intervenir en un caso ambiguo." },
-  { id: "beliefs", label: "Cambio de creencias", mastery: 55, affected: 34, severity: "high", insight: "Las reformulaciones tienden a ser positivas pero no comprobables ni basadas en evidencia." },
-  { id: "values", label: "Jerarquía de valores", mastery: 71, affected: 18, severity: "low", insight: "Buen desempeño conceptual; falta evidencia diferida de retención." },
+  { id: "pas", label: "P.A.S. en contexto", mastery: 49, affected: 41, severity: "high", insight: "El siguiente salto es separar acontecimiento, pensamiento y emoción con fluidez en escenarios nuevos." },
+  { id: "levels", label: "Niveles lógicos", mastery: 62, affected: 28, severity: "medium", insight: "El grupo reconoce los niveles; la oportunidad está en elegir el punto de intervención en casos ambiguos." },
+  { id: "beliefs", label: "Cambio de creencias", mastery: 55, affected: 34, severity: "high", insight: "La práctica se concentra en formular alternativas comprobables y conectadas con evidencia." },
+  { id: "values", label: "Jerarquía de valores", mastery: 71, affected: 18, severity: "low", insight: "El desempeño conceptual es sólido; la próxima señal será una comprobación diferida de retención." },
 ];
 
 const learners = [
-  { id: "maria", initials: "MV", name: "María V.", signal: "3 fallos en P.A.S.", confidence: "Baja", action: "Sesión humana", urgency: "high" },
-  { id: "carlos", initials: "CR", name: "Carlos R.", signal: "Conducta contradice evaluación", confidence: "Media", action: "Revisión de evidencia", urgency: "medium" },
-  { id: "ana", initials: "AL", name: "Ana L.", signal: "Pregunta repetida 4 veces", confidence: "Baja", action: "Tutor + check-in", urgency: "high" },
-  { id: "jorge", initials: "JM", name: "Jorge M.", signal: "Sin actividad 8 días", confidence: "Alta", action: "Nudge contextual", urgency: "low" },
+  { id: "mariana", initials: "MM", name: "Mariana", signal: "P.A.S.: transferencia en desarrollo", confidence: "68%", action: "Abrir Learning Twin", urgency: "medium" },
+  { id: "maria", initials: "MV", name: "María V.", signal: "P.A.S.: 3 intentos con apoyo", confidence: "Baja", action: "Sesión humana", urgency: "high" },
+  { id: "carlos", initials: "CR", name: "Carlos R.", signal: "Evidencia mixta entre evaluación y conducta", confidence: "Media", action: "Revisión de evidencia", urgency: "medium" },
+  { id: "ana", initials: "AL", name: "Ana L.", signal: "4 consultas sobre el mismo concepto", confidence: "Baja", action: "Tutor + check-in", urgency: "high" },
+  { id: "jorge", initials: "JM", name: "Jorge M.", signal: "Última actividad: hace 8 días", confidence: "Alta", action: "Nudge contextual", urgency: "low" },
 ];
 
 export function StudioDashboard() {
@@ -65,10 +66,10 @@ export function StudioDashboard() {
           <div className={styles.sparkline} aria-hidden="true"><i style={{ height: "25%" }} /><i style={{ height: "38%" }} /><i style={{ height: "31%" }} /><i style={{ height: "52%" }} /><i style={{ height: "62%" }} /><i style={{ height: "74%" }} /><i style={{ height: "88%" }} /></div>
         </article>
         {[
-          [Users, "Learners activos", "128", "82% de la cohorte"],
+          [Users, "Coachees activos", "128", "82% de la cohorte"],
           [BrainCircuit, "Dominio mediano", "64%", "+6 puntos"],
           [AlertTriangle, "Intervención humana", "7", "4 prioridad alta"],
-          [BookOpenCheck, "Learning Quality", "86", "2 gaps de alineación"],
+          [BookOpenCheck, "Learning Quality", "86", "2 objetivos en revisión"],
         ].map(([Icon, label, value, detail]) => {
           const MetricIcon = Icon as typeof Users;
           return (
@@ -93,7 +94,7 @@ export function StudioDashboard() {
       <div className={styles.mainGrid}>
         <section className={`${styles.bottleneckCard} glass`}>
           <div className={styles.cardHeading}>
-            <div><span className="eyebrow"><AlertTriangle size={14} /> Conceptos que frenan progreso</span><h2>¿Dónde deja de enseñar el curso?</h2></div>
+            <div><span className="eyebrow"><AlertTriangle size={14} /> Oportunidades de refuerzo</span><h2>Dónde una intervención mejora el aprendizaje</h2></div>
             <span className="status-pill" data-tone="warning">4 señales activas</span>
           </div>
           <div className={styles.bottleneckLayout}>
@@ -103,7 +104,7 @@ export function StudioDashboard() {
                   <span>{item.label}</span>
                   <div><i style={{ width: `${item.mastery}%` }} /></div>
                   <strong>{item.mastery}%</strong>
-                  <small>{item.affected}% afectados</small>
+                  <small>{item.affected}% con oportunidad</small>
                 </button>
               ))}
             </div>
@@ -112,7 +113,7 @@ export function StudioDashboard() {
               <h3>{selected.label}</h3>
               <p>{selected.insight}</p>
               <dl>
-                <div><dt>Señal</dt><dd>{selected.affected}% de learners</dd></div>
+                <div><dt>Señal</dt><dd>{selected.affected}% de coachees</dd></div>
                 <div><dt>Dominio</dt><dd>{selected.mastery}% mediano</dd></div>
                 <div><dt>Confianza</dt><dd>84% en la señal</dd></div>
               </dl>
@@ -120,7 +121,7 @@ export function StudioDashboard() {
             </div>
           </div>
           <div className={styles.interventionEffect}>
-            <div><span className={styles.effectIcon}><MessageSquareText size={19} /></span><div><strong>La pregunta socrática fue la intervención más efectiva</strong><p>63% mejoró en el segundo intento frente a 38% con explicación directa.</p></div></div>
+            <div><span className={styles.effectIcon}><MessageSquareText size={19} /></span><div><strong>La pregunta socrática generó la mejora más alta</strong><p>63% mejoró en el segundo intento frente a 38% con explicación directa.</p></div></div>
             <span>n=46 interacciones</span>
           </div>
         </section>
@@ -133,13 +134,13 @@ export function StudioDashboard() {
                 <div key={String(label)}><span>{String(label)}</span><div><i style={{ width: `${Number(value)}%` }} /></div><strong>{Number(value)}</strong></div>
               ))}
             </div>
-            <p><ShieldCheck size={14} /> La puntuación se explica por componente; no es un número opaco.</p>
+            <p><ShieldCheck size={14} /> Cada componente explica el puntaje y conserva trazabilidad.</p>
           </section>
 
           <section className={`${styles.questionCard} glass`}>
             <span className="eyebrow"><MessageSquareText size={14} /> Pregunta repetida</span>
             <blockquote>“¿Cómo sé si una creencia es mía o aprendida?”</blockquote>
-            <p>26 learners · 41 preguntas similares · Módulo 3</p>
+            <p>26 coachees · 41 preguntas similares · Módulo 3</p>
             <button className="button-secondary" type="button">Crear refuerzo de 3 min <Sparkles size={15} /></button>
           </section>
         </aside>
@@ -147,8 +148,8 @@ export function StudioDashboard() {
 
       <section className={`${styles.interventionQueue} glass`}>
         <div className={styles.cardHeading}>
-          <div><span className="eyebrow"><CircleUserRound size={14} /> Human-in-the-loop</span><h2>Personas que requieren contexto humano</h2></div>
-          <span>7 pendientes · 4 mostradas</span>
+          <div><span className="eyebrow"><CircleUserRound size={14} /> Coach-in-the-loop</span><h2>Coachees con oportunidad de acompañamiento</h2></div>
+          <span>7 activas · 5 mostradas</span>
         </div>
         <div className={styles.table} role="table" aria-label="Cola de intervención humana">
           <div className={styles.tableHead} role="row"><span role="columnheader">Persona</span><span role="columnheader">Señal</span><span role="columnheader">Confianza</span><span role="columnheader">Recomendación</span><span role="columnheader">Acción</span></div>
@@ -158,11 +159,19 @@ export function StudioDashboard() {
               <span role="cell">{learner.signal}</span>
               <span role="cell">{learner.confidence}</span>
               <span role="cell">{learner.action}</span>
-              <span role="cell"><button type="button" data-assigned={assigned.includes(learner.id)} onClick={() => assign(learner.id)}>{assigned.includes(learner.id) ? <><Check size={14} /> Asignado</> : "Asignar"}</button></span>
+              <span role="cell">
+                {learner.id === "mariana" ? (
+                  <Link className={styles.openTwin} href="/studio/learners/mariana">Abrir <ArrowRight size={13} /></Link>
+                ) : (
+                  <button type="button" data-assigned={assigned.includes(learner.id)} onClick={() => assign(learner.id)}>
+                    {assigned.includes(learner.id) ? <><Check size={14} /> Asignado</> : "Asignar"}
+                  </button>
+                )}
+              </span>
             </div>
           ))}
         </div>
-        <footer><p>Antes de la sesión, el instructor recibe un resumen breve del objetivo, evidencia, intentos e intervenciones previas.</p><Link href="/learn">Abrir un learner context pack <ArrowRight size={15} /></Link></footer>
+        <footer><p>Antes de la sesión, el coach recibe un resumen breve del objetivo, evidencia, intentos e intervenciones previas.</p><Link href="/studio/learners/mariana">Abrir Learning Twin de Mariana <ArrowRight size={15} /></Link></footer>
       </section>
     </div>
   );

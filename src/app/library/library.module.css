@@ -7,7 +7,7 @@
   align-items: center;
   gap: 34px;
   background:
-    radial-gradient(circle at 92% 8%, rgba(201,241,90,.15), transparent 30%),
+    radial-gradient(circle at 92% 8%, rgba(239,200,106,.15), transparent 30%),
     linear-gradient(145deg, rgba(255,255,255,.1), rgba(255,255,255,.025)),
     var(--glass);
 }
@@ -191,7 +191,7 @@
 
 .graphCanvas path {
   fill: none;
-  stroke: rgba(201,241,90,.24);
+  stroke: rgba(239,200,106,.24);
   stroke-width: 1.5;
   stroke-dasharray: 5 7;
 }
@@ -213,9 +213,9 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border-color: rgba(201,241,90,.28);
+  border-color: rgba(239,200,106,.28);
   border-radius: 50%;
-  color: #102015;
+  color: #2d1b1d;
   background: linear-gradient(145deg, var(--accent), var(--mint));
   font-size: .82rem;
   font-weight: 800;
@@ -235,7 +235,7 @@
   padding: 9px;
   border-radius: 18px;
   color: var(--muted-strong);
-  background: rgba(15,35,28,.88);
+  background: rgba(58,34,35,.9);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   font-size: .68rem;
@@ -308,7 +308,7 @@
 }
 
 .assetList > a:hover {
-  border-color: rgba(201,241,90,.28);
+  border-color: rgba(239,200,106,.28);
 }
 
 .assetList > a > span,
@@ -319,7 +319,7 @@
   display: grid;
   place-items: center;
   color: var(--mint);
-  background: rgba(117,223,194,.08);
+  background: rgba(157,172,120,.08);
 }
 
 .assetList strong {
@@ -338,7 +338,7 @@
 
 .authoringCard {
   background:
-    radial-gradient(circle at 90% 0%, rgba(201,241,90,.12), transparent 32%),
+    radial-gradient(circle at 90% 0%, rgba(239,200,106,.12), transparent 32%),
     linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.025)),
     var(--glass);
 }
@@ -403,7 +403,7 @@
 }
 
 .moduleGrid article[data-active="true"] {
-  border-color: rgba(201,241,90,.32);
+  border-color: rgba(239,200,106,.32);
   background: var(--accent-soft);
 }
 
