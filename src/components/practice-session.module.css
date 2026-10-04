@@ -616,3 +616,71 @@
 .contextCard a { color: #f0d577; border-color: rgba(255,255,255,.12); }
 .twinImpact li svg { color: #d7df9d; }
 .twinImpact li strong { color: #fff7e7; }
+
+:global(html[data-theme="se"]) .page,
+:global(html[data-theme="se"]) .completePage,
+:global(html[data-theme="light"]) .page,
+:global(html[data-theme="light"]) .completePage {
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 92% 5%, color-mix(in srgb, var(--brand-secondary) 12%, transparent), transparent 28rem),
+    radial-gradient(circle at 5% 90%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 34rem),
+    var(--bg);
+}
+
+:global(html[data-theme="dark"]) .page,
+:global(html[data-theme="dark"]) .completePage {
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 92% 5%, rgba(217,123,75,.12), transparent 28rem),
+    radial-gradient(circle at 5% 90%, rgba(157,172,120,.09), transparent 34rem),
+    #171114;
+}
+
+:global(html[data-theme="se"]) .session,
+:global(html[data-theme="light"]) .session,
+:global(html[data-theme="se"]) .completeCard,
+:global(html[data-theme="light"]) .completeCard {
+  color: var(--ink);
+  border-color: var(--line);
+  background: rgba(255,255,255,.76);
+  box-shadow: var(--shadow), inset 0 1px 0 #fff;
+}
+
+:global(html[data-theme="dark"]) .session,
+:global(html[data-theme="dark"]) .completeCard {
+  color: var(--ink);
+  border-color: var(--line);
+  background: rgba(48,29,32,.84);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+:global(html[data-theme="se"]) .questionHeading > span,
+:global(html[data-theme="se"]) .questionFooter :global(.button-primary) { color: #052b3a; background: #00a2f1; }
+:global(html[data-theme="light"]) .questionHeading > span,
+:global(html[data-theme="light"]) .questionFooter :global(.button-primary) { color: #00131f; background: #0a84ff; }
+:global(html[data-theme="dark"]) .questionHeading > span,
+:global(html[data-theme="dark"]) .questionFooter :global(.button-primary) { color: #2d1b1d; background: #efc86a; }
+
+:global(html[data-theme="se"]) .choices button[data-selected="true"] { border-color: #00a2f1; background: rgba(0,162,241,.08); }
+:global(html[data-theme="light"]) .choices button[data-selected="true"] { border-color: #0a84ff; background: rgba(10,132,255,.08); }
+:global(html[data-theme="dark"]) .choices button[data-selected="true"] { border-color: #efc86a; background: rgba(239,200,106,.08); }
+
+:global(html[data-theme="se"]) .contextCard,
+:global(html[data-theme="se"]) .twinImpact {
+  color: #fff;
+  background: linear-gradient(145deg, #007ebc, #993366);
+  border-color: rgba(255,255,255,.18);
+}
+:global(html[data-theme="light"]) .contextCard,
+:global(html[data-theme="light"]) .twinImpact {
+  color: #fff;
+  background: linear-gradient(145deg, #1b3a8c, #7b5cff);
+  border-color: rgba(255,255,255,.18);
+}
+:global(html[data-theme="dark"]) .contextCard,
+:global(html[data-theme="dark"]) .twinImpact {
+  color: #fff8e8;
+  background: linear-gradient(145deg, #5b3037, #342124);
+  border-color: rgba(255,238,210,.12);
+}

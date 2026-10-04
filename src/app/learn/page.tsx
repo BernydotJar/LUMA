@@ -11,6 +11,7 @@ import { AppShell } from "@/components/app-shell";
 import { LearningJourney } from "@/components/learning-journey";
 import { LearningPulse } from "@/components/learning-pulse";
 import { NextActionCard } from "@/components/next-action-card";
+import { ProgressStory } from "@/components/progress-story";
 import { TutorPanel } from "@/components/tutor-panel";
 import { journeySteps, learnerState, nextAction, twinDimensions } from "@/lib/luma-data";
 import styles from "./learn.module.css";
@@ -52,6 +53,8 @@ export default function LearnPage() {
         <NextActionCard action={nextAction} />
         <LearningPulse dimensions={twinDimensions} />
       </div>
+
+      <ProgressStory />
 
       <section className={styles.proofStrip} aria-label="Cómo se adapta tu journey">
         <div><span>01</span><strong>Base demostrada</strong><p>Comunicación emocional con evidencia consistente.</p></div>

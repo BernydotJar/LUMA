@@ -118,6 +118,45 @@ test.describe("LUMA product showcase", () => {
 
 
 
+  test("superuser can compare roles and persist a visual theme", async ({ page }) => {
+    await page.goto("/experience");
+    await expect(page.getByRole("heading", { name: /Una plataforma. Dos experiencias. Tres expresiones visuales/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Abrir coachee/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Abrir coach", exact: true })).toBeVisible();
+
+    await page.getByRole("button", { name: "Usar tema Liquid Light" }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+
+    await page.getByRole("button", { name: "Usar tema Nocturne Intelligence" }).click();
+    await page.getByRole("link", { name: /Abrir coachee/i }).click();
+    await expect(page).toHaveURL(/\/learn$/);
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  });
+
+  test("adult progress is expressed as capability, transfer and next demonstration", async ({ page }) => {
+    await page.goto("/learn");
+    await expect(page.getByRole("heading", { name: /Tu progreso se expresa en capacidades demostradas/i })).toBeVisible();
+    const tabs = page.getByRole("tab");
+    await expect(tabs).toHaveCount(3);
+    await expect(tabs.nth(0)).toContainText(/Capacidad demostrada/i);
+    await expect(tabs.nth(1)).toContainText(/Transferencia reciente/i);
+    await expect(tabs.nth(2)).toContainText(/Siguiente demostración/i);
+    await tabs.nth(2).click();
+    await expect(tabs.nth(2)).toHaveAttribute("aria-selected", "true");
+  });
+
+  test("iconography catalog changes material while preserving semantics", async ({ page }) => {
+    await page.goto("/iconography");
+    await expect(page.getByRole("heading", { name: /El significado permanece. El material cambia con el tema/i })).toBeVisible();
+    await expect(page.getByText("Prisma refractivo", { exact: true })).toBeVisible();
+    await expect(page.getByText("Campo orbital", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "Claro Liquid Light", exact: true }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await expect(page.locator('img[src*="/iconography/light/practice.svg"]')).toBeVisible();
+  });
+
   test("premium semantic objects appear in the intended product moments", async ({ page }) => {
     await page.goto("/learn");
     await expect(page.locator('[data-variant="prism"]').first()).toBeVisible();
@@ -154,6 +193,8 @@ test.describe("LUMA product showcase", () => {
       "/learn",
       "/studio/learners/mariana",
       "/library",
+      "/experience",
+      "/iconography",
       "/studio",
       "/studio/reflections",
       "/onboarding",

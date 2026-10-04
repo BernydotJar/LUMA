@@ -323,3 +323,159 @@ textarea:focus-visible {
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+
+/* Theme architecture: institutional SE, liquid light and nocturne dark. */
+html[data-theme="se"] {
+  color-scheme: light;
+  --bg: #f7f9fc;
+  --bg-elevated: #ffffff;
+  --bg-soft: #eef7fd;
+  --ink: #333333;
+  --ink-strong: #15171a;
+  --muted: #737b84;
+  --muted-strong: #4f5963;
+  --line: rgba(62, 93, 116, .14);
+  --line-strong: rgba(62, 93, 116, .24);
+  --glass: rgba(255, 255, 255, .62);
+  --glass-strong: rgba(255, 255, 255, .78);
+  --accent: #00a2f1;
+  --accent-soft: rgba(0, 162, 241, .12);
+  --mint: #2bb3b1;
+  --peach: #ef746a;
+  --danger: #d74765;
+  --brand-secondary: #ff438c;
+  --brand-deep: #993366;
+  --active-control-ink: #052b3a;
+  --control-surface: rgba(255,255,255,.67);
+  --shadow: 0 26px 74px rgba(32, 84, 118, .12);
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f5f5f7;
+  --bg-elevated: #ffffff;
+  --bg-soft: #ececf0;
+  --ink: #1d1d1f;
+  --ink-strong: #000000;
+  --muted: #6e6e73;
+  --muted-strong: #3a3a3c;
+  --line: rgba(29, 29, 31, .12);
+  --line-strong: rgba(29, 29, 31, .2);
+  --glass: rgba(255, 255, 255, .58);
+  --glass-strong: rgba(255, 255, 255, .76);
+  --accent: #0a84ff;
+  --accent-soft: rgba(10, 132, 255, .12);
+  --mint: #2bb3b1;
+  --peach: #ffb38a;
+  --danger: #ff453a;
+  --brand-secondary: #7b5cff;
+  --brand-deep: #1b3a8c;
+  --active-control-ink: #00131f;
+  --control-surface: rgba(255,255,255,.64);
+  --shadow: 0 24px 72px rgba(40, 47, 64, .12);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #171114;
+  --bg-elevated: #24181a;
+  --bg-soft: #342124;
+  --ink: #f7edd8;
+  --ink-strong: #fff8e8;
+  --muted: #b7a18c;
+  --muted-strong: #dbcbb6;
+  --line: rgba(255, 238, 210, .12);
+  --line-strong: rgba(255, 238, 210, .2);
+  --glass: rgba(255, 244, 222, .065);
+  --glass-strong: rgba(255, 244, 222, .1);
+  --accent: #efc86a;
+  --accent-soft: rgba(239, 200, 106, .12);
+  --mint: #9dac78;
+  --peach: #d97b4b;
+  --danger: #e78472;
+  --brand-secondary: #d97b4b;
+  --brand-deep: #5b3037;
+  --active-control-ink: #2d1b1d;
+  --control-surface: rgba(255,244,222,.06);
+  --shadow: 0 30px 80px rgba(9, 4, 5, .28);
+}
+
+html[data-theme="se"] body {
+  background:
+    radial-gradient(circle at 88% 2%, rgba(255, 67, 140, .13), transparent 31rem),
+    radial-gradient(circle at 4% 82%, rgba(0, 162, 241, .14), transparent 35rem),
+    linear-gradient(145deg, #f8fbfe, #f9f5fb 58%, #ffffff);
+}
+
+html[data-theme="light"] body {
+  background:
+    radial-gradient(circle at 88% -4%, rgba(123, 92, 255, .15), transparent 32rem),
+    radial-gradient(circle at 7% 88%, rgba(43, 179, 177, .13), transparent 36rem),
+    radial-gradient(circle at 48% 18%, rgba(255, 179, 138, .1), transparent 24rem),
+    #f5f5f7;
+}
+
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 90% 0%, rgba(217, 123, 75, .12), transparent 32rem),
+    radial-gradient(circle at 8% 88%, rgba(157, 172, 120, .09), transparent 36rem),
+    #171114;
+}
+
+html[data-theme="light"] .glass,
+html[data-theme="se"] .glass {
+  border-color: var(--line);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.74), rgba(255,255,255,.2) 58%),
+    var(--glass);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.92);
+  -webkit-backdrop-filter: blur(28px) saturate(1.18);
+  backdrop-filter: blur(28px) saturate(1.18);
+}
+
+html[data-theme="light"] .glass-subtle,
+html[data-theme="se"] .glass-subtle {
+  border-color: var(--line);
+  background: rgba(255,255,255,.48);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.86);
+}
+
+html[data-theme="se"] .brand-mark__icon {
+  color: #ffffff;
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.78), transparent 30%),
+    linear-gradient(145deg, #00a2f1, #ff438c 72%, #993366);
+  box-shadow: 0 10px 30px rgba(0,162,241,.18), inset 0 1px 0 rgba(255,255,255,.72);
+}
+
+html[data-theme="light"] .brand-mark__icon {
+  color: #ffffff;
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.78), transparent 32%),
+    linear-gradient(145deg, #0a84ff, #7b5cff);
+  box-shadow: 0 10px 30px rgba(10,132,255,.18), inset 0 1px 0 rgba(255,255,255,.72);
+}
+
+html[data-theme="dark"] .brand-mark__icon {
+  color: #2d1b1d;
+  background:
+    radial-gradient(circle at 28% 20%, #fff0b7, transparent 35%),
+    linear-gradient(145deg, #efc86a, #d97b4b);
+}
+
+.brand-mark__se-logo {
+  width: 126px;
+  height: auto;
+  margin-top: 2px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass-subtle {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: var(--bg-elevated) !important;
+  }
+}

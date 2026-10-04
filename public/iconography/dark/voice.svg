@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Voice Practice — Nocturne Intelligence</title>
+  <desc id="desc">Premium abstract icon: Resonance field.</desc>
+  
+    <defs>
+      <linearGradient id="g-voice" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#EFC86A"/>
+        <stop offset="0.62" stop-color="#D97B4B"/>
+        <stop offset="1" stop-color="#5B3037"/>
+      </linearGradient>
+      <linearGradient id="glass-voice" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.78"/>
+        <stop offset="0.45" stop-color="#342124" stop-opacity="0.34"/>
+        <stop offset="1" stop-color="#EFC86A" stop-opacity="0.14"/>
+      </linearGradient>
+      <radialGradient id="orb-voice" cx="32%" cy="24%" r="78%">
+        <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.92"/>
+        <stop offset="0.16" stop-color="#EFC86A"/>
+        <stop offset="0.62" stop-color="#D97B4B"/>
+        <stop offset="1" stop-color="#5B3037"/>
+      </radialGradient>
+      <filter id="shadow-voice" x="-40%" y="-40%" width="180%" height="180%">
+        <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#5B3037" flood-opacity="0.18"/>
+      </filter>
+      <filter id="blur-voice" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="9"/>
+      </filter>
+    </defs>
+    
+  <rect width="256" height="256" rx="64" fill="#24181A"/>
+  <circle cx="206" cy="42" r="78" fill="#D97B4B" opacity="0.10" filter="url(#blur-voice)"/>
+  <circle cx="42" cy="216" r="72" fill="#EFC86A" opacity="0.10" filter="url(#blur-voice)"/>
+  <rect x="20" y="20" width="216" height="216" rx="52" fill="url(#glass-voice)" stroke="#FFF5DF" stroke-opacity="0.58"/>
+  
+  <g filter="url(#shadow-voice)">
+    <rect x="45" y="66" width="166" height="124" rx="45" fill="#342124" fill-opacity=".28" stroke="#FFF" stroke-opacity=".32"/>
+    <rect x="62" y="117.0" width="9" height="22" rx="4.5" fill="#EFC86A" opacity="0.55"/><rect x="80" y="109.0" width="9" height="38" rx="4.5" fill="#EFC86A" opacity="0.59"/><rect x="98" y="99.0" width="9" height="58" rx="4.5" fill="#EFC86A" opacity="0.63"/><rect x="116" y="86.0" width="9" height="84" rx="4.5" fill="#EFC86A" opacity="0.67"/><rect x="134" y="76.0" width="9" height="104" rx="4.5" fill="#D97B4B" opacity="0.71"/><rect x="152" y="93.0" width="9" height="70" rx="4.5" fill="#D97B4B" opacity="0.75"/><rect x="170" y="107.0" width="9" height="42" rx="4.5" fill="#D97B4B" opacity="0.79"/><rect x="188" y="114.0" width="9" height="28" rx="4.5" fill="#D97B4B" opacity="0.83"/>
+    <circle cx="128" cy="128" r="61" fill="none" stroke="#9DAC78" stroke-opacity=".24" stroke-width="2"/>
+  </g>
+</svg>

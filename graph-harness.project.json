@@ -444,6 +444,251 @@
         "firebase.json",
         "apphosting.yaml"
       ]
+    },
+    {
+      "id": "LUMA-017-theme-superuser-architecture",
+      "kind": "product-foundation",
+      "title": "Three-theme architecture and unified superuser experience console",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-016-premium-showcase-release"
+      ],
+      "capability": "theme-and-profile-experience",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/012-theme-system-superuser.md",
+        "src/app/layout.tsx",
+        "src/app/experience/**",
+        "src/components/theme-*",
+        "src/components/experience-*",
+        "src/components/app-shell*",
+        "src/components/brand-mark.tsx",
+        "src/lib/themes.ts",
+        "src/app/globals.css",
+        "e2e/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-018-seres-institutional-theme",
+      "kind": "product-surface",
+      "title": "Seres de Excelencia institutional theme and brand provenance",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-017-theme-superuser-architecture"
+      ],
+      "capability": "institutional-theme",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "public/brand/seres-de-excelencia/**",
+        "evidence/theme-research/**",
+        "src/app/globals.css",
+        "src/components/**/*module.css",
+        "src/lib/themes.ts",
+        "e2e/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-019-liquid-light-theme",
+      "kind": "product-surface",
+      "title": "Liquid Light material theme with accessible motion and transparency fallbacks",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-017-theme-superuser-architecture"
+      ],
+      "capability": "light-material-theme",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/012-theme-system-superuser.md",
+        "src/app/globals.css",
+        "src/components/**/*module.css",
+        "src/lib/themes.ts",
+        "e2e/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-020-nocturne-theme",
+      "kind": "product-surface",
+      "title": "Nocturne Intelligence dark theme across coachee and coach surfaces",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-017-theme-superuser-architecture"
+      ],
+      "capability": "dark-material-theme",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/012-theme-system-superuser.md",
+        "src/app/globals.css",
+        "src/components/**/*module.css",
+        "src/lib/themes.ts",
+        "e2e/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-021-glass-adversarial-harness",
+      "kind": "verification-capability",
+      "title": "Glass material adversarial testing across themes, roles and viewports",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-018-seres-institutional-theme",
+        "LUMA-019-liquid-light-theme",
+        "LUMA-020-nocturne-theme"
+      ],
+      "capability": "ui-adversarial-testing",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/015-glass-adversarial-testing.md",
+        "scripts/glass-adversarial-audit.mjs",
+        "evidence/glass-adversarial/**",
+        "e2e/**",
+        "src/app/globals.css"
+      ]
+    },
+    {
+      "id": "LUMA-022-iconography-3dicon-pipeline",
+      "kind": "product-foundation",
+      "title": "Theme-aware iconography baseline and controlled 3dicon animation pipeline",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-018-seres-institutional-theme",
+        "LUMA-019-liquid-light-theme",
+        "LUMA-020-nocturne-theme"
+      ],
+      "capability": "iconography-and-motion-assets",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/013-iconography-3dicon.md",
+        "docs/iconography/**",
+        "public/iconography/**",
+        "scripts/iconography/**",
+        "src/app/iconography/**",
+        "src/components/iconography-*",
+        "src/components/experience-console*",
+        "e2e/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-023-andragogical-progress",
+      "kind": "product-surface",
+      "title": "Andragogical progress narrative using capability, transfer and next demonstration",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-017-theme-superuser-architecture"
+      ],
+      "capability": "adult-progress-experience",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/014-progress-andragogy.md",
+        "src/app/learn/**",
+        "src/components/progress-story*",
+        "e2e/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-024-original-coach-voice",
+      "kind": "product-research",
+      "title": "Original Seres Coach Voice direction, rights gate and provider-neutral architecture",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-017-theme-superuser-architecture"
+      ],
+      "capability": "voice-learning-modality",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/016-original-coach-voice.md",
+        "docs/voice/**",
+        "evidence/voice/**",
+        "src/components/experience-console*"
+      ]
+    },
+    {
+      "id": "LUMA-025-private-video-showcase-pipeline",
+      "kind": "product-research",
+      "title": "Private course video rights, ingestion, transcode and learning-evidence pipeline",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-017-theme-superuser-architecture"
+      ],
+      "capability": "video-learning-pipeline",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/017-video-ingestion-showcase.md",
+        "docs/video/**",
+        "evidence/video/**",
+        "src/components/experience-console*"
+      ]
+    },
+    {
+      "id": "LUMA-026-themed-superuser-release",
+      "kind": "release",
+      "title": "Three-theme superuser and premium asset-system client-showcase release",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-021-glass-adversarial-harness",
+        "LUMA-022-iconography-3dicon-pipeline",
+        "LUMA-023-andragogical-progress",
+        "LUMA-024-original-coach-voice",
+        "LUMA-025-private-video-showcase-pipeline"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "scripts/**",
+        "e2e/**",
+        "evidence/**",
+        "firebase.json",
+        "apphosting.yaml"
+      ]
     }
   ]
 }

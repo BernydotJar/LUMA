@@ -8,18 +8,68 @@
       "height": 1000
     },
     "documentWidth": 1440,
-    "documentHeight": 2528,
+    "documentHeight": 3399,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "Superuser",
         "rect": {
-          "x": 33,
-          "y": 40,
-          "width": 183,
-          "height": 38
+          "x": 732,
+          "y": 29,
+          "width": 97,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coachee",
+        "rect": {
+          "x": 839,
+          "y": 29,
+          "width": 85,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coach",
+        "rect": {
+          "x": 926,
+          "y": 29,
+          "width": 52,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 986,
+          "y": 29,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 1021,
+          "y": 29,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 1056,
+          "y": 29,
+          "width": 33,
+          "height": 32
         }
       },
       {
@@ -27,7 +77,7 @@
         "text": "Ayúdame a identificar un P.A.S.",
         "rect": {
           "x": 699,
-          "y": 1977,
+          "y": 2847,
           "width": 174,
           "height": 27
         }
@@ -37,7 +87,7 @@
         "text": "¿Por qué me recomiendas esta práctica?",
         "rect": {
           "x": 879,
-          "y": 1977,
+          "y": 2847,
           "width": 220,
           "height": 27
         }
@@ -47,7 +97,7 @@
         "text": "Dame un ejemplo de niveles lógicos",
         "rect": {
           "x": 1105,
-          "y": 1977,
+          "y": 2847,
           "width": 199,
           "height": 27
         }
@@ -57,7 +107,7 @@
         "text": "",
         "rect": {
           "x": 716,
-          "y": 2031,
+          "y": 2901,
           "width": 593,
           "height": 16
         }
@@ -75,18 +125,68 @@
       "height": 1000
     },
     "documentWidth": 1440,
-    "documentHeight": 2528,
+    "documentHeight": 3399,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "Superuser",
         "rect": {
-          "x": 33,
-          "y": 40,
-          "width": 183,
-          "height": 38
+          "x": 732,
+          "y": 29,
+          "width": 97,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coachee",
+        "rect": {
+          "x": 839,
+          "y": 29,
+          "width": 85,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coach",
+        "rect": {
+          "x": 926,
+          "y": 29,
+          "width": 52,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 986,
+          "y": 29,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 1021,
+          "y": 29,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 1056,
+          "y": 29,
+          "width": 33,
+          "height": 32
         }
       },
       {
@@ -94,7 +194,7 @@
         "text": "Ayúdame a identificar un P.A.S.",
         "rect": {
           "x": 699,
-          "y": 1977,
+          "y": 2847,
           "width": 174,
           "height": 27
         }
@@ -104,7 +204,7 @@
         "text": "¿Por qué me recomiendas esta práctica?",
         "rect": {
           "x": 879,
-          "y": 1977,
+          "y": 2847,
           "width": 220,
           "height": 27
         }
@@ -114,7 +214,7 @@
         "text": "Dame un ejemplo de niveles lógicos",
         "rect": {
           "x": 1105,
-          "y": 1977,
+          "y": 2847,
           "width": 199,
           "height": 27
         }
@@ -124,7 +224,7 @@
         "text": "",
         "rect": {
           "x": 716,
-          "y": 2031,
+          "y": 2901,
           "width": 593,
           "height": 16
         }
@@ -148,12 +248,62 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "Superuser",
         "rect": {
-          "x": 36,
-          "y": 42,
-          "width": 183,
-          "height": 38
+          "x": 732,
+          "y": 30,
+          "width": 97,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coachee",
+        "rect": {
+          "x": 839,
+          "y": 30,
+          "width": 85,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coach",
+        "rect": {
+          "x": 926,
+          "y": 30,
+          "width": 52,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 986,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 1021,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 1056,
+          "y": 30,
+          "width": 33,
+          "height": 32
         }
       },
       {
@@ -215,12 +365,62 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "Superuser",
         "rect": {
-          "x": 36,
-          "y": 42,
-          "width": 183,
-          "height": 38
+          "x": 732,
+          "y": 30,
+          "width": 97,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coachee",
+        "rect": {
+          "x": 839,
+          "y": 30,
+          "width": 85,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coach",
+        "rect": {
+          "x": 926,
+          "y": 30,
+          "width": 52,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 986,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 1021,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 1056,
+          "y": 30,
+          "width": 33,
+          "height": 32
         }
       },
       {
@@ -282,12 +482,226 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "Superuser",
         "rect": {
-          "x": 36,
-          "y": 42,
-          "width": 183,
+          "x": 732,
+          "y": 30,
+          "width": 97,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coachee",
+        "rect": {
+          "x": 839,
+          "y": 30,
+          "width": 85,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coach",
+        "rect": {
+          "x": 926,
+          "y": 30,
+          "width": 52,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 986,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 1021,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 1056,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/experience",
+    "viewportName": "desktop",
+    "title": "Experience Console · LUMA",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "documentWidth": 1440,
+    "documentHeight": 3753,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "Superuser",
+        "rect": {
+          "x": 732,
+          "y": 30,
+          "width": 97,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coachee",
+        "rect": {
+          "x": 839,
+          "y": 30,
+          "width": 85,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coach",
+        "rect": {
+          "x": 926,
+          "y": 30,
+          "width": 52,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 986,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 1021,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 1056,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir catálogo",
+        "rect": {
+          "x": 1224,
+          "y": 1692,
+          "width": 121,
           "height": 38
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/iconography",
+    "viewportName": "desktop",
+    "title": "Iconografía LUMA · LUMA",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "documentWidth": 1440,
+    "documentHeight": 2010,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "Superuser",
+        "rect": {
+          "x": 732,
+          "y": 30,
+          "width": 97,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coachee",
+        "rect": {
+          "x": 839,
+          "y": 30,
+          "width": 85,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coach",
+        "rect": {
+          "x": 926,
+          "y": 30,
+          "width": 52,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 986,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 1021,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 1056,
+          "y": 30,
+          "width": 33,
+          "height": 32
         }
       }
     ],
@@ -309,12 +723,62 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "Superuser",
         "rect": {
-          "x": 36,
-          "y": 42,
-          "width": 183,
-          "height": 38
+          "x": 732,
+          "y": 30,
+          "width": 97,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coachee",
+        "rect": {
+          "x": 839,
+          "y": 30,
+          "width": 85,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coach",
+        "rect": {
+          "x": 926,
+          "y": 30,
+          "width": 52,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 986,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 1021,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 1056,
+          "y": 30,
+          "width": 33,
+          "height": 32
         }
       },
       {
@@ -416,12 +880,62 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "Superuser",
         "rect": {
-          "x": 36,
-          "y": 42,
-          "width": 183,
-          "height": 38
+          "x": 732,
+          "y": 30,
+          "width": 97,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coachee",
+        "rect": {
+          "x": 839,
+          "y": 30,
+          "width": 85,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Coach",
+        "rect": {
+          "x": 926,
+          "y": 30,
+          "width": 52,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 986,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 1021,
+          "y": 30,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 1056,
+          "y": 30,
+          "width": 33,
+          "height": 32
         }
       },
       {
@@ -532,16 +1046,6 @@
     "outOfBounds": [],
     "smallTargets": [
       {
-        "tag": "a",
-        "text": "LUMA inicio",
-        "rect": {
-          "x": 60,
-          "y": 25,
-          "width": 183,
-          "height": 38
-        }
-      },
-      {
         "tag": "button",
         "text": "Usar perfil de showcase",
         "rect": {
@@ -601,13 +1105,13 @@
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 4132,
+    "documentHeight": 5624,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "LUMA para Seres de Excelencia, inicio",
         "rect": {
           "x": 14,
           "y": 28,
@@ -617,10 +1121,40 @@
       },
       {
         "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 218,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 253,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 288,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
         "text": "Ayúdame a identificar un P.A.S.",
         "rect": {
           "x": 31,
-          "y": 3789,
+          "y": 5281,
           "width": 174,
           "height": 27
         }
@@ -630,7 +1164,7 @@
         "text": "¿Por qué me recomiendas esta práctica?",
         "rect": {
           "x": 211,
-          "y": 3789,
+          "y": 5281,
           "width": 220,
           "height": 27
         }
@@ -640,7 +1174,7 @@
         "text": "Dame un ejemplo de niveles lógicos",
         "rect": {
           "x": 437,
-          "y": 3789,
+          "y": 5281,
           "width": 199,
           "height": 27
         }
@@ -650,7 +1184,7 @@
         "text": "",
         "rect": {
           "x": 48,
-          "y": 3843,
+          "y": 5335,
           "width": 264,
           "height": 16
         }
@@ -668,13 +1202,13 @@
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 4132,
+    "documentHeight": 5624,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "LUMA para Seres de Excelencia, inicio",
         "rect": {
           "x": 14,
           "y": 28,
@@ -684,10 +1218,40 @@
       },
       {
         "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 218,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 253,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 288,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
         "text": "Ayúdame a identificar un P.A.S.",
         "rect": {
           "x": 31,
-          "y": 3789,
+          "y": 5281,
           "width": 174,
           "height": 27
         }
@@ -697,7 +1261,7 @@
         "text": "¿Por qué me recomiendas esta práctica?",
         "rect": {
           "x": 211,
-          "y": 3789,
+          "y": 5281,
           "width": 220,
           "height": 27
         }
@@ -707,7 +1271,7 @@
         "text": "Dame un ejemplo de niveles lógicos",
         "rect": {
           "x": 437,
-          "y": 3789,
+          "y": 5281,
           "width": 199,
           "height": 27
         }
@@ -717,7 +1281,7 @@
         "text": "",
         "rect": {
           "x": 48,
-          "y": 3843,
+          "y": 5335,
           "width": 264,
           "height": 16
         }
@@ -741,12 +1305,42 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "LUMA para Seres de Excelencia, inicio",
         "rect": {
           "x": 14,
           "y": 26,
           "width": 38,
           "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 218,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 253,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 288,
+          "y": 17,
+          "width": 33,
+          "height": 32
         }
       },
       {
@@ -808,12 +1402,42 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "LUMA para Seres de Excelencia, inicio",
         "rect": {
           "x": 14,
           "y": 26,
           "width": 38,
           "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 218,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 253,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 288,
+          "y": 17,
+          "width": 33,
+          "height": 32
         }
       },
       {
@@ -875,12 +1499,166 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "LUMA para Seres de Excelencia, inicio",
         "rect": {
           "x": 14,
           "y": 26,
           "width": 38,
           "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 218,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 253,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 288,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/experience",
+    "viewportName": "mobile",
+    "title": "Experience Console · LUMA",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentWidth": 390,
+    "documentHeight": 6392,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA para Seres de Excelencia, inicio",
+        "rect": {
+          "x": 14,
+          "y": 26,
+          "width": 38,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 218,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 253,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 288,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir catálogo",
+        "rect": {
+          "x": 36,
+          "y": 2566,
+          "width": 123,
+          "height": 38
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/iconography",
+    "viewportName": "mobile",
+    "title": "Iconografía LUMA · LUMA",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentWidth": 390,
+    "documentHeight": 4422,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "LUMA para Seres de Excelencia, inicio",
+        "rect": {
+          "x": 14,
+          "y": 26,
+          "width": 38,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 218,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 253,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 288,
+          "y": 17,
+          "width": 33,
+          "height": 32
         }
       }
     ],
@@ -902,12 +1680,42 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "LUMA para Seres de Excelencia, inicio",
         "rect": {
           "x": 14,
           "y": 26,
           "width": 38,
           "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 218,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 253,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 288,
+          "y": 17,
+          "width": 33,
+          "height": 32
         }
       },
       {
@@ -1009,12 +1817,42 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA inicio",
+        "text": "LUMA para Seres de Excelencia, inicio",
         "rect": {
           "x": 14,
           "y": 26,
           "width": 38,
           "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Seres de Excelencia",
+        "rect": {
+          "x": 218,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Liquid Light",
+        "rect": {
+          "x": 253,
+          "y": 17,
+          "width": 33,
+          "height": 32
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Usar tema Nocturne Intelligence",
+        "rect": {
+          "x": 288,
+          "y": 17,
+          "width": 33,
+          "height": 32
         }
       },
       {
@@ -1124,16 +1962,6 @@
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
-      {
-        "tag": "a",
-        "text": "LUMA inicio",
-        "rect": {
-          "x": 12,
-          "y": 19,
-          "width": 183,
-          "height": 38
-        }
-      },
       {
         "tag": "button",
         "text": "Usar perfil de showcase",

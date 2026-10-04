@@ -235,3 +235,24 @@
   0%, 100% { transform: rotateY(0deg); }
   50% { transform: rotateY(8deg); }
 }
+
+:global(html[data-theme="se"]) .object {
+  --object-accent: #00a2f1;
+  --object-warm: #ff89b8;
+  --object-dark: #993366;
+  --object-sage: #2bb3b1;
+}
+
+:global(html[data-theme="light"]) .object {
+  --object-accent: #0a84ff;
+  --object-warm: #ffb38a;
+  --object-dark: #1b3a8c;
+  --object-sage: #2bb3b1;
+}
+
+:global(html[data-theme="dark"]) .object {
+  --object-accent: #d97b4b;
+  --object-warm: #efc86a;
+  --object-dark: #5b3037;
+  --object-sage: #9dac78;
+}

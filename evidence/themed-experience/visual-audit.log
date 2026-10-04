@@ -1,0 +1,26 @@
+
+> luma-learning-intelligence@0.1.0 audit:visual
+> node scripts/visual-audit.mjs
+
+desktop /                    overflow=0 out=0 small=10 clipped=0 heading=true
+desktop /learn               overflow=0 out=0 small=10 clipped=0 heading=true
+desktop /twin                overflow=0 out=0 small=10 clipped=0 heading=true
+desktop /studio/learners/mariana overflow=0 out=0 small=10 clipped=0 heading=true
+desktop /library             overflow=0 out=0 small=6 clipped=0 heading=true
+desktop /experience          overflow=0 out=0 small=7 clipped=0 heading=true
+desktop /iconography         overflow=0 out=0 small=6 clipped=0 heading=true
+desktop /studio              overflow=0 out=0 small=14 clipped=0 heading=true
+desktop /studio/reflections  overflow=0 out=0 small=15 clipped=0 heading=true
+desktop /onboarding          overflow=0 out=0 small=1 clipped=0 heading=true
+desktop /learn/session/pas   overflow=0 out=0 small=2 clipped=0 heading=true
+mobile  /                    overflow=0 out=0 small=8 clipped=0 heading=true
+mobile  /learn               overflow=0 out=0 small=8 clipped=0 heading=true
+mobile  /twin                overflow=0 out=0 small=8 clipped=0 heading=true
+mobile  /studio/learners/mariana overflow=0 out=0 small=8 clipped=0 heading=true
+mobile  /library             overflow=0 out=0 small=4 clipped=0 heading=true
+mobile  /experience          overflow=0 out=0 small=5 clipped=0 heading=true
+mobile  /iconography         overflow=0 out=0 small=4 clipped=0 heading=true
+mobile  /studio              overflow=0 out=0 small=12 clipped=0 heading=true
+mobile  /studio/reflections  overflow=0 out=0 small=13 clipped=0 heading=true
+mobile  /onboarding          overflow=0 out=0 small=1 clipped=0 heading=true
+mobile  /learn/session/pas   overflow=0 out=0 small=2 clipped=0 heading=true

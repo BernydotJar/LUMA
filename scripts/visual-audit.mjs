@@ -1,7 +1,7 @@
 import { chromium } from "playwright";
 import { writeFile } from "node:fs/promises";
 
-const routes = ["/", "/learn", "/twin", "/studio/learners/mariana", "/library", "/studio", "/studio/reflections", "/onboarding", "/learn/session/pas"];
+const routes = ["/", "/learn", "/twin", "/studio/learners/mariana", "/library", "/experience", "/iconography", "/studio", "/studio/reflections", "/onboarding", "/learn/session/pas"];
 const viewports = [
   { name: "desktop", width: 1440, height: 1000 },
   { name: "mobile", width: 390, height: 844 },
@@ -22,6 +22,7 @@ for (const viewport of viewports) {
         const rect = el.getBoundingClientRect();
         if (el.classList.contains("sr-only")) return false;
         if (el.closest('[aria-hidden="true"]')) return false;
+        if (rect.width <= 1.5 && rect.height <= 1.5) return false;
         return style.display !== "none" && style.visibility !== "hidden" && Number(style.opacity) > 0 && rect.width > 0 && rect.height > 0;
       };
       const describe = (el) => ({

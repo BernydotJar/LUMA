@@ -10,6 +10,7 @@ import {
   ChevronDown,
   GitBranch,
   Compass,
+  Crown,
   HelpCircle,
   Home,
   MessageCircle,
@@ -18,6 +19,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
+import { ExperienceControl } from "@/components/experience-control";
 import styles from "./app-shell.module.css";
 
 const learnerNavigation = [
@@ -28,6 +30,7 @@ const learnerNavigation = [
 ];
 
 const studioNavigation = [
+  { href: "/experience", label: "Experience Console", icon: Crown },
   { href: "/studio", label: "Coach Studio", icon: ChartNoAxesCombined },
   { href: "/studio/learners/mariana", label: "Learning Twin", icon: BrainCircuit },
   { href: "/library", label: "Content Intelligence", icon: BookOpen },
@@ -101,11 +104,7 @@ export function AppShell({
             </div>
           </div>
           <div className={styles.topbarActions}>
-            {studio && (
-              <Link className={styles.modeSwitch} href="/learn">
-                <Sparkles size={15} /> <span>Vista coachee</span>
-              </Link>
-            )}
+            <ExperienceControl mode={mode} />
             {actions}
             <button className={styles.iconButton} type="button" aria-label="Buscar">
               <Search size={19} />

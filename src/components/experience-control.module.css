@@ -1,0 +1,117 @@
+.control {
+  min-height: 42px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted-strong);
+  background: var(--control-surface, rgba(255,255,255,.055));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  backdrop-filter: blur(20px) saturate(1.2);
+}
+
+.consoleLink,
+.roleSwitch a,
+.themeSwitch button {
+  min-height: 32px;
+  border: 0;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  font-size: .62rem;
+  font-weight: 760;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.consoleLink {
+  padding: 0 10px;
+  color: var(--accent);
+}
+
+.roleSwitch,
+.themeSwitch {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.roleSwitch {
+  padding-left: 4px;
+  border-left: 1px solid var(--line);
+}
+
+.roleSwitch a {
+  padding: 0 9px;
+}
+
+.roleSwitch a[data-active="true"],
+.themeSwitch button[data-active="true"] {
+  color: var(--active-control-ink, #201316);
+  background: var(--accent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.42), 0 5px 16px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.themeSwitch {
+  padding-left: 4px;
+  border-left: 1px solid var(--line);
+}
+
+.themeSwitch button {
+  width: 33px;
+  padding: 0;
+}
+
+.themeSwitch button span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.consoleLink:hover,
+.roleSwitch a:hover,
+.themeSwitch button:hover {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+}
+
+@media (max-width: 1180px) {
+  .consoleLink span,
+  .roleSwitch a {
+    font-size: 0;
+  }
+
+  .consoleLink,
+  .roleSwitch a {
+    width: 32px;
+    padding: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .control {
+    position: fixed;
+    top: 12px;
+    right: 64px;
+    z-index: 95;
+  }
+
+  .consoleLink,
+  .roleSwitch {
+    display: none;
+  }
+
+  .themeSwitch {
+    padding-left: 0;
+    border-left: 0;
+  }
+}

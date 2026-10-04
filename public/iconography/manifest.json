@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "luma.iconography.v1",
+  "generatedBy": "scripts/iconography/build_static_icon_set.py",
+  "themes": {
+    "se": {
+      "label": "Seres de Excelencia",
+      "palette": {
+        "bg": "#F7FBFE",
+        "surface": "#FFFFFF",
+        "ink": "#333333",
+        "primary": "#00A2F1",
+        "secondary": "#FF438C",
+        "deep": "#993366",
+        "support": "#2BB3B1"
+      },
+      "files": [
+        "/iconography/se/practice.svg",
+        "/iconography/se/progress.svg",
+        "/iconography/se/coach-insight.svg",
+        "/iconography/se/human-intervention.svg",
+        "/iconography/se/voice.svg",
+        "/iconography/se/video.svg"
+      ]
+    },
+    "light": {
+      "label": "Liquid Light",
+      "palette": {
+        "bg": "#F5F5F7",
+        "surface": "#FFFFFF",
+        "ink": "#1D1D1F",
+        "primary": "#0A84FF",
+        "secondary": "#7B5CFF",
+        "deep": "#1B3A8C",
+        "support": "#2BB3B1"
+      },
+      "files": [
+        "/iconography/light/practice.svg",
+        "/iconography/light/progress.svg",
+        "/iconography/light/coach-insight.svg",
+        "/iconography/light/human-intervention.svg",
+        "/iconography/light/voice.svg",
+        "/iconography/light/video.svg"
+      ]
+    },
+    "dark": {
+      "label": "Nocturne Intelligence",
+      "palette": {
+        "bg": "#24181A",
+        "surface": "#342124",
+        "ink": "#F7EDD8",
+        "primary": "#EFC86A",
+        "secondary": "#D97B4B",
+        "deep": "#5B3037",
+        "support": "#9DAC78"
+      },
+      "files": [
+        "/iconography/dark/practice.svg",
+        "/iconography/dark/progress.svg",
+        "/iconography/dark/coach-insight.svg",
+        "/iconography/dark/human-intervention.svg",
+        "/iconography/dark/voice.svg",
+        "/iconography/dark/video.svg"
+      ]
+    }
+  },
+  "icons": {
+    "practice": {
+      "label": "Practice",
+      "metaphor": "Refractive prism",
+      "concept": "P.A.S. / reframing"
+    },
+    "progress": {
+      "label": "Progress",
+      "metaphor": "Orbital field",
+      "concept": "Demonstrated capability"
+    },
+    "coach-insight": {
+      "label": "Coach Insight",
+      "metaphor": "Architectural strata",
+      "concept": "Logical levels / intervention"
+    },
+    "human-intervention": {
+      "label": "Human Intervention",
+      "metaphor": "Bridge / threshold",
+      "concept": "Evidence connected to human context"
+    },
+    "voice": {
+      "label": "Voice Practice",
+      "metaphor": "Resonance field",
+      "concept": "Speaking as learning modality"
+    },
+    "video": {
+      "label": "Video Learning",
+      "metaphor": "Editorial frame",
+      "concept": "Source segment / chapter evidence"
+    }
+  }
+}

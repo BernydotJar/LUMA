@@ -226,3 +226,59 @@
   z-index: 1;
   transform: translateZ(12px);
 }
+
+:global(html[data-theme="se"]) .panel {
+  color: #333333;
+  border-color: rgba(0,162,241,.14);
+  background:
+    radial-gradient(circle at 88% 8%, rgba(255,67,140,.14), transparent 19rem),
+    linear-gradient(140deg, rgba(255,255,255,.78), rgba(236,248,255,.42)),
+    rgba(239,248,254,.74);
+  box-shadow: 0 30px 80px rgba(32,84,118,.12), inset 0 1px 0 #fff;
+}
+:global(html[data-theme="se"]) .panelGlow { background: #ff438c; opacity: .13; }
+:global(html[data-theme="se"]) .kicker { color: #007fbd; }
+:global(html[data-theme="se"]) .progressMark { color: #ffffff; background: #00a2f1; border-color: rgba(0,162,241,.2); }
+:global(html[data-theme="se"]) .floatingMetric { background: rgba(255,255,255,.74); border-color: rgba(0,162,241,.13); }
+:global(html[data-theme="se"]) .floatingMetric small { color: #65737f; }
+:global(html[data-theme="se"]) .floatingMetric strong { color: #993366; }
+:global(html[data-theme="se"]) .signal { color: #007fbd; }
+:global(html[data-theme="se"]) .readout p { color: #687580; }
+
+:global(html[data-theme="light"]) .panel {
+  color: #1d1d1f;
+  border-color: rgba(29,29,31,.1);
+  background:
+    radial-gradient(circle at 88% 8%, rgba(123,92,255,.13), transparent 19rem),
+    linear-gradient(140deg, rgba(255,255,255,.76), rgba(245,245,247,.36)),
+    rgba(255,255,255,.56);
+  box-shadow: 0 30px 80px rgba(40,47,64,.11), inset 0 1px 0 #fff;
+}
+:global(html[data-theme="light"]) .panelGlow { background: #7b5cff; opacity: .12; }
+:global(html[data-theme="light"]) .kicker { color: #0a64bd; }
+:global(html[data-theme="light"]) .progressMark { color: #ffffff; background: #0a84ff; border-color: rgba(10,132,255,.2); }
+:global(html[data-theme="light"]) .floatingMetric { background: rgba(255,255,255,.72); border-color: rgba(29,29,31,.1); }
+:global(html[data-theme="light"]) .floatingMetric small { color: #6e6e73; }
+:global(html[data-theme="light"]) .floatingMetric strong { color: #1b3a8c; }
+:global(html[data-theme="light"]) .signal { color: #0a64bd; }
+:global(html[data-theme="light"]) .readout p { color: #6e6e73; }
+
+:global(html[data-theme="dark"]) .panel {
+  color: #f7edd8;
+  border-color: rgba(255,238,210,.12);
+  background:
+    radial-gradient(circle at 88% 8%, rgba(217,123,75,.14), transparent 19rem),
+    linear-gradient(140deg, rgba(255,244,222,.08), rgba(255,244,222,.025)),
+    rgba(48,29,32,.72);
+  box-shadow: 0 30px 80px rgba(8,3,4,.26), inset 0 1px 0 rgba(255,255,255,.09);
+}
+:global(html[data-theme="dark"]) .panel::after { border-color: rgba(255,238,210,.08); }
+:global(html[data-theme="dark"]) .panelGlow { background: #d97b4b; opacity: .12; }
+:global(html[data-theme="dark"]) .kicker { color: #efc86a; }
+:global(html[data-theme="dark"]) .progressMark { color: #2d1b1d; background: #efc86a; border-color: rgba(239,200,106,.2); }
+:global(html[data-theme="dark"]) .floatingMetric { background: rgba(255,244,222,.065); border-color: rgba(255,238,210,.12); box-shadow: 0 18px 32px rgba(8,3,4,.2), inset 0 1px 0 rgba(255,255,255,.08); }
+:global(html[data-theme="dark"]) .floatingMetric small { color: #b7a18c; }
+:global(html[data-theme="dark"]) .floatingMetric strong { color: #efc86a; }
+:global(html[data-theme="dark"]) .readout { border-color: rgba(255,238,210,.1); }
+:global(html[data-theme="dark"]) .signal { color: #b8c68b; }
+:global(html[data-theme="dark"]) .readout p { color: #b7a18c; }

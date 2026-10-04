@@ -775,3 +775,97 @@
     border-radius: 30px;
   }
 }
+
+:global(html[data-theme="se"]) .page,
+:global(html[data-theme="light"]) .page {
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 91% 5%, color-mix(in srgb, var(--brand-secondary) 14%, transparent), transparent 28rem),
+    radial-gradient(circle at 5% 88%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 34rem),
+    var(--bg);
+}
+
+:global(html[data-theme="dark"]) .page {
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 91% 5%, rgba(217,123,75,.12), transparent 28rem),
+    radial-gradient(circle at 5% 88%, rgba(157,172,120,.09), transparent 34rem),
+    #171114;
+}
+
+:global(html[data-theme="se"]) .context {
+  color: #fff;
+  border-color: rgba(255,255,255,.26);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255,255,255,.22), transparent 20rem),
+    radial-gradient(circle at 89% 85%, rgba(255,67,140,.28), transparent 25rem),
+    linear-gradient(145deg, #00a2f1, #147ebc 54%, #993366);
+}
+:global(html[data-theme="se"]) .context :global(.eyebrow) { color: #fff3fb; }
+:global(html[data-theme="se"]) .context :global(.eyebrow-dot) { background: #ffb3d0; }
+
+:global(html[data-theme="light"]) .context {
+  color: #fff;
+  border-color: rgba(255,255,255,.24);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255,255,255,.2), transparent 20rem),
+    radial-gradient(circle at 89% 85%, rgba(43,179,177,.24), transparent 25rem),
+    linear-gradient(145deg, #1b3a8c, #0a84ff 58%, #7b5cff);
+}
+:global(html[data-theme="light"]) .context :global(.eyebrow) { color: #eaf5ff; }
+:global(html[data-theme="light"]) .context :global(.eyebrow-dot) { background: #ffb38a; }
+
+:global(html[data-theme="dark"]) .context {
+  color: #fff8e8;
+  border-color: rgba(255,238,210,.13);
+  background:
+    radial-gradient(circle at 14% 10%, rgba(239,200,106,.17), transparent 23rem),
+    radial-gradient(circle at 90% 86%, rgba(157,172,120,.14), transparent 25rem),
+    #5b3037;
+}
+
+:global(html[data-theme="se"]) .formArea,
+:global(html[data-theme="light"]) .formArea {
+  color: var(--ink);
+  border-color: var(--line);
+  background: rgba(255,255,255,.72);
+  box-shadow: var(--shadow), inset 0 1px 0 #fff;
+}
+
+:global(html[data-theme="dark"]) .formArea {
+  color: var(--ink);
+  border-color: var(--line);
+  background: rgba(48,29,32,.82);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+:global(html[data-theme="se"]) .stepper > span[data-active="true"] { background: #00a2f1; }
+:global(html[data-theme="light"]) .stepper > span[data-active="true"] { background: #0a84ff; }
+:global(html[data-theme="dark"]) .stepper > span[data-active="true"] { background: #efc86a; }
+
+:global(html[data-theme="se"]) .stepContent :global(.eyebrow) { color: #007fbd; }
+:global(html[data-theme="light"]) .stepContent :global(.eyebrow) { color: #0a64bd; }
+:global(html[data-theme="dark"]) .stepContent :global(.eyebrow) { color: #efc86a; }
+
+:global(html[data-theme="se"]) .goalGrid button[data-selected="true"],
+:global(html[data-theme="se"]) .questionCard button[data-selected="true"] {
+  border-color: #00a2f1;
+  background: rgba(0,162,241,.09);
+}
+:global(html[data-theme="light"]) .goalGrid button[data-selected="true"],
+:global(html[data-theme="light"]) .questionCard button[data-selected="true"] {
+  border-color: #0a84ff;
+  background: rgba(10,132,255,.08);
+}
+:global(html[data-theme="dark"]) .goalGrid button[data-selected="true"],
+:global(html[data-theme="dark"]) .questionCard button[data-selected="true"] {
+  border-color: #efc86a;
+  background: rgba(239,200,106,.08);
+}
+
+:global(html[data-theme="se"]) .timeGrid button[data-selected="true"],
+:global(html[data-theme="se"]) .formFooter :global(.button-primary) { color: #052b3a; border-color: #00a2f1; background: #00a2f1; }
+:global(html[data-theme="light"]) .timeGrid button[data-selected="true"],
+:global(html[data-theme="light"]) .formFooter :global(.button-primary) { color: #00131f; border-color: #0a84ff; background: #0a84ff; }
+:global(html[data-theme="dark"]) .timeGrid button[data-selected="true"],
+:global(html[data-theme="dark"]) .formFooter :global(.button-primary) { color: #2d1b1d; border-color: #efc86a; background: #efc86a; }

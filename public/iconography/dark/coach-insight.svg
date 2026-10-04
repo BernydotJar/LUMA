@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Coach Insight — Nocturne Intelligence</title>
+  <desc id="desc">Premium abstract icon: Architectural strata.</desc>
+  
+    <defs>
+      <linearGradient id="g-coach-insight" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#EFC86A"/>
+        <stop offset="0.62" stop-color="#D97B4B"/>
+        <stop offset="1" stop-color="#5B3037"/>
+      </linearGradient>
+      <linearGradient id="glass-coach-insight" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.78"/>
+        <stop offset="0.45" stop-color="#342124" stop-opacity="0.34"/>
+        <stop offset="1" stop-color="#EFC86A" stop-opacity="0.14"/>
+      </linearGradient>
+      <radialGradient id="orb-coach-insight" cx="32%" cy="24%" r="78%">
+        <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.92"/>
+        <stop offset="0.16" stop-color="#EFC86A"/>
+        <stop offset="0.62" stop-color="#D97B4B"/>
+        <stop offset="1" stop-color="#5B3037"/>
+      </radialGradient>
+      <filter id="shadow-coach-insight" x="-40%" y="-40%" width="180%" height="180%">
+        <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#5B3037" flood-opacity="0.18"/>
+      </filter>
+      <filter id="blur-coach-insight" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="9"/>
+      </filter>
+    </defs>
+    
+  <rect width="256" height="256" rx="64" fill="#24181A"/>
+  <circle cx="206" cy="42" r="78" fill="#D97B4B" opacity="0.10" filter="url(#blur-coach-insight)"/>
+  <circle cx="42" cy="216" r="72" fill="#EFC86A" opacity="0.10" filter="url(#blur-coach-insight)"/>
+  <rect x="20" y="20" width="216" height="216" rx="52" fill="url(#glass-coach-insight)" stroke="#FFF5DF" stroke-opacity="0.58"/>
+  
+  <g filter="url(#shadow-coach-insight)">
+    <path d="m66 162 65 33 62-33-65-30Z" fill="#5B3037" opacity=".86" stroke="#FFF" stroke-opacity=".20"/>
+    <path d="m59 132 69 34 70-34-70-32Z" fill="#9DAC78" opacity=".90" stroke="#FFF" stroke-opacity=".28"/>
+    <path d="m70 101 58 29 58-29-58-27Z" fill="url(#g-coach-insight)" stroke="#FFF" stroke-opacity=".40"/>
+    <circle cx="128" cy="101" r="9" fill="#FFF" fill-opacity=".70"/>
+    <path d="M128 110v54" stroke="#FFF" stroke-opacity=".36" stroke-width="3" stroke-dasharray="5 7"/>
+  </g>
+</svg>

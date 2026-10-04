@@ -1060,3 +1060,147 @@
     border-radius: 29px;
   }
 }
+
+/* Product themes override the warm editorial baseline without changing information architecture. */
+:global(html[data-theme="se"]) .nextAction,
+:global(html[data-theme="se"]) .journeyCard,
+:global(html[data-theme="se"]) .tutorPanel {
+  color: #333333;
+  border-color: rgba(0,162,241,.13);
+  background:
+    radial-gradient(circle at 89% 4%, rgba(255,67,140,.11), transparent 24rem),
+    linear-gradient(145deg, rgba(255,255,255,.82), rgba(239,248,254,.38)),
+    rgba(255,255,255,.68);
+  box-shadow: 0 28px 76px rgba(32,84,118,.1), inset 0 1px 0 #fff;
+}
+:global(html[data-theme="se"]) .nextActionGlow { background: rgba(255,67,140,.14); }
+:global(html[data-theme="se"]) .nextAction :global(.eyebrow),
+:global(html[data-theme="se"]) .journeyCard :global(.eyebrow),
+:global(html[data-theme="se"]) .tutorPanel :global(.eyebrow),
+:global(html[data-theme="se"]) .kicker { color: #007fbd; }
+:global(html[data-theme="se"]) .nextAction :global(.eyebrow-dot),
+:global(html[data-theme="se"]) .journeyCard :global(.eyebrow-dot),
+:global(html[data-theme="se"]) .tutorPanel :global(.eyebrow-dot) { background: #ff438c; }
+:global(html[data-theme="se"]) .nextAction h2,
+:global(html[data-theme="se"]) .cardHeading h2,
+:global(html[data-theme="se"]) .journeyStep h3,
+:global(html[data-theme="se"]) .tutorIdentity h2 { color: #2f3338; }
+:global(html[data-theme="se"]) .actionDescription,
+:global(html[data-theme="se"]) .actionReasonStrip,
+:global(html[data-theme="se"]) .journeyStep span,
+:global(html[data-theme="se"]) .journeyStep p,
+:global(html[data-theme="se"]) .journeyNote,
+:global(html[data-theme="se"]) .tutorIdentity p,
+:global(html[data-theme="se"]) .tutorDisclaimer { color: #687580; }
+:global(html[data-theme="se"]) .nextActionFooter :global(.button-primary),
+:global(html[data-theme="se"]) .tutorComposer button {
+  color: #052b3a;
+  background: linear-gradient(135deg, #00a2f1, #168bdd);
+  box-shadow: 0 16px 35px rgba(0,162,241,.18);
+}
+:global(html[data-theme="se"]) .whyButton { color: #007fbd; }
+:global(html[data-theme="se"]) .explanationPanel,
+:global(html[data-theme="se"]) .message p,
+:global(html[data-theme="se"]) .quickPrompts button,
+:global(html[data-theme="se"]) .tutorComposer {
+  color: #3f4b54;
+  border-color: rgba(0,162,241,.13);
+  background: rgba(255,255,255,.64);
+}
+:global(html[data-theme="se"]) .message[data-role="learner"] p { color: #fff; background: #993366; }
+:global(html[data-theme="se"]) .tutorIdentity > span {
+  color: #fff;
+  background: linear-gradient(145deg, #00a2f1, #ff438c 72%, #993366);
+}
+:global(html[data-theme="se"]) .stepMarker { color: #71808b; background: #eef7fd; border-color: rgba(0,162,241,.14); }
+:global(html[data-theme="se"]) .journeyStep[data-status="complete"] .stepMarker { color: #fff; background: #2bb3b1; }
+:global(html[data-theme="se"]) .journeyStep[data-status="current"] .stepMarker { color: #fff; background: #ff438c; box-shadow: 0 0 0 7px rgba(255,67,140,.1); }
+:global(html[data-theme="se"]) .actionObject { border-color: rgba(0,162,241,.12); background: rgba(255,255,255,.58); box-shadow: 0 22px 46px rgba(0,121,184,.1), inset 0 1px 0 #fff; }
+
+:global(html[data-theme="light"]) .nextAction,
+:global(html[data-theme="light"]) .journeyCard,
+:global(html[data-theme="light"]) .tutorPanel {
+  color: #1d1d1f;
+  border-color: rgba(29,29,31,.1);
+  background:
+    radial-gradient(circle at 89% 4%, rgba(123,92,255,.1), transparent 24rem),
+    linear-gradient(145deg, rgba(255,255,255,.78), rgba(245,245,247,.34)),
+    rgba(255,255,255,.58);
+  box-shadow: 0 28px 76px rgba(40,47,64,.1), inset 0 1px 0 #fff;
+}
+:global(html[data-theme="light"]) .nextActionGlow { background: rgba(123,92,255,.12); }
+:global(html[data-theme="light"]) .nextAction :global(.eyebrow),
+:global(html[data-theme="light"]) .journeyCard :global(.eyebrow),
+:global(html[data-theme="light"]) .tutorPanel :global(.eyebrow),
+:global(html[data-theme="light"]) .kicker { color: #0a64bd; }
+:global(html[data-theme="light"]) .nextAction :global(.eyebrow-dot),
+:global(html[data-theme="light"]) .journeyCard :global(.eyebrow-dot),
+:global(html[data-theme="light"]) .tutorPanel :global(.eyebrow-dot) { background: #0a84ff; }
+:global(html[data-theme="light"]) .nextAction h2,
+:global(html[data-theme="light"]) .cardHeading h2,
+:global(html[data-theme="light"]) .journeyStep h3,
+:global(html[data-theme="light"]) .tutorIdentity h2 { color: #1d1d1f; }
+:global(html[data-theme="light"]) .actionDescription,
+:global(html[data-theme="light"]) .actionReasonStrip,
+:global(html[data-theme="light"]) .journeyStep span,
+:global(html[data-theme="light"]) .journeyStep p,
+:global(html[data-theme="light"]) .journeyNote,
+:global(html[data-theme="light"]) .tutorIdentity p,
+:global(html[data-theme="light"]) .tutorDisclaimer { color: #6e6e73; }
+:global(html[data-theme="light"]) .nextActionFooter :global(.button-primary),
+:global(html[data-theme="light"]) .tutorComposer button { color: #00131f; background: #0a84ff; box-shadow: 0 16px 35px rgba(10,132,255,.18); }
+:global(html[data-theme="light"]) .whyButton { color: #0a64bd; }
+:global(html[data-theme="light"]) .explanationPanel,
+:global(html[data-theme="light"]) .message p,
+:global(html[data-theme="light"]) .quickPrompts button,
+:global(html[data-theme="light"]) .tutorComposer { color: #3a3a3c; border-color: rgba(29,29,31,.1); background: rgba(255,255,255,.62); }
+:global(html[data-theme="light"]) .message[data-role="learner"] p { color: #fff; background: #1b3a8c; }
+:global(html[data-theme="light"]) .tutorIdentity > span { color: #fff; background: linear-gradient(145deg, #0a84ff, #7b5cff); }
+:global(html[data-theme="light"]) .stepMarker { color: #6e6e73; background: #f5f5f7; border-color: rgba(29,29,31,.1); }
+:global(html[data-theme="light"]) .journeyStep[data-status="complete"] .stepMarker { color: #fff; background: #2bb3b1; }
+:global(html[data-theme="light"]) .journeyStep[data-status="current"] .stepMarker { color: #fff; background: #0a84ff; box-shadow: 0 0 0 7px rgba(10,132,255,.09); }
+:global(html[data-theme="light"]) .actionObject { border-color: rgba(29,29,31,.1); background: rgba(255,255,255,.54); box-shadow: 0 22px 46px rgba(40,47,64,.1), inset 0 1px 0 #fff; }
+
+:global(html[data-theme="dark"]) .nextAction,
+:global(html[data-theme="dark"]) .journeyCard,
+:global(html[data-theme="dark"]) .tutorPanel {
+  color: #f7edd8;
+  border-color: rgba(255,238,210,.12);
+  background:
+    radial-gradient(circle at 89% 4%, rgba(217,123,75,.11), transparent 24rem),
+    linear-gradient(145deg, rgba(255,244,222,.075), rgba(255,244,222,.02)),
+    rgba(48,29,32,.76);
+  box-shadow: 0 30px 82px rgba(8,3,4,.24), inset 0 1px 0 rgba(255,255,255,.08);
+}
+:global(html[data-theme="dark"]) .nextActionGlow { background: rgba(217,123,75,.12); }
+:global(html[data-theme="dark"]) .nextAction :global(.eyebrow),
+:global(html[data-theme="dark"]) .journeyCard :global(.eyebrow),
+:global(html[data-theme="dark"]) .tutorPanel :global(.eyebrow),
+:global(html[data-theme="dark"]) .kicker { color: #efc86a; }
+:global(html[data-theme="dark"]) .nextAction :global(.eyebrow-dot),
+:global(html[data-theme="dark"]) .journeyCard :global(.eyebrow-dot),
+:global(html[data-theme="dark"]) .tutorPanel :global(.eyebrow-dot) { background: #efc86a; }
+:global(html[data-theme="dark"]) .nextAction h2,
+:global(html[data-theme="dark"]) .cardHeading h2,
+:global(html[data-theme="dark"]) .journeyStep h3,
+:global(html[data-theme="dark"]) .tutorIdentity h2 { color: #fff8e8; }
+:global(html[data-theme="dark"]) .actionDescription,
+:global(html[data-theme="dark"]) .actionReasonStrip,
+:global(html[data-theme="dark"]) .journeyStep span,
+:global(html[data-theme="dark"]) .journeyStep p,
+:global(html[data-theme="dark"]) .journeyNote,
+:global(html[data-theme="dark"]) .tutorIdentity p,
+:global(html[data-theme="dark"]) .tutorDisclaimer { color: #b7a18c; }
+:global(html[data-theme="dark"]) .nextActionFooter :global(.button-primary),
+:global(html[data-theme="dark"]) .tutorComposer button { color: #2d1b1d; background: #efc86a; box-shadow: 0 16px 35px rgba(239,200,106,.15); }
+:global(html[data-theme="dark"]) .whyButton { color: #efc86a; }
+:global(html[data-theme="dark"]) .explanationPanel,
+:global(html[data-theme="dark"]) .message p,
+:global(html[data-theme="dark"]) .quickPrompts button,
+:global(html[data-theme="dark"]) .tutorComposer { color: #dbcbb6; border-color: rgba(255,238,210,.11); background: rgba(255,244,222,.055); }
+:global(html[data-theme="dark"]) .message[data-role="learner"] p { color: #fff8e8; background: #5b3037; }
+:global(html[data-theme="dark"]) .tutorIdentity > span { color: #2d1b1d; background: linear-gradient(145deg, #efc86a, #d97b4b); }
+:global(html[data-theme="dark"]) .stepMarker { color: #b7a18c; background: #342124; border-color: rgba(255,238,210,.11); }
+:global(html[data-theme="dark"]) .journeyStep[data-status="complete"] .stepMarker { color: #2d1b1d; background: #9dac78; }
+:global(html[data-theme="dark"]) .journeyStep[data-status="current"] .stepMarker { color: #2d1b1d; background: #efc86a; box-shadow: 0 0 0 7px rgba(239,200,106,.08); }
+:global(html[data-theme="dark"]) .actionObject { border-color: rgba(255,238,210,.1); background: rgba(255,244,222,.045); box-shadow: 0 22px 46px rgba(8,3,4,.2), inset 0 1px 0 rgba(255,255,255,.08); }
