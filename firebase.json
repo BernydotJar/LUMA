@@ -1,0 +1,18 @@
+{
+  "apphosting": [
+    {
+      "backendId": "luma",
+      "rootDir": ".",
+      "ignore": [
+        "node_modules",
+        ".git",
+        ".next",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "test-results",
+        "playwright-report",
+        "evidence/playwright-report"
+      ]
+    }
+  ]
+}
