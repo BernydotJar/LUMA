@@ -60,4 +60,4 @@ The upstream pipeline is not allowed to invent icon meaning. Every run must refe
 
 ## Current environment boundary
 
-The LUMA sandbox currently has no configured `GOOGLE_API_KEY`, `OPENROUTER_API_KEY`, `OPENAI_API_KEY` or authenticated Gemini browser profile. The deterministic SVG set and prompt pack are therefore the current production baseline. Generated stills require the authenticated bridge or an approved provider credential.
+The private host-browser bridge now exposes an authenticated Gemini Images session to the sandbox through a local CDP adapter. One SE Practice/P.A.S. still has been generated and matted locally for review. The deterministic SVG set remains the published baseline until that still is approved. The upstream 3dicon rule still applies: exactly one still first, then explicit Product Owner approval, then a separately approved motion proposal before animation.

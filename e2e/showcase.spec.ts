@@ -130,9 +130,31 @@ test.describe("LUMA product showcase", () => {
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 
     await page.getByRole("button", { name: "Usar tema Nocturne Intelligence" }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     await page.getByRole("link", { name: /Abrir coachee/i }).click();
     await expect(page).toHaveURL(/\/learn$/);
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  });
+
+  test("superuser review lab exposes real gated assets without leaking private source locators", async ({ page }) => {
+    await page.goto("/experience");
+    await expect(
+      page.getByRole("heading", { name: /Activos reales, visibles antes de publicarlos/i }),
+    ).toBeVisible();
+    await expect(page.getByText(/Practice \/ P\.A\.S\. · SE/i)).toBeVisible();
+    await expect(page.getByText(/Awaiting PO approval/i)).toBeVisible();
+    await expect(page.getByText("Motion", { exact: true })).toBeVisible();
+    await expect(page.getByText("Bloqueado hasta aprobación", { exact: true })).toBeVisible();
+    await expect(page.getByText(/Seres Coach Voice · Prototype 01/i)).toBeVisible();
+    await expect(page.getByText(/12\.4s/i)).toBeVisible();
+    await expect(page.locator('audio[src="/audio/seres-coach-prototype-01.mp3"]')).toBeVisible();
+    await expect(page.getByRole("heading", { name: /PASO 58 · Semillas de Esperanza/i })).toBeVisible();
+    await page.getByRole("button", { name: /Reproducir video público/i }).click();
+    await expect(page.locator('iframe[title*="PASO 58"]')).toBeVisible();
+    await expect(page.getByText(/5 clases privadas · 15\.82 GiB/i)).toBeVisible();
+    await expect(page.getByAltText(/Candidato 3D de práctica P\.A\.S\./i)).toBeVisible();
+    await expect(page.locator("body")).not.toContainText("drive.google.com");
+    await expect(page.locator("body")).not.toContainText("6997a8d1");
   });
 
   test("adult progress is expressed as capability, transfer and next demonstration", async ({ page }) => {

@@ -71,7 +71,7 @@ Aubergine, champagne, burnt orange, sage and ivory.
 
 ## Gemini bridge
 
-The prompt pack supports generation in an authenticated Gemini image session. The current sandbox contains no authenticated Gemini browser profile or image API key; therefore the SVG baseline remains authoritative until the bridge is authenticated.
+The prompt pack supports generation in an authenticated Gemini image session. The private host-browser bridge has now been verified and one SE Practice/P.A.S. still has been generated. The still remains a review candidate; deterministic SVG assets remain the published baseline until the Product Owner approves the still and, separately, the proposed motion.
 
 ## Acceptance criteria
 

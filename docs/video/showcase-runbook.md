@@ -75,3 +75,15 @@ The coach sees:
 It does not update mastery by itself.
 
 A separate practice or assessment event supplies capability evidence.
+
+
+## Public showcase baseline
+
+Until a private class segment clears the rights gate, the superuser experience may use a public Seres de Excelencia video to demonstrate the audiovisual product surface.
+
+Current public demo:
+- `PASO 58 · Semillas de Esperanza para Volver a Empezar`;
+- YouTube ID: `0Q4ZcGexZSY`;
+- embedded through the privacy-enhanced YouTube domain.
+
+The public demo does not substitute for source-linked private derivatives. It demonstrates playback, layout, role context and the evidence boundary only.

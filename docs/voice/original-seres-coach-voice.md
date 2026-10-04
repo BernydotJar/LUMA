@@ -64,3 +64,19 @@ Use the voice only when speaking or listening is pedagogically useful:
 - spoken reflection for a coach context pack.
 
 Text-only completion remains available.
+
+
+## Prototype 01
+
+A first original-direction speech sample is available at:
+
+`/audio/seres-coach-prototype-01.mp3`
+
+Receipt:
+- 12.4 seconds;
+- Spanish;
+- 0.92 speed;
+- licensed preset voice used only to validate the product pipeline and pacing contract;
+- not accepted as the final Colombian / Latin American voice identity.
+
+The connected extended voice search returned no Spanish candidates in the current workspace, so the final identity remains open rather than forcing a poor match.

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -12,6 +13,7 @@ import {
   Fingerprint,
   Layers3,
   Palette,
+  Play,
   ShieldCheck,
   Sparkles,
   UserRoundCheck,
@@ -19,6 +21,7 @@ import {
 import { SemanticObject } from "@/components/semantic-object";
 import { useLumaTheme } from "@/components/theme-provider";
 import { lumaThemes } from "@/lib/themes";
+import { iconStillCandidate, publicVideoDemo, showcaseVideoSources, showcaseVideoSummary, voicePrototype } from "@/lib/showcase-media";
 import styles from "./experience-console.module.css";
 
 
@@ -35,28 +38,29 @@ const deliveryTracks = [
   {
     id: "LUMA-022",
     title: "Iconografía semántica",
-    status: "Sistema base listo",
-    description: "Seis significados, tres temas y una ruta controlada hacia WebP animado.",
+    status: "Still 3D en revisión",
+    description: "Seis significados, tres temas y un primer candidato Gemini con motion bloqueado hasta aprobación.",
     icon: Layers3,
   },
   {
     id: "LUMA-024",
     title: "Voz original SE",
-    status: "Research + rights gate",
-    description: "Voz adulta, colombiana/latinoamericana, cálida y directa; imitación de identidad excluida.",
+    status: "Prototype 01 listo",
+    description: "Pipeline de voz probado con dirección original; la identidad final sigue sujeta a revisión de tono y derechos.",
     icon: AudioLines,
   },
   {
     id: "LUMA-025",
     title: "Video learning pipeline",
-    status: "Inventario privado localizado",
-    description: "Derechos, clip representativo, captions, capítulos, transcode y evidencia de aprendizaje.",
+    status: "5 clases verificadas",
+    description: "15.82 GiB privados inventariados; el primer clip queda detrás del gate de derechos y selección de segmento.",
     icon: Film,
   },
 ];
 
 export function ExperienceConsole() {
   const { theme, setTheme } = useLumaTheme();
+  const [videoOpen, setVideoOpen] = useState(false);
 
   return (
     <div className={styles.console}>
@@ -149,6 +153,112 @@ export function ExperienceConsole() {
               <strong>{metaphor}</strong>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className={styles.labSection} aria-labelledby="review-lab-title">
+        <div className={styles.sectionHeading}>
+          <div>
+            <span className="eyebrow"><Sparkles size={14} /> Review lab</span>
+            <h2 id="review-lab-title">Activos reales, visibles antes de publicarlos.</h2>
+          </div>
+          <span>Superuser · gates explícitos</span>
+        </div>
+
+        <div className={styles.labGrid}>
+          <article className={styles.iconCandidate}>
+            <div className={styles.labTop}>
+              <span><Layers3 size={16} /> Iconografía 3D</span>
+              <small>{iconStillCandidate.status}</small>
+            </div>
+            <div className={styles.candidateStage}>
+              <Image
+                src={iconStillCandidate.path}
+                alt="Candidato 3D de práctica P.A.S. para el tema Seres de Excelencia"
+                width={512}
+                height={512}
+                sizes="(max-width: 760px) 74vw, 280px"
+              />
+            </div>
+            <h3>{iconStillCandidate.label}</h3>
+            <p>Prisma de refracción para representar interpretación y reenfoque. Este still todavía no sustituye la iconografía publicada.</p>
+            <div className={styles.reviewReceipt}>
+              <span>Still</span><strong>1/1 generado</strong>
+              <span>Motion</span><strong>Bloqueado hasta aprobación</strong>
+            </div>
+          </article>
+
+          <article>
+            <div className={styles.labTop}>
+              <span><AudioLines size={16} /> Voz</span>
+              <small>{voicePrototype.status}</small>
+            </div>
+            <SemanticObject variant="axis" size="md" className={styles.labObject} />
+            <h3>{voicePrototype.label}</h3>
+            <p>Prueba de dirección vocal para coaching en español: pausada, clara y adulta. Es una voz original de trabajo, no una imitación de una persona identificable.</p>
+            <audio
+              className={styles.audioPlayer}
+              controls
+              preload="metadata"
+              src={voicePrototype.path}
+            >
+              Tu navegador no puede reproducir este audio.
+            </audio>
+            <div className={styles.reviewReceipt}>
+              <span>Duración</span><strong>{voicePrototype.durationSeconds}s</strong>
+              <span>Uso</span><strong>Práctica hablada</strong>
+            </div>
+          </article>
+
+          <article>
+            <div className={styles.labTop}>
+              <span><Film size={16} /> Video source layer</span>
+              <small>{showcaseVideoSummary.rightsState}</small>
+            </div>
+            <div className={styles.videoFrame}>
+              {videoOpen ? (
+                <iframe
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  src={publicVideoDemo.embedUrl}
+                  title={publicVideoDemo.title}
+                />
+              ) : (
+                <button
+                  aria-label="Reproducir video público de Seres de Excelencia"
+                  className={styles.videoPoster}
+                  onClick={() => setVideoOpen(true)}
+                  type="button"
+                >
+                  <Image
+                    alt=""
+                    fill
+                    sizes="(max-width: 760px) 88vw, 360px"
+                    src={publicVideoDemo.posterPath}
+                  />
+                  <span><Play size={17} fill="currentColor" /> Reproducir demo</span>
+                </button>
+              )}
+            </div>
+            <h3>{publicVideoDemo.title}</h3>
+            <p>{publicVideoDemo.author}. Este video público demuestra la experiencia audiovisual sin exponer el corpus privado del programa.</p>
+            <div className={styles.reviewReceipt}>
+              <span>Fuente</span><strong>{publicVideoDemo.status}</strong>
+              <span>Evidencia</span><strong>Exposición ≠ dominio</strong>
+            </div>
+            <details className={styles.privateInventory}>
+              <summary>{showcaseVideoSummary.count} clases privadas · {showcaseVideoSummary.totalGiB} GiB</summary>
+              <div className={styles.videoMiniList}>
+                {showcaseVideoSources.map((source) => (
+                  <span key={source.label}>
+                    <strong>{source.label}</strong>
+                    <small>{source.sizeGiB} GiB · privada</small>
+                  </span>
+                ))}
+              </div>
+            </details>
+          </article>
         </div>
       </section>
 
