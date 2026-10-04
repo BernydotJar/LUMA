@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "36ade287-bc9e-4f9c-a9be-0cb6b44b53a5",
-  "event_count": 42,
+  "last_event_id": "f57a7460-a7c3-42d6-91f2-ba33d5d2c8f9",
+  "event_count": 64,
   "ready_nodes": [],
   "nodes": [
     {
@@ -107,8 +107,54 @@
         "cefe99db-ae30-493a-8c26-58867e0fec67"
       ],
       "approval_count": 0
+    },
+    {
+      "id": "LUMA-006-knowledge-reflection",
+      "kind": "ai-learning-capability",
+      "title": "Inspectable Knowledge Reflection with gated retrieval and trust controls",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-003-twin-tutor",
+        "LUMA-004-studio-content"
+      ],
+      "capability": "knowledge-reflection-and-trust",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "361d59ca-d205-4caf-9b75-b71a6973359b",
+        "c455ac1a-70fa-48b1-96b8-3818a189e82f",
+        "d71623b2-7147-4043-b153-1e585bbd0ce0"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-007-reflection-showcase-release",
+      "kind": "release",
+      "title": "Knowledge Reflection client-showcase release gate",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-006-knowledge-reflection"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "03baa9f6-b700-4623-acb9-882326585792",
+        "2265ac99-5a22-4ab8-98d9-7a80f6701903",
+        "57c5eeb7-0c52-4c72-8992-a63bc2150e64",
+        "926c5f9a-fea1-4850-af4d-09cef26f9b06",
+        "9a1044ba-5577-48df-96c2-14453e1f220d",
+        "c409daca-2432-4949-863b-d592d859cc69",
+        "d66dcf5d-224b-472d-bc1d-7c2f03a35db0"
+      ],
+      "approval_count": 0
     }
   ],
-  "checkpoint_count": 1,
+  "checkpoint_count": 2,
   "repair_plan_count": 0
 }
