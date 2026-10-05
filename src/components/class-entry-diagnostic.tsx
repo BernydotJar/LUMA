@@ -39,8 +39,8 @@ export function ClassEntryDiagnostic({ slug }: { slug: string }) {
     if (!selectedChoice) return;
 
     const route = selectedChoice.correct
-      ? contract.diagnostic.correctRoute
-      : contract.diagnostic.remediationRoute;
+      ? activeContract.diagnostic.correctRoute
+      : activeContract.diagnostic.remediationRoute;
 
     const nextResult: ResultState = {
       choiceId: selectedChoice.id,
@@ -53,9 +53,9 @@ export function ClassEntryDiagnostic({ slug }: { slug: string }) {
 
     appendLearningEvent({
       type: "CLASS_DIAGNOSTIC_COMPLETED",
-      classId: contract.experienceSlug,
-      capabilityId: contract.capabilityId,
-      sourceIds: contract.sourceIds,
+      classId: activeContract.experienceSlug,
+      capabilityId: activeContract.capabilityId,
+      sourceIds: activeContract.sourceIds,
       correct: selectedChoice.correct,
       recommendedRoute: route,
       evidenceCategory: "observed",
@@ -95,11 +95,11 @@ export function ClassEntryDiagnostic({ slug }: { slug: string }) {
         <div className={styles.contractGrid}>
           <div>
             <span>Al terminar podrás</span>
-            <strong>{contract.objective}</strong>
+            <strong>{activeContract.objective}</strong>
           </div>
           <div>
             <span>Cómo lo vas a demostrar</span>
-            <strong>{contract.evidenceContract.label}</strong>
+            <strong>{activeContract.evidenceContract.label}</strong>
           </div>
         </div>
       </div>
@@ -111,7 +111,7 @@ export function ClassEntryDiagnostic({ slug }: { slug: string }) {
             <span className="eyebrow">
               <CircleHelp size={14} /> Punto de partida
             </span>
-            <h3>{contract.diagnostic.prompt}</h3>
+            <h3>{activeContract.diagnostic.prompt}</h3>
             <p>
               Es una comprobación breve para elegir dónde empezar. Esta señal no
               certifica dominio.
@@ -120,7 +120,7 @@ export function ClassEntryDiagnostic({ slug }: { slug: string }) {
         </div>
 
         <div className={styles.choices}>
-          {contract.diagnostic.choices.map((choice, index) => (
+          {activeContract.diagnostic.choices.map((choice, index) => (
             <button
               type="button"
               key={choice.id}
