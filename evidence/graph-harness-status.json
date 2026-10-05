@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "75491e96-32ac-4de4-b681-9f1bb85af017",
-  "event_count": 322,
+  "last_event_id": "0855fbc8-c36d-468c-94fa-1bd72ffd7182",
+  "event_count": 352,
   "ready_nodes": [],
   "nodes": [
     {
@@ -718,8 +718,74 @@
         "f4c5c5d8-d309-47f0-9211-b366b13ac62a"
       ],
       "approval_count": 0
+    },
+    {
+      "id": "LUMA-033-google-auth-participant-profile",
+      "kind": "product-capability",
+      "title": "Firebase Google sign-in with participant preferred display name",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-032-finish-line-client-demo-release"
+      ],
+      "capability": "participant-auth-profile",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "0b3925a0-be5b-4ce1-a30c-6a55e4192dc1",
+        "3916b924-3d3f-40c6-9e9e-29a0531bf6ac",
+        "9909e8d8-51b7-4a3b-b759-c221b06e74e4",
+        "e83d671c-9a3f-470e-9662-df619953f67c"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-034-uiux-adversarial-desktop-mobile",
+      "kind": "verification",
+      "title": "Adversarial UI UX review across mobile desktop themes auth and learner journeys",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-033-google-auth-participant-profile"
+      ],
+      "capability": "uiux-adversarial-verification",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "9dcaf7b0-c451-460d-8817-5c829cf11fe4",
+        "db887450-9af0-4515-97b9-4badfd7c5d87"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-035-auth-uiux-client-release",
+      "kind": "release",
+      "title": "Google-auth and adversarial UI UX client-demo release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-033-google-auth-participant-profile",
+        "LUMA-034-uiux-adversarial-desktop-mobile"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "1c2d14b9-dfe6-417d-a128-81117abcaa85",
+        "29d82bae-f79a-421d-8bab-1ea27748f647",
+        "62b65737-6bfa-494c-93bd-e3e2be04d75c",
+        "669f1fcb-468e-4a11-958c-5604beda28ed",
+        "986de4b4-bfc6-43dc-b601-03ba7636c81b",
+        "9d3ba503-7485-4f75-875e-e64da2f49d4c",
+        "ff3f3c62-dad6-484f-900b-cdfb2d91b738"
+      ],
+      "approval_count": 0
     }
   ],
-  "checkpoint_count": 8,
+  "checkpoint_count": 9,
   "repair_plan_count": 0
 }
