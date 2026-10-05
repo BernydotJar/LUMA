@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "7d772a82-b99b-4fb9-90e6-f367392291bc",
-  "event_count": 257,
+  "last_event_id": "77fee773-6e98-446f-a2dd-c833e74228ca",
+  "event_count": 288,
   "ready_nodes": [],
   "nodes": [
     {
@@ -581,8 +581,75 @@
         "d268bbd7-c994-4320-a335-ea7e007a162f"
       ],
       "approval_count": 0
+    },
+    {
+      "id": "LUMA-027-beta-content-graph",
+      "kind": "content",
+      "title": "Source-grounded Practitioner beta content graph",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-026-themed-superuser-release"
+      ],
+      "capability": "curriculum-content",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "c161babd-f683-4f55-a366-8c1bb6d54165",
+        "e62f7c05-4271-4839-849d-234c5a2c5fff",
+        "eb7b7f5e-22fc-4f31-a465-cbe359ed4ce1"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-028-learner-experience-library",
+      "kind": "product-surface",
+      "title": "Learner experience library and reflective practice routes",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-027-beta-content-graph"
+      ],
+      "capability": "learner-content-experience",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "6e53f39c-c414-4044-842a-2cbafb4bbc21",
+        "80260ec5-78ac-47b7-af93-982681414975",
+        "ce8fdfc5-0b62-4aef-9da6-7ddaebb62ca9"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-029-beta-content-release",
+      "kind": "release",
+      "title": "First-user beta content release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-027-beta-content-graph",
+        "LUMA-028-learner-experience-library"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "05bd4534-4843-4b4b-92e9-2790bf77567f",
+        "18733d1a-d0cc-4f59-aadf-51e3f2b85b44",
+        "353ede92-533a-4cf6-ac88-150ab12280de",
+        "587f4797-6ca5-41b9-a455-6d390a9d4ff4",
+        "a9a63db6-4573-4d76-85e3-013758768631",
+        "b1ef81b3-08b2-4a2d-a88c-5cb4f3c3b2be",
+        "cf70a919-2df9-4b3d-8bb4-c6614df67193",
+        "f084ca9f-f26a-435d-9f69-92697be6115b"
+      ],
+      "approval_count": 0
     }
   ],
-  "checkpoint_count": 6,
+  "checkpoint_count": 7,
   "repair_plan_count": 0
 }

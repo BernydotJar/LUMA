@@ -1,0 +1,14 @@
+Firebase production smoke — beta content
+
+PASS
+
+/learn 200
+/learn/experiences 200
+/learn/experience/congruencia-tres-canales 200
+/learn/experience/calibracion-observar-antes-de-interpretar 200
+
+Catalog renders source-grounded content: PASS
+Private source links absent from learner surface: PASS
+Framework error overlay absent: PASS
+Calibration detail renders: PASS
+Reflection textarea available: PASS
