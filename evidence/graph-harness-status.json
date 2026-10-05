@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "77fee773-6e98-446f-a2dd-c833e74228ca",
-  "event_count": 288,
+  "last_event_id": "75491e96-32ac-4de4-b681-9f1bb85af017",
+  "event_count": 322,
   "ready_nodes": [],
   "nodes": [
     {
@@ -648,8 +648,78 @@
         "f084ca9f-f26a-435d-9f69-92697be6115b"
       ],
       "approval_count": 0
+    },
+    {
+      "id": "LUMA-030-mobile-responsive-concept",
+      "kind": "product-surface",
+      "title": "Mobile-responsive learner concept with folio program and field-note practices",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-029-beta-content-release"
+      ],
+      "capability": "mobile-responsive-experience",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "12af651a-79e8-4d14-99a9-78d025bbd499",
+        "6244b185-3636-4d82-aea2-bf4146ef88d7",
+        "db6947fd-ec61-4204-b3c3-099acdf8c594",
+        "f4bb51c7-9eb2-4e94-9e40-136ee37dc04e"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-031-seven-module-spanish-learner-surface",
+      "kind": "content",
+      "title": "Seven-module source-grounded learner program and Spanish product terminology",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-030-mobile-responsive-concept"
+      ],
+      "capability": "program-navigation-localization",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "21a10e4c-4446-4fa2-9692-55eb065990e2",
+        "a3d7a4f0-cd31-4de6-b1c6-255ce6e4f4f7",
+        "c002e8a6-e83c-45e9-95fe-bc3214e47102",
+        "e1f6726a-86f8-4481-9395-5412688baee6"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-032-finish-line-client-demo-release",
+      "kind": "release",
+      "title": "Responsive seven-module client-demo finish-line release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-030-mobile-responsive-concept",
+        "LUMA-031-seven-module-spanish-learner-surface"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "0433ea26-0826-473b-af04-350bb84d9917",
+        "1cbcef3d-5419-4f0f-9bd4-9199898341fb",
+        "54b2b619-7ba1-4d3e-b118-70cbbfb08a5d",
+        "80a70381-d258-43fa-9f27-cd592f664206",
+        "82fcb582-ebd9-4e17-9ae3-f5730b8e0bf7",
+        "b7692a09-25ce-4beb-ac7a-d044816f4585",
+        "d9edf957-193b-4fec-84a3-73356634e172",
+        "dc258512-2f6f-43ef-aac6-d84681bc1cc9",
+        "f4c5c5d8-d309-47f0-9211-b366b13ac62a"
+      ],
+      "approval_count": 0
     }
   ],
-  "checkpoint_count": 7,
+  "checkpoint_count": 8,
   "repair_plan_count": 0
 }

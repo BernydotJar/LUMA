@@ -1,0 +1,16 @@
+# Firebase production smoke — responsive seven-module release
+
+Base: https://luma--luma-learning-intelligence.us-central1.hosted.app
+
+## HTTP
+/learn status=200
+/learn/experiences status=200
+/studio status=200
+/experience status=200
+/library status=200
+
+## Browser verification
+375x667 {"width":375,"scrollWidth":375,"modules":["Ir al módulo 1","Ir al módulo 2","Ir al módulo 3","Ir al módulo 4","Ir al módulo 5","Ir al módulo 6","Ir al módulo 7"],"hasSevenHeading":true,"banned":[],"errorOverlay":false}
+390x844 {"width":390,"scrollWidth":390,"modules":["Ir al módulo 1","Ir al módulo 2","Ir al módulo 3","Ir al módulo 4","Ir al módulo 5","Ir al módulo 6","Ir al módulo 7"],"hasSevenHeading":true,"banned":[],"errorOverlay":false}
+430x932 {"width":430,"scrollWidth":430,"modules":["Ir al módulo 1","Ir al módulo 2","Ir al módulo 3","Ir al módulo 4","Ir al módulo 5","Ir al módulo 6","Ir al módulo 7"],"hasSevenHeading":true,"banned":[],"errorOverlay":false}
+home-375 {"width":375,"scrollWidth":375,"practiceHeading":true,"programHeading":true,"snap":"x mandatory","stripScrollable":true}
