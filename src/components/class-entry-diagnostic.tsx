@@ -30,8 +30,9 @@ export function ClassEntryDiagnostic({ slug }: { slug: string }) {
   const [result, setResult] = useState<ResultState | null>(null);
 
   if (!contract) return null;
+  const activeContract = contract;
 
-  const selectedChoice = contract.diagnostic.choices.find(
+  const selectedChoice = activeContract.diagnostic.choices.find(
     (choice) => choice.id === selected,
   );
 
