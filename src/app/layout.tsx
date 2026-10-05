@@ -5,7 +5,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "LUMA · Learning Intelligence",
+    default: "LUMA · Inteligencia de Aprendizaje",
     template: "%s · LUMA",
   },
   description:

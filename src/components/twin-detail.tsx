@@ -76,23 +76,23 @@ export function TwinDetail() {
     <div className={styles.layout}>
       <section className={`${styles.heroCard} glass`}>
         <div className={styles.heroCopy}>
-          <span className="eyebrow"><span className="eyebrow-dot" /> LUMA Learning Twin · Coach intelligence</span>
+          <span className="eyebrow"><span className="eyebrow-dot" /> LUMA Gemelo de aprendizaje · Inteligencia del entrenador</span>
           <h2>Mariana: estado de aprendizaje con evidencia y confianza.</h2>
           <p>
             El modelo conecta señales observadas, auto-reporte e inferencias acotadas
-            para orientar la próxima intervención del coach. Cada inferencia conserva
+            para orientar la próxima intervención del entrenador. Cada inferencia conserva
             procedencia y nivel de confianza.
           </p>
           <div className={styles.proprietary}>
             <ShieldCheck size={15} />
-            <span>© 2026 LUMA · Learning Twin model &amp; evidence framework · Proprietary coach view.</span>
+            <span>© 2026 LUMA · Modelo de gemelo de aprendizaje y marco de evidencia · Vista interna del entrenador.</span>
           </div>
           <div className={styles.heroActions}>
             <button className="button-secondary" type="button" onClick={exportTwin}>
               <Download size={16} /> Exportar evidencia
             </button>
             <button className="button-ghost" type="button" onClick={() => setCoachNote((value) => !value)}>
-              <Pencil size={16} /> {coachNote ? "Nota del coach registrada" : "Agregar nota del coach"}
+              <Pencil size={16} /> {coachNote ? "Nota del entrenador registrada" : "Agregar nota del entrenador"}
             </button>
           </div>
         </div>
@@ -106,13 +106,13 @@ export function TwinDetail() {
         <section className={styles.correctionBanner}>
           <Check size={18} />
           <div>
-            <strong>Nota del coach añadida como señal humana.</strong>
+            <strong>Nota del entrenador añadida como señal humana.</strong>
             <p>La próxima actualización conservará esta nota junto con evidencia observada e inferencias.</p>
           </div>
         </section>
       )}
 
-      <section className={styles.dimensionGrid} aria-label="Dimensiones del Learning Twin">
+      <section className={styles.dimensionGrid} aria-label="Dimensiones del gemelo de aprendizaje">
         {twinDimensions.map((dimension) => (
           <button
             type="button"
@@ -134,7 +134,7 @@ export function TwinDetail() {
         <section className={`${styles.evidencePanel} glass`}>
           <div className={styles.panelHeading}>
             <div>
-              <span className="eyebrow"><Eye size={14} /> Evidencia del coachee</span>
+              <span className="eyebrow"><Eye size={14} /> Evidencia del participante</span>
               <h2>{selected.label}</h2>
               <p>{selected.summary}</p>
             </div>
@@ -219,14 +219,14 @@ export function TwinDetail() {
             <span className={styles.privacyIcon}><ShieldCheck size={22} /></span>
             <div>
               <h2>Gobernanza del modelo</h2>
-              <p>El Learning Twin conserva separación entre hechos, inferencias y aportes humanos.</p>
+              <p>El gemelo de aprendizaje conserva separación entre hechos, inferencias y aportes humanos.</p>
             </div>
             <ul>
               <li><Check size={14} /> Alcance: decisiones de aprendizaje</li>
               <li><Check size={14} /> Procedencia por evento y fuente</li>
               <li><Check size={14} /> Revisión humana disponible</li>
             </ul>
-            <small className={styles.copyright}>© 2026 LUMA · Internal coaching intelligence.</small>
+            <small className={styles.copyright}>© 2026 LUMA · Inteligencia interna de acompañamiento.</small>
           </section>
         </aside>
       </div>

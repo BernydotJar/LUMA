@@ -2,43 +2,43 @@
   {
     "route": "/",
     "viewportName": "desktop",
-    "title": "LUMA · Learning Intelligence",
+    "title": "LUMA · Inteligencia de Aprendizaje",
     "viewport": {
       "width": 1440,
       "height": 1000
     },
     "documentWidth": 1440,
-    "documentHeight": 4027,
+    "documentHeight": 4864,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
       {
         "tag": "a",
-        "text": "Superuser",
+        "text": "Superusuario",
         "rect": {
-          "x": 732,
+          "x": 648,
           "y": 29,
-          "width": 97,
+          "width": 115,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coachee",
+        "text": "Participante",
         "rect": {
-          "x": 839,
+          "x": 772,
           "y": 29,
-          "width": 85,
+          "width": 106,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coach",
+        "text": "Entrenador",
         "rect": {
-          "x": 926,
+          "x": 880,
           "y": 29,
-          "width": 52,
+          "width": 81,
           "height": 32
         }
       },
@@ -46,7 +46,7 @@
         "tag": "button",
         "text": "Usar tema Seres de Excelencia",
         "rect": {
-          "x": 986,
+          "x": 970,
           "y": 29,
           "width": 33,
           "height": 32
@@ -54,9 +54,9 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Liquid Light",
+        "text": "Usar tema Luz Líquida",
         "rect": {
-          "x": 1021,
+          "x": 1005,
           "y": 29,
           "width": 33,
           "height": 32
@@ -64,51 +64,11 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
+        "text": "Usar tema Inteligencia Nocturna",
         "rect": {
-          "x": 1056,
+          "x": 1040,
           "y": 29,
           "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Ver todas",
-        "rect": {
-          "x": 1248,
-          "y": 2409,
-          "width": 99,
-          "height": 38
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 310,
-          "y": 2821,
-          "width": 307,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 665,
-          "y": 2821,
-          "width": 307,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 1021,
-          "y": 2821,
-          "width": 307,
           "height": 32
         }
       },
@@ -117,7 +77,7 @@
         "text": "Ayúdame a identificar un P.A.S.",
         "rect": {
           "x": 699,
-          "y": 3476,
+          "y": 4313,
           "width": 174,
           "height": 27
         }
@@ -127,7 +87,7 @@
         "text": "¿Por qué me recomiendas esta práctica?",
         "rect": {
           "x": 879,
-          "y": 3476,
+          "y": 4313,
           "width": 220,
           "height": 27
         }
@@ -137,7 +97,7 @@
         "text": "Dame un ejemplo de niveles lógicos",
         "rect": {
           "x": 1105,
-          "y": 3476,
+          "y": 4313,
           "width": 199,
           "height": 27
         }
@@ -147,7 +107,7 @@
         "text": "",
         "rect": {
           "x": 716,
-          "y": 3530,
+          "y": 4367,
           "width": 593,
           "height": 16
         }
@@ -159,43 +119,43 @@
   {
     "route": "/learn",
     "viewportName": "desktop",
-    "title": "LUMA · Learning Intelligence",
+    "title": "LUMA · Inteligencia de Aprendizaje",
     "viewport": {
       "width": 1440,
       "height": 1000
     },
     "documentWidth": 1440,
-    "documentHeight": 4027,
+    "documentHeight": 4864,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
       {
         "tag": "a",
-        "text": "Superuser",
+        "text": "Superusuario",
         "rect": {
-          "x": 732,
+          "x": 648,
           "y": 29,
-          "width": 97,
+          "width": 115,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coachee",
+        "text": "Participante",
         "rect": {
-          "x": 839,
+          "x": 772,
           "y": 29,
-          "width": 85,
+          "width": 106,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coach",
+        "text": "Entrenador",
         "rect": {
-          "x": 926,
+          "x": 880,
           "y": 29,
-          "width": 52,
+          "width": 81,
           "height": 32
         }
       },
@@ -203,7 +163,7 @@
         "tag": "button",
         "text": "Usar tema Seres de Excelencia",
         "rect": {
-          "x": 986,
+          "x": 970,
           "y": 29,
           "width": 33,
           "height": 32
@@ -211,9 +171,9 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Liquid Light",
+        "text": "Usar tema Luz Líquida",
         "rect": {
-          "x": 1021,
+          "x": 1005,
           "y": 29,
           "width": 33,
           "height": 32
@@ -221,51 +181,11 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
+        "text": "Usar tema Inteligencia Nocturna",
         "rect": {
-          "x": 1056,
+          "x": 1040,
           "y": 29,
           "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Ver todas",
-        "rect": {
-          "x": 1248,
-          "y": 2409,
-          "width": 99,
-          "height": 38
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 310,
-          "y": 2821,
-          "width": 307,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 665,
-          "y": 2821,
-          "width": 307,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 1021,
-          "y": 2821,
-          "width": 307,
           "height": 32
         }
       },
@@ -274,7 +194,7 @@
         "text": "Ayúdame a identificar un P.A.S.",
         "rect": {
           "x": 699,
-          "y": 3476,
+          "y": 4313,
           "width": 174,
           "height": 27
         }
@@ -284,7 +204,7 @@
         "text": "¿Por qué me recomiendas esta práctica?",
         "rect": {
           "x": 879,
-          "y": 3476,
+          "y": 4313,
           "width": 220,
           "height": 27
         }
@@ -294,7 +214,7 @@
         "text": "Dame un ejemplo de niveles lógicos",
         "rect": {
           "x": 1105,
-          "y": 3476,
+          "y": 4313,
           "width": 199,
           "height": 27
         }
@@ -304,7 +224,7 @@
         "text": "",
         "rect": {
           "x": 716,
-          "y": 3530,
+          "y": 4367,
           "width": 593,
           "height": 16
         }
@@ -316,7 +236,7 @@
   {
     "route": "/twin",
     "viewportName": "desktop",
-    "title": "Coach Intelligence · Mariana · LUMA",
+    "title": "Inteligencia del entrenador · Mariana · LUMA",
     "viewport": {
       "width": 1440,
       "height": 1000
@@ -328,31 +248,31 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "Superuser",
+        "text": "Superusuario",
         "rect": {
-          "x": 732,
+          "x": 665,
           "y": 30,
-          "width": 97,
+          "width": 115,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coachee",
+        "text": "Participante",
         "rect": {
-          "x": 839,
+          "x": 788,
           "y": 30,
-          "width": 85,
+          "width": 106,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coach",
+        "text": "Entrenador",
         "rect": {
-          "x": 926,
+          "x": 897,
           "y": 30,
-          "width": 52,
+          "width": 81,
           "height": 32
         }
       },
@@ -368,7 +288,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Liquid Light",
+        "text": "Usar tema Luz Líquida",
         "rect": {
           "x": 1021,
           "y": 30,
@@ -378,7 +298,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
+        "text": "Usar tema Inteligencia Nocturna",
         "rect": {
           "x": 1056,
           "y": 30,
@@ -433,7 +353,7 @@
   {
     "route": "/studio/learners/mariana",
     "viewportName": "desktop",
-    "title": "Coach Intelligence · Mariana · LUMA",
+    "title": "Inteligencia del entrenador · Mariana · LUMA",
     "viewport": {
       "width": 1440,
       "height": 1000
@@ -445,31 +365,31 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "Superuser",
+        "text": "Superusuario",
         "rect": {
-          "x": 732,
+          "x": 665,
           "y": 30,
-          "width": 97,
+          "width": 115,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coachee",
+        "text": "Participante",
         "rect": {
-          "x": 839,
+          "x": 788,
           "y": 30,
-          "width": 85,
+          "width": 106,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coach",
+        "text": "Entrenador",
         "rect": {
-          "x": 926,
+          "x": 897,
           "y": 30,
-          "width": 52,
+          "width": 81,
           "height": 32
         }
       },
@@ -485,7 +405,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Liquid Light",
+        "text": "Usar tema Luz Líquida",
         "rect": {
           "x": 1021,
           "y": 30,
@@ -495,7 +415,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
+        "text": "Usar tema Inteligencia Nocturna",
         "rect": {
           "x": 1056,
           "y": 30,
@@ -562,31 +482,31 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "Superuser",
+        "text": "Superusuario",
         "rect": {
-          "x": 732,
+          "x": 665,
           "y": 30,
-          "width": 97,
+          "width": 115,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coachee",
+        "text": "Participante",
         "rect": {
-          "x": 839,
+          "x": 788,
           "y": 30,
-          "width": 85,
+          "width": 106,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coach",
+        "text": "Entrenador",
         "rect": {
-          "x": 926,
+          "x": 897,
           "y": 30,
-          "width": 52,
+          "width": 81,
           "height": 32
         }
       },
@@ -602,7 +522,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Liquid Light",
+        "text": "Usar tema Luz Líquida",
         "rect": {
           "x": 1021,
           "y": 30,
@@ -612,7 +532,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
+        "text": "Usar tema Inteligencia Nocturna",
         "rect": {
           "x": 1056,
           "y": 30,
@@ -627,43 +547,43 @@
   {
     "route": "/experience",
     "viewportName": "desktop",
-    "title": "Experience Console · LUMA",
+    "title": "Consola de experiencia · LUMA",
     "viewport": {
       "width": 1440,
       "height": 1000
     },
     "documentWidth": 1440,
-    "documentHeight": 4479,
+    "documentHeight": 4578,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
       {
         "tag": "a",
-        "text": "Superuser",
+        "text": "Superusuario",
         "rect": {
-          "x": 732,
+          "x": 665,
           "y": 30,
-          "width": 97,
+          "width": 115,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coachee",
+        "text": "Participante",
         "rect": {
-          "x": 839,
+          "x": 788,
           "y": 30,
-          "width": 85,
+          "width": 106,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coach",
+        "text": "Entrenador",
         "rect": {
-          "x": 926,
+          "x": 897,
           "y": 30,
-          "width": 52,
+          "width": 81,
           "height": 32
         }
       },
@@ -679,7 +599,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Liquid Light",
+        "text": "Usar tema Luz Líquida",
         "rect": {
           "x": 1021,
           "y": 30,
@@ -689,7 +609,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
+        "text": "Usar tema Inteligencia Nocturna",
         "rect": {
           "x": 1056,
           "y": 30,
@@ -726,31 +646,31 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "Superuser",
+        "text": "Superusuario",
         "rect": {
-          "x": 732,
+          "x": 665,
           "y": 30,
-          "width": 97,
+          "width": 115,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coachee",
+        "text": "Participante",
         "rect": {
-          "x": 839,
+          "x": 788,
           "y": 30,
-          "width": 85,
+          "width": 106,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coach",
+        "text": "Entrenador",
         "rect": {
-          "x": 926,
+          "x": 897,
           "y": 30,
-          "width": 52,
+          "width": 81,
           "height": 32
         }
       },
@@ -766,7 +686,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Liquid Light",
+        "text": "Usar tema Luz Líquida",
         "rect": {
           "x": 1021,
           "y": 30,
@@ -776,7 +696,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
+        "text": "Usar tema Inteligencia Nocturna",
         "rect": {
           "x": 1056,
           "y": 30,
@@ -791,7 +711,7 @@
   {
     "route": "/studio",
     "viewportName": "desktop",
-    "title": "Coach Studio · LUMA",
+    "title": "Estudio del entrenador · LUMA",
     "viewport": {
       "width": 1440,
       "height": 1000
@@ -803,31 +723,31 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "Superuser",
+        "text": "Superusuario",
         "rect": {
-          "x": 732,
+          "x": 665,
           "y": 30,
-          "width": 97,
+          "width": 115,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coachee",
+        "text": "Participante",
         "rect": {
-          "x": 839,
+          "x": 788,
           "y": 30,
-          "width": 85,
+          "width": 106,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coach",
+        "text": "Entrenador",
         "rect": {
-          "x": 926,
+          "x": 897,
           "y": 30,
-          "width": 52,
+          "width": 81,
           "height": 32
         }
       },
@@ -843,7 +763,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Liquid Light",
+        "text": "Usar tema Luz Líquida",
         "rect": {
           "x": 1021,
           "y": 30,
@@ -853,7 +773,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
+        "text": "Usar tema Inteligencia Nocturna",
         "rect": {
           "x": 1056,
           "y": 30,
@@ -933,11 +853,11 @@
       },
       {
         "tag": "a",
-        "text": "Abrir Learning Twin de Mariana",
+        "text": "Abrir gemelo de aprendizaje de Mariana",
         "rect": {
-          "x": 1161,
+          "x": 1112,
           "y": 1676,
-          "width": 193,
+          "width": 242,
           "height": 15
         }
       }
@@ -948,7 +868,7 @@
   {
     "route": "/studio/reflections",
     "viewportName": "desktop",
-    "title": "Curriculum Reflection · LUMA",
+    "title": "Reflexión curricular · LUMA",
     "viewport": {
       "width": 1440,
       "height": 1000
@@ -960,31 +880,31 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "Superuser",
+        "text": "Superusuario",
         "rect": {
-          "x": 732,
+          "x": 665,
           "y": 30,
-          "width": 97,
+          "width": 115,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coachee",
+        "text": "Participante",
         "rect": {
-          "x": 839,
+          "x": 788,
           "y": 30,
-          "width": 85,
+          "width": 106,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coach",
+        "text": "Entrenador",
         "rect": {
-          "x": 926,
+          "x": 897,
           "y": 30,
-          "width": 52,
+          "width": 81,
           "height": 32
         }
       },
@@ -1000,7 +920,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Liquid Light",
+        "text": "Usar tema Luz Líquida",
         "rect": {
           "x": 1021,
           "y": 30,
@@ -1010,7 +930,7 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
+        "text": "Usar tema Inteligencia Nocturna",
         "rect": {
           "x": 1056,
           "y": 30,
@@ -1179,43 +1099,43 @@
   {
     "route": "/learn/experiences",
     "viewportName": "desktop",
-    "title": "LUMA · Learning Intelligence",
+    "title": "LUMA · Inteligencia de Aprendizaje",
     "viewport": {
       "width": 1440,
       "height": 1000
     },
     "documentWidth": 1440,
-    "documentHeight": 1746,
+    "documentHeight": 3332,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
       {
         "tag": "a",
-        "text": "Superuser",
+        "text": "Superusuario",
         "rect": {
-          "x": 732,
+          "x": 648,
           "y": 29,
-          "width": 97,
+          "width": 115,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coachee",
+        "text": "Participante",
         "rect": {
-          "x": 839,
+          "x": 772,
           "y": 29,
-          "width": 85,
+          "width": 106,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coach",
+        "text": "Entrenador",
         "rect": {
-          "x": 926,
+          "x": 880,
           "y": 29,
-          "width": 52,
+          "width": 81,
           "height": 32
         }
       },
@@ -1223,7 +1143,7 @@
         "tag": "button",
         "text": "Usar tema Seres de Excelencia",
         "rect": {
-          "x": 986,
+          "x": 970,
           "y": 29,
           "width": 33,
           "height": 32
@@ -1231,9 +1151,9 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Liquid Light",
+        "text": "Usar tema Luz Líquida",
         "rect": {
-          "x": 1021,
+          "x": 1005,
           "y": 29,
           "width": 33,
           "height": 32
@@ -1241,81 +1161,11 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
+        "text": "Usar tema Inteligencia Nocturna",
         "rect": {
-          "x": 1056,
+          "x": 1040,
           "y": 29,
           "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 275,
-          "y": 776,
-          "width": 710,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 1033,
-          "y": 776,
-          "width": 331,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 275,
-          "y": 1189,
-          "width": 331,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 654,
-          "y": 1189,
-          "width": 331,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 1033,
-          "y": 1189,
-          "width": 331,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 275,
-          "y": 1625,
-          "width": 331,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 654,
-          "y": 1625,
-          "width": 331,
           "height": 32
         }
       }
@@ -1326,7 +1176,7 @@
   {
     "route": "/learn/experience/calibracion-observar-antes-de-interpretar",
     "viewportName": "desktop",
-    "title": "LUMA · Learning Intelligence",
+    "title": "LUMA · Inteligencia de Aprendizaje",
     "viewport": {
       "width": 1440,
       "height": 1000
@@ -1338,31 +1188,31 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "Superuser",
+        "text": "Superusuario",
         "rect": {
-          "x": 732,
+          "x": 648,
           "y": 29,
-          "width": 97,
+          "width": 115,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coachee",
+        "text": "Participante",
         "rect": {
-          "x": 839,
+          "x": 772,
           "y": 29,
-          "width": 85,
+          "width": 106,
           "height": 32
         }
       },
       {
         "tag": "a",
-        "text": "Coach",
+        "text": "Entrenador",
         "rect": {
-          "x": 926,
+          "x": 880,
           "y": 29,
-          "width": 52,
+          "width": 81,
           "height": 32
         }
       },
@@ -1370,7 +1220,7 @@
         "tag": "button",
         "text": "Usar tema Seres de Excelencia",
         "rect": {
-          "x": 986,
+          "x": 970,
           "y": 29,
           "width": 33,
           "height": 32
@@ -1378,9 +1228,9 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Liquid Light",
+        "text": "Usar tema Luz Líquida",
         "rect": {
-          "x": 1021,
+          "x": 1005,
           "y": 29,
           "width": 33,
           "height": 32
@@ -1388,9 +1238,9 @@
       },
       {
         "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
+        "text": "Usar tema Inteligencia Nocturna",
         "rect": {
-          "x": 1056,
+          "x": 1040,
           "y": 29,
           "width": 33,
           "height": 32
@@ -1412,337 +1262,55 @@
   },
   {
     "route": "/",
-    "viewportName": "mobile",
-    "title": "LUMA · Learning Intelligence",
+    "viewportName": "mobile-small",
+    "title": "LUMA · Inteligencia de Aprendizaje",
     "viewport": {
-      "width": 390,
-      "height": 844
+      "width": 375,
+      "height": 667
     },
-    "documentWidth": 390,
-    "documentHeight": 7072,
+    "documentWidth": 375,
+    "documentHeight": 7285,
     "horizontalOverflow": 0,
     "outOfBounds": [],
-    "smallTargets": [
-      {
-        "tag": "a",
-        "text": "LUMA para Seres de Excelencia, inicio",
-        "rect": {
-          "x": 14,
-          "y": 28,
-          "width": 38,
-          "height": 38
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Seres de Excelencia",
-        "rect": {
-          "x": 218,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Liquid Light",
-        "rect": {
-          "x": 253,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
-        "rect": {
-          "x": 288,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Ver todas",
-        "rect": {
-          "x": 35,
-          "y": 3874,
-          "width": 99,
-          "height": 38
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 54,
-          "y": 4274,
-          "width": 282,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 54,
-          "y": 4676,
-          "width": 282,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 54,
-          "y": 5077,
-          "width": 282,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Ayúdame a identificar un P.A.S.",
-        "rect": {
-          "x": 31,
-          "y": 6729,
-          "width": 174,
-          "height": 27
-        }
-      },
-      {
-        "tag": "button",
-        "text": "¿Por qué me recomiendas esta práctica?",
-        "rect": {
-          "x": 211,
-          "y": 6729,
-          "width": 220,
-          "height": 27
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Dame un ejemplo de niveles lógicos",
-        "rect": {
-          "x": 437,
-          "y": 6729,
-          "width": 199,
-          "height": 27
-        }
-      },
-      {
-        "tag": "input",
-        "text": "",
-        "rect": {
-          "x": 48,
-          "y": 6783,
-          "width": 264,
-          "height": 16
-        }
-      }
-    ],
+    "smallTargets": [],
     "clippedText": [],
     "primaryHeadingVisible": true
   },
   {
     "route": "/learn",
-    "viewportName": "mobile",
-    "title": "LUMA · Learning Intelligence",
+    "viewportName": "mobile-small",
+    "title": "LUMA · Inteligencia de Aprendizaje",
     "viewport": {
-      "width": 390,
-      "height": 844
+      "width": 375,
+      "height": 667
     },
-    "documentWidth": 390,
-    "documentHeight": 7072,
+    "documentWidth": 375,
+    "documentHeight": 7285,
     "horizontalOverflow": 0,
     "outOfBounds": [],
-    "smallTargets": [
-      {
-        "tag": "a",
-        "text": "LUMA para Seres de Excelencia, inicio",
-        "rect": {
-          "x": 14,
-          "y": 28,
-          "width": 38,
-          "height": 38
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Seres de Excelencia",
-        "rect": {
-          "x": 218,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Liquid Light",
-        "rect": {
-          "x": 253,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
-        "rect": {
-          "x": 288,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Ver todas",
-        "rect": {
-          "x": 35,
-          "y": 3874,
-          "width": 99,
-          "height": 38
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 54,
-          "y": 4274,
-          "width": 282,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 54,
-          "y": 4676,
-          "width": 282,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 54,
-          "y": 5077,
-          "width": 282,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Ayúdame a identificar un P.A.S.",
-        "rect": {
-          "x": 31,
-          "y": 6729,
-          "width": 174,
-          "height": 27
-        }
-      },
-      {
-        "tag": "button",
-        "text": "¿Por qué me recomiendas esta práctica?",
-        "rect": {
-          "x": 211,
-          "y": 6729,
-          "width": 220,
-          "height": 27
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Dame un ejemplo de niveles lógicos",
-        "rect": {
-          "x": 437,
-          "y": 6729,
-          "width": 199,
-          "height": 27
-        }
-      },
-      {
-        "tag": "input",
-        "text": "",
-        "rect": {
-          "x": 48,
-          "y": 6783,
-          "width": 264,
-          "height": 16
-        }
-      }
-    ],
+    "smallTargets": [],
     "clippedText": [],
     "primaryHeadingVisible": true
   },
   {
     "route": "/twin",
-    "viewportName": "mobile",
-    "title": "Coach Intelligence · Mariana · LUMA",
+    "viewportName": "mobile-small",
+    "title": "Inteligencia del entrenador · Mariana · LUMA",
     "viewport": {
-      "width": 390,
-      "height": 844
+      "width": 375,
+      "height": 667
     },
-    "documentWidth": 390,
-    "documentHeight": 3099,
+    "documentWidth": 375,
+    "documentHeight": 3140,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
-      {
-        "tag": "a",
-        "text": "LUMA para Seres de Excelencia, inicio",
-        "rect": {
-          "x": 14,
-          "y": 26,
-          "width": 38,
-          "height": 38
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Seres de Excelencia",
-        "rect": {
-          "x": 218,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Liquid Light",
-        "rect": {
-          "x": 253,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
-        "rect": {
-          "x": 288,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
       {
         "tag": "button",
         "text": "Todo",
         "rect": {
           "x": 31,
-          "y": 1577,
+          "y": 1619,
           "width": 52,
           "height": 30
         }
@@ -1752,7 +1320,7 @@
         "text": "Observado",
         "rect": {
           "x": 90,
-          "y": 1577,
+          "y": 1619,
           "width": 88,
           "height": 30
         }
@@ -1762,7 +1330,7 @@
         "text": "Inferido",
         "rect": {
           "x": 185,
-          "y": 1577,
+          "y": 1619,
           "width": 71,
           "height": 30
         }
@@ -1772,7 +1340,523 @@
         "text": "Auto-reportado",
         "rect": {
           "x": 263,
-          "y": 1577,
+          "y": 1619,
+          "width": 116,
+          "height": 30
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/studio/learners/mariana",
+    "viewportName": "mobile-small",
+    "title": "Inteligencia del entrenador · Mariana · LUMA",
+    "viewport": {
+      "width": 375,
+      "height": 667
+    },
+    "documentWidth": 375,
+    "documentHeight": 3140,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "text": "Todo",
+        "rect": {
+          "x": 31,
+          "y": 1619,
+          "width": 52,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Observado",
+        "rect": {
+          "x": 90,
+          "y": 1619,
+          "width": 88,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Inferido",
+        "rect": {
+          "x": 185,
+          "y": 1619,
+          "width": 71,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Auto-reportado",
+        "rect": {
+          "x": 263,
+          "y": 1619,
+          "width": 116,
+          "height": 30
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/library",
+    "viewportName": "mobile-small",
+    "title": "Contenido inteligente · LUMA",
+    "viewport": {
+      "width": 375,
+      "height": 667
+    },
+    "documentWidth": 375,
+    "documentHeight": 4002,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/experience",
+    "viewportName": "mobile-small",
+    "title": "Consola de experiencia · LUMA",
+    "viewport": {
+      "width": 375,
+      "height": 667
+    },
+    "documentWidth": 375,
+    "documentHeight": 8090,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "Abrir catálogo",
+        "rect": {
+          "x": 36,
+          "y": 2553,
+          "width": 123,
+          "height": 38
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/iconography",
+    "viewportName": "mobile-small",
+    "title": "Iconografía LUMA · LUMA",
+    "viewport": {
+      "width": 375,
+      "height": 667
+    },
+    "documentWidth": 375,
+    "documentHeight": 4442,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/studio",
+    "viewportName": "mobile-small",
+    "title": "Estudio del entrenador · LUMA",
+    "viewport": {
+      "width": 375,
+      "height": 667
+    },
+    "documentWidth": 375,
+    "documentHeight": 3897,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "text": "Módulo 3",
+        "rect": {
+          "x": 27,
+          "y": 161,
+          "width": 156,
+          "height": 38
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Últimos 7 días",
+        "rect": {
+          "x": 192,
+          "y": 161,
+          "width": 156,
+          "height": 38
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir",
+        "rect": {
+          "x": 46,
+          "y": 3264,
+          "width": 67,
+          "height": 34
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 46,
+          "y": 3361,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 46,
+          "y": 3458,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 46,
+          "y": 3555,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 46,
+          "y": 3652,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir gemelo de aprendizaje de Mariana",
+        "rect": {
+          "x": 31,
+          "y": 3750,
+          "width": 242,
+          "height": 15
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/studio/reflections",
+    "viewportName": "mobile-small",
+    "title": "Reflexión curricular · LUMA",
+    "viewport": {
+      "width": 375,
+      "height": 667
+    },
+    "documentWidth": 375,
+    "documentHeight": 4602,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "text": "Todo",
+        "rect": {
+          "x": 31,
+          "y": 1455,
+          "width": 44,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "RAW",
+        "rect": {
+          "x": 80,
+          "y": 1455,
+          "width": 43,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Reflexión",
+        "rect": {
+          "x": 128,
+          "y": 1455,
+          "width": 67,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Síntesis",
+        "rect": {
+          "x": 200,
+          "y": 1455,
+          "width": 60,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "QA",
+        "rect": {
+          "x": 265,
+          "y": 1455,
+          "width": 35,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Factual",
+        "rect": {
+          "x": 31,
+          "y": 3525,
+          "width": 101,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Conceptual",
+        "rect": {
+          "x": 137,
+          "y": 3525,
+          "width": 101,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Revisión",
+        "rect": {
+          "x": 243,
+          "y": 3525,
+          "width": 101,
+          "height": 30
+        }
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "rect": {
+          "x": 68,
+          "y": 3639,
+          "width": 263,
+          "height": 14
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/onboarding",
+    "viewportName": "mobile-small",
+    "title": "Configura tu experiencia · LUMA",
+    "viewport": {
+      "width": 375,
+      "height": 667
+    },
+    "documentWidth": 375,
+    "documentHeight": 1869,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "text": "Usar perfil de showcase",
+        "rect": {
+          "x": 217,
+          "y": 32,
+          "width": 146,
+          "height": 13
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/learn/session/pas",
+    "viewportName": "mobile-small",
+    "title": "Práctica guiada · LUMA",
+    "viewport": {
+      "width": 375,
+      "height": 667
+    },
+    "documentWidth": 375,
+    "documentHeight": 1704,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "Salir de la práctica",
+        "rect": {
+          "x": 10,
+          "y": 29,
+          "width": 147,
+          "height": 17
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir material original",
+        "rect": {
+          "x": 36,
+          "y": 1325,
+          "width": 303,
+          "height": 29
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/learn/experiences",
+    "viewportName": "mobile-small",
+    "title": "LUMA · Inteligencia de Aprendizaje",
+    "viewport": {
+      "width": 375,
+      "height": 667
+    },
+    "documentWidth": 375,
+    "documentHeight": 4475,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/learn/experience/calibracion-observar-antes-de-interpretar",
+    "viewportName": "mobile-small",
+    "title": "LUMA · Inteligencia de Aprendizaje",
+    "viewport": {
+      "width": 375,
+      "height": 667
+    },
+    "documentWidth": 375,
+    "documentHeight": 1998,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "Volver",
+        "rect": {
+          "x": 12,
+          "y": 90,
+          "width": 54,
+          "height": 15
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/",
+    "viewportName": "mobile",
+    "title": "LUMA · Inteligencia de Aprendizaje",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentWidth": 390,
+    "documentHeight": 7199,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/learn",
+    "viewportName": "mobile",
+    "title": "LUMA · Inteligencia de Aprendizaje",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentWidth": 390,
+    "documentHeight": 7199,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/twin",
+    "viewportName": "mobile",
+    "title": "Inteligencia del entrenador · Mariana · LUMA",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentWidth": 390,
+    "documentHeight": 3125,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "text": "Todo",
+        "rect": {
+          "x": 31,
+          "y": 1603,
+          "width": 52,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Observado",
+        "rect": {
+          "x": 90,
+          "y": 1603,
+          "width": 88,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Inferido",
+        "rect": {
+          "x": 185,
+          "y": 1603,
+          "width": 71,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Auto-reportado",
+        "rect": {
+          "x": 263,
+          "y": 1603,
           "width": 116,
           "height": 30
         }
@@ -1784,62 +1868,22 @@
   {
     "route": "/studio/learners/mariana",
     "viewportName": "mobile",
-    "title": "Coach Intelligence · Mariana · LUMA",
+    "title": "Inteligencia del entrenador · Mariana · LUMA",
     "viewport": {
       "width": 390,
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 3099,
+    "documentHeight": 3125,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
-      {
-        "tag": "a",
-        "text": "LUMA para Seres de Excelencia, inicio",
-        "rect": {
-          "x": 14,
-          "y": 26,
-          "width": 38,
-          "height": 38
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Seres de Excelencia",
-        "rect": {
-          "x": 218,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Liquid Light",
-        "rect": {
-          "x": 253,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
-        "rect": {
-          "x": 288,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
       {
         "tag": "button",
         "text": "Todo",
         "rect": {
           "x": 31,
-          "y": 1577,
+          "y": 1603,
           "width": 52,
           "height": 30
         }
@@ -1849,7 +1893,7 @@
         "text": "Observado",
         "rect": {
           "x": 90,
-          "y": 1577,
+          "y": 1603,
           "width": 88,
           "height": 30
         }
@@ -1859,7 +1903,7 @@
         "text": "Inferido",
         "rect": {
           "x": 185,
-          "y": 1577,
+          "y": 1603,
           "width": 71,
           "height": 30
         }
@@ -1869,7 +1913,7 @@
         "text": "Auto-reportado",
         "rect": {
           "x": 263,
-          "y": 1577,
+          "y": 1603,
           "width": 116,
           "height": 30
         }
@@ -1887,107 +1931,26 @@
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 4022,
+    "documentHeight": 3997,
     "horizontalOverflow": 0,
     "outOfBounds": [],
-    "smallTargets": [
-      {
-        "tag": "a",
-        "text": "LUMA para Seres de Excelencia, inicio",
-        "rect": {
-          "x": 14,
-          "y": 26,
-          "width": 38,
-          "height": 38
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Seres de Excelencia",
-        "rect": {
-          "x": 218,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Liquid Light",
-        "rect": {
-          "x": 253,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
-        "rect": {
-          "x": 288,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      }
-    ],
+    "smallTargets": [],
     "clippedText": [],
     "primaryHeadingVisible": true
   },
   {
     "route": "/experience",
     "viewportName": "mobile",
-    "title": "Experience Console · LUMA",
+    "title": "Consola de experiencia · LUMA",
     "viewport": {
       "width": 390,
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 8029,
+    "documentHeight": 8114,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
-      {
-        "tag": "a",
-        "text": "LUMA para Seres de Excelencia, inicio",
-        "rect": {
-          "x": 14,
-          "y": 26,
-          "width": 38,
-          "height": 38
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Seres de Excelencia",
-        "rect": {
-          "x": 218,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Liquid Light",
-        "rect": {
-          "x": 253,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
-        "rect": {
-          "x": 288,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
       {
         "tag": "a",
         "text": "Abrir catálogo",
@@ -2011,58 +1974,17 @@
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 4422,
+    "documentHeight": 4440,
     "horizontalOverflow": 0,
     "outOfBounds": [],
-    "smallTargets": [
-      {
-        "tag": "a",
-        "text": "LUMA para Seres de Excelencia, inicio",
-        "rect": {
-          "x": 14,
-          "y": 26,
-          "width": 38,
-          "height": 38
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Seres de Excelencia",
-        "rect": {
-          "x": 218,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Liquid Light",
-        "rect": {
-          "x": 253,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
-        "rect": {
-          "x": 288,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      }
-    ],
+    "smallTargets": [],
     "clippedText": [],
     "primaryHeadingVisible": true
   },
   {
     "route": "/studio",
     "viewportName": "mobile",
-    "title": "Coach Studio · LUMA",
+    "title": "Estudio del entrenador · LUMA",
     "viewport": {
       "width": 390,
       "height": 844
@@ -2072,46 +1994,6 @@
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
-      {
-        "tag": "a",
-        "text": "LUMA para Seres de Excelencia, inicio",
-        "rect": {
-          "x": 14,
-          "y": 26,
-          "width": 38,
-          "height": 38
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Seres de Excelencia",
-        "rect": {
-          "x": 218,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Liquid Light",
-        "rect": {
-          "x": 253,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
-        "rect": {
-          "x": 288,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
       {
         "tag": "button",
         "text": "Módulo 3",
@@ -2184,11 +2066,11 @@
       },
       {
         "tag": "a",
-        "text": "Abrir Learning Twin de Mariana",
+        "text": "Abrir gemelo de aprendizaje de Mariana",
         "rect": {
           "x": 31,
           "y": 3750,
-          "width": 193,
+          "width": 242,
           "height": 15
         }
       }
@@ -2199,62 +2081,22 @@
   {
     "route": "/studio/reflections",
     "viewportName": "mobile",
-    "title": "Curriculum Reflection · LUMA",
+    "title": "Reflexión curricular · LUMA",
     "viewport": {
       "width": 390,
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 4467,
+    "documentHeight": 4489,
     "horizontalOverflow": 0,
     "outOfBounds": [],
     "smallTargets": [
-      {
-        "tag": "a",
-        "text": "LUMA para Seres de Excelencia, inicio",
-        "rect": {
-          "x": 14,
-          "y": 26,
-          "width": 38,
-          "height": 38
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Seres de Excelencia",
-        "rect": {
-          "x": 218,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Liquid Light",
-        "rect": {
-          "x": 253,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
-        "rect": {
-          "x": 288,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
       {
         "tag": "button",
         "text": "Todo",
         "rect": {
           "x": 31,
-          "y": 1409,
+          "y": 1432,
           "width": 44,
           "height": 30
         }
@@ -2264,7 +2106,7 @@
         "text": "RAW",
         "rect": {
           "x": 80,
-          "y": 1409,
+          "y": 1432,
           "width": 43,
           "height": 30
         }
@@ -2274,7 +2116,7 @@
         "text": "Reflexión",
         "rect": {
           "x": 128,
-          "y": 1409,
+          "y": 1432,
           "width": 67,
           "height": 30
         }
@@ -2284,7 +2126,7 @@
         "text": "Síntesis",
         "rect": {
           "x": 200,
-          "y": 1409,
+          "y": 1432,
           "width": 60,
           "height": 30
         }
@@ -2294,7 +2136,7 @@
         "text": "QA",
         "rect": {
           "x": 265,
-          "y": 1409,
+          "y": 1432,
           "width": 35,
           "height": 30
         }
@@ -2304,7 +2146,7 @@
         "text": "Factual",
         "rect": {
           "x": 31,
-          "y": 3418,
+          "y": 3441,
           "width": 106,
           "height": 30
         }
@@ -2314,7 +2156,7 @@
         "text": "Conceptual",
         "rect": {
           "x": 142,
-          "y": 3418,
+          "y": 3441,
           "width": 106,
           "height": 30
         }
@@ -2324,7 +2166,7 @@
         "text": "Revisión",
         "rect": {
           "x": 253,
-          "y": 3418,
+          "y": 3441,
           "width": 106,
           "height": 30
         }
@@ -2334,7 +2176,7 @@
         "text": "",
         "rect": {
           "x": 68,
-          "y": 3532,
+          "y": 3554,
           "width": 278,
           "height": 14
         }
@@ -2410,134 +2252,23 @@
   {
     "route": "/learn/experiences",
     "viewportName": "mobile",
-    "title": "LUMA · Learning Intelligence",
+    "title": "LUMA · Inteligencia de Aprendizaje",
     "viewport": {
       "width": 390,
       "height": 844
     },
     "documentWidth": 390,
-    "documentHeight": 3295,
+    "documentHeight": 4469,
     "horizontalOverflow": 0,
     "outOfBounds": [],
-    "smallTargets": [
-      {
-        "tag": "a",
-        "text": "LUMA para Seres de Excelencia, inicio",
-        "rect": {
-          "x": 14,
-          "y": 28,
-          "width": 38,
-          "height": 38
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Seres de Excelencia",
-        "rect": {
-          "x": 218,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Liquid Light",
-        "rect": {
-          "x": 253,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
-        "rect": {
-          "x": 288,
-          "y": 17,
-          "width": 33,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 31,
-          "y": 704,
-          "width": 328,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 31,
-          "y": 1106,
-          "width": 328,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 31,
-          "y": 1507,
-          "width": 328,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 31,
-          "y": 1908,
-          "width": 328,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 31,
-          "y": 2310,
-          "width": 328,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 31,
-          "y": 2711,
-          "width": 328,
-          "height": 32
-        }
-      },
-      {
-        "tag": "a",
-        "text": "Abrir experiencia",
-        "rect": {
-          "x": 31,
-          "y": 3134,
-          "width": 328,
-          "height": 32
-        }
-      }
-    ],
+    "smallTargets": [],
     "clippedText": [],
     "primaryHeadingVisible": true
   },
   {
     "route": "/learn/experience/calibracion-observar-antes-de-interpretar",
     "viewportName": "mobile",
-    "title": "LUMA · Learning Intelligence",
+    "title": "LUMA · Inteligencia de Aprendizaje",
     "viewport": {
       "width": 390,
       "height": 844
@@ -2549,44 +2280,520 @@
     "smallTargets": [
       {
         "tag": "a",
-        "text": "LUMA para Seres de Excelencia, inicio",
+        "text": "Volver",
         "rect": {
-          "x": 14,
-          "y": 28,
-          "width": 38,
+          "x": 12,
+          "y": 90,
+          "width": 54,
+          "height": 15
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/",
+    "viewportName": "mobile-large",
+    "title": "LUMA · Inteligencia de Aprendizaje",
+    "viewport": {
+      "width": 430,
+      "height": 932
+    },
+    "documentWidth": 430,
+    "documentHeight": 7182,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/learn",
+    "viewportName": "mobile-large",
+    "title": "LUMA · Inteligencia de Aprendizaje",
+    "viewport": {
+      "width": 430,
+      "height": 932
+    },
+    "documentWidth": 430,
+    "documentHeight": 7182,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/twin",
+    "viewportName": "mobile-large",
+    "title": "Inteligencia del entrenador · Mariana · LUMA",
+    "viewport": {
+      "width": 430,
+      "height": 932
+    },
+    "documentWidth": 430,
+    "documentHeight": 3025,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "text": "Todo",
+        "rect": {
+          "x": 31,
+          "y": 1541,
+          "width": 52,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Observado",
+        "rect": {
+          "x": 90,
+          "y": 1541,
+          "width": 88,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Inferido",
+        "rect": {
+          "x": 185,
+          "y": 1541,
+          "width": 71,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Auto-reportado",
+        "rect": {
+          "x": 263,
+          "y": 1541,
+          "width": 116,
+          "height": 30
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/studio/learners/mariana",
+    "viewportName": "mobile-large",
+    "title": "Inteligencia del entrenador · Mariana · LUMA",
+    "viewport": {
+      "width": 430,
+      "height": 932
+    },
+    "documentWidth": 430,
+    "documentHeight": 3025,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "text": "Todo",
+        "rect": {
+          "x": 31,
+          "y": 1541,
+          "width": 52,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Observado",
+        "rect": {
+          "x": 90,
+          "y": 1541,
+          "width": 88,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Inferido",
+        "rect": {
+          "x": 185,
+          "y": 1541,
+          "width": 71,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Auto-reportado",
+        "rect": {
+          "x": 263,
+          "y": 1541,
+          "width": 116,
+          "height": 30
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/library",
+    "viewportName": "mobile-large",
+    "title": "Contenido inteligente · LUMA",
+    "viewport": {
+      "width": 430,
+      "height": 932
+    },
+    "documentWidth": 430,
+    "documentHeight": 3858,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/experience",
+    "viewportName": "mobile-large",
+    "title": "Consola de experiencia · LUMA",
+    "viewport": {
+      "width": 430,
+      "height": 932
+    },
+    "documentWidth": 430,
+    "documentHeight": 8008,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "Abrir catálogo",
+        "rect": {
+          "x": 36,
+          "y": 2575,
+          "width": 123,
+          "height": 38
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/iconography",
+    "viewportName": "mobile-large",
+    "title": "Iconografía LUMA · LUMA",
+    "viewport": {
+      "width": 430,
+      "height": 932
+    },
+    "documentWidth": 430,
+    "documentHeight": 4383,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/studio",
+    "viewportName": "mobile-large",
+    "title": "Estudio del entrenador · LUMA",
+    "viewport": {
+      "width": 430,
+      "height": 932
+    },
+    "documentWidth": 430,
+    "documentHeight": 3853,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "text": "Módulo 3",
+        "rect": {
+          "x": 27,
+          "y": 147,
+          "width": 184,
           "height": 38
         }
       },
       {
         "tag": "button",
-        "text": "Usar tema Seres de Excelencia",
+        "text": "Últimos 7 días",
         "rect": {
-          "x": 218,
-          "y": 17,
-          "width": 33,
-          "height": 32
+          "x": 220,
+          "y": 147,
+          "width": 184,
+          "height": 38
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir",
+        "rect": {
+          "x": 46,
+          "y": 3220,
+          "width": 67,
+          "height": 34
         }
       },
       {
         "tag": "button",
-        "text": "Usar tema Liquid Light",
+        "text": "Asignar",
         "rect": {
-          "x": 253,
-          "y": 17,
-          "width": 33,
-          "height": 32
+          "x": 46,
+          "y": 3317,
+          "width": 55,
+          "height": 34
         }
       },
       {
         "tag": "button",
-        "text": "Usar tema Nocturne Intelligence",
+        "text": "Asignar",
         "rect": {
-          "x": 288,
-          "y": 17,
-          "width": 33,
-          "height": 32
+          "x": 46,
+          "y": 3414,
+          "width": 55,
+          "height": 34
         }
       },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 46,
+          "y": 3511,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Asignar",
+        "rect": {
+          "x": 46,
+          "y": 3608,
+          "width": 55,
+          "height": 34
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir gemelo de aprendizaje de Mariana",
+        "rect": {
+          "x": 31,
+          "y": 3706,
+          "width": 242,
+          "height": 15
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/studio/reflections",
+    "viewportName": "mobile-large",
+    "title": "Reflexión curricular · LUMA",
+    "viewport": {
+      "width": 430,
+      "height": 932
+    },
+    "documentWidth": 430,
+    "documentHeight": 4348,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "text": "Todo",
+        "rect": {
+          "x": 31,
+          "y": 1409,
+          "width": 44,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "RAW",
+        "rect": {
+          "x": 80,
+          "y": 1409,
+          "width": 43,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Reflexión",
+        "rect": {
+          "x": 128,
+          "y": 1409,
+          "width": 67,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Síntesis",
+        "rect": {
+          "x": 200,
+          "y": 1409,
+          "width": 60,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "QA",
+        "rect": {
+          "x": 265,
+          "y": 1409,
+          "width": 35,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Factual",
+        "rect": {
+          "x": 31,
+          "y": 3326,
+          "width": 119,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Conceptual",
+        "rect": {
+          "x": 155,
+          "y": 3326,
+          "width": 119,
+          "height": 30
+        }
+      },
+      {
+        "tag": "button",
+        "text": "Revisión",
+        "rect": {
+          "x": 280,
+          "y": 3326,
+          "width": 119,
+          "height": 30
+        }
+      },
+      {
+        "tag": "input",
+        "text": "",
+        "rect": {
+          "x": 68,
+          "y": 3439,
+          "width": 318,
+          "height": 14
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/onboarding",
+    "viewportName": "mobile-large",
+    "title": "Configura tu experiencia · LUMA",
+    "viewport": {
+      "width": 430,
+      "height": 932
+    },
+    "documentWidth": 430,
+    "documentHeight": 1760,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "button",
+        "text": "Usar perfil de showcase",
+        "rect": {
+          "x": 272,
+          "y": 32,
+          "width": 146,
+          "height": 13
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/learn/session/pas",
+    "viewportName": "mobile-large",
+    "title": "Práctica guiada · LUMA",
+    "viewport": {
+      "width": 430,
+      "height": 932
+    },
+    "documentWidth": 430,
+    "documentHeight": 1640,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
+      {
+        "tag": "a",
+        "text": "Salir de la práctica",
+        "rect": {
+          "x": 10,
+          "y": 29,
+          "width": 147,
+          "height": 17
+        }
+      },
+      {
+        "tag": "a",
+        "text": "Abrir material original",
+        "rect": {
+          "x": 36,
+          "y": 1275,
+          "width": 358,
+          "height": 29
+        }
+      }
+    ],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/learn/experiences",
+    "viewportName": "mobile-large",
+    "title": "LUMA · Inteligencia de Aprendizaje",
+    "viewport": {
+      "width": 430,
+      "height": 932
+    },
+    "documentWidth": 430,
+    "documentHeight": 4563,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [],
+    "clippedText": [],
+    "primaryHeadingVisible": true
+  },
+  {
+    "route": "/learn/experience/calibracion-observar-antes-de-interpretar",
+    "viewportName": "mobile-large",
+    "title": "LUMA · Inteligencia de Aprendizaje",
+    "viewport": {
+      "width": 430,
+      "height": 932
+    },
+    "documentWidth": 430,
+    "documentHeight": 1962,
+    "horizontalOverflow": 0,
+    "outOfBounds": [],
+    "smallTargets": [
       {
         "tag": "a",
         "text": "Volver",

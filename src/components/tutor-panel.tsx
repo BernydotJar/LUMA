@@ -43,7 +43,7 @@ export function TutorPanel() {
     {
       role: "tutor",
       content:
-        "Estoy contigo en esta parte del journey. Puedo explicarlo distinto, darte un ejemplo, probarte o llevarte al momento exacto del material. ¿Qué necesitas?",
+        "Estoy contigo en esta parte de la ruta. Puedo explicarlo distinto, darte un ejemplo, probarte o llevarte al momento exacto del material. ¿Qué necesitas?",
     },
   ]);
 
@@ -134,7 +134,7 @@ export function TutorPanel() {
                 <div className={styles.trustWarning}>
                   <AlertTriangle size={14} />
                   <div>
-                    <strong>Claim bloqueado por política</strong>
+                    <strong>Afirmación bloqueada por política</strong>
                     <span>{item.trust.reason}</span>
                   </div>
                 </div>

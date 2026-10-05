@@ -28,7 +28,7 @@ export const experienceModes: Record<
   { label: string; description: string }
 > = {
   "organic-reflection": {
-    label: "Organic Reflection",
+    label: "Reflexión orgánica",
     description:
       "Formas fluidas, vidrio cálido, ritmo contemplativo y profundidad relacional.",
   },
@@ -128,15 +128,15 @@ export const productSemanticObjects = {
   coachInsight: {
     ...conceptVisualProfiles["logical-levels"],
     id: "coach-insight",
-    label: "Coach Insight",
+    label: "Perspectiva del entrenador",
     semanticObject: "strata" as const,
   },
   humanIntervention: {
     id: "human-intervention",
-    label: "Human Intervention",
+    label: "Intervención humana",
     semanticObject: "bridge" as const,
     experienceMode: "architectural-focus" as const,
-    sourceLocator: "Learning Model · human escalation",
+    sourceLocator: "Modelo de aprendizaje · escalamiento humano",
     rationale:
       "La intervención conecta evidencia del sistema con contexto experto humano.",
   },

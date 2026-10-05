@@ -83,7 +83,7 @@ export async function POST(request: Request) {
       answer:
         "El material del curso contiene una afirmación que relaciona emociones, órganos y enfermedad, pero el corpus no aporta evidencia clínica independiente. LUMA no puede presentarla como un hecho médico verificado. Puedo mostrarte exactamente dónde aparece y separar la perspectiva del curso de la evidencia disponible; para una preocupación de salud, corresponde consultar a un profesional cualificado.",
       evidence: {
-        concept: "Claim de salud bajo revisión",
+        concept: "Afirmación de salud bajo revisión",
         source: "Módulo 3 · págs. 7–8 · afirmaciones de salud",
         url: moduleThreeSource.url,
         confidence: 1,
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
       trust: {
         status: "BLOCKED_CLAIM",
         reason:
-          "El claim es de alto impacto y no tiene evidencia independiente ni aprobación cualificada dentro del corpus.",
+          "La afirmación es de alto impacto y no tiene evidencia independiente ni aprobación cualificada dentro del corpus.",
         artifactId: "finding-health-claims",
       },
     });

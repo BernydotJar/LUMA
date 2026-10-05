@@ -282,7 +282,7 @@
     display: block;
   }
 
-  .topbarActions > .iconButton:first-of-type,
+  .topbarActions > .iconButton,
   .profileButton > span:nth-child(2),
   .profileButton > svg {
     display: none;
@@ -872,4 +872,10 @@
 :global(html[data-theme="dark"]) .mobileNav .mobileActive {
   color: #2d1b1d !important;
   background: #efc86a !important;
+}
+
+@media (max-width: 760px) {
+  .profileButton {
+    display: none;
+  }
 }

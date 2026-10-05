@@ -1,0 +1,52 @@
+
+Running 46 tests using 1 worker
+
+  ✓   1 [chromium] › e2e/content-beta.spec.ts:3:1 › beta content catalog is available to the learner (882ms)
+  ✓   2 [chromium] › e2e/content-beta.spec.ts:12:1 › a reflection creates a practice receipt (959ms)
+  -   3 [chromium] › e2e/responsive-mobile.spec.ts:4:3 › responsive mobile product › mobile learner header does not overlap and navigation remains usable
+  -   4 [chromium] › e2e/responsive-mobile.spec.ts:31:3 › responsive mobile product › all seven program modules are selectable on mobile
+  -   5 [chromium] › e2e/responsive-mobile.spec.ts:46:3 › responsive mobile product › practice suggestions use horizontal snap rather than stacked dashboard cards
+  ✓   6 [chromium] › e2e/showcase.spec.ts:10:3 › LUMA product showcase › showcase root enters the learner product immediately (830ms)
+  ✓   7 [chromium] › e2e/showcase.spec.ts:17:3 › LUMA product showcase › onboarding calibrates a learner and enters the journey (958ms)
+  ✓   8 [chromium] › e2e/showcase.spec.ts:38:3 › LUMA product showcase › coachee navigation keeps internal intelligence out of the learning surface (720ms)
+  ✓   9 [chromium] › e2e/showcase.spec.ts:50:3 › LUMA product showcase › legacy Twin route opens the coach intelligence view (677ms)
+  ✓  10 [chromium] › e2e/showcase.spec.ts:56:3 › LUMA product showcase › coach view exposes proprietary Learning Twin evidence (514ms)
+  ✓  11 [chromium] › e2e/showcase.spec.ts:64:3 › LUMA product showcase › learner can inspect recommendation and ask the grounded tutor (923ms)
+  ✓  12 [chromium] › e2e/showcase.spec.ts:75:3 › LUMA product showcase › tutor blocks unsupported high-stakes course claims (2.3s)
+  ✓  13 [chromium] › e2e/showcase.spec.ts:87:3 › LUMA product showcase › curriculum reflection creates a reviewable artifact without updating learner state (725ms)
+  ✓  14 [chromium] › e2e/showcase.spec.ts:105:3 › LUMA product showcase › practice produces a real evidence receipt (746ms)
+  ✓  15 [chromium] › e2e/showcase.spec.ts:121:3 › LUMA product showcase › superuser can compare roles and persist a visual theme (1.4s)
+  ✓  16 [chromium] › e2e/showcase.spec.ts:139:3 › LUMA product showcase › superuser review lab exposes real gated assets without leaking private source locators (695ms)
+  ✓  17 [chromium] › e2e/showcase.spec.ts:160:3 › LUMA product showcase › adult progress is expressed as capability, transfer and next demonstration (876ms)
+  ✓  18 [chromium] › e2e/showcase.spec.ts:172:3 › LUMA product showcase › iconography catalog changes material while preserving semantics (555ms)
+  ✓  19 [chromium] › e2e/showcase.spec.ts:182:3 › LUMA product showcase › premium semantic objects appear in the intended product moments (916ms)
+  ✓  20 [chromium] › e2e/showcase.spec.ts:192:3 › LUMA product showcase › Content Intelligence leads with transformation, not the AI operating model (498ms)
+  ✓  21 [chromium] › e2e/showcase.spec.ts:203:3 › LUMA product showcase › studio lets an instructor assign human intervention (678ms)
+  ✓  22 [chromium] › e2e/showcase.spec.ts:211:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks (10.6s)
+  ✓  23 [chromium] › e2e/spanish-ui.spec.ts:36:1 › client-facing product terminology stays in Spanish (5.8s)
+  ✓  24 [mobile] › e2e/content-beta.spec.ts:3:1 › beta content catalog is available to the learner (1.3s)
+  ✓  25 [mobile] › e2e/content-beta.spec.ts:12:1 › a reflection creates a practice receipt (3.1s)
+  ✓  26 [mobile] › e2e/responsive-mobile.spec.ts:4:3 › responsive mobile product › mobile learner header does not overlap and navigation remains usable (1.7s)
+  ✓  27 [mobile] › e2e/responsive-mobile.spec.ts:31:3 › responsive mobile product › all seven program modules are selectable on mobile (1.9s)
+  ✓  28 [mobile] › e2e/responsive-mobile.spec.ts:46:3 › responsive mobile product › practice suggestions use horizontal snap rather than stacked dashboard cards (1.1s)
+  ✓  29 [mobile] › e2e/showcase.spec.ts:10:3 › LUMA product showcase › showcase root enters the learner product immediately (1.3s)
+  ✓  30 [mobile] › e2e/showcase.spec.ts:17:3 › LUMA product showcase › onboarding calibrates a learner and enters the journey (3.6s)
+  ✓  31 [mobile] › e2e/showcase.spec.ts:38:3 › LUMA product showcase › coachee navigation keeps internal intelligence out of the learning surface (1.2s)
+  ✓  32 [mobile] › e2e/showcase.spec.ts:50:3 › LUMA product showcase › legacy Twin route opens the coach intelligence view (1.0s)
+  ✓  33 [mobile] › e2e/showcase.spec.ts:56:3 › LUMA product showcase › coach view exposes proprietary Learning Twin evidence (923ms)
+  ✓  34 [mobile] › e2e/showcase.spec.ts:64:3 › LUMA product showcase › learner can inspect recommendation and ask the grounded tutor (1.4s)
+  ✓  35 [mobile] › e2e/showcase.spec.ts:75:3 › LUMA product showcase › tutor blocks unsupported high-stakes course claims (3.4s)
+  ✓  36 [mobile] › e2e/showcase.spec.ts:87:3 › LUMA product showcase › curriculum reflection creates a reviewable artifact without updating learner state (1.1s)
+  ✓  37 [mobile] › e2e/showcase.spec.ts:105:3 › LUMA product showcase › practice produces a real evidence receipt (1.2s)
+  ✓  38 [mobile] › e2e/showcase.spec.ts:121:3 › LUMA product showcase › superuser can compare roles and persist a visual theme (2.5s)
+  ✓  39 [mobile] › e2e/showcase.spec.ts:139:3 › LUMA product showcase › superuser review lab exposes real gated assets without leaking private source locators (1.1s)
+  ✓  40 [mobile] › e2e/showcase.spec.ts:160:3 › LUMA product showcase › adult progress is expressed as capability, transfer and next demonstration (1.3s)
+  ✓  41 [mobile] › e2e/showcase.spec.ts:172:3 › LUMA product showcase › iconography catalog changes material while preserving semantics (1.0s)
+  ✓  42 [mobile] › e2e/showcase.spec.ts:182:3 › LUMA product showcase › premium semantic objects appear in the intended product moments (1.2s)
+  ✓  43 [mobile] › e2e/showcase.spec.ts:192:3 › LUMA product showcase › Content Intelligence leads with transformation, not the AI operating model (1.0s)
+  ✓  44 [mobile] › e2e/showcase.spec.ts:203:3 › LUMA product showcase › studio lets an instructor assign human intervention (1.1s)
+  -  45 [mobile] › e2e/showcase.spec.ts:211:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks
+  ✓  46 [mobile] › e2e/spanish-ui.spec.ts:36:1 › client-facing product terminology stays in Spanish (5.9s)
+
+  4 skipped
+  42 passed (1.2m)

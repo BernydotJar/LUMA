@@ -9,7 +9,7 @@ import styles from "./iconography-catalog.module.css";
 const icons = [
   { id: "practice", label: "Práctica", metaphor: "Prisma refractivo", concept: "P.A.S. · reenfoque" },
   { id: "progress", label: "Progreso", metaphor: "Campo orbital", concept: "Capacidad demostrada" },
-  { id: "coach-insight", label: "Coach Insight", metaphor: "Estratos arquitectónicos", concept: "Nivel de intervención" },
+  { id: "coach-insight", label: "Perspectiva del entrenador", metaphor: "Estratos arquitectónicos", concept: "Nivel de intervención" },
   { id: "human-intervention", label: "Intervención humana", metaphor: "Puente / umbral", concept: "Evidencia + contexto" },
   { id: "voice", label: "Voz", metaphor: "Campo de resonancia", concept: "Expresión como práctica" },
   { id: "video", label: "Video", metaphor: "Frame editorial", concept: "Segmento + evidencia" },
@@ -23,16 +23,16 @@ export function IconographyCatalog() {
     <div className={styles.catalog}>
       <section className={styles.hero}>
         <div>
-          <span className="eyebrow"><Sparkles size={14} /> LUMA iconography</span>
+          <span className="eyebrow"><Sparkles size={14} /> Iconografía LUMA</span>
           <h2>El significado permanece. El material cambia con el tema.</h2>
           <p>
-            Seis objetos semánticos para práctica, progreso, coach insight, intervención humana,
-            voz y video. El SVG es el baseline; el WebP animado entra después de aprobación.
+            Seis objetos semánticos para práctica, progreso, perspectiva del entrenador, intervención humana,
+            voz y video. El SVG es la base; el WebP animado entra después de aprobación.
           </p>
         </div>
         <div className={styles.receipt}>
           <ShieldCheck size={20} />
-          <div><small>Asset policy</small><strong>Adulto · abstracto · accesible</strong></div>
+          <div><small>Política de activos</small><strong>Adulto · abstracto · accesible</strong></div>
         </div>
       </section>
 
@@ -68,7 +68,7 @@ export function IconographyCatalog() {
             <p>{icon.concept}</p>
             <div className={styles.assetState}>
               <small><FileImage size={13} /> SVG baseline</small>
-              <small><Play size={13} /> Motion gated</small>
+              <small><Play size={13} /> Movimiento controlado</small>
             </div>
           </article>
         ))}
@@ -76,18 +76,18 @@ export function IconographyCatalog() {
 
       <section className={styles.pipeline}>
         <div>
-          <span className="eyebrow"><Check size={14} /> Controlled generation</span>
+          <span className="eyebrow"><Check size={14} /> Generación controlada</span>
           <h2>Una imagen estática aprobada antes de cada animación.</h2>
           <p>
-            Prompt semántico → un still → revisión del Product Owner → propuesta de movimiento →
-            aprobación → loop transparente → verifier → release receipt.
+            Prompt semántico → una imagen → revisión de producto → propuesta de movimiento →
+            aprobación → bucle transparente → verificación → recibo de publicación.
           </p>
         </div>
         <ol>
-          <li><span>01</span><strong>Still</strong><small>Una sola propuesta</small></li>
-          <li><span>02</span><strong>Review</strong><small>Objeto, material, peso</small></li>
-          <li><span>03</span><strong>Motion</strong><small>Una acción física</small></li>
-          <li><span>04</span><strong>Verify</strong><small>Loop, alpha, peso</small></li>
+          <li><span>01</span><strong>Imagen</strong><small>Una sola propuesta</small></li>
+          <li><span>02</span><strong>Revisión</strong><small>Objeto, material, peso</small></li>
+          <li><span>03</span><strong>Movimiento</strong><small>Una acción física</small></li>
+          <li><span>04</span><strong>Verificación</strong><small>Bucle, alfa, peso</small></li>
         </ol>
       </section>
     </div>

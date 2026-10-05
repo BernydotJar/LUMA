@@ -7,7 +7,7 @@ export function LiquidOrb() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <div className="liquid-orb" aria-label="Learning Twin de LUMA visualizado como una esfera viva">
+    <div className="liquid-orb" aria-label="Gemelo de aprendizaje de LUMA visualizado como una esfera viva">
       <motion.div
         className="liquid-orb__halo liquid-orb__halo--one"
         animate={reduceMotion ? undefined : { rotate: 360 }}

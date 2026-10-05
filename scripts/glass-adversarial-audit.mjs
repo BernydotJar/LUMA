@@ -64,8 +64,12 @@ for (const theme of themes) {
             const rect = element.getBoundingClientRect();
             const style = getComputedStyle(element);
             if (style.position === "fixed" && (rect.right <= 0 || rect.left >= viewportWidth)) return false;
-            const parentStyle = element.parentElement ? getComputedStyle(element.parentElement) : null;
-            if (parentStyle && ["auto", "scroll"].includes(parentStyle.overflowX)) return false;
+            let ancestor = element.parentElement;
+            while (ancestor) {
+              const ancestorStyle = getComputedStyle(ancestor);
+              if (["auto", "scroll", "hidden", "clip"].includes(ancestorStyle.overflowX)) return false;
+              ancestor = ancestor.parentElement;
+            }
             return rect.left < -3 || rect.right > viewportWidth + 3;
           })
           .slice(0, 20)

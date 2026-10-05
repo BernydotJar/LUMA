@@ -758,6 +758,90 @@
         "evidence/**",
         "e2e/**"
       ]
+    },
+    {
+      "id": "LUMA-030-mobile-responsive-concept",
+      "kind": "product-surface",
+      "title": "Mobile-responsive learner concept with folio program and field-note practices",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-029-beta-content-release"
+      ],
+      "capability": "mobile-responsive-experience",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/019-responsive-program-concept.md",
+        "src/app/learn/**",
+        "src/components/module-cover-flow*",
+        "src/components/experience-shelf*",
+        "src/components/learning-experience-card*",
+        "src/components/app-shell*",
+        "src/components/experience-control*",
+        "scripts/visual-audit.mjs",
+        "scripts/glass-adversarial-audit.mjs",
+        "e2e/responsive-mobile.spec.ts",
+        "evidence/finish-line/**"
+      ]
+    },
+    {
+      "id": "LUMA-031-seven-module-spanish-learner-surface",
+      "kind": "content",
+      "title": "Seven-module source-grounded learner program and Spanish product terminology",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-030-mobile-responsive-concept"
+      ],
+      "capability": "program-navigation-localization",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/program-modules.ts",
+        "src/lib/themes.ts",
+        "src/lib/showcase-media.ts",
+        "src/lib/experience-themes.ts",
+        "src/lib/luma-data.ts",
+        "src/app/**",
+        "src/components/**",
+        "e2e/spanish-ui.spec.ts",
+        "e2e/showcase.spec.ts",
+        "e2e/content-beta.spec.ts",
+        "evidence/finish-line/**"
+      ]
+    },
+    {
+      "id": "LUMA-032-finish-line-client-demo-release",
+      "kind": "release",
+      "title": "Responsive seven-module client-demo finish-line release",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-030-mobile-responsive-concept",
+        "LUMA-031-seven-module-spanish-learner-surface"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "scripts/**",
+        "e2e/**",
+        "evidence/**",
+        "firebase.json",
+        "apphosting.yaml"
+      ]
     }
   ]
 }

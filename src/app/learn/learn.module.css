@@ -256,7 +256,7 @@
   }
 
   .intro h2 {
-    font-size: clamp(3.15rem, 15vw, 5rem);
+    font-size: clamp(2.9rem, 12.8vw, 4.35rem);
   }
 
   .introBody { margin-top: 20px; }

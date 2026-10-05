@@ -25,7 +25,7 @@ export const lumaThemes: readonly LumaTheme[] = [
   },
   {
     id: "light",
-    label: "Liquid Light",
+    label: "Luz Líquida",
     shortLabel: "Claro",
     description:
       "Materiales claros, jerarquía editorial y respuesta física inspirada en interfaces Apple, sin copiar su marca.",
@@ -35,11 +35,11 @@ export const lumaThemes: readonly LumaTheme[] = [
   },
   {
     id: "dark",
-    label: "Nocturne Intelligence",
+    label: "Inteligencia Nocturna",
     shortLabel: "Oscuro",
     description:
       "Aubergine, grafito, champagne y luz medida para sesiones profundas y superficies analíticas.",
-    source: "LUMA premium adult intelligence system",
+    source: "Sistema LUMA de inteligencia adulta premium",
     palette: ["#24181A", "#F7EDD8", "#EFC86A", "#D97B4B", "#9DAC78"],
     iconographyPath: "/iconography/dark",
   },

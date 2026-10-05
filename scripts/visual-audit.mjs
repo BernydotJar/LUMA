@@ -4,7 +4,9 @@ import { writeFile } from "node:fs/promises";
 const routes = ["/", "/learn", "/twin", "/studio/learners/mariana", "/library", "/experience", "/iconography", "/studio", "/studio/reflections", "/onboarding", "/learn/session/pas", "/learn/experiences", "/learn/experience/calibracion-observar-antes-de-interpretar"];
 const viewports = [
   { name: "desktop", width: 1440, height: 1000 },
+  { name: "mobile-small", width: 375, height: 667 },
   { name: "mobile", width: 390, height: 844 },
+  { name: "mobile-large", width: 430, height: 932 },
 ];
 
 const browser = await chromium.launch({ headless: true });
@@ -39,8 +41,12 @@ for (const viewport of viewports) {
           const r = el.getBoundingClientRect();
           const style = getComputedStyle(el);
           if (style.position === "fixed" && (r.right <= 0 || r.left >= vw)) return false;
-          const scrollParent = el.parentElement && getComputedStyle(el.parentElement);
-          if (scrollParent && ["auto", "scroll"].includes(scrollParent.overflowX)) return false;
+          let ancestor = el.parentElement;
+          while (ancestor) {
+            const ancestorStyle = getComputedStyle(ancestor);
+            if (["auto", "scroll", "hidden", "clip"].includes(ancestorStyle.overflowX)) return false;
+            ancestor = ancestor.parentElement;
+          }
           return r.left < -3 || r.right > vw + 3;
         })
         .slice(0, 20)

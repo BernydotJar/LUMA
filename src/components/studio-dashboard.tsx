@@ -31,7 +31,7 @@ const bottlenecks = [
 ];
 
 const learners = [
-  { id: "mariana", initials: "MM", name: "Mariana", signal: "P.A.S.: transferencia en desarrollo", confidence: "68%", action: "Abrir Learning Twin", urgency: "medium" },
+  { id: "mariana", initials: "MM", name: "Mariana", signal: "P.A.S.: transferencia en desarrollo", confidence: "68%", action: "Abrir gemelo de aprendizaje", urgency: "medium" },
   { id: "maria", initials: "MV", name: "María V.", signal: "P.A.S.: 3 intentos con apoyo", confidence: "Baja", action: "Sesión humana", urgency: "high" },
   { id: "carlos", initials: "CR", name: "Carlos R.", signal: "Evidencia mixta entre evaluación y conducta", confidence: "Media", action: "Revisión de evidencia", urgency: "medium" },
   { id: "ana", initials: "AL", name: "Ana L.", signal: "4 consultas sobre el mismo concepto", confidence: "Baja", action: "Tutor + check-in", urgency: "high" },
@@ -67,10 +67,10 @@ export function StudioDashboard() {
           <div className={styles.sparkline} aria-hidden="true"><i style={{ height: "25%" }} /><i style={{ height: "38%" }} /><i style={{ height: "31%" }} /><i style={{ height: "52%" }} /><i style={{ height: "62%" }} /><i style={{ height: "74%" }} /><i style={{ height: "88%" }} /></div>
         </article>
         {[
-          [Users, "Coachees activos", "128", "82% de la cohorte"],
+          [Users, "Participantes activos", "128", "82% de la cohorte"],
           [BrainCircuit, "Dominio mediano", "64%", "+6 puntos"],
           [AlertTriangle, "Intervención humana", "7", "4 prioridad alta"],
-          [BookOpenCheck, "Learning Quality", "86", "2 objetivos en revisión"],
+          [BookOpenCheck, "Calidad de aprendizaje", "86", "2 objetivos en revisión"],
         ].map(([Icon, label, value, detail]) => {
           const MetricIcon = Icon as typeof Users;
           return (
@@ -115,7 +115,7 @@ export function StudioDashboard() {
               <h3>{selected.label}</h3>
               <p>{selected.insight}</p>
               <dl>
-                <div><dt>Señal</dt><dd>{selected.affected}% de coachees</dd></div>
+                <div><dt>Señal</dt><dd>{selected.affected}% de participantes</dd></div>
                 <div><dt>Dominio</dt><dd>{selected.mastery}% mediano</dd></div>
                 <div><dt>Confianza</dt><dd>84% en la señal</dd></div>
               </dl>
@@ -142,7 +142,7 @@ export function StudioDashboard() {
           <section className={`${styles.questionCard} glass`}>
             <span className="eyebrow"><MessageSquareText size={14} /> Pregunta repetida</span>
             <blockquote>“¿Cómo sé si una creencia es mía o aprendida?”</blockquote>
-            <p>26 coachees · 41 preguntas similares · Módulo 3</p>
+            <p>26 participantes · 41 preguntas similares · Módulo 3</p>
             <button className="button-secondary" type="button">Crear refuerzo de 3 min <Sparkles size={15} /></button>
           </section>
         </aside>
@@ -151,7 +151,7 @@ export function StudioDashboard() {
       <section className={`${styles.interventionQueue} glass`}>
         <SemanticObject variant="bridge" size="sm" className={styles.interventionObject} />
         <div className={styles.cardHeading}>
-          <div><span className="eyebrow"><CircleUserRound size={14} /> Coach-in-the-loop</span><h2>Coachees con oportunidad de acompañamiento</h2></div>
+          <div><span className="eyebrow"><CircleUserRound size={14} /> Entrenador en el circuito</span><h2>Participantes con oportunidad de acompañamiento</h2></div>
           <span>7 activas · 5 mostradas</span>
         </div>
         <div className={styles.table} role="table" aria-label="Cola de intervención humana">
@@ -174,7 +174,7 @@ export function StudioDashboard() {
             </div>
           ))}
         </div>
-        <footer><p>Antes de la sesión, el coach recibe un resumen breve del objetivo, evidencia, intentos e intervenciones previas.</p><Link href="/studio/learners/mariana">Abrir Learning Twin de Mariana <ArrowRight size={15} /></Link></footer>
+        <footer><p>Antes de la sesión, el entrenador recibe un resumen breve del objetivo, evidencia, intentos e intervenciones previas.</p><Link href="/studio/learners/mariana">Abrir gemelo de aprendizaje de Mariana <ArrowRight size={15} /></Link></footer>
       </section>
     </div>
   );

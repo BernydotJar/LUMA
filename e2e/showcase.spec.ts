@@ -38,11 +38,11 @@ test.describe("LUMA product showcase", () => {
   test("coachee navigation keeps internal intelligence out of the learning surface", async ({ page }) => {
     await page.goto("/learn");
     await expect(page.getByRole("link", { name: "Hoy", exact: true }).last()).toBeVisible();
-    await expect(page.getByRole("link", { name: "Journey", exact: true }).last()).toBeVisible();
-    await expect(page.getByRole("link", { name: "Práctica", exact: true }).last()).toBeVisible();
+    await expect(page.getByRole("link", { name: "Ruta", exact: true }).last()).toBeVisible();
+    await expect(page.getByRole("link", { name: "Programa", exact: true }).last()).toBeVisible();
     await expect(page.getByRole("link", { name: "LUMA", exact: true }).last()).toBeVisible();
-    await expect(page.getByRole("link", { name: /Twin|Content Intelligence/i })).toHaveCount(0);
-    await expect(page.getByText("Learning Twin", { exact: false })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /Gemelo|Inteligencia de contenido/i })).toHaveCount(0);
+    await expect(page.getByText("Gemelo de aprendizaje", { exact: false })).toHaveCount(0);
   });
 
 
@@ -56,9 +56,9 @@ test.describe("LUMA product showcase", () => {
   test("coach view exposes proprietary Learning Twin evidence", async ({ page }) => {
     await page.goto("/studio/learners/mariana");
     await expect(page.getByRole("heading", { name: /Mariana: estado de aprendizaje con evidencia y confianza/i })).toBeVisible();
-    await expect(page.getByText(/© 2026 LUMA · Learning Twin model & evidence framework/i)).toBeVisible();
-    await expect(page.getByText(/Evidencia del coachee/i)).toBeVisible();
-    await expect(page.getByRole("link", { name: "Learning Twin", exact: true }).last()).toBeVisible();
+    await expect(page.getByText(/© 2026 LUMA · Modelo de gemelo de aprendizaje y marco de evidencia/i)).toBeVisible();
+    await expect(page.getByText(/Evidencia del participante/i)).toBeVisible();
+    await expect(page.getByRole("link", { name: "Gemelo de aprendizaje", exact: true }).last()).toBeVisible();
   });
 
   test("learner can inspect recommendation and ask the grounded tutor", async ({ page }) => {
@@ -81,7 +81,7 @@ test.describe("LUMA product showcase", () => {
     await expect(
       page.getByText(/no puede presentarla como un hecho médico verificado/i),
     ).toBeVisible();
-    await expect(page.getByText(/Claim bloqueado por política/i)).toBeVisible();
+    await expect(page.getByText(/Afirmación bloqueada por política/i)).toBeVisible();
   });
 
   test("curriculum reflection creates a reviewable artifact without updating learner state", async ({ page }) => {
@@ -91,7 +91,7 @@ test.describe("LUMA product showcase", () => {
     ).toBeVisible();
     await page.getByRole("button", { name: /Generar reflexión/i }).click();
     await expect(
-      page.getByText(/Borrador generado. Estado: revisión humana antes de participar en respuestas al coachee/i),
+      page.getByText(/Borrador generado. Estado: revisión humana antes de participar en respuestas al participante/i),
     ).toBeVisible();
     await expect(page.getByText(/autoridad de estado: ninguna/i)).toBeVisible();
     await page.getByRole("button", { name: /Aprobar con recibo/i }).click();
@@ -121,17 +121,17 @@ test.describe("LUMA product showcase", () => {
   test("superuser can compare roles and persist a visual theme", async ({ page }) => {
     await page.goto("/experience");
     await expect(page.getByRole("heading", { name: /Una plataforma. Dos experiencias. Tres expresiones visuales/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Abrir coachee/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Abrir coach", exact: true })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Abrir participante/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Abrir entrenador", exact: true })).toBeVisible();
 
-    await page.getByRole("button", { name: "Usar tema Liquid Light" }).click();
+    await page.getByRole("button", { name: "Usar tema Luz Líquida" }).click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 
-    await page.getByRole("button", { name: "Usar tema Nocturne Intelligence" }).click();
+    await page.getByRole("button", { name: "Usar tema Inteligencia Nocturna" }).click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    await page.getByRole("link", { name: /Abrir coachee/i }).click();
+    await page.getByRole("link", { name: /Abrir participante/i }).click();
     await expect(page).toHaveURL(/\/learn$/);
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   });
@@ -141,11 +141,11 @@ test.describe("LUMA product showcase", () => {
     await expect(
       page.getByRole("heading", { name: /Activos reales, visibles antes de publicarlos/i }),
     ).toBeVisible();
-    await expect(page.getByText(/Practice \/ P\.A\.S\. · SE/i)).toBeVisible();
-    await expect(page.getByText(/Awaiting PO approval/i)).toBeVisible();
-    await expect(page.getByText("Motion", { exact: true })).toBeVisible();
+    await expect(page.getByText(/Práctica \/ P\.A\.S\. · SE/i)).toBeVisible();
+    await expect(page.getByText(/En espera de aprobación de producto/i)).toBeVisible();
+    await expect(page.getByText("Movimiento", { exact: true })).toBeVisible();
     await expect(page.getByText("Bloqueado hasta aprobación", { exact: true })).toBeVisible();
-    await expect(page.getByText(/Seres Coach Voice · Prototype 01/i)).toBeVisible();
+    await expect(page.getByText(/Voz del entrenador Seres · Prototipo 01/i)).toBeVisible();
     await expect(page.getByText(/12\.4s/i)).toBeVisible();
     await expect(page.locator('audio[src="/audio/seres-coach-prototype-01.mp3"]')).toBeVisible();
     await expect(page.getByRole("heading", { name: /PASO 58 · Semillas de Esperanza/i })).toBeVisible();
@@ -174,7 +174,7 @@ test.describe("LUMA product showcase", () => {
     await expect(page.getByRole("heading", { name: /El significado permanece. El material cambia con el tema/i })).toBeVisible();
     await expect(page.getByText("Prisma refractivo", { exact: true })).toBeVisible();
     await expect(page.getByText("Campo orbital", { exact: true })).toBeVisible();
-    await page.getByRole("button", { name: "Claro Liquid Light", exact: true }).click();
+    await page.getByRole("button", { name: "Claro Luz Líquida", exact: true }).click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
     await expect(page.locator('img[src*="/iconography/light/practice.svg"]')).toBeVisible();
   });
@@ -202,7 +202,7 @@ test.describe("LUMA product showcase", () => {
 
   test("studio lets an instructor assign human intervention", async ({ page }) => {
     await page.goto("/studio");
-    await expect(page.getByRole("heading", { name: /Coach Studio/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Estudio del entrenador/i })).toBeVisible();
     const assignButton = page.getByRole("button", { name: "Asignar" }).first();
     await assignButton.click();
     await expect(page.getByRole("button", { name: /Asignado/i }).first()).toBeVisible();

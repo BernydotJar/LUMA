@@ -13,23 +13,24 @@ export function LearningExperienceCard({
 }) {
   return (
     <article className={styles.card} data-featured={featured || undefined}>
-      <div className={styles.objectStage}>
-        <SemanticObject variant={experience.semanticObject} size={featured ? "lg" : "md"} />
-      </div>
+      <span className={styles.rail}>{experience.category}</span>
       <div className={styles.copy}>
         <div className={styles.meta}>
-          <span>{experience.category}</span>
+          <span>Práctica</span>
           <span><Clock3 size={13} /> {experience.minutes} min</span>
         </div>
         <h3>{experience.title}</h3>
         <p>{experience.summary}</p>
         <div className={styles.capability}>
-          <small>Vas a practicar</small>
+          <small>Capacidad</small>
           <strong>{experience.capability}</strong>
         </div>
         <Link href={`/learn/experience/${experience.slug}`}>
-          Abrir experiencia <ArrowRight size={15} />
+          Abrir práctica <ArrowRight size={15} />
         </Link>
+      </div>
+      <div className={styles.objectStage} aria-hidden="true">
+        <SemanticObject variant={experience.semanticObject} size={featured ? "lg" : "md"} />
       </div>
     </article>
   );

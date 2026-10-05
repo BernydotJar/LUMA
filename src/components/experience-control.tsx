@@ -19,14 +19,14 @@ export function ExperienceControl({ mode }: { mode: "learner" | "studio" }) {
     <div className={styles.control} aria-label="Controles de superusuario">
       <Link className={styles.consoleLink} href="/experience">
         <Crown size={14} />
-        <span>Superuser</span>
+        <span>Superusuario</span>
       </Link>
       <div className={styles.roleSwitch} aria-label="Cambiar experiencia">
         <Link href="/learn" data-active={mode === "learner"}>
-          <UsersRound size={14} /> Coachee
+          <UsersRound size={14} /> Participante
         </Link>
         <Link href="/studio" data-active={mode === "studio"}>
-          Coach
+          Entrenador
         </Link>
       </div>
       <div className={styles.themeSwitch} aria-label="Tema visual">

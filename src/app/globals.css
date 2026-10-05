@@ -479,3 +479,10 @@ html[data-theme="dark"] .brand-mark__icon {
     background: var(--bg-elevated) !important;
   }
 }
+
+@media (max-width: 760px) {
+  .brand-mark {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}

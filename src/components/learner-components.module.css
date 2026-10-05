@@ -1204,3 +1204,14 @@
 :global(html[data-theme="dark"]) .journeyStep[data-status="complete"] .stepMarker { color: #2d1b1d; background: #9dac78; }
 :global(html[data-theme="dark"]) .journeyStep[data-status="current"] .stepMarker { color: #2d1b1d; background: #efc86a; box-shadow: 0 0 0 7px rgba(239,200,106,.08); }
 :global(html[data-theme="dark"]) .actionObject { border-color: rgba(255,238,210,.1); background: rgba(255,244,222,.045); box-shadow: 0 22px 46px rgba(8,3,4,.2), inset 0 1px 0 rgba(255,255,255,.08); }
+
+@media (max-width: 760px) {
+  .quickPrompts button {
+    min-height: 44px;
+    padding-block: 9px;
+  }
+
+  .tutorComposer input {
+    min-height: 44px;
+  }
+}

@@ -309,7 +309,7 @@ export const studioSignals: StudioSignal[] = [
     id: "human",
     label: "Acompañamiento humano",
     value: "7 personas",
-    detail: "Señales que justifican revisión del coach, evidencia adicional o un check-in.",
+    detail: "Señales que justifican revisión del entrenador, evidencia adicional o un seguimiento.",
     trend: "steady",
   },
 ];

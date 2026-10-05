@@ -1,0 +1,56 @@
+
+> luma-learning-intelligence@0.1.0 audit:visual
+> node scripts/visual-audit.mjs
+
+desktop /                    overflow=0 out=0 small=10 clipped=0 heading=true
+desktop /learn               overflow=0 out=0 small=10 clipped=0 heading=true
+desktop /twin                overflow=0 out=0 small=10 clipped=0 heading=true
+desktop /studio/learners/mariana overflow=0 out=0 small=10 clipped=0 heading=true
+desktop /library             overflow=0 out=0 small=6 clipped=0 heading=true
+desktop /experience          overflow=0 out=0 small=7 clipped=0 heading=true
+desktop /iconography         overflow=0 out=0 small=6 clipped=0 heading=true
+desktop /studio              overflow=0 out=0 small=14 clipped=0 heading=true
+desktop /studio/reflections  overflow=0 out=0 small=15 clipped=0 heading=true
+desktop /onboarding          overflow=0 out=0 small=1 clipped=0 heading=true
+desktop /learn/session/pas   overflow=0 out=0 small=2 clipped=0 heading=true
+desktop /learn/experiences   overflow=0 out=0 small=6 clipped=0 heading=true
+desktop /learn/experience/calibracion-observar-antes-de-interpretar overflow=0 out=0 small=7 clipped=0 heading=true
+mobile-small /                    overflow=0 out=0 small=0 clipped=0 heading=true
+mobile-small /learn               overflow=0 out=0 small=0 clipped=0 heading=true
+mobile-small /twin                overflow=0 out=0 small=4 clipped=0 heading=true
+mobile-small /studio/learners/mariana overflow=0 out=0 small=4 clipped=0 heading=true
+mobile-small /library             overflow=0 out=0 small=0 clipped=0 heading=true
+mobile-small /experience          overflow=0 out=0 small=1 clipped=0 heading=true
+mobile-small /iconography         overflow=0 out=0 small=0 clipped=0 heading=true
+mobile-small /studio              overflow=0 out=0 small=8 clipped=0 heading=true
+mobile-small /studio/reflections  overflow=0 out=0 small=9 clipped=0 heading=true
+mobile-small /onboarding          overflow=0 out=0 small=1 clipped=0 heading=true
+mobile-small /learn/session/pas   overflow=0 out=0 small=2 clipped=0 heading=true
+mobile-small /learn/experiences   overflow=0 out=0 small=0 clipped=0 heading=true
+mobile-small /learn/experience/calibracion-observar-antes-de-interpretar overflow=0 out=0 small=1 clipped=0 heading=true
+mobile  /                    overflow=0 out=0 small=0 clipped=0 heading=true
+mobile  /learn               overflow=0 out=0 small=0 clipped=0 heading=true
+mobile  /twin                overflow=0 out=0 small=4 clipped=0 heading=true
+mobile  /studio/learners/mariana overflow=0 out=0 small=4 clipped=0 heading=true
+mobile  /library             overflow=0 out=0 small=0 clipped=0 heading=true
+mobile  /experience          overflow=0 out=0 small=1 clipped=0 heading=true
+mobile  /iconography         overflow=0 out=0 small=0 clipped=0 heading=true
+mobile  /studio              overflow=0 out=0 small=8 clipped=0 heading=true
+mobile  /studio/reflections  overflow=0 out=0 small=9 clipped=0 heading=true
+mobile  /onboarding          overflow=0 out=0 small=1 clipped=0 heading=true
+mobile  /learn/session/pas   overflow=0 out=0 small=2 clipped=0 heading=true
+mobile  /learn/experiences   overflow=0 out=0 small=0 clipped=0 heading=true
+mobile  /learn/experience/calibracion-observar-antes-de-interpretar overflow=0 out=0 small=1 clipped=0 heading=true
+mobile-large /                    overflow=0 out=0 small=0 clipped=0 heading=true
+mobile-large /learn               overflow=0 out=0 small=0 clipped=0 heading=true
+mobile-large /twin                overflow=0 out=0 small=4 clipped=0 heading=true
+mobile-large /studio/learners/mariana overflow=0 out=0 small=4 clipped=0 heading=true
+mobile-large /library             overflow=0 out=0 small=0 clipped=0 heading=true
+mobile-large /experience          overflow=0 out=0 small=1 clipped=0 heading=true
+mobile-large /iconography         overflow=0 out=0 small=0 clipped=0 heading=true
+mobile-large /studio              overflow=0 out=0 small=8 clipped=0 heading=true
+mobile-large /studio/reflections  overflow=0 out=0 small=9 clipped=0 heading=true
+mobile-large /onboarding          overflow=0 out=0 small=1 clipped=0 heading=true
+mobile-large /learn/session/pas   overflow=0 out=0 small=2 clipped=0 heading=true
+mobile-large /learn/experiences   overflow=0 out=0 small=0 clipped=0 heading=true
+mobile-large /learn/experience/calibracion-observar-antes-de-interpretar overflow=0 out=0 small=1 clipped=0 heading=true

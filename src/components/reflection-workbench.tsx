@@ -59,7 +59,7 @@ const intentCopy: Record<RetrievalIntent, { label: string; helper: string }> = {
   },
   "curriculum-review": {
     label: "Revisión",
-    helper: "Incluye borradores, gaps y hallazgos bloqueados para decisión humana.",
+    helper: "Incluye borradores, vacíos y hallazgos bloqueados para decisión humana.",
   },
 };
 
@@ -110,7 +110,7 @@ export function ReflectionWorkbench() {
       setSelectedId(data.artifact.id);
       setReceipt(data.receipt);
       setFilter("all");
-      setNotice("Borrador generado. Estado: revisión humana antes de participar en respuestas al coachee.");
+      setNotice("Borrador generado. Estado: revisión humana antes de participar en respuestas al participante.");
     } catch (error) {
       setNotice(
         error instanceof Error
@@ -127,7 +127,7 @@ export function ReflectionWorkbench() {
     status: Extract<ReflectionReviewStatus, "approved" | "blocked">,
   ) => {
     if (status === "approved" && artifact.highStakes) {
-      setNotice("Un claim de alto impacto no puede aprobarse sin evidencia externa y revisión cualificada.");
+      setNotice("Una afirmación de alto impacto no puede aprobarse sin evidencia externa y revisión cualificada.");
       return;
     }
 
@@ -166,13 +166,13 @@ export function ReflectionWorkbench() {
       <section className={`${styles.hero} glass`}>
         <div className={styles.heroCopy}>
           <span className="eyebrow">
-            <span className="eyebrow-dot" /> Knowledge Reflection
+            <span className="eyebrow-dot" /> Reflexión de conocimiento
           </span>
           <h2>El corpus aprende con trazabilidad y revisión.</h2>
           <p>
             LUMA detecta conexiones, contradicciones y vacíos entre fuentes; los guarda
             como artefactos derivados, versionados y revisables. La fuente original sigue
-            siendo autoridad y ninguna reflexión modifica el Learning Twin.
+            siendo autoridad y ninguna reflexión modifica el gemelo de aprendizaje.
           </p>
           <div className={styles.policyRow} aria-label="Políticas de reflexión">
             <span><Database size={14} /> RAW inmutable</span>
@@ -200,12 +200,12 @@ export function ReflectionWorkbench() {
         </div>
       </section>
 
-      <section className={styles.metricRail} aria-label="Estado de Curriculum Reflection">
+      <section className={styles.metricRail} aria-label="Estado de reflexión curricular">
         {[
           [Layers3, "Fuentes activas", "3", "PDF · secciones aprobadas"],
           [Sparkles, "Artefactos derivados", String(artifacts.filter((item) => item.kind !== "raw-source").length), "con linaje completo"],
           [BookOpenCheck, "Listos para retrieval", String(artifacts.filter((item) => item.status === "approved" && item.learnerVisible).length), "por intención"],
-          [AlertTriangle, "Claims bloqueados", String(artifacts.filter((item) => item.status === "blocked").length), "requieren evidencia"],
+          [AlertTriangle, "Afirmaciones bloqueadas", String(artifacts.filter((item) => item.status === "blocked").length), "requieren evidencia"],
         ].map(([Icon, label, value, detail]) => {
           const MetricIcon = Icon as typeof Layers3;
           return (
@@ -332,7 +332,7 @@ export function ReflectionWorkbench() {
 
           <footer className={styles.detailFooter}>
             <div>
-              <span>Pipeline</span>
+              <span>Flujo</span>
               <strong>{selected.pipelineVersion}</strong>
               {selected.promptVersion && <small>{selected.promptVersion}</small>}
             </div>
@@ -413,13 +413,13 @@ export function ReflectionWorkbench() {
             <div className={styles.guardrailIcon}><ShieldCheck size={22} /></div>
             <div>
               <span className="eyebrow">Autoridad explícita</span>
-              <h2>La reflexión mejora el sistema; el coachee demuestra el aprendizaje.</h2>
+              <h2>La reflexión mejora el sistema; el participante demuestra el aprendizaje.</h2>
               <p>Estos artefactos pueden mejorar búsqueda, tutor y revisión curricular. Solo eventos aceptados de interacción actualizan dominio, confianza o recomendaciones.</p>
             </div>
             <ul>
               <li><Check size={14} /> La ingesta termina aunque falle la reflexión</li>
               <li><Check size={14} /> Consolidación solo sobre artefactos aprobados</li>
-              <li><Check size={14} /> Claims sensibles bloqueados por política</li>
+              <li><Check size={14} /> Afirmaciones sensibles bloqueadas por política</li>
             </ul>
           </section>
         </aside>

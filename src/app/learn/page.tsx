@@ -11,6 +11,7 @@ import { AppShell } from "@/components/app-shell";
 import { LearningJourney } from "@/components/learning-journey";
 import { ExperienceShelf } from "@/components/experience-shelf";
 import { LearningPulse } from "@/components/learning-pulse";
+import { ModuleCoverFlow } from "@/components/module-cover-flow";
 import { NextActionCard } from "@/components/next-action-card";
 import { ProgressStory } from "@/components/progress-story";
 import { TutorPanel } from "@/components/tutor-panel";
@@ -45,7 +46,7 @@ export default function LearnPage() {
           <span><Clock3 size={15} /> Tienes 12 minutos</span>
           <strong>Una práctica enfocada en transferencia.</strong>
           <Link href="/learn/session/pas">
-            Continuar mi journey <ArrowRight size={17} />
+            Continuar mi ruta <ArrowRight size={17} />
           </Link>
         </div>
       </section>
@@ -59,7 +60,9 @@ export default function LearnPage() {
 
       <ExperienceShelf />
 
-      <section className={styles.proofStrip} aria-label="Cómo se adapta tu journey">
+      <ModuleCoverFlow compact />
+
+      <section className={styles.proofStrip} aria-label="Cómo se adapta tu ruta">
         <div><span>01</span><strong>Base demostrada</strong><p>Comunicación emocional con evidencia consistente.</p></div>
         <div><span>02</span><strong>Capacidad en desarrollo</strong><p>Aplicar P.A.S. en situaciones concretas.</p></div>
         <div><span>03</span><strong>Práctica de hoy</strong><p>Detectar, nombrar y reformular.</p></div>
@@ -72,7 +75,7 @@ export default function LearnPage() {
       </div>
 
       <section className={styles.endNote}>
-        <span><Sparkles size={14} /> LUMA ajusta tu journey con lo que demuestras en práctica.</span>
+        <span><Sparkles size={14} /> LUMA ajusta tu ruta con lo que demuestras en práctica.</span>
       </section>
     </AppShell>
   );

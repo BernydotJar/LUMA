@@ -28,7 +28,7 @@ import styles from "./experience-console.module.css";
 const iconography = [
   ["practice", "Práctica", "Prisma · reenfoque"],
   ["progress", "Progreso", "Órbita · capacidad"],
-  ["coach-insight", "Coach Insight", "Estratos · intervención"],
+  ["coach-insight", "Perspectiva del entrenador", "Estratos · intervención"],
   ["human-intervention", "Intervención humana", "Puente · contexto"],
   ["voice", "Voz", "Resonancia · expresión"],
   ["video", "Video", "Frame · fuente"],
@@ -38,22 +38,22 @@ const deliveryTracks = [
   {
     id: "LUMA-022",
     title: "Iconografía semántica",
-    status: "Still 3D en revisión",
-    description: "Seis significados, tres temas y un primer candidato Gemini con motion bloqueado hasta aprobación.",
+    status: "Imagen 3D en revisión",
+    description: "Seis significados, tres temas y un primer candidato Gemini con movimiento bloqueado hasta aprobación.",
     icon: Layers3,
   },
   {
     id: "LUMA-024",
     title: "Voz original SE",
-    status: "Prototype 01 listo",
-    description: "Pipeline de voz probado con dirección original; la identidad final sigue sujeta a revisión de tono y derechos.",
+    status: "Prototipo 01 listo",
+    description: "Flujo de voz probado con dirección original; la identidad final sigue sujeta a revisión de tono y derechos.",
     icon: AudioLines,
   },
   {
     id: "LUMA-025",
-    title: "Video learning pipeline",
+    title: "Flujo de aprendizaje en video",
     status: "5 clases verificadas",
-    description: "15.82 GiB privados inventariados; el primer clip queda detrás del gate de derechos y selección de segmento.",
+    description: "15.82 GiB privados inventariados; el primer clip queda detrás del control de derechos y selección de segmento.",
     icon: Film,
   },
 ];
@@ -66,15 +66,15 @@ export function ExperienceConsole() {
     <div className={styles.console}>
       <section className={styles.hero}>
         <div>
-          <span className="eyebrow"><Crown size={14} /> Superuser experience</span>
+          <span className="eyebrow"><Crown size={14} /> Experiencia de superusuario</span>
           <h2>Una plataforma. Dos experiencias. Tres expresiones visuales.</h2>
           <p>
-            Desde aquí puedes revisar la experiencia del coachee, la inteligencia del coach
+            Desde aquí puedes revisar la experiencia del participante, la inteligencia del entrenador
             y la identidad visual antes de asignarlas a perfiles y organizaciones.
           </p>
           <div className={styles.heroActions}>
-            <Link href="/learn">Abrir coachee <ArrowRight size={16} /></Link>
-            <Link href="/studio">Abrir coach <ArrowRight size={16} /></Link>
+            <Link href="/learn">Abrir participante <ArrowRight size={16} /></Link>
+            <Link href="/studio">Abrir entrenador <ArrowRight size={16} /></Link>
           </div>
         </div>
         <div className={styles.heroObjects} aria-hidden="true">
@@ -86,7 +86,7 @@ export function ExperienceConsole() {
       <section className={styles.themeSection} aria-labelledby="theme-system-title">
         <div className={styles.sectionHeading}>
           <div>
-            <span className="eyebrow"><Palette size={14} /> Theme system</span>
+            <span className="eyebrow"><Palette size={14} /> Sistema de temas</span>
             <h2 id="theme-system-title">Elige cómo se presenta LUMA.</h2>
           </div>
           <span>Persistencia local · perfiles después</span>
@@ -159,10 +159,10 @@ export function ExperienceConsole() {
       <section className={styles.labSection} aria-labelledby="review-lab-title">
         <div className={styles.sectionHeading}>
           <div>
-            <span className="eyebrow"><Sparkles size={14} /> Review lab</span>
+            <span className="eyebrow"><Sparkles size={14} /> Laboratorio de revisión</span>
             <h2 id="review-lab-title">Activos reales, visibles antes de publicarlos.</h2>
           </div>
-          <span>Superuser · gates explícitos</span>
+          <span>Superusuario · controles explícitos</span>
         </div>
 
         <div className={styles.labGrid}>
@@ -183,8 +183,8 @@ export function ExperienceConsole() {
             <h3>{iconStillCandidate.label}</h3>
             <p>Prisma de refracción para representar interpretación y reenfoque. Este still todavía no sustituye la iconografía publicada.</p>
             <div className={styles.reviewReceipt}>
-              <span>Still</span><strong>1/1 generado</strong>
-              <span>Motion</span><strong>Bloqueado hasta aprobación</strong>
+              <span>Imagen</span><strong>1/1 generado</strong>
+              <span>Movimiento</span><strong>Bloqueado hasta aprobación</strong>
             </div>
           </article>
 
@@ -195,7 +195,7 @@ export function ExperienceConsole() {
             </div>
             <SemanticObject variant="axis" size="md" className={styles.labObject} />
             <h3>{voicePrototype.label}</h3>
-            <p>Prueba de dirección vocal para coaching en español: pausada, clara y adulta. Es una voz original de trabajo, no una imitación de una persona identificable.</p>
+            <p>Prueba de dirección vocal para acompañamiento en español: pausada, clara y adulta. Es una voz original de trabajo, no una imitación de una persona identificable.</p>
             <audio
               className={styles.audioPlayer}
               controls
@@ -212,7 +212,7 @@ export function ExperienceConsole() {
 
           <article>
             <div className={styles.labTop}>
-              <span><Film size={16} /> Video source layer</span>
+              <span><Film size={16} /> Capa de fuentes de video</span>
               <small>{showcaseVideoSummary.rightsState}</small>
             </div>
             <div className={styles.videoFrame}>
@@ -265,15 +265,15 @@ export function ExperienceConsole() {
       <section className={styles.roleSection} aria-labelledby="role-preview-title">
         <div className={styles.sectionHeading}>
           <div>
-            <span className="eyebrow"><Eye size={14} /> Role preview</span>
-            <h2 id="role-preview-title">El coachee actúa. El coach interpreta e interviene.</h2>
+            <span className="eyebrow"><Eye size={14} /> Vista de roles</span>
+            <h2 id="role-preview-title">El participante actúa. El entrenador interpreta e interviene.</h2>
           </div>
           <span>Vista conjunta de superusuario</span>
         </div>
         <div className={styles.roleGrid}>
           <article className={styles.coacheeCard}>
             <div className={styles.roleTop}>
-              <span><Fingerprint size={17} /> Coachee</span>
+              <span><Fingerprint size={17} /> Participante</span>
               <small>Mariana · Practitioner</small>
             </div>
             <h3>Hoy llevas lo que sabes a la práctica.</h3>
@@ -283,47 +283,47 @@ export function ExperienceConsole() {
               <div><dt>Demostrado</dt><dd>Hecho vs. interpretación</dd></div>
               <div><dt>Después</dt><dd>Transferencia autónoma</dd></div>
             </dl>
-            <Link href="/learn">Entrar como coachee <ArrowRight size={15} /></Link>
+            <Link href="/learn">Entrar como participante <ArrowRight size={15} /></Link>
           </article>
 
           <article className={styles.coachCard}>
             <div className={styles.roleTop}>
-              <span><UserRoundCheck size={17} /> Coach</span>
-              <small>Intelligence workspace</small>
+              <span><UserRoundCheck size={17} /> Entrenador</span>
+              <small>Espacio de inteligencia</small>
             </div>
             <h3>Mariana: evidencia, confianza y siguiente intervención.</h3>
-            <p>Learning Twin, procedencia, escenarios y contexto humano para tomar una decisión.</p>
+            <p>Gemelo de aprendizaje, procedencia, escenarios y contexto humano para tomar una decisión.</p>
             <dl>
               <div><dt>Aplicación</dt><dd>58 · foco</dd></div>
               <div><dt>Confianza</dt><dd>46 · calibrar</dd></div>
               <div><dt>Intervención</dt><dd>Pregunta socrática</dd></div>
             </dl>
-            <Link href="/studio/learners/mariana">Abrir Coach Intelligence <ArrowRight size={15} /></Link>
+            <Link href="/studio/learners/mariana">Abrir Inteligencia del entrenador <ArrowRight size={15} /></Link>
           </article>
         </div>
       </section>
 
       <section className={styles.profileSection}>
         <div>
-          <span className="eyebrow"><ShieldCheck size={14} /> Profile architecture</span>
-          <h2>Hoy eres superuser; mañana el acceso se deriva del perfil.</h2>
+          <span className="eyebrow"><ShieldCheck size={14} /> Arquitectura de perfiles</span>
+          <h2>Hoy eres superusuario; mañana el acceso se deriva del perfil.</h2>
           <p>
-            El control actual permite comparar experiencias. La siguiente capa asignará tenant,
+            El control actual permite comparar experiencias. La siguiente capa asignará organización,
             rol, tema, preferencias de modalidad y permisos a cada identidad.
           </p>
         </div>
         <div className={styles.profileRail}>
-          <span data-active="true"><Crown size={15} /> Eduardo · Superuser</span>
-          <span>Mariana · Coachee</span>
-          <span>Coach · Practitioner</span>
-          <span>Admin SE · Organization</span>
+          <span data-active="true"><Crown size={15} /> Eduardo · Superusuario</span>
+          <span>Mariana · Participante</span>
+          <span>Entrenador · Practitioner</span>
+          <span>Admin SE · Organización</span>
         </div>
       </section>
 
       <section className={styles.deliverySection} aria-labelledby="delivery-title">
         <div className={styles.sectionHeading}>
           <div>
-            <span className="eyebrow"><Sparkles size={14} /> Delivery graphs</span>
+            <span className="eyebrow"><Sparkles size={14} /> Grafos de entrega</span>
             <h2 id="delivery-title">Los siguientes incrementos ya tienen frontera y evidencia.</h2>
           </div>
         </div>

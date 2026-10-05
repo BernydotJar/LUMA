@@ -39,7 +39,7 @@ const modules = [
 
 export default function LibraryPage() {
   return (
-    <AppShell mode="studio" title="Content Intelligence" subtitle="El corpus aporta estructura; LUMA lo conecta con capacidades, evidencia y decisiones de aprendizaje.">
+    <AppShell mode="studio" title="Inteligencia de contenido" subtitle="El corpus aporta estructura; LUMA lo conecta con capacidades, evidencia y decisiones de aprendizaje.">
       <section className={`${styles.hero} glass`}>
         <div>
           <span className="eyebrow"><span className="eyebrow-dot" /> Corpus conectado</span>
@@ -51,7 +51,7 @@ export default function LibraryPage() {
           </div>
         </div>
         <div className={styles.qualityScore}>
-          <span>Learning Quality</span>
+          <span>Calidad de aprendizaje</span>
           <strong>86</strong>
           <div><i style={{ width: "86%" }} /></div>
           <p>Alta cobertura conceptual; 2 objetivos están en revisión de alineación.</p>
@@ -121,7 +121,7 @@ export default function LibraryPage() {
       </div>
 
       <section className={styles.moduleSection}>
-        <div className={styles.sectionHeading}><div><span className="eyebrow"><BookOpen size={14} /> Vista secundaria del currículo</span><h2>Los módulos conservan la estructura editorial; el journey se organiza por capacidades y evidencia.</h2></div><span>7 módulos detectados</span></div>
+        <div className={styles.sectionHeading}><div><span className="eyebrow"><BookOpen size={14} /> Vista complementaria del currículo</span><h2>Los módulos conservan la estructura editorial; la ruta se organiza por capacidades y evidencia.</h2></div><span>7 módulos detectados</span></div>
         <div className={styles.moduleGrid}>
           {modules.map((module) => (
             <article className="glass-subtle" key={module.id} data-active={module.id === 3}>

@@ -29,7 +29,7 @@ const progressMoments = [
     eyebrow: "Siguiente demostración",
     title: "Aplicarás la misma habilidad con mayor autonomía.",
     body: "El próximo caso cambia el contexto y reduce las pistas para comprobar que la capacidad viaja contigo.",
-    evidence: "Journey · práctica diferida",
+    evidence: "Ruta · práctica diferida",
     icon: Compass,
     object: "bridge" as const,
   },

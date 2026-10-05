@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("beta content catalog is available to the learner", async ({ page }) => {
   await page.goto("/learn/experiences");
-  await expect(page.getByRole("heading", { name: /Contenido para usar/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Tu programa, convertido en práctica/i })).toBeVisible();
   await expect(page.getByText("Congruencia: tres canales, un mensaje")).toBeVisible();
   await expect(page.getByText("Calibración: observar antes de interpretar")).toBeVisible();
   await expect(page.getByText("Rapport: crear sintonía con respeto")).toBeVisible();

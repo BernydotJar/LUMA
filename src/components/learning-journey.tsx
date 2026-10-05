@@ -7,8 +7,8 @@ export function LearningJourney({ steps }: { steps: JourneyStep[] }) {
     <section className={`${styles.journeyCard} glass`} id="journey" aria-labelledby="journey-title">
       <div className={styles.cardHeading}>
         <div>
-          <span className="eyebrow"><span className="eyebrow-dot" /> Tu journey</span>
-          <h2 id="journey-title">Tu journey avanza con lo que demuestras.</h2>
+          <span className="eyebrow"><span className="eyebrow-dot" /> Tu ruta</span>
+          <h2 id="journey-title">Tu ruta avanza con lo que demuestras.</h2>
         </div>
         <span className="status-pill" data-tone="positive">Se adapta</span>
       </div>
@@ -28,7 +28,7 @@ export function LearningJourney({ steps }: { steps: JourneyStep[] }) {
           </article>
         ))}
       </div>
-      <p className={styles.journeyNote}>Cada nueva señal puede adelantar tu journey o activar una práctica específica para fortalecer el siguiente paso.</p>
+      <p className={styles.journeyNote}>Cada nueva señal puede adelantar tu ruta o activar una práctica específica para fortalecer el siguiente paso.</p>
     </section>
   );
 }

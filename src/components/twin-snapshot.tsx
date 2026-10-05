@@ -17,7 +17,7 @@ export function TwinSnapshot({ dimensions }: { dimensions: TwinDimension[] }) {
     <section className={`${styles.twinSnapshot} glass`} aria-labelledby="twin-snapshot-title">
       <div className={styles.cardHeading}>
         <div>
-          <span className="eyebrow"><span className="eyebrow-dot" /> Mi Learning Twin</span>
+          <span className="eyebrow"><span className="eyebrow-dot" /> Mi gemelo de aprendizaje</span>
           <h2 id="twin-snapshot-title">Lo que LUMA cree—y por qué</h2>
         </div>
         <span className={styles.twinIcon}><BrainCircuit size={21} /></span>

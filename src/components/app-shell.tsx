@@ -24,18 +24,18 @@ import styles from "./app-shell.module.css";
 
 const learnerNavigation = [
   { href: "/learn", label: "Hoy", icon: Home },
-  { href: "/learn#journey", label: "Journey", icon: Compass },
-  { href: "/learn/experiences", label: "Práctica", icon: PlayCircle },
+  { href: "/learn#journey", label: "Ruta", icon: Compass },
+  { href: "/learn/experiences", label: "Programa", icon: PlayCircle },
   { href: "/learn#luma", label: "LUMA", icon: MessageCircle },
 ];
 
 const studioNavigation = [
-  { href: "/experience", label: "Experience Console", icon: Crown },
-  { href: "/studio", label: "Coach Studio", icon: ChartNoAxesCombined },
-  { href: "/studio/learners/mariana", label: "Learning Twin", icon: BrainCircuit },
-  { href: "/library", label: "Content Intelligence", icon: BookOpen },
-  { href: "/studio/reflections", label: "Curriculum Reflection", icon: GitBranch },
-  { href: "/learn", label: "Vista coachee", icon: Sparkles },
+  { href: "/experience", label: "Consola de experiencia", icon: Crown },
+  { href: "/studio", label: "Estudio del entrenador", icon: ChartNoAxesCombined },
+  { href: "/studio/learners/mariana", label: "Gemelo de aprendizaje", icon: BrainCircuit },
+  { href: "/library", label: "Inteligencia de contenido", icon: BookOpen },
+  { href: "/studio/reflections", label: "Reflexión curricular", icon: GitBranch },
+  { href: "/learn", label: "Vista participante", icon: Sparkles },
 ];
 
 export function AppShell({
@@ -61,12 +61,12 @@ export function AppShell({
       <aside className={`${styles.sidebar} glass`}>
         <BrandMark />
         <div className={styles.workspaceLabel}>
-          <span>{studio ? "Coach intelligence" : "Journey activo"}</span>
+          <span>{studio ? "Inteligencia del entrenador" : "Ruta activa"}</span>
           <strong>{studio ? "Practitioner 2026" : "Practitioner · Poder"}</strong>
         </div>
         <nav
           className={styles.navigation}
-          aria-label={studio ? "Navegación del coach" : "Navegación de aprendizaje"}
+          aria-label={studio ? "Navegación del entrenador" : "Navegación de aprendizaje"}
         >
           {navigation.map(({ href, label, icon: Icon }) => {
             const pathOnly = href.split("#")[0];
@@ -87,7 +87,7 @@ export function AppShell({
 
         <div className={styles.sidebarBottom}>
           {studio ? (
-            <Link href="/learn"><Sparkles size={18} /> Abrir vista coachee</Link>
+            <Link href="/learn"><Sparkles size={18} /> Abrir vista participante</Link>
           ) : (
             <Link href="/onboarding"><HelpCircle size={18} /> Ajustar mi perfil</Link>
           )}
@@ -116,12 +116,12 @@ export function AppShell({
             <button
               className={styles.profileButton}
               type="button"
-              aria-label={studio ? "Abrir menú del coach" : "Abrir menú de Mariana"}
+              aria-label={studio ? "Abrir menú del entrenador" : "Abrir menú de Mariana"}
             >
               <span className={styles.avatar}>{studio ? "C" : "M"}</span>
               <span>
-                <strong>{studio ? "Coach" : "Mariana"}</strong>
-                <small>{studio ? "Vista interna" : "Plan Practitioner"}</small>
+                <strong>{studio ? "Entrenador" : "Mariana"}</strong>
+                <small>{studio ? "Vista interna" : "Programa Practitioner"}</small>
               </span>
               <ChevronDown size={15} />
             </button>

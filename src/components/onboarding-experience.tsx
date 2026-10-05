@@ -54,7 +54,7 @@ export function OnboardingExperience() {
         <aside className={`${styles.context} glass`}>
           <span className="eyebrow"><span className="eyebrow-dot" /> Antes de empezar</span>
           <h1>LUMA empieza con lo esencial sobre tu objetivo.</h1>
-          <p>Con unas pocas señales iniciales construye un journey que se ajusta a lo que quieres lograr. Puedes actualizar tu perfil de aprendizaje en cualquier momento.</p>
+          <p>Con unas pocas señales iniciales construye una ruta que se ajusta a lo que quieres lograr. Puedes actualizar tu perfil de aprendizaje en cualquier momento.</p>
           <div className={styles.twinPreview}>
             <div className={styles.previewOrb}><Sparkles size={40} /></div>
             <div>
