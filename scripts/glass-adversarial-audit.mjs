@@ -4,7 +4,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 const baseURL = process.env.LUMA_AUDIT_URL ?? "http://127.0.0.1:3100";
 const themes = ["se", "light", "dark"];
-const routes = ["/learn", "/studio", "/experience", "/iconography", "/library"];
+const routes = ["/learn", "/studio", "/experience", "/iconography", "/library", "/learn/experiences", "/learn/experience/calibracion-observar-antes-de-interpretar"];
 const viewports = [
   { name: "desktop", width: 1440, height: 1000 },
   { name: "mobile", width: 390, height: 844 },

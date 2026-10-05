@@ -1,0 +1,6 @@
+.hero { min-height:300px; padding:clamp(28px,5vw,64px); border:1px solid var(--line); border-radius:36px; display:flex; flex-direction:column; justify-content:flex-end; background:linear-gradient(145deg,color-mix(in srgb,var(--bg-elevated) 84%,transparent),color-mix(in srgb,var(--glass) 50%,transparent)); box-shadow:var(--shadow); }
+.hero h2 { max-width:860px; margin-top:14px; font-size:clamp(3rem,6.6vw,6.6rem); line-height:.86; letter-spacing:-.065em; }
+.grid { margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.grid > :first-child { grid-column:span 2; }
+@media (max-width:1050px){.grid{grid-template-columns:1fr 1fr}.grid > :first-child{grid-column:1 / -1}}
+@media (max-width:760px){.hero{min-height:260px;padding:28px 22px;border-radius:30px}.hero h2{font-size:clamp(3rem,15vw,4.8rem)}.grid{grid-template-columns:1fr}.grid > :first-child{grid-column:auto}}

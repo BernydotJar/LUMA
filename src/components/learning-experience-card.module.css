@@ -1,0 +1,38 @@
+.card {
+  min-height: 340px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  display: grid;
+  grid-template-rows: 138px 1fr;
+  gap: 16px;
+  overflow: hidden;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--bg-elevated) 74%, transparent), color-mix(in srgb, var(--glass) 54%, transparent));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+}
+
+.card[data-featured="true"] {
+  min-height: 390px;
+  grid-template-rows: 174px 1fr;
+}
+
+.objectStage {
+  border-radius: 22px;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 50% 36%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 48%), color-mix(in srgb, var(--bg-soft) 72%, transparent);
+}
+
+.copy { min-width: 0; display: flex; flex-direction: column; }
+.meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--muted); font-size: .56rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+.meta span:last-child { display: inline-flex; align-items: center; gap: 5px; }
+.copy h3 { margin-top: 10px; font-size: 1.42rem; line-height: .98; letter-spacing: -.045em; }
+.copy > p { margin-top: 10px; color: var(--muted); font-size: .68rem; line-height: 1.52; }
+.capability { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); display: grid; gap: 4px; }
+.capability small { color: var(--muted); font-size: .51rem; font-weight: 760; letter-spacing: .05em; text-transform: uppercase; }
+.capability strong { color: var(--muted-strong); font-size: .62rem; line-height: 1.4; }
+.copy > a { margin-top: auto; padding-top: 17px; display: inline-flex; align-items: center; gap: 6px; color: var(--accent); font-size: .61rem; font-weight: 840; }
+
+@media (max-width: 760px) {
+  .card, .card[data-featured="true"] { min-height: 320px; grid-template-rows: 126px 1fr; }
+}

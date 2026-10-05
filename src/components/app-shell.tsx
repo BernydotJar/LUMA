@@ -25,7 +25,7 @@ import styles from "./app-shell.module.css";
 const learnerNavigation = [
   { href: "/learn", label: "Hoy", icon: Home },
   { href: "/learn#journey", label: "Journey", icon: Compass },
-  { href: "/learn/session/pas", label: "Práctica", icon: PlayCircle },
+  { href: "/learn/experiences", label: "Práctica", icon: PlayCircle },
   { href: "/learn#luma", label: "LUMA", icon: MessageCircle },
 ];
 

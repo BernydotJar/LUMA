@@ -689,6 +689,75 @@
         "firebase.json",
         "apphosting.yaml"
       ]
+    },
+    {
+      "id": "LUMA-027-beta-content-graph",
+      "kind": "content",
+      "title": "Source-grounded Practitioner beta content graph",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-026-themed-superuser-release"
+      ],
+      "capability": "curriculum-content",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/018-beta-content-expansion.md",
+        "evidence/content-beta/**",
+        "src/lib/learning-content.ts"
+      ]
+    },
+    {
+      "id": "LUMA-028-learner-experience-library",
+      "kind": "product-surface",
+      "title": "Learner experience library and reflective practice routes",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-027-beta-content-graph"
+      ],
+      "capability": "learner-content-experience",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/learn/**",
+        "src/components/experience-*",
+        "src/components/learning-experience-*",
+        "src/components/app-shell.tsx",
+        "e2e/content-beta.spec.ts",
+        "evidence/content-beta/**"
+      ]
+    },
+    {
+      "id": "LUMA-029-beta-content-release",
+      "kind": "release",
+      "title": "First-user beta content release",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-027-beta-content-graph",
+        "LUMA-028-learner-experience-library"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "scripts/**",
+        "evidence/**",
+        "e2e/**"
+      ]
     }
   ]
 }

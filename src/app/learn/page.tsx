@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { LearningJourney } from "@/components/learning-journey";
+import { ExperienceShelf } from "@/components/experience-shelf";
 import { LearningPulse } from "@/components/learning-pulse";
 import { NextActionCard } from "@/components/next-action-card";
 import { ProgressStory } from "@/components/progress-story";
@@ -55,6 +56,8 @@ export default function LearnPage() {
       </div>
 
       <ProgressStory />
+
+      <ExperienceShelf />
 
       <section className={styles.proofStrip} aria-label="Cómo se adapta tu journey">
         <div><span>01</span><strong>Base demostrada</strong><p>Comunicación emocional con evidencia consistente.</p></div>

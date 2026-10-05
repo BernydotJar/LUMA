@@ -1,0 +1,73 @@
+.reflection,
+.complete {
+  margin-top: 18px;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--bg-elevated) 76%, transparent), color-mix(in srgb, var(--glass) 48%, transparent));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.16);
+}
+
+.reflection h2,
+.complete h2 {
+  max-width: 850px;
+  margin-top: 12px;
+  font-size: clamp(1.6rem, 3vw, 2.85rem);
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+
+.reflection textarea {
+  width: 100%;
+  margin-top: 22px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  resize: vertical;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--bg-elevated) 76%, transparent);
+  font: inherit;
+  font-size: .77rem;
+  line-height: 1.55;
+}
+
+.reflection textarea:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent) 58%, transparent);
+  outline-offset: 2px;
+}
+
+.footer {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.footer p,
+.complete > p {
+  color: var(--muted);
+  font-size: .63rem;
+  line-height: 1.5;
+}
+
+.footer :global(.button-primary) {
+  min-width: 178px;
+  justify-content: center;
+}
+
+.footer button:disabled { opacity: .38; cursor: not-allowed; }
+
+.complete { position: relative; overflow: hidden; }
+.completeMark { width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; color: var(--bg); background: var(--accent); margin-bottom: 20px; }
+.complete > p { max-width: 760px; margin-top: 12px; }
+.receipt { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); display: grid; grid-template-columns: auto minmax(0,1fr); gap: 7px 18px; }
+.receipt span { color: var(--muted); font-size: .52rem; font-weight: 780; text-transform: uppercase; letter-spacing: .05em; }
+.receipt strong { color: var(--muted-strong); font-size: .59rem; text-align: right; }
+.actions { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 10px; }
+.actions a, .actions button { min-height: 40px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; display: inline-flex; align-items: center; gap: 7px; color: var(--muted-strong); background: color-mix(in srgb, var(--bg-elevated) 74%, transparent); font-size: .59rem; font-weight: 800; cursor: pointer; }
+
+@media (max-width: 760px) {
+  .footer { align-items: stretch; flex-direction: column; }
+  .footer :global(.button-primary) { width: 100%; }
+}
