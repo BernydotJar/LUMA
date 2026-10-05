@@ -56,7 +56,7 @@ test.describe("LUMA product showcase", () => {
   test("coach view exposes proprietary Learning Twin evidence", async ({ page }) => {
     await page.goto("/studio/learners/mariana");
     await expect(page.getByRole("heading", { name: /Mariana: estado de aprendizaje con evidencia y confianza/i })).toBeVisible();
-    await expect(page.getByText(/© 2026 LUMA · Modelo de gemelo de aprendizaje y marco de evidencia/i)).toBeVisible();
+    await expect(page.getByText(/© 2026 LUMA · Modelo de gemelo de aprendizaje y marco de evidencia/i).first()).toBeVisible();
     await expect(page.getByText(/Evidencia del participante/i)).toBeVisible();
     await expect(page.getByRole("link", { name: "Gemelo de aprendizaje", exact: true }).last()).toBeVisible();
   });
@@ -118,18 +118,26 @@ test.describe("LUMA product showcase", () => {
 
 
 
-  test("superuser can compare roles and persist a visual theme", async ({ page }) => {
+  test("superuser can compare roles and persist a visual theme", async ({ page }, testInfo) => {
     await page.goto("/experience");
     await expect(page.getByRole("heading", { name: /Una plataforma. Dos experiencias. Tres expresiones visuales/i })).toBeVisible();
     await expect(page.getByRole("link", { name: /Abrir participante/i })).toBeVisible();
     await expect(page.getByRole("link", { name: "Abrir entrenador", exact: true })).toBeVisible();
 
-    await page.getByRole("button", { name: "Usar tema Luz Líquida" }).click();
+    if (testInfo.project.name === "mobile") {
+      await page.getByRole("button", { name: /Cambiar tema\. Tema actual: Seres de Excelencia/i }).click();
+    } else {
+      await page.getByRole("button", { name: "Usar tema Luz Líquida" }).click();
+    }
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 
-    await page.getByRole("button", { name: "Usar tema Inteligencia Nocturna" }).click();
+    if (testInfo.project.name === "mobile") {
+      await page.getByRole("button", { name: /Cambiar tema\. Tema actual: Luz Líquida/i }).click();
+    } else {
+      await page.getByRole("button", { name: "Usar tema Inteligencia Nocturna" }).click();
+    }
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     await page.getByRole("link", { name: /Abrir participante/i }).click();
     await expect(page).toHaveURL(/\/learn$/);

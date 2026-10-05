@@ -14,9 +14,12 @@
     "test:e2e": "playwright test",
     "verify": "npm run lint && npm run typecheck && npm run test:run && npm run build",
     "audit:visual": "node scripts/visual-audit.mjs",
-    "audit:glass": "node scripts/glass-adversarial-audit.mjs"
+    "audit:glass": "node scripts/glass-adversarial-audit.mjs",
+    "audit:uiux": "node scripts/uiux-adversarial-audit.mjs"
   },
   "dependencies": {
+    "@firebase/app": "0.16.2",
+    "@firebase/auth": "1.13.6",
     "lucide-react": "1.51.0",
     "motion": "14.0.0",
     "next": "16.3.8",
@@ -24,6 +27,7 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
     "@playwright/test": "1.63.0",
     "@types/node": "^22.12.0",
     "@types/react": "^19",
@@ -31,8 +35,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
     "typescript": "^5",
-    "vitest": "5.0.3",
-    "@axe-core/playwright": "4.10.2"
+    "vitest": "5.0.3"
   },
   "type": "module"
 }

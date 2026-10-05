@@ -7,7 +7,6 @@ import {
   BookOpen,
   BrainCircuit,
   ChartNoAxesCombined,
-  ChevronDown,
   GitBranch,
   Compass,
   Crown,
@@ -19,6 +18,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
+import { AccountMenu } from "@/components/account-menu";
 import { ExperienceControl } from "@/components/experience-control";
 import styles from "./app-shell.module.css";
 
@@ -76,7 +76,7 @@ export function AppShell({
               (pathname === pathOnly ||
                 (pathOnly !== "/learn" && pathname.startsWith(pathOnly)));
             return (
-              <Link href={href} key={href} className={active ? styles.activeNav : undefined}>
+              <Link href={href} key={href} aria-label={label} className={active ? styles.activeNav : undefined}>
                 <Icon size={19} strokeWidth={1.8} />
                 <span>{label}</span>
                 {active && <span className={styles.activeDot} />}
@@ -87,9 +87,9 @@ export function AppShell({
 
         <div className={styles.sidebarBottom}>
           {studio ? (
-            <Link href="/learn"><Sparkles size={18} /> Abrir vista participante</Link>
+            <Link href="/learn" aria-label="Abrir vista participante"><Sparkles size={18} /> Abrir vista participante</Link>
           ) : (
-            <Link href="/onboarding"><HelpCircle size={18} /> Ajustar mi perfil</Link>
+            <Link href="/onboarding" aria-label="Ajustar mi perfil"><HelpCircle size={18} /> Ajustar mi perfil</Link>
           )}
         </div>
       </aside>
@@ -113,18 +113,7 @@ export function AppShell({
               <Bell size={19} />
               <span className={styles.notificationDot} />
             </button>
-            <button
-              className={styles.profileButton}
-              type="button"
-              aria-label={studio ? "Abrir menú del entrenador" : "Abrir menú de Mariana"}
-            >
-              <span className={styles.avatar}>{studio ? "C" : "M"}</span>
-              <span>
-                <strong>{studio ? "Entrenador" : "Mariana"}</strong>
-                <small>{studio ? "Vista interna" : "Programa Practitioner"}</small>
-              </span>
-              <ChevronDown size={15} />
-            </button>
+            <AccountMenu mode={mode} />
           </div>
         </header>
         <main className={styles.content}>{children}</main>
@@ -139,7 +128,7 @@ export function AppShell({
             (pathname === pathOnly ||
               (pathOnly !== "/learn" && pathname.startsWith(pathOnly)));
           return (
-            <Link href={href} key={href} className={active ? styles.mobileActive : undefined}>
+            <Link href={href} key={href} aria-label={label} className={active ? styles.mobileActive : undefined}>
               <Icon size={20} />
               <span>{label}</span>
             </Link>

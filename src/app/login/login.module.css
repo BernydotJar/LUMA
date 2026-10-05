@@ -1,0 +1,264 @@
+.page {
+  min-height: 100svh;
+  padding: 22px clamp(18px, 4vw, 56px) 48px;
+  position: relative;
+  overflow: hidden;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 85% 10%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 30rem),
+    radial-gradient(circle at 8% 86%, color-mix(in srgb, var(--mint) 12%, transparent), transparent 34rem),
+    var(--bg);
+}
+
+.glow {
+  width: 38rem;
+  height: 38rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 16%, transparent);
+  border-radius: 50%;
+  position: absolute;
+  right: -19rem;
+  top: 16%;
+  box-shadow: inset 0 0 100px color-mix(in srgb, var(--accent) 8%, transparent);
+  pointer-events: none;
+}
+
+.header {
+  max-width: 1380px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.header > a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted-strong);
+  font-size: .61rem;
+  font-weight: 800;
+}
+
+.hero {
+  width: min(1180px, 100%);
+  min-height: calc(100svh - 110px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0,1.3fr) minmax(300px,.7fr);
+  align-items: center;
+  gap: clamp(42px, 8vw, 110px);
+}
+
+.copy {
+  max-width: 760px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--accent);
+  font-size: .59rem;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.copy h1 {
+  max-width: 780px;
+  margin-top: 14px;
+  font-size: clamp(4rem, 8vw, 8.4rem);
+  font-weight: 640;
+  line-height: .82;
+  letter-spacing: -.075em;
+}
+
+.copy > p {
+  max-width: 610px;
+  margin-top: 22px;
+  color: var(--muted);
+  font-size: .76rem;
+  line-height: 1.68;
+}
+
+.googleButton {
+  min-width: 270px;
+  min-height: 52px;
+  margin-top: 28px;
+  padding: 0 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #202124;
+  background: #fff;
+  box-shadow: 0 18px 42px rgba(0,0,0,.1);
+  cursor: pointer;
+  font-size: .68rem;
+  font-weight: 760;
+}
+
+.googleButton:disabled {
+  opacity: .58;
+  cursor: wait;
+}
+
+.notice {
+  margin-top: 12px;
+  color: var(--danger);
+  font-size: .61rem;
+}
+
+.trust {
+  max-width: 540px;
+  margin-top: 18px;
+  display: flex;
+  gap: 8px;
+  color: var(--muted);
+  font-size: .56rem;
+  line-height: 1.5;
+}
+
+.trust svg {
+  flex: 0 0 auto;
+}
+
+.demoLink {
+  min-height: 44px;
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted-strong);
+  font-size: .58rem;
+  font-weight: 760;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.card {
+  min-height: 430px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--bg-elevated) 78%, transparent), color-mix(in srgb, var(--bg-soft) 45%, transparent));
+  clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%);
+}
+
+.card::before {
+  content: "LUMA";
+  position: absolute;
+  top: 26px;
+  right: 26px;
+  color: color-mix(in srgb, var(--ink) 9%, transparent);
+  font-size: clamp(4rem, 8vw, 8rem);
+  font-weight: 900;
+  letter-spacing: -.08em;
+}
+
+.card > span {
+  color: var(--accent);
+  font-size: .54rem;
+  font-weight: 850;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.card > strong {
+  max-width: 360px;
+  margin-top: 10px;
+  font-size: clamp(1.8rem, 3vw, 3.1rem);
+  line-height: .95;
+  letter-spacing: -.05em;
+}
+
+.card ol {
+  margin-top: 28px;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.card li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 9px;
+  color: var(--muted);
+  font-size: .59rem;
+  line-height: 1.45;
+}
+
+.card li b {
+  color: var(--accent);
+  font-size: .52rem;
+}
+
+@media (max-width: 760px) {
+  .page {
+    padding: 15px 14px 36px;
+    overflow: hidden;
+  }
+
+  .header :global(.brand-mark__copy) {
+    display: none;
+  }
+
+  .header > a {
+    font-size: .56rem;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-top: 56px;
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+
+  .copy h1 {
+    font-size: clamp(3.6rem, 16vw, 5.2rem);
+  }
+
+  .copy > p {
+    margin-top: 18px;
+    font-size: .68rem;
+  }
+
+  .googleButton {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .card {
+    min-height: 350px;
+    padding: 22px;
+  }
+
+  .card::before {
+    top: 20px;
+    right: 20px;
+    font-size: 4.8rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    width: auto;
+    max-width: none;
+    margin-inline: 0;
+  }
+
+  .copy,
+  .card {
+    width: 100%;
+    min-width: 0;
+  }
+}

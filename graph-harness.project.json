@@ -842,6 +842,85 @@
         "firebase.json",
         "apphosting.yaml"
       ]
+    },
+    {
+      "id": "LUMA-033-google-auth-participant-profile",
+      "kind": "product-capability",
+      "title": "Firebase Google sign-in with participant preferred display name",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-032-finish-line-client-demo-release"
+      ],
+      "capability": "participant-auth-profile",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "firebase.json",
+        "package.json",
+        "package-lock.json",
+        "src/app/login/**",
+        "src/app/layout.tsx",
+        "src/app/learn/**",
+        "src/components/auth-*",
+        "src/components/account-*",
+        "src/components/app-shell*",
+        "src/components/learner-greeting*",
+        "src/lib/firebase-*",
+        "e2e/auth.spec.ts",
+        "evidence/auth/**"
+      ]
+    },
+    {
+      "id": "LUMA-034-uiux-adversarial-desktop-mobile",
+      "kind": "verification",
+      "title": "Adversarial UI UX review across mobile desktop themes auth and learner journeys",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-033-google-auth-participant-profile"
+      ],
+      "capability": "uiux-adversarial-verification",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "scripts/uiux-adversarial-audit.mjs",
+        "src/**",
+        "e2e/**",
+        "evidence/uiux-adversarial/**"
+      ]
+    },
+    {
+      "id": "LUMA-035-auth-uiux-client-release",
+      "kind": "release",
+      "title": "Google-auth and adversarial UI UX client-demo release",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-033-google-auth-participant-profile",
+        "LUMA-034-uiux-adversarial-desktop-mobile"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "scripts/**",
+        "e2e/**",
+        "evidence/**",
+        "firebase.json",
+        "apphosting.yaml"
+      ]
     }
   ]
 }

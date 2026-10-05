@@ -1215,3 +1215,30 @@
     min-height: 44px;
   }
 }
+
+.tutorComposer input {
+  min-height: 40px;
+}
+
+@media (max-width: 760px) {
+  .tutorComposer button {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.quickPrompts button {
+  min-height: 40px;
+}
+
+.tutorComposer input {
+  min-height: 44px;
+}
+
+.quickPrompts button {
+  min-height: 42px;
+}
+
+.quickPrompts button {
+  min-height: 44px;
+}

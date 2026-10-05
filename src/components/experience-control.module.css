@@ -65,7 +65,8 @@
 }
 
 .themeSwitch button {
-  width: 33px;
+  width: 40px;
+  min-height: 40px;
   padding: 0;
 }
 
@@ -120,4 +121,46 @@
     width: 40px;
     min-height: 40px;
   }
+}
+
+.mobileThemeButton {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .control {
+    min-height: 44px;
+    padding: 2px;
+  }
+
+  .themeSwitch {
+    display: none;
+  }
+
+  .mobileThemeButton {
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    color: var(--active-control-ink, #201316);
+    background: var(--accent);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.42), 0 5px 16px color-mix(in srgb, var(--accent) 22%, transparent);
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 1180px) and (min-width: 761px) {
+  .consoleLink,
+  .roleSwitch a {
+    width: 40px;
+    min-height: 40px;
+  }
+}
+
+.consoleLink,
+.roleSwitch a,
+.themeSwitch button {
+  min-height: 40px;
 }

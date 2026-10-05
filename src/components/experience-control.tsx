@@ -14,6 +14,14 @@ const themeIcon = {
 
 export function ExperienceControl({ mode }: { mode: "learner" | "studio" }) {
   const { theme, setTheme } = useLumaTheme();
+  const themeIndex = lumaThemes.findIndex((item) => item.id === theme);
+  const currentTheme = lumaThemes[themeIndex] ?? lumaThemes[0];
+  const CurrentThemeIcon = themeIcon[currentTheme.id];
+
+  function cycleTheme() {
+    const nextTheme = lumaThemes[(themeIndex + 1) % lumaThemes.length];
+    setTheme(nextTheme.id);
+  }
 
   return (
     <div className={styles.control} aria-label="Controles de superusuario">
@@ -47,6 +55,14 @@ export function ExperienceControl({ mode }: { mode: "learner" | "studio" }) {
           );
         })}
       </div>
+      <button
+        className={styles.mobileThemeButton}
+        type="button"
+        aria-label={`Cambiar tema. Tema actual: ${currentTheme.label}`}
+        onClick={cycleTheme}
+      >
+        <CurrentThemeIcon size={17} />
+      </button>
     </div>
   );
 }

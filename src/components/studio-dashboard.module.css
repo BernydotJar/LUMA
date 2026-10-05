@@ -785,3 +785,24 @@
     top: 18px;
   }
 }
+
+/* Adversarial UX target-size pass. */
+.controlBar button,
+.tableRow button,
+.openTwin,
+.interventionQueue footer a {
+  min-height: 40px;
+}
+
+.interventionQueue footer a {
+  align-items: center;
+}
+
+@media (max-width: 760px) {
+  .controlBar button,
+  .tableRow button,
+  .openTwin,
+  .interventionQueue footer a {
+    min-height: 44px;
+  }
+}

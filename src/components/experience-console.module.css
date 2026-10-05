@@ -776,3 +776,7 @@
     transition: none;
   }
 }
+
+.iconSection .sectionHeading > a {
+  min-height: 44px;
+}

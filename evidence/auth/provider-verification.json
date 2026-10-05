@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-10-05T04:32:00Z",
+  "project": "luma-learning-intelligence",
+  "subtype": "IDENTITY_PLATFORM",
+  "authorizedDomains": [
+    "luma-learning-intelligence.firebaseapp.com",
+    "luma-learning-intelligence.web.app",
+    "luma--luma-learning-intelligence.us-central1.hosted.app",
+    "localhost"
+  ],
+  "googleProvider": {
+    "enabled": true,
+    "clientIdPresent": true
+  },
+  "createAuthUri": {
+    "providerId": "google.com",
+    "authUriPresent": true,
+    "error": null
+  },
+  "note": "Verified through Firebase/Identity Toolkit admin and createAuthUri checks. No interactive human Google account was used in automation."
+}

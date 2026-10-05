@@ -1,0 +1,254 @@
+.account {
+  position: relative;
+}
+
+.signInLink,
+.accountButton {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+}
+
+.signInLink {
+  padding: 0 14px;
+  font-size: .65rem;
+  font-weight: 820;
+}
+
+.accountButton {
+  padding: 4px 11px 4px 4px;
+  cursor: pointer;
+}
+
+.avatar,
+.avatarLarge {
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(145deg, var(--accent), var(--peach));
+  font-weight: 850;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  font-size: .7rem;
+}
+
+.avatarLarge {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+}
+
+.identity {
+  min-width: 72px;
+  display: grid;
+  gap: 1px;
+  text-align: left;
+}
+
+.identity strong {
+  max-width: 116px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: .69rem;
+}
+
+.identity small {
+  color: var(--muted);
+  font-size: .55rem;
+}
+
+.popover {
+  width: min(340px, calc(100vw - 24px));
+  padding: 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 22px;
+  position: absolute;
+  top: calc(100% + 9px);
+  right: 0;
+  z-index: 140;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
+  box-shadow: 0 28px 80px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.42);
+  backdrop-filter: blur(24px) saturate(125%);
+}
+
+.popover header,
+.popover header > div {
+  display: flex;
+  align-items: center;
+}
+
+.popover header {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.popover header > div {
+  min-width: 0;
+  gap: 10px;
+}
+
+.popover header div div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.popover header strong,
+.popover header small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.popover header strong {
+  font-size: .72rem;
+}
+
+.popover header small {
+  color: var(--muted);
+  font-size: .55rem;
+}
+
+.popover header > button {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: var(--muted-strong);
+  background: transparent;
+  cursor: pointer;
+}
+
+.editButton,
+.signOutButton {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 13px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--bg-soft) 44%, transparent);
+  cursor: pointer;
+  font-size: .61rem;
+  font-weight: 760;
+}
+
+.signOutButton {
+  color: var(--muted-strong);
+  background: transparent;
+}
+
+.nameForm {
+  margin-top: 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.nameForm label {
+  color: var(--muted-strong);
+  font-size: .56rem;
+  font-weight: 760;
+}
+
+.nameForm input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 13px;
+  outline: 0;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--bg) 65%, transparent);
+}
+
+.nameForm input:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.nameForm > div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.nameForm button {
+  min-height: 40px;
+  padding: 0 11px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+  background: transparent;
+  cursor: pointer;
+  font-size: .58rem;
+  font-weight: 760;
+}
+
+.nameForm button[type="submit"] {
+  color: #fff;
+  border-color: transparent;
+  background: var(--accent);
+}
+
+.notice {
+  margin-top: 9px;
+  color: var(--muted-strong);
+  font-size: .56rem;
+}
+
+.skeleton {
+  width: 92px;
+  height: 44px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--bg-soft) 75%, transparent);
+}
+
+@media (max-width: 760px) {
+  .signInLink {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .signInLink span,
+  .identity {
+    display: none;
+  }
+
+  .accountButton {
+    width: 44px;
+    padding: 3px;
+    justify-content: center;
+  }
+
+  .popover {
+    position: fixed;
+    top: 72px;
+    right: 12px;
+  }
+
+  .skeleton {
+    width: 44px;
+  }
+}

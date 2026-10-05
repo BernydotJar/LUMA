@@ -1,0 +1,76 @@
+
+> luma-learning-intelligence@0.1.0 verify
+> npm run lint && npm run typecheck && npm run test:run && npm run build
+
+
+> luma-learning-intelligence@0.1.0 lint
+> eslint .
+
+
+> luma-learning-intelligence@0.1.0 typecheck
+> tsc --noEmit
+
+
+> luma-learning-intelligence@0.1.0 test:run
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace/projects/LUMA[39m
+
+ [32m✓[39m src/lib/experience-themes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/profile-name.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/themes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/lib/learning-engine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/reflection-engine.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[32m19 passed[39m[22m[90m (19)[39m
+[2m   Start at [22m 05:37:19
+[2m   Duration [22m 232ms[2m (transform 61%, import 27%, worker 7%, tests 5%)[22m
+
+
+> luma-learning-intelligence@0.1.0 build
+> next build
+
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 119ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.4s
+  Running TypeScript ...
+  Finished TypeScript in 2.3s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/25) ...
+  Generating static pages using 11 workers (6/25)
+  Generating static pages using 11 workers (12/25)
+  Generating static pages using 11 workers (18/25)
+✓ Generating static pages using 11 workers (25/25) in 1184ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/reflections
+├ ƒ /api/tutor
+├ ○ /experience
+├ ○ /iconography
+├ ○ /learn
+├   /learn/experience/[slug]
+│ ├ ● /learn/experience/congruencia-tres-canales
+│ ├ ● /learn/experience/calibracion-observar-antes-de-interpretar
+│ ├ ● /learn/experience/rapport-sintonia-con-respeto
+│ └ ● [+4 more paths]
+├ ○ /learn/experiences
+├ ○ /learn/session/pas
+├ ○ /library
+├ ○ /login
+├ ○ /onboarding
+├ ○ /studio
+├ ○ /studio/learners/mariana
+├ ○ /studio/reflections
+└ ○ /twin
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand

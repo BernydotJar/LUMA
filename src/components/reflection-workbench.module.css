@@ -1020,3 +1020,32 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Dense internal controls stay compact on desktop but remain comfortably tappable on phones. */
+.filters button,
+.intentTabs button {
+  min-height: 40px;
+}
+
+@media (max-width: 760px) {
+  .filters button,
+  .intentTabs button,
+  .reviewActions button {
+    min-height: 44px;
+  }
+}
+
+.filters button,
+.intentTabs button {
+  min-width: 44px;
+}
+
+.searchBox input {
+  min-height: 40px;
+}
+
+@media (max-width: 760px) {
+  .searchBox input {
+    min-height: 44px;
+  }
+}

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { LearningJourney } from "@/components/learning-journey";
+import { LearnerGreeting } from "@/components/learner-greeting";
 import { ExperienceShelf } from "@/components/experience-shelf";
 import { LearningPulse } from "@/components/learning-pulse";
 import { ModuleCoverFlow } from "@/components/module-cover-flow";
@@ -27,7 +28,7 @@ export default function LearnPage() {
       <section className={styles.intro}>
         <div className={styles.introCopy}>
           <span className={styles.datePill}><CalendarDays size={14} /> Tu sesión de hoy</span>
-          <p className={styles.greeting}>Buenas noches, Mariana.</p>
+          <LearnerGreeting />
           <h2>
             Hoy llevas lo que sabes
             <em> a la práctica.</em>

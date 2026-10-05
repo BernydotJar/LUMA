@@ -409,3 +409,9 @@
     padding-inline: 6px;
   }
 }
+
+/* Adversarial UX: discrete module selectors meet mobile touch ergonomics. */
+.pagination button {
+  min-width: 44px;
+  height: 44px;
+}

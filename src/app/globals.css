@@ -486,3 +486,22 @@ html[data-theme="dark"] .brand-mark__icon {
     min-height: 44px;
   }
 }
+
+.brand-mark {
+  min-width: 40px;
+  min-height: 40px;
+}
+
+@media (max-width: 760px) {
+  .button-ghost {
+    min-height: 44px;
+  }
+}
+
+.brand-mark {
+  min-width: 44px;
+}
+
+.brand-mark {
+  min-height: 44px;
+}

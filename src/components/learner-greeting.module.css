@@ -1,0 +1,25 @@
+.greeting {
+  color: var(--muted-strong);
+  font-size: .72rem;
+  font-weight: 760;
+}
+
+.guestGreeting {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.guestGreeting a {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent);
+  font-size: .58rem;
+  font-weight: 820;
+}
+
+.guestGreeting a {
+  min-height: 44px;
+}

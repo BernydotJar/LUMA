@@ -548,3 +548,14 @@
   font-size: .52rem;
   line-height: 1.4;
 }
+
+.filters button {
+  min-width: 44px;
+  min-height: 40px;
+}
+
+@media (max-width: 760px) {
+  .filters button {
+    min-height: 44px;
+  }
+}

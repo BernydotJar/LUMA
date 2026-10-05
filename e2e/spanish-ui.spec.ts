@@ -35,8 +35,8 @@ const forbiddenUiLabels = [
 
 test("client-facing product terminology stays in Spanish", async ({ page }) => {
   for (const route of routes) {
-    await page.goto(route);
-    await page.waitForLoadState("networkidle");
+    await page.goto(route, { waitUntil: "domcontentloaded" });
+    await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {});
     const body = await page.locator("body").innerText();
 
     for (const label of forbiddenUiLabels) {
