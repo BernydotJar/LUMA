@@ -1,0 +1,40 @@
+
+> luma-learning-intelligence@0.1.0 dev
+> next dev -p 3017
+
+▲ Next.js 16.3.8 (Turbopack)
+- Local:         http://localhost:3017
+- Network:       http://172.17.0.3:3017
+✓ Ready in 8.7s
+✓ Running next.config.ts took 1174ms
+[?25h
+
+> luma-learning-intelligence@0.1.0 dev
+> next dev -p 3017
+
+▲ Next.js 16.3.8 (Turbopack)
+- Local:         http://localhost:3017
+- Network:       http://172.17.0.3:3017
+✓ Ready in 3.4s
+✓ Running next.config.ts took 122ms
+
+○ Compiling /learn/experience/[slug] ...
+ GET /learn/experience/congruencia-tres-canales 200 in 179ms (next.js: 76ms, generate-params: 13ms, application-code: 90ms)
+ GET /learn/experience/congruencia-tres-canales 200 in 143ms (next.js: 39ms, generate-params: 17ms, application-code: 87ms)
+ GET /learn/experience/congruencia-tres-canales 200 in 157ms (next.js: 49ms, generate-params: 12ms, application-code: 96ms)
+⚠ Blocked cross-origin request to Next.js dev resource /_next/hmr from "127.0.0.1".
+Cross-origin access to Next.js dev resources is blocked by default for safety.
+
+To allow this host in development, add it to "allowedDevOrigins" in next.config.js and restart the dev server:
+
+// next.config.js
+module.exports = {
+  allowedDevOrigins: ['127.0.0.1'],
+}
+
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET /learn/experience/congruencia-tres-canales 200 in 80ms (next.js: 10ms, generate-params: 11ms, application-code: 59ms)
+ GET /learn/experience/congruencia-tres-canales 200 in 71ms (next.js: 10ms, generate-params: 8ms, application-code: 53ms)
+ GET /learn/experience/congruencia-tres-canales 200 in 68ms (next.js: 10ms, generate-params: 9ms, application-code: 48ms)
+ POST /learn/experience/congruencia-tres-canales 200 in 15.4s (next.js: 11ms, generate-params: 0.0ms, application-code: 15.4s)
+  └─ ƒ synthesizeReflectionGuide("¿Qué cambió en tu mensaje cuando alineaste las palabras, el cuerpo y la voz? Describe una señal concreta.") in 15358ms src/app/actions/speech.ts

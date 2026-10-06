@@ -1,0 +1,10 @@
+Security closure — LUMA × SE Voice
+- New public LUMA API route handlers added: 0
+- Browser direct Voice API calls: 0
+- Browser direct Firebase Storage calls: 0
+- Learner response passed to synthesizeReflectionGuide: 0
+- Static reflection prompt passed to synthesizeReflectionGuide: 1
+- Server-side timeout: 45 seconds
+- Maximum returned audio: 5 MiB
+- Voice authorization remains delegated to SE Voice
+- Text-only fallback remains available on voice failure

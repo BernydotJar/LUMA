@@ -1,0 +1,48 @@
+
+> luma-learning-intelligence@0.1.0 build
+> next build
+
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 111ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.2s
+  Running TypeScript ...
+  Finished TypeScript in 6.7s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/26) ...
+  Generating static pages using 11 workers (6/26) 
+  Generating static pages using 11 workers (12/26) 
+  Generating static pages using 11 workers (19/26) 
+✓ Generating static pages using 11 workers (26/26) in 2.6s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/reflections
+├ ƒ /api/tutor
+├ ○ /experience
+├ ○ /iconography
+├ ○ /learn
+├   /learn/experience/[slug]
+│ ├ ● /learn/experience/congruencia-tres-canales
+│ ├ ● /learn/experience/calibracion-observar-antes-de-interpretar
+│ ├ ● /learn/experience/rapport-sintonia-con-respeto
+│ └ ● [+4 more paths]
+├ ○ /learn/experiences
+├ ○ /learn/session/pas
+├ ○ /library
+├ ○ /login
+├ ○ /onboarding
+├ ○ /preview/liquid-light
+├ ○ /studio
+├ ○ /studio/learners/mariana
+├ ○ /studio/reflections
+└ ○ /twin
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
