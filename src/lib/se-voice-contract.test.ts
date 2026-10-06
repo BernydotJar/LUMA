@@ -10,6 +10,8 @@ describe("SE Voice contract", () => {
       apiUrl: "http://127.0.0.1:8097",
       voiceId: "example_public",
       engine: "openvoice_v2",
+      authMode: "none",
+      audience: "http://127.0.0.1:8097",
     });
   });
 
@@ -47,4 +49,18 @@ describe("SE Voice contract", () => {
       resolveSeVoiceConfig({ SE_VOICE_DEFAULT_VOICE: "../../mary" }),
     ).toThrow();
   });
+});
+
+
+it("resolves Google OIDC runtime configuration", () => {
+  const config = resolveSeVoiceConfig({
+    SE_VOICE_API_URL: "https://voice.example/",
+    SE_VOICE_AUDIENCE: "https://voice.example",
+    SE_VOICE_AUTH_MODE: "google_oidc",
+    SE_VOICE_DEFAULT_VOICE: "example_public",
+    SE_VOICE_ENGINE: "openvoice_v2",
+  });
+  expect(config.apiUrl).toBe("https://voice.example");
+  expect(config.authMode).toBe("google_oidc");
+  expect(config.audience).toBe("https://voice.example");
 });
