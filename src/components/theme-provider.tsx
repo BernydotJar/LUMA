@@ -4,9 +4,8 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
 } from "react";
 import {
   defaultLumaTheme,
@@ -21,8 +20,9 @@ type ThemeContextValue = {
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
+const themeListeners = new Set<() => void>();
 
-function readInitialTheme(): LumaThemeId {
+function readThemeSnapshot(): LumaThemeId {
   if (typeof document === "undefined") return defaultLumaTheme;
   const htmlTheme = document.documentElement.dataset.theme;
   if (isLumaTheme(htmlTheme)) return htmlTheme;
@@ -35,22 +35,44 @@ function readInitialTheme(): LumaThemeId {
   return defaultLumaTheme;
 }
 
+function readServerThemeSnapshot(): LumaThemeId {
+  return defaultLumaTheme;
+}
+
+function emitThemeChange() {
+  for (const listener of themeListeners) listener();
+}
+
+function subscribeTheme(listener: () => void) {
+  themeListeners.add(listener);
+
+  const handleStorage = (event: StorageEvent) => {
+    if (event.key === LUMA_THEME_STORAGE_KEY) listener();
+  };
+  window.addEventListener("storage", handleStorage);
+
+  return () => {
+    themeListeners.delete(listener);
+    window.removeEventListener("storage", handleStorage);
+  };
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<LumaThemeId>(readInitialTheme);
+  const theme = useSyncExternalStore(
+    subscribeTheme,
+    readThemeSnapshot,
+    readServerThemeSnapshot,
+  );
 
   const setTheme = useCallback((nextTheme: LumaThemeId) => {
-    setThemeState(nextTheme);
     document.documentElement.dataset.theme = nextTheme;
     try {
       window.localStorage.setItem(LUMA_THEME_STORAGE_KEY, nextTheme);
     } catch {
       // The theme still applies for the current page when storage is blocked.
     }
+    emitThemeChange();
   }, []);
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-  }, [theme]);
 
   const value = useMemo(() => ({ theme, setTheme }), [theme, setTheme]);
 

@@ -77,6 +77,21 @@ Manual review also checks:
 - mismatched corner radii;
 - glass used where an opaque information surface is clearer.
 
+
+## Refraction v2 boundary
+
+The CodePen reference supplied for the v2 review demonstrates a cross-browser bounded-lens technique: render a duplicate of the local scene inside the lens, generate a rounded-rectangle displacement map, and apply SVG `feDisplacementMap`; keep tint, blur, and glint as separate layers.
+
+LUMA adopts that technique only where the scene is small, stable, and intentionally showcased. A refractive preview may therefore use a generated displacement map, but ordinary learning cards remain CSS-only. This prevents a design-system effect from becoming a permanent GPU tax.
+
+For bounded refraction:
+- generate the map on mount or resize, not continuously;
+- prefer one displacement pass and keep chromatic aberration off by default;
+- refresh the filter id only when the displacement map is regenerated; never churn it per frame;
+- preserve an opaque reduced-transparency fallback;
+- keep meaningful text outside the warped clone;
+- never stack a refractive lens inside another glass surface.
+
 ## Implementation boundary
 
-The web product uses CSS material approximations for performance and broad compatibility. The user-supplied 1440×1440 motion prompt describes a WebGL2 rendering approach for motion artwork; LUMA does not need to reproduce that renderer in every application surface to preserve the design principles.
+The web product uses CSS material approximations for most application surfaces and bounded SVG displacement only for deliberately small showcase lenses. The user-supplied 1440×1440 motion prompt describes a WebGL2 rendering approach for motion artwork; LUMA does not need to reproduce that renderer in every application surface to preserve the design principles.

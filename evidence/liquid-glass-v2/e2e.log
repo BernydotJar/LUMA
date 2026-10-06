@@ -1,0 +1,7 @@
+
+Running 2 tests using 2 workers
+
+  ✓  1 [chromium] › e2e/liquid-glass-v2.spec.ts:9:1 › Liquid Light renders bounded refraction without nested glass (1.4s)
+  ✓  2 [mobile] › e2e/liquid-glass-v2.spec.ts:9:1 › Liquid Light renders bounded refraction without nested glass (3.4s)
+
+  2 passed (4.2s)

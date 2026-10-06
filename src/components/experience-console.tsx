@@ -18,6 +18,7 @@ import {
   Sparkles,
   UserRoundCheck,
 } from "lucide-react";
+import { LiquidGlassPreview } from "@/components/liquid-glass-preview";
 import { SemanticObject } from "@/components/semantic-object";
 import { useLumaTheme } from "@/components/theme-provider";
 import { lumaThemes } from "@/lib/themes";
@@ -110,10 +111,12 @@ export function ExperienceConsole() {
                     height={40}
                     sizes="168px"
                   />
+                ) : item.id === "light" ? (
+                  <LiquidGlassPreview />
                 ) : (
                   <span>{item.shortLabel}</span>
                 )}
-                <i /><i /><i />
+                {item.id !== "light" ? <><i /><i /><i /></> : null}
               </div>
               <span className={styles.themeMeta}>
                 <small>{item.shortLabel}</small>

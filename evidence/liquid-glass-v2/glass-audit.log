@@ -1,0 +1,48 @@
+
+> luma-learning-intelligence@0.1.0 audit:glass
+> node scripts/glass-adversarial-audit.mjs
+
+se    desktop /learn         overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=5/10 coverage=0.43
+se    desktop /studio        overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=7/12 coverage=0.69
+se    desktop /experience    overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/12 coverage=0.24
+se    desktop /iconography   overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/5 coverage=0.24
+se    desktop /library       overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=6/15 coverage=0.86
+se    desktop /learn/experiences overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/5 coverage=0.23
+se    desktop /learn/experience/calibracion-observar-antes-de-interpretar overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/5 coverage=0.23
+se    mobile  /learn         overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=5/8 coverage=0.51
+se    mobile  /studio        overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=7/10 coverage=0.37
+se    mobile  /experience    overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/10 coverage=0.19
+se    mobile  /iconography   overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/3 coverage=0.19
+se    mobile  /library       overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=6/13 coverage=1.07
+se    mobile  /learn/experiences overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/3 coverage=0.19
+se    mobile  /learn/experience/calibracion-observar-antes-de-interpretar overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/3 coverage=0.19
+light desktop /learn         overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=5/10 coverage=0.43
+light desktop /studio        overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=7/12 coverage=0.69
+light desktop /experience    overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/12 coverage=0.24
+light desktop /iconography   overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/5 coverage=0.24
+light desktop /library       overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=6/15 coverage=0.86
+light desktop /learn/experiences overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/5 coverage=0.23
+light desktop /learn/experience/calibracion-observar-antes-de-interpretar overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/5 coverage=0.23
+light mobile  /learn         overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=5/8 coverage=0.51
+light mobile  /studio        overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=7/10 coverage=0.37
+light mobile  /experience    overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/10 coverage=0.19
+light mobile  /iconography   overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/3 coverage=0.19
+light mobile  /library       overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=6/13 coverage=1.07
+light mobile  /learn/experiences overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/3 coverage=0.19
+light mobile  /learn/experience/calibracion-observar-antes-de-interpretar overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/3 coverage=0.19
+dark  desktop /learn         overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=5/10 coverage=0.43
+dark  desktop /studio        overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=7/12 coverage=0.69
+dark  desktop /experience    overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/12 coverage=0.24
+dark  desktop /iconography   overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/5 coverage=0.24
+dark  desktop /library       overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=6/15 coverage=0.86
+dark  desktop /learn/experiences overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/5 coverage=0.23
+dark  desktop /learn/experience/calibracion-observar-antes-de-interpretar overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/5 coverage=0.23
+dark  mobile  /learn         overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=5/8 coverage=0.51
+dark  mobile  /studio        overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=7/10 coverage=0.37
+dark  mobile  /experience    overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/10 coverage=0.19
+dark  mobile  /iconography   overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/3 coverage=0.19
+dark  mobile  /library       overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=6/13 coverage=1.07
+dark  mobile  /learn/experiences overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/3 coverage=0.19
+dark  mobile  /learn/experience/calibracion-observar-antes-de-interpretar overflow=0 nested=0 clip=0 out=0 motion=0 axe=0 glass=2/3 coverage=0.19
+reduced_transparency_fallback=true
+blocking_findings=0

@@ -921,6 +921,35 @@
         "firebase.json",
         "apphosting.yaml"
       ]
+    },
+    {
+      "id": "LUMA-036-liquid-glass-refraction-v2",
+      "kind": "product-surface",
+      "title": "Bounded Liquid Light refraction and lens-material v2",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-035-auth-uiux-client-release"
+      ],
+      "capability": "liquid-glass-refraction-v2",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/020-liquid-glass-refraction-v2.md",
+        "docs/design/liquid-glass-contract.md",
+        "src/app/globals.css",
+        "src/components/experience-console.tsx",
+        "src/components/experience-console.module.css",
+        "src/components/theme-provider.tsx",
+        "src/components/liquid-glass-preview.tsx",
+        "src/components/liquid-glass-preview.module.css",
+        "e2e/liquid-glass-v2.spec.ts",
+        "evidence/liquid-glass-v2/**",
+        "evidence/glass-adversarial/**",
+        "graph-harness.events.jsonl"
+      ]
     }
   ]
 }
