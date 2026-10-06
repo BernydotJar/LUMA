@@ -7,6 +7,8 @@ import { synthesizeReflectionGuide } from "@/app/actions/speech";
 import type { LearningExperience } from "@/lib/learning-content";
 import styles from "./experience-reflection.module.css";
 
+const VOICE_ENABLED = process.env.NEXT_PUBLIC_SE_VOICE_ENABLED === "true";
+
 export function ExperienceReflection({ experience }: { experience: LearningExperience }) {
   const [response, setResponse] = useState("");
   const [completed, setCompleted] = useState(false);
@@ -72,28 +74,30 @@ export function ExperienceReflection({ experience }: { experience: LearningExper
     <section className={styles.reflection} aria-labelledby="reflection-title">
       <span className="eyebrow"><Sparkles size={14} /> Cierra con evidencia propia</span>
       <h2 id="reflection-title">{experience.reflectionPrompt}</h2>
-      <div className={styles.voiceGuide}>
-        <button
-          className={styles.listenButton}
-          disabled={isAudioPending}
-          onClick={listenToGuide}
-          type="button"
-        >
-          {isAudioPending ? <LoaderCircle className={styles.spinner} size={15} /> : <Volume2 size={15} />}
-          {isAudioPending ? "Preparando audio…" : audioSrc ? "Generar de nuevo" : "Escuchar guía"}
-        </button>
-        {audioSrc && (
-          <audio
-            aria-label="Guía de audio de la reflexión"
-            className={styles.audioPlayer}
-            controls
-            autoPlay
-            preload="metadata"
-            src={audioSrc}
-          />
-        )}
-        {audioError && <p className={styles.audioError} role="status">{audioError}</p>}
-      </div>
+      {VOICE_ENABLED && (
+        <div className={styles.voiceGuide}>
+          <button
+            className={styles.listenButton}
+            disabled={isAudioPending}
+            onClick={listenToGuide}
+            type="button"
+          >
+            {isAudioPending ? <LoaderCircle className={styles.spinner} size={15} /> : <Volume2 size={15} />}
+            {isAudioPending ? "Preparando audio…" : audioSrc ? "Generar de nuevo" : "Escuchar guía"}
+          </button>
+          {audioSrc && (
+            <audio
+              aria-label="Guía de audio de la reflexión"
+              className={styles.audioPlayer}
+              controls
+              autoPlay
+              preload="metadata"
+              src={audioSrc}
+            />
+          )}
+          {audioError && <p className={styles.audioError} role="status">{audioError}</p>}
+        </div>
+      )}
       <textarea
         aria-label="Tu reflexión"
         onChange={(event) => setResponse(event.target.value)}
