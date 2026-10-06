@@ -921,6 +921,120 @@
         "firebase.json",
         "apphosting.yaml"
       ]
+    },
+    {
+      "id": "LUMA-036-adaptive-next-best-action",
+      "kind": "product-capability",
+      "title": "Evidence-driven adaptive Next Best Action with canonical learner differentiation",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-035-auth-uiux-client-release"
+      ],
+      "capability": "adaptive-learning-intelligence",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/learn/**",
+        "src/components/adaptive-learning-home*",
+        "src/components/next-action-card*",
+        "src/components/onboarding-experience*",
+        "src/components/practice-session*",
+        "src/lib/learner-projection*",
+        "src/lib/learning-engine*",
+        "src/lib/luma-data.ts",
+        "src/types/learning.ts",
+        "e2e/adaptive-loop.spec.ts",
+        "evidence/po-cx-adaptive-loop/**"
+      ]
+    },
+    {
+      "id": "LUMA-037-persistent-learning-twin",
+      "kind": "product-capability",
+      "title": "Firestore-backed persistent learner state and append-only evidence ledger",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-036-adaptive-next-best-action"
+      ],
+      "capability": "persistent-learning-twin",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "package.json",
+        "package-lock.json",
+        "firebase.json",
+        "firestore.rules",
+        "src/app/api/learning/**",
+        "src/lib/firebase-admin.ts",
+        "src/lib/learning-api-client.ts",
+        "src/lib/learning-server.ts",
+        "src/lib/learning-store*",
+        "src/lib/persistent-learning*",
+        "src/lib/learner-projection.ts",
+        "src/components/adaptive-learning-home.tsx",
+        "src/components/onboarding-experience.tsx",
+        "src/components/practice-session.tsx",
+        "scripts/persistent-api-emulator-smoke.sh",
+        "evidence/persistent-twin/**"
+      ]
+    },
+    {
+      "id": "LUMA-038-theme-hydration-hygiene",
+      "kind": "verification",
+      "title": "Deterministic theme hydration across server and persisted client themes",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-037-persistent-learning-twin"
+      ],
+      "capability": "runtime-hydration-hygiene",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/components/theme-provider.tsx",
+        "src/components/theme-bootstrap.tsx",
+        "src/components/brand-mark.tsx",
+        "e2e/showcase.spec.ts",
+        "evidence/persistent-twin/**"
+      ]
+    },
+    {
+      "id": "LUMA-039-persistent-twin-release",
+      "kind": "release",
+      "title": "Persistent Learning Twin code release with adversarial and integration gates",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-036-adaptive-next-best-action",
+        "LUMA-037-persistent-learning-twin",
+        "LUMA-038-theme-hydration-hygiene"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "scripts/**",
+        "evidence/**",
+        "e2e/**",
+        "firebase.json",
+        "firestore.rules",
+        "package.json",
+        "package-lock.json"
+      ]
     }
   ]
 }

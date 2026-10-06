@@ -1,0 +1,22 @@
+
+Running 17 tests using 1 worker
+
+  ✓   1 [chromium] › e2e/showcase.spec.ts:10:3 › LUMA product showcase › showcase root enters the learner product immediately (972ms)
+  ✓   2 [chromium] › e2e/showcase.spec.ts:17:3 › LUMA product showcase › onboarding calibrates a learner and enters the journey (1.2s)
+  ✓   3 [chromium] › e2e/showcase.spec.ts:38:3 › LUMA product showcase › coachee navigation keeps internal intelligence out of the learning surface (694ms)
+  ✓   4 [chromium] › e2e/showcase.spec.ts:50:3 › LUMA product showcase › legacy Twin route opens the coach intelligence view (785ms)
+  ✓   5 [chromium] › e2e/showcase.spec.ts:56:3 › LUMA product showcase › coach view exposes proprietary Learning Twin evidence (556ms)
+  ✓   6 [chromium] › e2e/showcase.spec.ts:64:3 › LUMA product showcase › learner can inspect recommendation and ask the grounded tutor (1.8s)
+  ✓   7 [chromium] › e2e/showcase.spec.ts:75:3 › LUMA product showcase › tutor blocks unsupported high-stakes course claims (2.8s)
+  ✓   8 [chromium] › e2e/showcase.spec.ts:87:3 › LUMA product showcase › curriculum reflection creates a reviewable artifact without updating learner state (1.7s)
+  ✓   9 [chromium] › e2e/showcase.spec.ts:105:3 › LUMA product showcase › practice produces a real evidence receipt (1.2s)
+  ✓  10 [chromium] › e2e/showcase.spec.ts:121:3 › LUMA product showcase › superuser can compare roles and persist a visual theme (1.8s)
+  ✓  11 [chromium] › e2e/showcase.spec.ts:147:3 › LUMA product showcase › superuser review lab exposes real gated assets without leaking private source locators (862ms)
+  ✓  12 [chromium] › e2e/showcase.spec.ts:168:3 › LUMA product showcase › adult progress is expressed as capability, transfer and next demonstration (757ms)
+  ✓  13 [chromium] › e2e/showcase.spec.ts:180:3 › LUMA product showcase › iconography catalog changes material while preserving semantics (733ms)
+  ✓  14 [chromium] › e2e/showcase.spec.ts:190:3 › LUMA product showcase › premium semantic objects appear in the intended product moments (1.0s)
+  ✓  15 [chromium] › e2e/showcase.spec.ts:200:3 › LUMA product showcase › Content Intelligence leads with transformation, not the AI operating model (835ms)
+  ✓  16 [chromium] › e2e/showcase.spec.ts:211:3 › LUMA product showcase › studio lets an instructor assign human intervention (725ms)
+  ✓  17 [chromium] › e2e/showcase.spec.ts:219:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks (9.6s)
+
+  17 passed (31.6s)

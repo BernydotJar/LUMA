@@ -1,0 +1,9 @@
+
+Running 4 tests using 4 workers
+
+  ✓  1 [chromium] › e2e/adaptive-loop.spec.ts:37:3 › LUMA adaptive learning loop › canonical learner states receive materially different next actions (4.9s)
+  ✓  4 [chromium] › e2e/adaptive-loop.spec.ts:77:3 › LUMA adaptive learning loop › successful practice evidence changes the next best action (5.7s)
+  ✓  2 [mobile] › e2e/adaptive-loop.spec.ts:77:3 › LUMA adaptive learning loop › successful practice evidence changes the next best action (6.7s)
+  ✓  3 [mobile] › e2e/adaptive-loop.spec.ts:37:3 › LUMA adaptive learning loop › canonical learner states receive materially different next actions (6.9s)
+
+  4 passed (11.8s)

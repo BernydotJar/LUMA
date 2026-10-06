@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import {
   ArrowRight,
   CalendarDays,
@@ -19,10 +19,16 @@ import { ModuleCoverFlow } from "@/components/module-cover-flow";
 import { NextActionCard } from "@/components/next-action-card";
 import { ProgressStory } from "@/components/progress-story";
 import { TutorPanel } from "@/components/tutor-panel";
+import { useLumaAuth } from "@/components/auth-provider";
+import {
+  fetchPersistentLearningPlan,
+  syncPendingLearningEvent,
+} from "@/lib/learning-api-client";
 import {
   createAdaptiveLearningPlan,
   parseStoredLearningEvent,
   parseStoredOnboarding,
+  type AdaptiveLearningPlan,
 } from "@/lib/learner-projection";
 import styles from "@/app/learn/learn.module.css";
 
@@ -45,19 +51,44 @@ function getServerLearningStorageSnapshot() {
 }
 
 export function AdaptiveLearningHome() {
+  const { user, loading } = useLumaAuth();
+  const [remotePlan, setRemotePlan] = useState<{ uid: string; plan: AdaptiveLearningPlan } | null>(null);
   const storageSnapshot = useSyncExternalStore(
     subscribeToLearningStorage,
     getLearningStorageSnapshot,
     getServerLearningStorageSnapshot,
   );
 
-  const plan = useMemo(() => {
+  const localPlan = useMemo(() => {
     const [onboardingRaw, eventRaw] = JSON.parse(storageSnapshot) as [string | null, string | null];
     const onboarding = parseStoredOnboarding(onboardingRaw);
     const event = parseStoredLearningEvent(eventRaw);
     return createAdaptiveLearningPlan(onboarding, event);
   }, [storageSnapshot]);
 
+  useEffect(() => {
+    const uid = user?.uid;
+    if (loading || !uid) return;
+
+    let cancelled = false;
+    void (async () => {
+      try {
+        const flushedPlan = await syncPendingLearningEvent();
+        const persistentPlan = flushedPlan ?? (await fetchPersistentLearningPlan());
+        if (!cancelled && persistentPlan) {
+          setRemotePlan({ uid, plan: persistentPlan });
+        }
+      } catch {
+        // The authenticated learner can continue from the local projection if persistence is temporarily unavailable.
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [loading, user?.uid]);
+
+  const plan = remotePlan && remotePlan.uid === user?.uid ? remotePlan.plan : localPlan;
   const actionHref = plan.nextAction.href ?? "/learn/experiences";
   const routeChangeCopy =
     plan.routeChanged && plan.previousAction
@@ -113,9 +144,7 @@ export function AdaptiveLearningHome() {
       </div>
 
       <ProgressStory />
-
       <ExperienceShelf />
-
       <ModuleCoverFlow compact />
 
       <section className={styles.proofStrip} aria-label="Cómo se adapta tu ruta">

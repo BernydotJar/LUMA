@@ -4,9 +4,8 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
 } from "react";
 import {
   defaultLumaTheme,
@@ -21,36 +20,60 @@ type ThemeContextValue = {
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
+const LUMA_THEME_CHANGE_EVENT = "luma-theme-change";
 
-function readInitialTheme(): LumaThemeId {
-  if (typeof document === "undefined") return defaultLumaTheme;
+function readBrowserTheme(): LumaThemeId {
   const htmlTheme = document.documentElement.dataset.theme;
   if (isLumaTheme(htmlTheme)) return htmlTheme;
+
   try {
     const stored = window.localStorage.getItem(LUMA_THEME_STORAGE_KEY);
     if (isLumaTheme(stored)) return stored;
   } catch {
     // Local storage can be unavailable in hardened browser contexts.
   }
+
+  return defaultLumaTheme;
+}
+
+function subscribeToTheme(callback: () => void) {
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === LUMA_THEME_STORAGE_KEY) callback();
+  };
+
+  window.addEventListener("storage", onStorage);
+  window.addEventListener(LUMA_THEME_CHANGE_EVENT, callback);
+
+  return () => {
+    window.removeEventListener("storage", onStorage);
+    window.removeEventListener(LUMA_THEME_CHANGE_EVENT, callback);
+  };
+}
+
+function getThemeSnapshot(): LumaThemeId {
+  return readBrowserTheme();
+}
+
+function getServerThemeSnapshot(): LumaThemeId {
   return defaultLumaTheme;
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<LumaThemeId>(readInitialTheme);
+  const theme = useSyncExternalStore(
+    subscribeToTheme,
+    getThemeSnapshot,
+    getServerThemeSnapshot,
+  );
 
   const setTheme = useCallback((nextTheme: LumaThemeId) => {
-    setThemeState(nextTheme);
     document.documentElement.dataset.theme = nextTheme;
     try {
       window.localStorage.setItem(LUMA_THEME_STORAGE_KEY, nextTheme);
     } catch {
       // The theme still applies for the current page when storage is blocked.
     }
+    window.dispatchEvent(new Event(LUMA_THEME_CHANGE_EVENT));
   }, []);
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-  }, [theme]);
 
   const value = useMemo(() => ({ theme, setTheme }), [theme, setTheme]);
 

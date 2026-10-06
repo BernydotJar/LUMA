@@ -15,6 +15,7 @@ import {
   Sparkles,
   Target,
 } from "lucide-react";
+import { appendPersistentLearningEvent, hasPersistentLearningSession } from "@/lib/learning-api-client";
 import { moduleThreeSource } from "@/lib/luma-data";
 import styles from "./practice-session.module.css";
 
@@ -53,6 +54,8 @@ export function PracticeSession() {
   const [answers, setAnswers] = useState<AnswerState>({});
   const [attempted, setAttempted] = useState<Record<string, number>>({});
   const [completed, setCompleted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [syncState, setSyncState] = useState<"local" | "synced" | "pending">("local");
   const current = steps[step];
   const selected = answers[current.id as keyof AnswerState];
   const selectedChoice = choices[current.id as keyof typeof choices].find((item) => item.id === selected);
@@ -63,22 +66,45 @@ export function PracticeSession() {
     setAttempted((currentAttempts) => ({ ...currentAttempts, [current.id]: (currentAttempts[current.id] ?? 0) + 1 }));
   };
 
-  const continueSession = () => {
-    if (!selectedChoice?.correct) return;
+  const continueSession = async () => {
+    if (!selectedChoice?.correct || submitting) return;
     if (step < steps.length - 1) {
       setStep((currentStep) => currentStep + 1);
       return;
     }
+
+    setSubmitting(true);
+    const eventId = crypto.randomUUID();
     const event = {
+      eventId,
       type: "SIMULATION_COMPLETED",
       conceptId: "pas",
       correctCount,
+      answers,
       attempts: attempted,
       completedAt: new Date().toISOString(),
       sourceId: moduleThreeSource.id,
     };
     window.localStorage.setItem("luma-latest-learning-event", JSON.stringify(event));
+
+    if (hasPersistentLearningSession()) {
+      window.localStorage.setItem(
+        "luma-pending-learning-event",
+        JSON.stringify({ eventId, event }),
+      );
+      try {
+        const plan = await appendPersistentLearningEvent(eventId, event);
+        if (plan) {
+          window.localStorage.removeItem("luma-pending-learning-event");
+          setSyncState("synced");
+        }
+      } catch {
+        setSyncState("pending");
+      }
+    }
+
     setCompleted(true);
+    setSubmitting(false);
   };
 
   const reset = () => {
@@ -86,6 +112,8 @@ export function PracticeSession() {
     setAnswers({});
     setAttempted({});
     setCompleted(false);
+    setSubmitting(false);
+    setSyncState("local");
   };
 
   if (completed) {
@@ -107,7 +135,7 @@ export function PracticeSession() {
             <Link className="button-primary" href="/learn">Volver a mi ruta <ArrowRight size={17} /></Link>
             <button className="button-secondary" type="button" onClick={reset}><RotateCcw size={16} /> Repetir con este caso</button>
           </div>
-          <p className={styles.receiptNote}>La siguiente comprobación será diferida para confirmar retención y aplicación.</p>
+          <p className={styles.receiptNote}>{syncState === "synced" ? "Evidencia sincronizada con tu perfil persistente. " : syncState === "pending" ? "La evidencia quedó pendiente de sincronización y LUMA volverá a intentarlo al regresar a tu ruta. " : ""}La siguiente comprobación será diferida para confirmar retención y aplicación.</p>
         </section>
       </main>
     );
@@ -162,7 +190,7 @@ export function PracticeSession() {
             )}
             <div className={styles.questionFooter}>
               <button className="button-ghost" type="button" disabled={step === 0} onClick={() => setStep((currentStep) => Math.max(0, currentStep - 1))}><ArrowLeft size={16} /> Anterior</button>
-              <button className="button-primary" type="button" disabled={!selectedChoice?.correct} onClick={continueSession}>{step === 2 ? "Registrar evidencia" : "Continuar"} <ArrowRight size={16} /></button>
+              <button className="button-primary" type="button" disabled={!selectedChoice?.correct} onClick={() => void continueSession()}>{step === 2 ? (submitting ? "Registrando…" : "Registrar evidencia") : "Continuar"} <ArrowRight size={16} /></button>
             </div>
           </section>
         </section>

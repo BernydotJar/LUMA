@@ -1,0 +1,31 @@
+{
+  "graph": "LUMA-PERSISTENT-TWIN-01",
+  "baseRemoteCommit": "427e46229df2c7381ff677c0cc0209ef724b0c67",
+  "gates": {
+    "verify": "PASS",
+    "unit": "25 passed; emulator-only tests excluded from standard run",
+    "firestoreEmulator": "2/2 PASS",
+    "authenticatedApiSmoke": "PASS",
+    "adaptiveE2E": "4/4 PASS desktop+mobile",
+    "showcaseE2E": "17/17 PASS Chromium including WCAG",
+    "productionAudit": "0 vulnerabilities",
+    "themeHydration": "PASS"
+  },
+  "proven": [
+    "Firebase ID-token authenticated learner persistence",
+    "Firestore materialized learner state keyed by verified UID",
+    "append-only event document per eventId",
+    "idempotent event replay",
+    "two authenticated learner identities isolated",
+    "server-derived assessment score from raw answers",
+    "evidence changes persisted Next Best Action",
+    "guest/local deterministic fallback",
+    "pending-event retry",
+    "deny-all direct Firestore client rules"
+  ],
+  "boundaries": [
+    "Coach Studio still reads showcase intelligence, not the authenticated learner collection",
+    "Production Firestore rules have not yet been deployed by this code-only release",
+    "Current verified event rubric covers the P.A.S. scored simulation; future assessment types need server rubrics"
+  ]
+}
