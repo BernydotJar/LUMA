@@ -1,11 +1,11 @@
-import { rankLearningActions } from "@/lib/learning-engine";
+import { rankLearningActions } from "./learning-engine";
 import type {
   JourneyStep,
   LearnerState,
   LearningAction,
   StudioSignal,
   TwinDimension,
-} from "@/types/learning";
+} from "../types/learning";
 
 export const moduleThreeSource = {
   id: "1OwHgWtDXC_AzkU31f6a7tuoHWHl0gv5V",
@@ -64,6 +64,20 @@ export const learnerState: LearnerState = {
 
 export const learningActions: LearningAction[] = [
   {
+    id: "pas-quick-practice",
+    kind: "practice",
+    conceptId: "pas",
+    title: "Distingue evento, pensamiento y emoción",
+    description:
+      "Haz una práctica breve para separar lo que ocurrió de la interpretación automática y la emoción que apareció.",
+    minutes: 7,
+    sourceLabel: "Módulo 3 · Comunicación emocional y P.A.S.",
+    sourceUrl: moduleThreeSource.url,
+    targetMastery: 0.72,
+    prerequisiteIds: ["emotional-communication"],
+    href: "/learn/experience/pas-detectar-y-reformular",
+  },
+  {
     id: "pas-guided-practice",
     kind: "practice",
     conceptId: "pas",
@@ -75,6 +89,35 @@ export const learningActions: LearningAction[] = [
     sourceUrl: moduleThreeSource.url,
     targetMastery: 0.78,
     prerequisiteIds: ["emotional-communication"],
+    href: "/learn/session/pas",
+  },
+  {
+    id: "pas-to-beliefs",
+    kind: "continue",
+    conceptId: "pas",
+    title: "Lleva la distinción a una creencia real",
+    description:
+      "La evidencia de P.A.S. ya permite avanzar: ahora separa hechos, interpretación y una regla personal que quieras comprobar.",
+    minutes: 10,
+    sourceLabel: "Módulo 3 · Creencias y mapas mentales",
+    sourceUrl: moduleThreeSource.url,
+    targetMastery: 0.9,
+    prerequisiteIds: ["emotional-communication"],
+    href: "/learn/experience/creencias-evidencia-e-interpretacion",
+  },
+  {
+    id: "communication-congruence-practice",
+    kind: "practice",
+    conceptId: "emotional-communication",
+    title: "Practica congruencia en tres canales",
+    description:
+      "Alinea palabras, cuerpo y voz en una conversación concreta para comprobar si tu intención se entiende con claridad.",
+    minutes: 8,
+    sourceLabel: "Practitioner · Comunicación Emocional",
+    sourceUrl: moduleThreeSource.url,
+    targetMastery: 0.76,
+    prerequisiteIds: [],
+    href: "/learn/experience/congruencia-tres-canales",
   },
   {
     id: "beliefs-mini-simulation",
@@ -88,6 +131,7 @@ export const learningActions: LearningAction[] = [
     sourceUrl: moduleThreeSource.url,
     targetMastery: 0.75,
     prerequisiteIds: ["pas", "logical-levels"],
+    href: "/learn/experience/creencias-evidencia-e-interpretacion",
   },
   {
     id: "logical-levels-review",
@@ -101,6 +145,7 @@ export const learningActions: LearningAction[] = [
     sourceUrl: moduleThreeSource.url,
     targetMastery: 0.76,
     prerequisiteIds: ["emotional-communication"],
+    href: "/learn/experience/niveles-logicos-donde-intervenir",
   },
   {
     id: "emotions-advance",
@@ -113,6 +158,7 @@ export const learningActions: LearningAction[] = [
     sourceUrl: moduleThreeSource.url,
     targetMastery: 0.8,
     prerequisiteIds: [],
+    href: "/learn/experience/niveles-logicos-donde-intervenir",
   },
 ];
 

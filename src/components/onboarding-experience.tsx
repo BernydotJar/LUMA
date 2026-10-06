@@ -14,6 +14,7 @@ import {
   Target,
 } from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
+import { createAdaptiveLearningPlan } from "@/lib/learner-projection";
 import styles from "./onboarding-experience.module.css";
 
 const goals = [
@@ -34,10 +35,22 @@ export function OnboardingExperience() {
 
   const selectedGoal = useMemo(() => goals.find((item) => item.id === goal) ?? goals[1], [goal]);
   const canContinue = step !== 1 || diagnostic !== null;
+  const previewPlan = useMemo(
+    () =>
+      createAdaptiveLearningPlan({
+        goal,
+        diagnostic,
+        confidence,
+        minutes,
+        createdAt: "preview",
+      }),
+    [goal, diagnostic, confidence, minutes],
+  );
 
   const finish = () => {
     const state = { goal, diagnostic, confidence, minutes, createdAt: new Date().toISOString() };
     window.localStorage.setItem("luma-onboarding", JSON.stringify(state));
+    window.localStorage.removeItem("luma-latest-learning-event");
     router.push("/learn");
   };
 
@@ -148,7 +161,7 @@ export function OnboardingExperience() {
                 <div><span>Señal diagnóstica</span><strong>{diagnostic === "b" ? "Reconocimiento correcto" : "Práctica recomendada"}</strong></div>
                 <div><span>Confianza reportada</span><strong>{confidence}/5</strong></div>
                 <div><span>Formato recomendado</span><strong>Sesiones de {minutes} min</strong></div>
-                <div className={styles.firstAction}><Sparkles size={18} /><span><small>Primera acción sugerida</small><strong>Detectar un P.A.S. en una situación real</strong></span></div>
+                <div className={styles.firstAction}><Sparkles size={18} /><span><small>Primera acción sugerida</small><strong>{previewPlan.nextAction.title}</strong></span></div>
               </div>
             </div>
           )}

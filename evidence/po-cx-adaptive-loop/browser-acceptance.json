@@ -1,0 +1,77 @@
+{
+  "generatedAt": "2026-10-05T15:41:20.083Z",
+  "desktop": {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "learnerA": {
+      "action": "Distingue evento, pensamiento y emoción",
+      "actionHref": "/learn/experience/pas-detectar-y-reformular",
+      "session": "Tienes 8 minutos",
+      "routeChanged": false,
+      "routeChangeText": null
+    },
+    "learnerB": {
+      "action": "Practica congruencia en tres canales",
+      "actionHref": "/learn/experience/congruencia-tres-canales",
+      "session": "Tienes 35 minutos",
+      "routeChanged": false,
+      "routeChangeText": null
+    },
+    "beforeEvidence": {
+      "action": "Detecta un P.A.S. en una situación real",
+      "actionHref": "/learn/session/pas",
+      "session": "Tienes 12 minutos",
+      "routeChanged": false,
+      "routeChangeText": null
+    },
+    "afterEvidence": {
+      "action": "Lleva la distinción a una creencia real",
+      "actionHref": "/learn/experience/creencias-evidencia-e-interpretacion",
+      "session": "Tienes 12 minutos",
+      "routeChanged": true,
+      "routeChangeText": "Tu ruta cambió con la evidenciaDetecta un P.A.S. en una situación real → Lleva la distinción a una creencia realYa no necesitas repetir la misma práctica. LUMA volvió a priorizar tu siguiente demostración."
+    },
+    "sameActionAB": false,
+    "actionChangedAfterEvidence": true,
+    "consoleErrors": []
+  },
+  "mobile": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "learnerA": {
+      "action": "Distingue evento, pensamiento y emoción",
+      "actionHref": "/learn/experience/pas-detectar-y-reformular",
+      "session": "Tienes 8 minutos",
+      "routeChanged": false,
+      "routeChangeText": null
+    },
+    "learnerB": {
+      "action": "Practica congruencia en tres canales",
+      "actionHref": "/learn/experience/congruencia-tres-canales",
+      "session": "Tienes 35 minutos",
+      "routeChanged": false,
+      "routeChangeText": null
+    },
+    "beforeEvidence": {
+      "action": "Detecta un P.A.S. en una situación real",
+      "actionHref": "/learn/session/pas",
+      "session": "Tienes 12 minutos",
+      "routeChanged": false,
+      "routeChangeText": null
+    },
+    "afterEvidence": {
+      "action": "Lleva la distinción a una creencia real",
+      "actionHref": "/learn/experience/creencias-evidencia-e-interpretacion",
+      "session": "Tienes 12 minutos",
+      "routeChanged": true,
+      "routeChangeText": "Tu ruta cambió con la evidenciaDetecta un P.A.S. en una situación real → Lleva la distinción a una creencia realYa no necesitas repetir la misma práctica. LUMA volvió a priorizar tu siguiente demostración."
+    },
+    "sameActionAB": false,
+    "actionChangedAfterEvidence": true,
+    "consoleErrors": []
+  }
+}

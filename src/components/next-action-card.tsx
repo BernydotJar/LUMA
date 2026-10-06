@@ -17,6 +17,17 @@ import styles from "./learner-components.module.css";
 
 export function NextActionCard({ action }: { action: RankedLearningAction }) {
   const [showReason, setShowReason] = useState(false);
+  const actionHref = action.href ?? "/learn/experiences";
+  const actionKindLabel =
+    action.kind === "continue"
+      ? "Siguiente reto"
+      : action.kind === "review"
+        ? "Refuerzo recomendado"
+        : action.kind === "diagnostic"
+          ? "Comprobación breve"
+          : action.kind === "simulation"
+            ? "Simulación"
+            : "Práctica guiada";
 
   return (
     <section className={`${styles.nextAction} glass`} aria-labelledby="next-action-title">
@@ -34,20 +45,20 @@ export function NextActionCard({ action }: { action: RankedLearningAction }) {
           <SemanticObject variant="prism" size="md" />
         </span>
         <div>
-          <p className={styles.kicker}>Práctica guiada · aplicación real</p>
+          <p className={styles.kicker}>{actionKindLabel} · aplicación real</p>
           <h2 id="next-action-title">{action.title}</h2>
           <p className={styles.actionDescription}>{action.description}</p>
         </div>
       </div>
 
       <div className={styles.actionReasonStrip}>
-        <span><Check size={15} /> Prerrequisito demostrado</span>
-        <span><Check size={15} /> Base conceptual lista</span>
+        <span><Check size={15} /> Alineado con tu objetivo</span>
+        <span><Check size={15} /> {Math.round(action.confidence * 100)}% de confianza de recomendación</span>
         <span><Check size={15} /> Cabe en tus {action.minutes} minutos</span>
       </div>
 
       <div className={styles.nextActionFooter}>
-        <Link className="button-primary" href="/learn/session/pas">
+        <Link className="button-primary" href={actionHref}>
           Continuar · {action.minutes} min <ArrowRight size={17} />
         </Link>
         <button
@@ -71,12 +82,12 @@ export function NextActionCard({ action }: { action: RankedLearningAction }) {
             <p>{action.reason}</p>
           </div>
           <dl>
-            <div><dt>Señal</dt><dd>En dos intentos recientes, una pista ayudó a convertir reconocimiento en aplicación.</dd></div>
-            <div><dt>Lectura</dt><dd>El concepto está reconocido y la transferencia práctica está en desarrollo.</dd></div>
-            <div><dt>Siguiente señal</dt><dd>Resolver este caso con autonomía abre el siguiente tramo: creencias.</dd></div>
+            <div><dt>Señal</dt><dd>{action.reason}</dd></div>
+            <div><dt>Lectura</dt><dd>LUMA priorizó esta acción frente a las alternativas que compiten por tu tiempo disponible.</dd></div>
+            <div><dt>Siguiente señal</dt><dd>Tu resultado volverá a ordenar la ruta; completar contenido por sí solo no equivale a dominio.</dd></div>
           </dl>
           <div className={styles.explanationFooter}>
-            <p className={styles.inferenceNote}>Hipótesis de aprendizaje: 68% de confianza. Se actualiza con cada nueva señal.</p>
+            <p className={styles.inferenceNote}>Hipótesis de aprendizaje: {Math.round(action.confidence * 100)}% de confianza. Se actualiza con cada nueva señal.</p>
             <a href={action.sourceUrl} target="_blank" rel="noreferrer">
               <BookOpenCheck size={14} /> Ver fuente <ExternalLink size={12} />
             </a>

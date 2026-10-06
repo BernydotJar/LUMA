@@ -153,6 +153,43 @@
   align-items: stretch;
 }
 
+.routeChange {
+  margin-top: 16px;
+  padding: 18px 22px;
+  border: 1px solid rgba(91,55,39,.1);
+  border-radius: 24px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.routeChange > svg {
+  color: #a94735;
+}
+
+.routeChange span {
+  display: block;
+  color: #875843;
+  font-size: .62rem;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.routeChange strong {
+  display: block;
+  margin-top: 4px;
+  font-size: .88rem;
+}
+
+.routeChange p {
+  margin-top: 4px;
+  color: #806a59;
+  font-size: .7rem;
+  line-height: 1.45;
+}
+
 .proofStrip {
   margin-top: 16px;
   padding: 10px;

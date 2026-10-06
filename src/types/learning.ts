@@ -41,6 +41,7 @@ export interface LearnerState {
   learnerId: string;
   goal: string;
   availableMinutes: number;
+  focusConceptIds?: string[];
   concepts: LearnerConceptState[];
 }
 
@@ -55,6 +56,7 @@ export interface LearningAction {
   sourceUrl: string;
   targetMastery: number;
   prerequisiteIds: string[];
+  href?: string;
 }
 
 export interface RankedLearningAction extends LearningAction {

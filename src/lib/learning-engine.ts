@@ -36,6 +36,12 @@ export function scoreLearningAction(
   const failureSignal = clamp(concept.consecutiveFailures / 3);
   const timeFit = action.minutes <= state.availableMinutes ? 1 : 0.18;
   const completionMismatch = concept.completedContent && concept.mastery < 0.65 ? 1 : 0;
+  const focusConceptIds = state.focusConceptIds ?? [];
+  const directGoalFocus = focusConceptIds.includes(action.conceptId);
+  const supportsGoalFocus = focusConceptIds.some((focusConceptId) =>
+    concepts.get(focusConceptId)?.prerequisiteIds.includes(action.conceptId),
+  );
+  const goalFocusWeight = directGoalFocus ? 1.35 : supportsGoalFocus ? 0.65 : 0;
 
   let kindWeight = 0.5;
   if (concept.consecutiveFailures >= 2) {
@@ -43,24 +49,29 @@ export function scoreLearningAction(
   } else if (concept.mastery >= 0.82) {
     kindWeight = action.kind === "continue" ? 1 : 0.22;
   } else if (concept.attempts === 0) {
-    kindWeight = action.kind === "diagnostic" ? 1 : 0.55;
+    kindWeight = action.kind === "diagnostic"
+      ? 1
+      : ["practice", "simulation"].includes(action.kind)
+        ? 0.82
+        : 0.25;
   } else if (["practice", "simulation"].includes(action.kind)) {
     kindWeight = 0.92;
   }
 
-  const prerequisitePenalty = unmetPrerequisites.length * 0.45;
+  const prerequisitePenalty = unmetPrerequisites.length * 1.15;
   const score =
     masteryGap * 3.1 +
     confidenceGap * 1.25 +
     failureSignal * 2.35 +
     completionMismatch * 1.9 +
     timeFit * 1.1 +
-    kindWeight * 1.2 -
+    kindWeight * 1.2 +
+    goalFocusWeight -
     prerequisitePenalty;
 
   let reason = `Cierra una brecha de dominio de ${Math.round(masteryGap * 100)} puntos.`;
   if (unmetPrerequisites.length > 0) {
-    reason = `Primero conviene reforzar ${unmetPrerequisites.length} prerrequisito(s).`;
+    reason = `Antes de esta acción faltan ${unmetPrerequisites.length} prerrequisito(s); LUMA prioriza la mejor alternativa disponible para cerrarlos.`;
   } else if (concept.consecutiveFailures >= 2) {
     reason = "Dos intentos recientes muestran que una práctica guiada de transferencia es el mejor siguiente paso.";
   } else if (completionMismatch) {
