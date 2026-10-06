@@ -71,3 +71,68 @@
   .footer { align-items: stretch; flex-direction: column; }
   .footer :global(.button-primary) { width: 100%; }
 }
+
+
+.voiceGuide {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.listenButton {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--line));
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: var(--muted-strong);
+  background: color-mix(in srgb, var(--bg-elevated) 84%, transparent);
+  font: inherit;
+  font-size: .59rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.listenButton:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--accent) 54%, var(--line));
+  color: var(--ink);
+}
+
+.listenButton:disabled {
+  opacity: .58;
+  cursor: progress;
+}
+
+.audioPlayer {
+  min-width: min(100%, 320px);
+  height: 40px;
+}
+
+.audioError {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--muted);
+  font-size: .58rem;
+  line-height: 1.45;
+}
+
+.spinner {
+  animation: reflectionVoiceSpin .9s linear infinite;
+}
+
+@keyframes reflectionVoiceSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 760px) {
+  .voiceGuide,
+  .audioPlayer,
+  .listenButton {
+    width: 100%;
+  }
+}
