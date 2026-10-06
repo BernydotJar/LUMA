@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "0855fbc8-c36d-468c-94fa-1bd72ffd7182",
-  "event_count": 352,
+  "last_event_id": "794324fd-6264-4373-94db-41fabde0e90d",
+  "event_count": 396,
   "ready_nodes": [],
   "nodes": [
     {
@@ -784,8 +784,101 @@
         "ff3f3c62-dad6-484f-900b-cdfb2d91b738"
       ],
       "approval_count": 0
+    },
+    {
+      "id": "LUMA-036-adaptive-next-best-action",
+      "kind": "product-capability",
+      "title": "Evidence-driven adaptive Next Best Action with canonical learner differentiation",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-035-auth-uiux-client-release"
+      ],
+      "capability": "adaptive-learning-intelligence",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "07fe10f8-e9ef-47c4-8a2a-52968ced2afd",
+        "0ea1414c-8285-469c-a596-9313e65411bc",
+        "50fb7750-f49b-42a2-aecd-1f49da1d14da",
+        "608bf2cd-48b6-4df2-a53a-e8eb30d579a5",
+        "e99501c5-bcab-40a4-83e6-808b47b7f642"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-037-persistent-learning-twin",
+      "kind": "product-capability",
+      "title": "Firestore-backed persistent learner state and append-only evidence ledger",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-036-adaptive-next-best-action"
+      ],
+      "capability": "persistent-learning-twin",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "6ec4f4c4-62dc-4979-8e58-0a03c9b38b72",
+        "a1918e6d-455d-45a8-bf73-a80e6eeaafeb",
+        "afa234b0-12dd-4949-a5c7-0c5f49a3eeee",
+        "aff71faa-5998-4225-89fb-ec99b7b688ee",
+        "b31caeef-0c7d-4003-b5b5-efa541033fdd",
+        "bdba45a3-657b-447e-98ff-261a1e1a894b"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-038-theme-hydration-hygiene",
+      "kind": "verification",
+      "title": "Deterministic theme hydration across server and persisted client themes",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-037-persistent-learning-twin"
+      ],
+      "capability": "runtime-hydration-hygiene",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "00d44320-b646-4cdf-bda1-f91367b8b4cd",
+        "aad28072-a25a-40b5-b020-e86aaa8b5e72"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-039-persistent-twin-release",
+      "kind": "release",
+      "title": "Persistent Learning Twin code release with adversarial and integration gates",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-036-adaptive-next-best-action",
+        "LUMA-037-persistent-learning-twin",
+        "LUMA-038-theme-hydration-hygiene"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "08cd4edb-70da-4110-837c-769262b58e3e",
+        "22d1b904-817a-4dfa-b7c9-821842d1a298",
+        "26510ea7-9eae-410d-aeb0-23bb9f251d60",
+        "592427a2-c423-4136-9b83-cffe47311381",
+        "6c06f1d6-7a03-4431-ac3d-91fca57a32b1",
+        "83e1ebe3-60c2-4ce1-afa1-97381d334388",
+        "87a96285-4523-42d2-9a35-8de2c2f43466",
+        "e482695c-b988-44d5-9242-12cd076e0fb2",
+        "ea4506c6-e73c-49c8-9225-f7d632c6261a"
+      ],
+      "approval_count": 0
     }
   ],
-  "checkpoint_count": 9,
+  "checkpoint_count": 10,
   "repair_plan_count": 0
 }
