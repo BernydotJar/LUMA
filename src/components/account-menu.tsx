@@ -29,7 +29,7 @@ export function AccountMenu({ mode }: { mode: "learner" | "studio" }) {
   }, []);
 
   if (loading) {
-    return <div className={styles.skeleton} aria-label="Cargando sesión" />;
+    return <div className={styles.skeleton} role="status" aria-label="Cargando sesión" />;
   }
 
   if (!user) {
