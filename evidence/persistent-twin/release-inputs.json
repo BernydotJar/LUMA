@@ -1,31 +1,39 @@
 {
   "graph": "LUMA-PERSISTENT-TWIN-01",
   "baseRemoteCommit": "427e46229df2c7381ff677c0cc0209ef724b0c67",
+  "producerCommit": "a5c8f6dd969379f69e9afacd80f3d357c3a3ede5",
   "gates": {
-    "verify": "PASS",
-    "unit": "25 passed; emulator-only tests excluded from standard run",
-    "firestoreEmulator": "2/2 PASS",
-    "authenticatedApiSmoke": "PASS",
+    "verify": "PASS: lint + typecheck + 27 unit tests + production build",
+    "unit": "27 passed; 2 emulator-only tests intentionally skipped in standard run",
+    "firestoreEmulator": "2/2 PASS with onboarding retry, event replay, persisted route-change, ledger and learner isolation assertions",
+    "authenticatedApiSmoke": "PASS: direct Firestore 403, unauthenticated API 401, bootstrap retry duplicate, event replay duplicate, route-change survives reload, A/B isolation, server-derived scoring",
     "adaptiveE2E": "4/4 PASS desktop+mobile",
-    "showcaseE2E": "17/17 PASS Chromium including WCAG",
+    "showcaseE2E": "17/17 PASS Chromium including automated WCAG",
     "productionAudit": "0 vulnerabilities",
-    "themeHydration": "PASS"
+    "themeHydration": "PASS: clean showcase run with no hydration warning",
+    "graniteCritic": "PASS_WITH_RISKS",
+    "graniteVerifier": "core_release_proven=true; model conservatively mislabeled code-only deployment boundary as blocker"
   },
   "proven": [
     "Firebase ID-token authenticated learner persistence",
     "Firestore materialized learner state keyed by verified UID",
     "append-only event document per eventId",
     "idempotent event replay",
+    "idempotent onboarding retry for the same journeyId",
     "two authenticated learner identities isolated",
-    "server-derived assessment score from raw answers",
+    "server-derived assessment score from raw answers instead of client correctCount",
+    "attempt telemetry sanitized to known bounded integer fields",
     "evidence changes persisted Next Best Action",
-    "guest/local deterministic fallback",
+    "previous action persists so route-change explanation survives reload",
+    "guest/local deterministic fallback is non-authoritative for authenticated learners",
     "pending-event retry",
-    "deny-all direct Firestore client rules"
+    "deny-all direct Firestore client rules verified by HTTP 403"
   ],
   "boundaries": [
     "Coach Studio still reads showcase intelligence, not the authenticated learner collection",
     "Production Firestore rules have not yet been deployed by this code-only release",
-    "Current verified event rubric covers the P.A.S. scored simulation; future assessment types need server rubrics"
-  ]
+    "Current verified event rubric covers the P.A.S. scored simulation; future assessment types need server rubrics",
+    "Known correct answer IDs can be submitted by a determined client; this supports learning adaptation evidence, not anti-cheat certification"
+  ],
+  "decision": "PASS_WITH_RISKS_FOR_CODE_RELEASE"
 }

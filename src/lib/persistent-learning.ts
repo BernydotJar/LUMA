@@ -6,7 +6,7 @@ import {
   type StoredLearningEvent,
   type StoredOnboardingState,
 } from "./learner-projection";
-import type { LearnerState } from "../types/learning";
+import type { LearnerState, RankedLearningAction } from "../types/learning";
 
 export interface PersistedLearnerRecord {
   schemaVersion: 1;
@@ -15,19 +15,33 @@ export interface PersistedLearnerRecord {
   onboarding: StoredOnboardingState;
   state: LearnerState;
   nextActionId: string;
+  previousAction: RankedLearningAction | null;
   version: number;
   createdAt: string;
   updatedAt: string;
   lastEventId?: string;
 }
 
-
-
 const pasAnswerKey = {
   thought: "pas",
   emotion: "shame",
   reframe: "balanced",
 } as const;
+
+function normalizeAttempts(value: unknown): Record<string, number> | undefined {
+  if (!value || typeof value !== "object") return undefined;
+
+  const raw = value as Record<string, unknown>;
+  const attempts: Record<string, number> = {};
+  for (const key of Object.keys(pasAnswerKey)) {
+    const count = Number(raw[key]);
+    if (Number.isInteger(count) && count >= 0 && count <= 25) {
+      attempts[key] = count;
+    }
+  }
+
+  return Object.keys(attempts).length > 0 ? attempts : undefined;
+}
 
 export function verifyLearningEvent(value: unknown): StoredLearningEvent | undefined {
   if (!value || typeof value !== "object") return undefined;
@@ -43,17 +57,23 @@ export function verifyLearningEvent(value: unknown): StoredLearningEvent | undef
     ([key, expected]) => normalizedAnswers[key] === expected,
   ).length;
 
+  const completedAt =
+    typeof event.completedAt === "string" && event.completedAt.length <= 64
+      ? event.completedAt
+      : undefined;
+  const sourceId =
+    typeof event.sourceId === "string" && event.sourceId.length <= 256
+      ? event.sourceId
+      : undefined;
+
   return {
     type: "SIMULATION_COMPLETED",
     conceptId: "pas",
     answers: normalizedAnswers,
     correctCount,
-    attempts:
-      event.attempts && typeof event.attempts === "object"
-        ? (event.attempts as Record<string, number>)
-        : undefined,
-    completedAt: typeof event.completedAt === "string" ? event.completedAt : undefined,
-    sourceId: typeof event.sourceId === "string" ? event.sourceId : undefined,
+    attempts: normalizeAttempts(event.attempts),
+    completedAt,
+    sourceId,
   };
 }
 
@@ -83,6 +103,7 @@ export function createPersistentLearnerRecord(
       onboarding: normalizedOnboarding,
       state,
       nextActionId: plan.nextAction.id,
+      previousAction: null,
       version: 1,
       createdAt: now,
       updatedAt: now,
@@ -113,6 +134,7 @@ export function applyEventToPersistentLearner(
       ...current,
       state: nextState,
       nextActionId: plan.nextAction.id,
+      previousAction: plan.routeChanged ? previousPlan.nextAction : null,
       version: current.version + 1,
       updatedAt: now,
       lastEventId: eventId,

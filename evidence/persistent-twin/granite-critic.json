@@ -1,0 +1,32 @@
+{
+  "verdict": "PASS_WITH_RISKS",
+  "proven": [
+    "authenticated learner state is server-verified Firebase ID token",
+    "event replay is handled by Firestore transaction checks",
+    "onboarding retry is idempotent with same journeyId",
+    "server recomputes Next Best Action after evidence",
+    "client Firestore rules deny all unauthenticated requests"
+  ],
+  "findings": [
+    {
+      "severity": "MINOR",
+      "finding": "Firestore client exposure: direct Firestore client access is possible, although HTTP 403 PERMISSION_DENIED is returned, indicating potential exposure risk."
+    },
+    {
+      "severity": "MINOR",
+      "finding": "route-change persistence: previousAction is materialized, ensuring learner sees route change after reload, but no explicit evidence of persistence across sessions."
+    },
+    {
+      "severity": "MINOR",
+      "finding": "guestMode: deterministic local fallback is used, which might not be as robust as server-side validation."
+    }
+  ],
+  "remaining_boundaries": [
+    "identity isolation: while UID comes from server-verified Firebase ID token, browser cannot choose learnerId, potential bypass risk.",
+    "client-forged mastery: no explicit anti-forgery measures are in place, although correct answer IDs exist in the browser experience, this is evidence integrity for learning adaptation, not anti-cheat certification.",
+    "stale local authority: no explicit measures to handle stale local authority, although no evidence of stale data in the provided facts.",
+    "Firestore client exposure: direct Firestore client access is possible, although HTTP 403 PERMISSION_DENIED is returned, indicating potential exposure risk.",
+    "production deployment: production Firestore rules are code-verified in emulator but have not been deployed by this code-only release."
+  ],
+  "release_recommendation": "Release the code with the specified release goal, acknowledging the risks associated with Firestore client exposure and production deployment. Address these concerns in subsequent releases."
+}

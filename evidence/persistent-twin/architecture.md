@@ -64,3 +64,14 @@ Guest/demo learner:
 The learner is now backed by one durable authority, but the current Coach Studio demo still uses its existing showcase intelligence rather than this authenticated learner collection. Unifying coach and learner reads requires a role-authorized coach API/custom-claims policy and is intentionally not exposed without that authorization layer.
 
 Production Firestore rules also need to be deployed with the application release; emulator verification proves behavior but is not evidence that the production ruleset is already active.
+
+## Hardening after Producer baseline
+
+The release verifier added four durability/integrity guarantees before graph closure:
+
+- Repeating the same onboarding payload for the same `journeyId` is transactionally idempotent and does not reset learner version.
+- The materialized learner record stores the prior ranked action when evidence changes the route, so `Tu ruta cambió` survives a server round-trip and reload.
+- Attempt telemetry is reduced to known P.A.S. keys and bounded non-negative integers before it enters the ledger.
+- The authenticated API smoke directly probes Firestore without credentials and requires HTTP 403, in addition to requiring API 401 without a Firebase token.
+
+These checks strengthen the persistent source of truth without changing the deterministic learning engine.

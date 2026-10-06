@@ -13,7 +13,10 @@ function isOnboarding(value: unknown): value is StoredOnboardingState {
     Number.isInteger(input.confidence) &&
     Number(input.confidence) >= 1 &&
     Number(input.confidence) <= 5 &&
-    [8, 12, 20, 35].includes(Number(input.minutes))
+    [8, 12, 20, 35].includes(Number(input.minutes)) &&
+    typeof input.createdAt === "string" &&
+    input.createdAt.length <= 64 &&
+    !Number.isNaN(Date.parse(input.createdAt))
   );
 }
 
@@ -58,6 +61,7 @@ export async function PUT(request: Request) {
     const result = await learningStore.bootstrap(user.uid, body.onboarding);
     return NextResponse.json({
       plan: result.plan,
+      duplicate: result.duplicate,
       persistence: {
         source: "firestore",
         version: result.record.version,

@@ -4,7 +4,11 @@ import {
   createPersistentLearnerRecord,
   type PersistedLearnerRecord,
 } from "./persistent-learning";
-import { createAdaptiveLearningPlanFromState, type StoredLearningEvent, type StoredOnboardingState } from "./learner-projection";
+import {
+  createAdaptiveLearningPlanFromState,
+  type StoredLearningEvent,
+  type StoredOnboardingState,
+} from "./learner-projection";
 
 export interface LearningStoreResult {
   record: PersistedLearnerRecord;
@@ -19,30 +23,50 @@ export class FirestoreLearningStore {
     return this.firestore.collection("learners").doc(learnerId);
   }
 
+  private resultForRecord(
+    record: PersistedLearnerRecord,
+    duplicate: boolean,
+  ): LearningStoreResult {
+    return {
+      record,
+      duplicate,
+      plan: createAdaptiveLearningPlanFromState(
+        record.state,
+        record.onboarding,
+        record.previousAction ?? undefined,
+      ),
+    };
+  }
+
   async get(learnerId: string): Promise<LearningStoreResult | undefined> {
     const snapshot = await this.learnerRef(learnerId).get();
     if (!snapshot.exists) return undefined;
-
-    const record = snapshot.data() as PersistedLearnerRecord;
-    return {
-      record,
-      duplicate: false,
-      plan: createAdaptiveLearningPlanFromState(record.state, record.onboarding),
-    };
+    return this.resultForRecord(snapshot.data() as PersistedLearnerRecord, false);
   }
 
   async bootstrap(
     learnerId: string,
     onboarding: StoredOnboardingState,
   ): Promise<LearningStoreResult> {
-    const result = createPersistentLearnerRecord(learnerId, onboarding);
-    await this.learnerRef(learnerId).set(result.record);
+    const learnerRef = this.learnerRef(learnerId);
 
-    return {
-      record: result.record,
-      duplicate: false,
-      plan: result.plan,
-    };
+    return this.firestore.runTransaction(async (transaction) => {
+      const snapshot = await transaction.get(learnerRef);
+      if (snapshot.exists) {
+        const current = snapshot.data() as PersistedLearnerRecord;
+        if (onboarding.createdAt && current.journeyId === onboarding.createdAt) {
+          return this.resultForRecord(current, true);
+        }
+      }
+
+      const result = createPersistentLearnerRecord(learnerId, onboarding);
+      transaction.set(learnerRef, result.record);
+      return {
+        record: result.record,
+        duplicate: false,
+        plan: result.plan,
+      };
+    });
   }
 
   async appendEvent(
@@ -65,11 +89,7 @@ export class FirestoreLearningStore {
 
       const current = learnerSnapshot.data() as PersistedLearnerRecord;
       if (eventSnapshot.exists) {
-        return {
-          record: current,
-          duplicate: true,
-          plan: createAdaptiveLearningPlanFromState(current.state, current.onboarding),
-        };
+        return this.resultForRecord(current, true);
       }
 
       const applied = applyEventToPersistentLearner(current, eventId, event);

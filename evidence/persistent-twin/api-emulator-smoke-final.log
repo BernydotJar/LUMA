@@ -5,16 +5,19 @@ i  firestore: Firestore Emulator logging to firestore-debug.log
 ✔  firestore: Firestore Emulator UI websocket is running on 9150.
 i  Running script: ./scripts/persistent-api-emulator-smoke.sh
 {
+  "directFirestoreStatus": 403,
   "unauthenticatedStatus": 401,
   "learnerA": {
-    "uid": "EEGKRVWqMm4IdYhMwJRsNegHWkwS",
+    "uid": "eKpqfneL5meWj6uSCNk7exaoo4ZF",
     "beforeAction": "pas-guided-practice",
     "afterAction": "pas-to-beliefs",
     "version": 2,
-    "replayDuplicate": true
+    "replayDuplicate": true,
+    "bootstrapRetryDuplicate": true,
+    "routeChangeSurvivesReload": true
   },
   "learnerB": {
-    "uid": "40AlfRDiMjwUJ46rG8ANw6kE27Wa",
+    "uid": "Xv4f83aAJhnOcbNmOFv52X4wSvh8",
     "action": "communication-congruence-practice",
     "version": 1
   },

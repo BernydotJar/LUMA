@@ -18,35 +18,48 @@ describe.runIf(emulatorEnabled)("FirestoreLearningStore emulator", () => {
     if (app) await deleteApp(app);
   });
 
-  it("persists the materialized learner state and event ledger idempotently", async () => {
+  it("keeps bootstrap and event replay idempotent and preserves route change after reload", async () => {
     const learnerId = `learner-${randomUUID()}`;
     const eventId = `event-${randomUUID()}`;
-    const bootstrapped = await store!.bootstrap(learnerId, {
+    const onboarding = {
       goal: "emotions",
       diagnostic: "b",
       confidence: 2,
       minutes: 12,
       createdAt: "2026-10-05T15:00:00.000Z",
-    });
+    };
+
+    const bootstrapped = await store!.bootstrap(learnerId, onboarding);
+    const bootstrapRetry = await store!.bootstrap(learnerId, onboarding);
 
     const event = {
       type: "SIMULATION_COMPLETED",
       conceptId: "pas",
       correctCount: 3,
+      answers: { thought: "pas", emotion: "shame", reframe: "balanced" },
       attempts: { thought: 1, emotion: 1, reframe: 1 },
       completedAt: "2026-10-05T15:05:00.000Z",
     };
 
     const first = await store!.appendEvent(learnerId, eventId, event);
     const replay = await store!.appendEvent(learnerId, eventId, event);
+    const reloaded = await store!.get(learnerId);
 
     expect(bootstrapped.record.version).toBe(1);
+    expect(bootstrapRetry.duplicate).toBe(true);
+    expect(bootstrapRetry.record.version).toBe(1);
+
     expect(first.duplicate).toBe(false);
     expect(first.record.version).toBe(2);
     expect(first.plan.routeChanged).toBe(true);
+    expect(first.record.previousAction?.id).toBe(bootstrapped.plan.nextAction.id);
+
     expect(replay.duplicate).toBe(true);
     expect(replay.record.version).toBe(2);
     expect(replay.record.lastEventId).toBe(eventId);
+
+    expect(reloaded?.plan.routeChanged).toBe(true);
+    expect(reloaded?.plan.previousAction?.id).toBe(bootstrapped.plan.nextAction.id);
 
     const persistedEvent = await getFirestore(app!)
       .collection("learners")
@@ -67,12 +80,14 @@ describe.runIf(emulatorEnabled)("FirestoreLearningStore emulator", () => {
       diagnostic: "b",
       confidence: 2,
       minutes: 8,
+      createdAt: "2026-10-05T15:10:00.000Z",
     });
     await store!.bootstrap(learnerB, {
       goal: "communication",
       diagnostic: "a",
       confidence: 4,
       minutes: 35,
+      createdAt: "2026-10-05T15:11:00.000Z",
     });
 
     const [a, b] = await Promise.all([store!.get(learnerA), store!.get(learnerB)]);

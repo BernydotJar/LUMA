@@ -63,6 +63,12 @@ async function api(path, token, init = {}) {
   }));
 }
 
+const directProject = process.env.GCLOUD_PROJECT || "demo-luma-persistent-twin";
+const directRules = await fetch(
+  `http://127.0.0.1:8085/v1/projects/${directProject}/databases/(default)/documents/learners/direct-client-test`,
+);
+assert.equal(directRules.status, 403);
+
 const unauth = await api("/api/learning/plan");
 assert.equal(unauth.status, 401);
 
@@ -87,7 +93,24 @@ const bootstrapA = await api("/api/learning/plan", learnerA.token, {
 });
 assert.equal(bootstrapA.status, 200);
 assert.equal(bootstrapA.body.persistence.version, 1);
+assert.equal(bootstrapA.body.duplicate, false);
 const beforeAction = bootstrapA.body.plan.nextAction.id;
+
+const bootstrapARetry = await api("/api/learning/plan", learnerA.token, {
+  method: "PUT",
+  body: JSON.stringify({
+    onboarding: {
+      goal: "emotions",
+      diagnostic: "b",
+      confidence: 2,
+      minutes: 12,
+      createdAt: "2026-10-05T15:00:00.000Z",
+    },
+  }),
+});
+assert.equal(bootstrapARetry.status, 200);
+assert.equal(bootstrapARetry.body.duplicate, true);
+assert.equal(bootstrapARetry.body.persistence.version, 1);
 
 const bootstrapB = await api("/api/learning/plan", learnerB.token, {
   method: "PUT",
@@ -146,10 +169,13 @@ assert.equal(afterA.status, 200);
 assert.equal(afterB.status, 200);
 assert.equal(afterA.body.persistence.version, 2);
 assert.equal(afterB.body.persistence.version, 1);
+assert.equal(afterA.body.plan.routeChanged, true);
+assert.equal(afterA.body.plan.previousAction.id, beforeAction);
 assert.notEqual(afterA.body.plan.state.learnerId, afterB.body.plan.state.learnerId);
 assert.notEqual(afterA.body.plan.nextAction.id, afterB.body.plan.nextAction.id);
 
 console.log(JSON.stringify({
+  directFirestoreStatus: directRules.status,
   unauthenticatedStatus: unauth.status,
   learnerA: {
     uid: learnerA.uid,
@@ -157,6 +183,10 @@ console.log(JSON.stringify({
     afterAction: afterA.body.plan.nextAction.id,
     version: afterA.body.persistence.version,
     replayDuplicate: replay.body.duplicate,
+    bootstrapRetryDuplicate: bootstrapARetry.body.duplicate,
+    routeChangeSurvivesReload:
+      afterA.body.plan.routeChanged === true &&
+      afterA.body.plan.previousAction.id === beforeAction,
   },
   learnerB: {
     uid: learnerB.uid,

@@ -1,0 +1,13 @@
+{
+  "critic_supported": true,
+  "false_positives": [],
+  "actual_risks": [
+    "Firestore client exposure: direct Firestore client access is possible, although HTTP 403 PERMISSION_DENIED is returned, indicating potential exposure risk."
+  ],
+  "blockers": [
+    "production deployment: production Firestore rules are code-verified in emulator but have not been deployed by this code-only release."
+  ],
+  "core_release_proven": true,
+  "final_verdict": "PASS_WITH_RISKS",
+  "reason": "Authenticated learner state is server-verified Firebase ID token, event replay is handled by Firestore transaction checks, onboarding retry is idempotent with same journeyId, server recomputes Next Best Action after evidence, client Firestore rules deny all unauthenticated requests. However, risks include Firestore client exposure, route-change persistence, and production deployment concerns."
+}

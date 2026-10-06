@@ -26,9 +26,10 @@ describe("persistent learner state", () => {
     expect(result.record.version).toBe(1);
     expect(result.record.state.learnerId).toBe("learner-a");
     expect(result.record.nextActionId).toBe(result.plan.nextAction.id);
+    expect(result.record.previousAction).toBeNull();
   });
 
-  it("increments state version and changes the next action after verified evidence", () => {
+  it("increments state version and persists the action that evidence replaced", () => {
     const initial = createPersistentLearnerRecord(
       "learner-a",
       onboarding,
@@ -52,6 +53,7 @@ describe("persistent learner state", () => {
     expect(applied.record.lastEventId).toBe("evt-pas-001");
     expect(applied.plan.routeChanged).toBe(true);
     expect(applied.plan.previousAction?.id).toBe(initial.plan.nextAction.id);
+    expect(applied.record.previousAction?.id).toBe(initial.plan.nextAction.id);
     expect(applied.plan.nextAction.id).not.toBe(initial.plan.nextAction.id);
     expect(
       applied.record.state.concepts.find((concept) => concept.conceptId === "pas")?.mastery,
@@ -67,6 +69,22 @@ describe("persistent learner state", () => {
     });
 
     expect(verified?.correctCount).toBe(0);
+  });
+
+  it("sanitizes attempt telemetry before it reaches the ledger", () => {
+    const verified = verifyLearningEvent({
+      type: "SIMULATION_COMPLETED",
+      conceptId: "pas",
+      answers: { thought: "pas", emotion: "shame", reframe: "balanced" },
+      attempts: {
+        thought: 1,
+        emotion: "2",
+        reframe: 999,
+        injected: 4,
+      },
+    });
+
+    expect(verified?.attempts).toEqual({ thought: 1, emotion: 2 });
   });
 
   it("keeps two learner records isolated", () => {
