@@ -1,0 +1,74 @@
+{
+  "schema_version": "graph-harness.project.v1",
+  "project_id": "luma-se-voice-functional-integration",
+  "mode": "SHIP",
+  "gate_definitions": [
+    {
+      "id": "independent-review",
+      "required_evidence_kinds": [
+        "critic"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "release-quality",
+      "required_evidence_kinds": [
+        "test",
+        "verification",
+        "security"
+      ],
+      "blocking": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "LUMA-VOICE-001-bridge",
+      "kind": "integration",
+      "title": "Server-side SE Voice bridge and reflection audio UX",
+      "status": "spec_ready",
+      "depends_on": [],
+      "capability": "voice-integration",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/luma-se-voice-functional-integration.md",
+        "src/app/actions/speech.ts",
+        "src/lib/se-voice-contract.ts",
+        "src/lib/se-voice-contract.test.ts",
+        "src/components/experience-reflection.tsx",
+        "src/components/experience-reflection.module.css",
+        "docs/se-voice-integration.md",
+        "evidence/se-voice-integration/**",
+        "graph-harness.voice-integration.project.json",
+        "graph-harness.voice-integration.events.jsonl"
+      ]
+    },
+    {
+      "id": "LUMA-VOICE-002-release",
+      "kind": "release",
+      "title": "Verify LUMA functional voice integration and close",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-VOICE-001-bridge"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "docs/se-voice-integration.md",
+        "evidence/se-voice-integration/**",
+        "graph-harness.voice-integration.project.json",
+        "graph-harness.voice-integration.events.jsonl"
+      ]
+    }
+  ]
+}

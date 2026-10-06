@@ -1,0 +1,13 @@
+route_handlers:
+src/app/api/reflections/route.ts
+src/app/api/tutor/route.ts
+server_action_files:
+src/app/actions/speech.ts
+voice_call_sites:
+src/app/actions/speech.ts:24:export async function synthesizeReflectionGuide(
+src/components/experience-reflection.tsx:6:import { synthesizeReflectionGuide } from "@/app/actions/speech";
+src/components/experience-reflection.tsx:20:      const result = await synthesizeReflectionGuide(experience.reflectionPrompt);
+learner_response_to_voice_count:
+0
+direct_browser_voice_url_count:
+0
