@@ -10,6 +10,8 @@ export type SeVoiceRuntimeConfig = {
   apiUrl: string;
   voiceId: string;
   engine: string;
+  authMode: "none" | "google_oidc";
+  audience: string;
 };
 
 const MAX_GUIDE_CHARS = 700;
@@ -37,8 +39,14 @@ function normalizeIdentifier(value: string, label: string): string {
 export function resolveSeVoiceConfig(
   env: Record<string, string | undefined> = process.env,
 ): SeVoiceRuntimeConfig {
+  const apiUrl = normalizeBaseUrl(env.SE_VOICE_API_URL || DEFAULT_API_URL);
+  const authMode = (env.SE_VOICE_AUTH_MODE || "none").trim().toLowerCase();
+  if (authMode !== "none" && authMode !== "google_oidc") {
+    throw new Error("SE Voice auth mode must be none or google_oidc");
+  }
+
   return {
-    apiUrl: normalizeBaseUrl(env.SE_VOICE_API_URL || DEFAULT_API_URL),
+    apiUrl,
     voiceId: normalizeIdentifier(
       env.SE_VOICE_DEFAULT_VOICE || DEFAULT_VOICE_ID,
       "SE Voice voice id",
@@ -47,6 +55,8 @@ export function resolveSeVoiceConfig(
       env.SE_VOICE_ENGINE || DEFAULT_ENGINE,
       "SE Voice engine",
     ),
+    authMode,
+    audience: normalizeBaseUrl(env.SE_VOICE_AUDIENCE || apiUrl),
   };
 }
 
