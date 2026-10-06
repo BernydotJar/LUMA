@@ -20,48 +20,49 @@ type ThemeContextValue = {
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
-const themeListeners = new Set<() => void>();
+const LUMA_THEME_CHANGE_EVENT = "luma-theme-change";
 
-function readThemeSnapshot(): LumaThemeId {
-  if (typeof document === "undefined") return defaultLumaTheme;
+function readBrowserTheme(): LumaThemeId {
   const htmlTheme = document.documentElement.dataset.theme;
   if (isLumaTheme(htmlTheme)) return htmlTheme;
+
   try {
     const stored = window.localStorage.getItem(LUMA_THEME_STORAGE_KEY);
     if (isLumaTheme(stored)) return stored;
   } catch {
     // Local storage can be unavailable in hardened browser contexts.
   }
+
   return defaultLumaTheme;
 }
 
-function readServerThemeSnapshot(): LumaThemeId {
-  return defaultLumaTheme;
-}
-
-function emitThemeChange() {
-  for (const listener of themeListeners) listener();
-}
-
-function subscribeTheme(listener: () => void) {
-  themeListeners.add(listener);
-
-  const handleStorage = (event: StorageEvent) => {
-    if (event.key === LUMA_THEME_STORAGE_KEY) listener();
+function subscribeToTheme(callback: () => void) {
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === LUMA_THEME_STORAGE_KEY) callback();
   };
-  window.addEventListener("storage", handleStorage);
+
+  window.addEventListener("storage", onStorage);
+  window.addEventListener(LUMA_THEME_CHANGE_EVENT, callback);
 
   return () => {
-    themeListeners.delete(listener);
-    window.removeEventListener("storage", handleStorage);
+    window.removeEventListener("storage", onStorage);
+    window.removeEventListener(LUMA_THEME_CHANGE_EVENT, callback);
   };
+}
+
+function getThemeSnapshot(): LumaThemeId {
+  return readBrowserTheme();
+}
+
+function getServerThemeSnapshot(): LumaThemeId {
+  return defaultLumaTheme;
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const theme = useSyncExternalStore(
-    subscribeTheme,
-    readThemeSnapshot,
-    readServerThemeSnapshot,
+    subscribeToTheme,
+    getThemeSnapshot,
+    getServerThemeSnapshot,
   );
 
   const setTheme = useCallback((nextTheme: LumaThemeId) => {
@@ -71,7 +72,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // The theme still applies for the current page when storage is blocked.
     }
-    emitThemeChange();
+    window.dispatchEvent(new Event(LUMA_THEME_CHANGE_EVENT));
   }, []);
 
   const value = useMemo(() => ({ theme, setTheme }), [theme, setTheme]);

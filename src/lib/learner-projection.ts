@@ -26,9 +26,11 @@ export interface StoredOnboardingState {
 }
 
 export interface StoredLearningEvent {
+  eventId?: string;
   type: string;
   conceptId?: string;
   correctCount?: number;
+  answers?: Record<string, string>;
   attempts?: Record<string, number>;
   completedAt?: string;
   sourceId?: string;
@@ -247,16 +249,13 @@ function projectDimensions(
   });
 }
 
-export function createAdaptiveLearningPlan(
+export function createAdaptiveLearningPlanFromState(
+  state: LearnerState,
   onboarding?: StoredOnboardingState,
-  event?: StoredLearningEvent,
+  previousAction?: RankedLearningAction,
 ): AdaptiveLearningPlan {
-  const beforeEvidenceState = projectLearnerState(onboarding);
-  const previousAction =
-    selectNextLearningAction(beforeEvidenceState, learningActions) ?? showcaseNextAction;
-  const state = projectLearnerState(onboarding, event);
   const nextAction = selectNextLearningAction(state, learningActions) ?? showcaseNextAction;
-  const routeChanged = Boolean(event && previousAction.id !== nextAction.id);
+  const routeChanged = Boolean(previousAction && previousAction.id !== nextAction.id);
 
   return {
     state,
@@ -266,4 +265,19 @@ export function createAdaptiveLearningPlan(
     journey: projectJourney(state, nextAction),
     dimensions: projectDimensions(state, onboarding),
   };
+}
+
+export function createAdaptiveLearningPlan(
+  onboarding?: StoredOnboardingState,
+  event?: StoredLearningEvent,
+): AdaptiveLearningPlan {
+  const beforeEvidenceState = projectLearnerState(onboarding);
+  const previousAction =
+    selectNextLearningAction(beforeEvidenceState, learningActions) ?? showcaseNextAction;
+  const state = projectLearnerState(onboarding, event);
+  return createAdaptiveLearningPlanFromState(
+    state,
+    onboarding,
+    event ? previousAction : undefined,
+  );
 }

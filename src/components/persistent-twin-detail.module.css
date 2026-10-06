@@ -1,0 +1,191 @@
+.layout {
+  display: grid;
+  gap: 18px;
+}
+
+.hero,
+.panel,
+.events,
+.stateCard {
+  border-radius: 28px;
+  border: 1px solid rgba(91, 55, 39, 0.1);
+}
+
+.hero {
+  padding: 28px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 28px;
+  align-items: center;
+}
+
+.hero h2,
+.panel h3,
+.events h3 {
+  margin: 8px 0 6px;
+}
+
+.hero p,
+.panel p,
+.stateCard p,
+.empty {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.hero code {
+  font-size: .85em;
+}
+
+.meta {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(120, 86, 62, .07);
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.score {
+  min-width: 122px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  border: 1px solid rgba(120, 86, 62, .16);
+  background: rgba(255, 255, 255, .42);
+}
+
+.score strong {
+  font-size: 1.7rem;
+}
+
+.score span {
+  font-size: .68rem;
+  color: var(--muted);
+}
+
+.routeChange {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 16px 20px;
+  border-radius: 20px;
+  background: rgba(169, 71, 53, .08);
+}
+
+.routeChange p {
+  margin-top: 3px;
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.panel {
+  padding: 24px;
+}
+
+.panel dl {
+  margin-top: 20px;
+  display: grid;
+  gap: 8px;
+}
+
+.panel dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(120, 86, 62, .09);
+}
+
+.panel dt {
+  color: var(--muted);
+}
+
+.panel dd {
+  font-weight: 750;
+}
+
+.events {
+  padding: 24px;
+}
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.heading > span {
+  font-size: .72rem;
+  color: var(--muted);
+}
+
+.eventList {
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.eventList article {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 13px 0;
+  border-top: 1px solid rgba(120, 86, 62, .09);
+}
+
+.eventList p {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: .74rem;
+}
+
+.eventList small {
+  color: var(--muted);
+  font-size: .68rem;
+}
+
+.stateCard {
+  padding: 24px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+@media (max-width: 760px) {
+  .hero,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .score {
+    min-width: 100px;
+    width: 100px;
+  }
+
+  .eventList article {
+    grid-template-columns: auto 1fr;
+  }
+
+  .eventList small {
+    grid-column: 2;
+  }
+}

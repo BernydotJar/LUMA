@@ -14,6 +14,7 @@ import {
   Target,
 } from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
+import { bootstrapPersistentLearningPlan } from "@/lib/learning-api-client";
 import { createAdaptiveLearningPlan } from "@/lib/learner-projection";
 import styles from "./onboarding-experience.module.css";
 
@@ -32,6 +33,7 @@ export function OnboardingExperience() {
   const [diagnostic, setDiagnostic] = useState<string | null>(null);
   const [confidence, setConfidence] = useState(2);
   const [minutes, setMinutes] = useState(12);
+  const [saving, setSaving] = useState(false);
 
   const selectedGoal = useMemo(() => goals.find((item) => item.id === goal) ?? goals[1], [goal]);
   const canContinue = step !== 1 || diagnostic !== null;
@@ -47,11 +49,20 @@ export function OnboardingExperience() {
     [goal, diagnostic, confidence, minutes],
   );
 
-  const finish = () => {
+  const finish = async () => {
+    setSaving(true);
     const state = { goal, diagnostic, confidence, minutes, createdAt: new Date().toISOString() };
     window.localStorage.setItem("luma-onboarding", JSON.stringify(state));
     window.localStorage.removeItem("luma-latest-learning-event");
-    router.push("/learn");
+    window.localStorage.removeItem("luma-pending-learning-event");
+
+    try {
+      await bootstrapPersistentLearningPlan(state);
+    } catch {
+      // Guest mode and temporary persistence failures continue with the deterministic local projection.
+    } finally {
+      router.push("/learn");
+    }
   };
 
   return (
@@ -175,8 +186,8 @@ export function OnboardingExperience() {
                 Continuar <ArrowRight size={17} />
               </button>
             ) : (
-              <button className="button-primary" type="button" onClick={finish}>
-                Entrar a mi experiencia <ArrowRight size={17} />
+              <button className="button-primary" type="button" disabled={saving} onClick={() => void finish()}>
+                {saving ? "Preparando mi ruta…" : "Entrar a mi experiencia"} <ArrowRight size={17} />
               </button>
             )}
           </footer>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -20,6 +20,8 @@ import {
   Users,
 } from "lucide-react";
 import { studioSignals } from "@/lib/luma-data";
+import { fetchCoachLearners, type CoachLearnerSummary } from "@/lib/coach-api-client";
+import { useLumaAuth } from "@/components/auth-provider";
 import { SemanticObject } from "@/components/semantic-object";
 import styles from "./studio-dashboard.module.css";
 
@@ -39,10 +41,41 @@ const learners = [
 ];
 
 export function StudioDashboard() {
+  const { user, loading } = useLumaAuth();
+  const [persistentLearners, setPersistentLearners] = useState<CoachLearnerSummary[] | null>(null);
   const [selectedBottleneck, setSelectedBottleneck] = useState("pas");
   const [period, setPeriod] = useState("Últimos 7 días");
   const [assigned, setAssigned] = useState<string[]>([]);
   const selected = useMemo(() => bottlenecks.find((item) => item.id === selectedBottleneck) ?? bottlenecks[0], [selectedBottleneck]);
+
+  useEffect(() => {
+    if (loading || !user) return;
+    let cancelled = false;
+    void fetchCoachLearners()
+      .then((items) => {
+        if (!cancelled && items) setPersistentLearners(items);
+      })
+      .catch(() => {
+        // Unauthorized coaches and transient API failures keep the curated showcase surface.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [loading, user]);
+
+  const visibleLearners = useMemo(() => {
+    if (!persistentLearners?.length) return learners;
+    return persistentLearners.map((item) => ({
+      id: item.learnerId,
+      initials: "LI",
+      name: `Participante ${item.learnerId.slice(0, 6)}`,
+      signal: item.goal,
+      confidence: `v${item.version}`,
+      action: item.nextActionTitle,
+      urgency: "medium",
+      persistent: true,
+    }));
+  }, [persistentLearners]);
 
   const assign = (id: string) => setAssigned((current) => current.includes(id) ? current : [...current, id]);
 
@@ -156,14 +189,16 @@ export function StudioDashboard() {
         </div>
         <div className={styles.table} role="table" aria-label="Cola de intervención humana">
           <div className={styles.tableHead} role="row"><span role="columnheader">Persona</span><span role="columnheader">Señal</span><span role="columnheader">Confianza</span><span role="columnheader">Recomendación</span><span role="columnheader">Acción</span></div>
-          {learners.map((learner) => (
+          {visibleLearners.map((learner) => (
             <div className={styles.tableRow} role="row" key={learner.id} data-urgency={learner.urgency}>
               <span className={styles.person} role="cell"><i>{learner.initials}</i><strong>{learner.name}</strong></span>
               <span role="cell">{learner.signal}</span>
               <span role="cell">{learner.confidence}</span>
               <span role="cell">{learner.action}</span>
               <span role="cell">
-                {learner.id === "mariana" ? (
+                {"persistent" in learner && learner.persistent ? (
+                  <Link className={styles.openTwin} href={`/studio/learners/${learner.id}`}>Abrir <ArrowRight size={13} /></Link>
+                ) : learner.id === "mariana" ? (
                   <Link className={styles.openTwin} href="/studio/learners/mariana">Abrir <ArrowRight size={13} /></Link>
                 ) : (
                   <button type="button" data-assigned={assigned.includes(learner.id)} onClick={() => assign(learner.id)}>

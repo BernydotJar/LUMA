@@ -1,0 +1,23 @@
+i  emulators: Starting emulators: firestore
+i  emulators: Detected demo project ID "demo-luma-persistent-twin", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+i  firestore: Firestore Emulator logging to firestore-debug.log
+✔  firestore: Firestore Emulator was started in standard edition.
+✔  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: npx vitest run src/lib/learning-store.emulator.test.ts
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace/_tmp/luma-adaptive-push[39m
+
+ [32m✓[39m src/lib/learning-store.emulator.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 544[2mms[22m[39m
+   [32m✓[39m FirestoreLearningStore emulator [2m(2)[22m
+     [33m[2m✓[22m[39m keeps bootstrap and event replay idempotent and preserves route change after reload[33m 512[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 04:15:30
+[2m   Duration [22m 1.16s[2m (tests 51%, import 42%, transform 7%)[22m
+
+✔  Script exited successfully (code 0)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator

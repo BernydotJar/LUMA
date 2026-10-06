@@ -1,0 +1,81 @@
+
+> luma-learning-intelligence@0.1.0 verify
+> npm run lint && npm run typecheck && npm run test:run && npm run build
+
+
+> luma-learning-intelligence@0.1.0 lint
+> eslint .
+
+
+> luma-learning-intelligence@0.1.0 typecheck
+> tsc --noEmit
+
+
+> luma-learning-intelligence@0.1.0 test:run
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace/_tmp/luma-adaptive-push[39m
+
+ [32m✓[39m src/lib/profile-name.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/learning-engine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/experience-themes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/themes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/lib/reflection-engine.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/learner-projection.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/persistent-learning.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [2m[90m↓[39m[22m src/lib/learning-store.emulator.test.ts [2m([22m[2m2 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m
+
+[2m Test Files [22m [1m[32m7 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (8)[39m
+[2m      Tests [22m [1m[32m27 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (29)[39m
+[2m   Start at [22m 04:14:03
+[2m   Duration [22m 753ms[2m (import 55%, transform 40%, worker 3%, tests 2%)[22m
+
+
+> luma-learning-intelligence@0.1.0 build
+> next build
+
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 73ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.8s
+  Running TypeScript ...
+  Finished TypeScript in 2.1s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/27) ...
+  Generating static pages using 11 workers (6/27)
+  Generating static pages using 11 workers (13/27)
+  Generating static pages using 11 workers (20/27)
+✓ Generating static pages using 11 workers (27/27) in 973ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/learning/events
+├ ƒ /api/learning/plan
+├ ƒ /api/reflections
+├ ƒ /api/tutor
+├ ○ /experience
+├ ○ /iconography
+├ ○ /learn
+├   /learn/experience/[slug]
+│ ├ ● /learn/experience/congruencia-tres-canales
+│ ├ ● /learn/experience/calibracion-observar-antes-de-interpretar
+│ ├ ● /learn/experience/rapport-sintonia-con-respeto
+│ └ ● [+4 more paths]
+├ ○ /learn/experiences
+├ ○ /learn/session/pas
+├ ○ /library
+├ ○ /login
+├ ○ /onboarding
+├ ○ /studio
+├ ○ /studio/learners/mariana
+├ ○ /studio/reflections
+└ ○ /twin
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
