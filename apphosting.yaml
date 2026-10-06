@@ -6,3 +6,30 @@ runConfig:
   minInstances: 0
   maxInstances: 2
   concurrency: 80
+
+env:
+  - variable: SE_VOICE_API_URL
+    value: https://se-voice-runtime-2zp4gbirka-uc.a.run.app
+    availability:
+      - RUNTIME
+  - variable: SE_VOICE_AUDIENCE
+    value: https://se-voice-runtime-2zp4gbirka-uc.a.run.app
+    availability:
+      - RUNTIME
+  - variable: SE_VOICE_AUTH_MODE
+    value: google_oidc
+    availability:
+      - RUNTIME
+  - variable: SE_VOICE_DEFAULT_VOICE
+    value: example_public
+    availability:
+      - RUNTIME
+  - variable: SE_VOICE_ENGINE
+    value: openvoice_v2
+    availability:
+      - RUNTIME
+  - variable: NEXT_PUBLIC_SE_VOICE_ENABLED
+    value: "true"
+    availability:
+      - BUILD
+      - RUNTIME
