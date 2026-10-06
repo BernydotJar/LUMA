@@ -1,6 +1,7 @@
 "use server";
 
 import { buildReflectionSpeechRequest } from "@/lib/se-voice-contract";
+import { getGoogleIdentityToken } from "@/lib/google-oidc";
 
 export type ReflectionGuideSpeechResult =
   | {
@@ -19,7 +20,7 @@ export type ReflectionGuideSpeechResult =
     };
 
 const MAX_AUDIO_BYTES = 5 * 1024 * 1024;
-const VOICE_TIMEOUT_MS = 45_000;
+const VOICE_TIMEOUT_MS = 150_000;
 
 export async function synthesizeReflectionGuide(
   text: string,
@@ -35,11 +36,16 @@ export async function synthesizeReflectionGuide(
   const timeout = setTimeout(() => controller.abort(), VOICE_TIMEOUT_MS);
 
   try {
+    const headers: Record<string, string> = {
+      "content-type": "application/json",
+    };
+    if (bridge.config.authMode === "google_oidc") {
+      headers.authorization = `Bearer ${await getGoogleIdentityToken(bridge.config.audience)}`;
+    }
+
     const response = await fetch(`${bridge.config.apiUrl}/v1/speech`, {
       method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
+      headers,
       body: JSON.stringify(bridge.request),
       cache: "no-store",
       signal: controller.signal,
