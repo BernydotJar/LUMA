@@ -1,0 +1,36 @@
+{
+  "verdict": "PASS_WITH_RISKS",
+  "proven": "Coach and learner derive learning state and Next Best Action from the same authoritative learners/{uid} record.",
+  "findings": [
+    {
+      "severity": "MINOR",
+      "finding": "Unauthorized access to Firestore by direct client is prevented by 403 status code."
+    },
+    {
+      "severity": "MINOR",
+      "finding": "Unauthorized access to coach API is prevented by 403 status code for unauthenticated users."
+    },
+    {
+      "severity": "MINOR",
+      "finding": "Unauthorized access to coach API is prevented by 403 status code for custom claims coach/admin/superuser."
+    },
+    {
+      "severity": "MINOR",
+      "finding": "Unauthorized access to coach API is prevented by 403 status code for direct Firestore client."
+    },
+    {
+      "severity": "MINOR",
+      "finding": "Unauthorized access to coach API is prevented by 403 status code for unauthorized or unavailable studio."
+    },
+    {
+      "severity": "MINOR",
+      "finding": "Unauthorized access to coach API is prevented by 403 status code for dynamic persistent detail without coach."
+    },
+    {
+      "severity": "MINOR",
+      "finding": "Unauthorized access to coach API is prevented by 403 status code for static Mariana showcase."
+    }
+  ],
+  "remaining_boundaries": "Role semantics are proven in Auth emulator; production claim provisioning is an operational authorization step.",
+  "release_recommendation": "Proceed with caution, as the system relies on server-side verification of Firebase ID tokens and custom claims for coach access. Ensure that no unauthorized access points are introduced in the client-side coach API."
+}

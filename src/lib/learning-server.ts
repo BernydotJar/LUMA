@@ -14,3 +14,19 @@ export async function requireLearningUser(request: Request) {
 
   return firebaseAdminAuth.verifyIdToken(token);
 }
+
+export async function requireLearningCoach(request: Request) {
+  const decoded = await requireLearningUser(request);
+  const role = typeof decoded.role === "string" ? decoded.role : "";
+  const allowed =
+    decoded.coach === true ||
+    decoded.admin === true ||
+    decoded.superuser === true ||
+    ["coach", "admin", "superuser"].includes(role);
+
+  if (!allowed) {
+    throw new Error("COACH_REQUIRED");
+  }
+
+  return decoded;
+}

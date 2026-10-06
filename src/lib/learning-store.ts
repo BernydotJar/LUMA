@@ -44,6 +44,28 @@ export class FirestoreLearningStore {
     return this.resultForRecord(snapshot.data() as PersistedLearnerRecord, false);
   }
 
+  async list(limit = 50): Promise<LearningStoreResult[]> {
+    const snapshot = await this.firestore
+      .collection("learners")
+      .orderBy("updatedAt", "desc")
+      .limit(Math.min(Math.max(limit, 1), 100))
+      .get();
+
+    return snapshot.docs.map((doc) =>
+      this.resultForRecord(doc.data() as PersistedLearnerRecord, false),
+    );
+  }
+
+  async listEvents(learnerId: string, limit = 20) {
+    const snapshot = await this.learnerRef(learnerId)
+      .collection("events")
+      .orderBy("recordedAt", "desc")
+      .limit(Math.min(Math.max(limit, 1), 50))
+      .get();
+
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+
   async bootstrap(
     learnerId: string,
     onboarding: StoredOnboardingState,

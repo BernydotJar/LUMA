@@ -1035,6 +1035,92 @@
         "package.json",
         "package-lock.json"
       ]
+    },
+    {
+      "id": "LUMA-040-production-persistent-twin-deployment",
+      "kind": "deployment",
+      "title": "Production deployment of Persistent Learning Twin and deny-all Firestore client boundary",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-039-persistent-twin-release"
+      ],
+      "capability": "production-persistent-learning-twin",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "firebase.json",
+        "firestore.rules",
+        "apphosting.yaml",
+        "evidence/production-persistent-twin/**",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "scripts/**"
+      ]
+    },
+    {
+      "id": "LUMA-041-coach-authoritative-learning-state",
+      "kind": "product-capability",
+      "title": "Role-authorized Coach Studio reads the same authoritative learner state and evidence ledger",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-040-production-persistent-twin-deployment"
+      ],
+      "capability": "coach-authoritative-learning-state",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/api/coach/**",
+        "src/app/studio/learners/**",
+        "src/components/studio-dashboard.tsx",
+        "src/components/persistent-twin-detail*",
+        "src/lib/coach-api-client.ts",
+        "src/lib/learning-server.ts",
+        "src/lib/learning-store.ts",
+        "scripts/coach-api-emulator-smoke.sh",
+        "e2e/coach-source.spec.ts",
+        "evidence/coach-source-of-truth/**"
+      ]
+    },
+    {
+      "id": "LUMA-042-authoritative-twin-production-release",
+      "kind": "release",
+      "title": "Production release of shared learner and coach authoritative Learning Twin",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-040-production-persistent-twin-deployment",
+        "LUMA-041-coach-authoritative-learning-state"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "scripts/**",
+        "evidence/**",
+        "e2e/**",
+        "firebase.json",
+        "firestore.rules",
+        "src/app/api/coach/**",
+        "src/app/studio/learners/**",
+        "src/components/studio-dashboard.tsx",
+        "src/components/persistent-twin-detail*",
+        "src/lib/coach-api-client.ts",
+        "src/lib/learning-server.ts",
+        "src/lib/learning-store.ts"
+      ]
     }
   ]
 }
