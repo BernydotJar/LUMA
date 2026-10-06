@@ -1,6 +1,0 @@
-- region "Vista previa LUMA Liquid Light v2" [ref=e1]
-  - navigation "Navegación de ejemplo" [ref=e2]
-  - heading "Observar antes de interpretar." [level=1, ref=e3]
-  - heading "Tu progreso ya se está volviendo capacidad." [level=2, ref=e4]
-  - heading "Una observación útil para tu próxima conversación." [level=2, ref=e5]
-- button "Open Next.js Dev Tools" [expanded=false, ref=e6]
