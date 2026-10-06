@@ -1,4 +1,5 @@
 import { selectNextLearningAction } from "./learning-engine";
+import { evidenceMayUpdateTwin, type SimulationCriterionResult } from "./simulation-evidence";
 import {
   journeySteps,
   learnerState as showcaseLearnerState,
@@ -34,6 +35,10 @@ export interface StoredLearningEvent {
   attempts?: Record<string, number>;
   completedAt?: string;
   sourceId?: string;
+  evidenceCategory?: "scored" | "observed" | "self-reported";
+  twinAuthority?: "none" | "supporting" | "eligible";
+  rubricId?: string;
+  criteria?: SimulationCriterionResult[];
 }
 
 export interface AdaptiveLearningPlan {
@@ -167,8 +172,11 @@ export function applyLearningEvent(
   event: StoredLearningEvent,
 ): LearnerState {
   if (event.type !== "SIMULATION_COMPLETED" || !event.conceptId) return state;
+  if (!evidenceMayUpdateTwin(event)) return state;
 
-  const success = (event.correctCount ?? 0) >= 3;
+  const success = event.criteria?.length
+    ? event.criteria.every((criterion) => criterion.passed)
+    : (event.correctCount ?? 0) >= 3;
   return {
     ...state,
     concepts: state.concepts.map((concept) => {

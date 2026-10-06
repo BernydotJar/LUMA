@@ -1150,6 +1150,171 @@
         "src/lib/learning-server.ts",
         "src/lib/learning-store.ts"
       ]
+    },
+    {
+      "id": "LUMA-043-learning-pattern-research",
+      "kind": "product-research",
+      "title": "Platzi and AI-EdTech learning pattern research with adoption decisions",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-042-authoritative-twin-production-release"
+      ],
+      "capability": "learning-product-research",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "docs/research/platzi-learning-intelligence-2026.md",
+        "specs/020-ai-native-class-factory.md",
+        "evidence/class-intelligence/**"
+      ]
+    },
+    {
+      "id": "LUMA-044-pedagogy-as-code-contract",
+      "kind": "ai-learning-capability",
+      "title": "Pedagogy-as-code class contract, topologies, invariants and quality gate",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-043-learning-pattern-research"
+      ],
+      "capability": "learning-quality-policy",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/020-ai-native-class-factory.md",
+        "src/lib/class-contract.ts",
+        "src/lib/class-contract.test.ts",
+        "src/lib/learning-content.ts",
+        "evidence/class-intelligence/**"
+      ]
+    },
+    {
+      "id": "LUMA-045-adaptive-entry-diagnostic",
+      "kind": "product-surface",
+      "title": "Capability micro-diagnostic and adaptive class entry routing",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-044-pedagogy-as-code-contract"
+      ],
+      "capability": "adaptive-learning-entry",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/learn/experience/**",
+        "src/components/class-entry-diagnostic*",
+        "src/lib/class-contract*",
+        "e2e/class-intelligence.spec.ts",
+        "evidence/class-intelligence/**"
+      ]
+    },
+    {
+      "id": "LUMA-046-simulation-evidence-runtime",
+      "kind": "ai-learning-capability",
+      "title": "Criterion-based simulation, remediation, replay and evidence authority runtime",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-045-adaptive-entry-diagnostic"
+      ],
+      "capability": "evidence-first-practice",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/learn/session/**",
+        "src/components/practice-session*",
+        "src/lib/simulation-evidence*",
+        "src/lib/persistent-learning.ts",
+        "src/lib/learner-projection.ts",
+        "e2e/class-intelligence.spec.ts",
+        "evidence/class-intelligence/**"
+      ]
+    },
+    {
+      "id": "LUMA-047-self-refreshing-class-factory",
+      "kind": "ai-learning-capability",
+      "title": "Source-grounded class factory with reflection, impact analysis and human promotion",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-044-pedagogy-as-code-contract"
+      ],
+      "capability": "class-generation-reflection",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/020-ai-native-class-factory.md",
+        "src/lib/class-factory*",
+        "src/app/studio/class-intelligence/**",
+        "evidence/class-intelligence/**"
+      ]
+    },
+    {
+      "id": "LUMA-048-learning-impact-observability",
+      "kind": "product-surface",
+      "title": "Learning evidence to coach insight and class-quality observability",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-046-simulation-evidence-runtime",
+        "LUMA-047-self-refreshing-class-factory"
+      ],
+      "capability": "learning-impact-observability",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/studio/class-intelligence/**",
+        "src/components/persistent-twin-detail.tsx",
+        "src/components/studio-dashboard*",
+        "src/lib/coach-api-client.ts",
+        "e2e/class-intelligence.spec.ts",
+        "evidence/class-intelligence/**"
+      ]
+    },
+    {
+      "id": "LUMA-049-class-intelligence-release",
+      "kind": "release",
+      "title": "AI-native class intelligence client-demo release",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-045-adaptive-entry-diagnostic",
+        "LUMA-046-simulation-evidence-runtime",
+        "LUMA-047-self-refreshing-class-factory",
+        "LUMA-048-learning-impact-observability"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "e2e/**",
+        "evidence/**",
+        "scripts/**",
+        "package.json",
+        "package-lock.json",
+        "firebase.json",
+        "apphosting.yaml"
+      ]
     }
   ]
 }

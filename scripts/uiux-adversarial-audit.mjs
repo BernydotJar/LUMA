@@ -20,6 +20,7 @@ const secondaryRoutes = [
   "/library",
   "/experience",
   "/studio/reflections",
+  "/studio/class-intelligence",
 ];
 const themes = ["se", "light", "dark"];
 const a11yViewportNames = new Set(["mobile-375", "tablet-1024", "desktop-1440"]);

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { appendPersistentLearningEvent, hasPersistentLearningSession } from "@/lib/learning-api-client";
 import { moduleThreeSource } from "@/lib/luma-data";
+import { evaluatePasSimulation, type SimulationEvidenceReceipt } from "@/lib/simulation-evidence";
 import styles from "./practice-session.module.css";
 
 type AnswerState = {
@@ -56,6 +57,7 @@ export function PracticeSession() {
   const [completed, setCompleted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [syncState, setSyncState] = useState<"local" | "synced" | "pending">("local");
+  const [evidenceReceipt, setEvidenceReceipt] = useState<SimulationEvidenceReceipt | null>(null);
   const current = steps[step];
   const selected = answers[current.id as keyof AnswerState];
   const selectedChoice = choices[current.id as keyof typeof choices].find((item) => item.id === selected);
@@ -75,15 +77,21 @@ export function PracticeSession() {
 
     setSubmitting(true);
     const eventId = crypto.randomUUID();
+    const receipt = evaluatePasSimulation(answers, attempted);
+    setEvidenceReceipt(receipt);
     const event = {
       eventId,
       type: "SIMULATION_COMPLETED",
       conceptId: "pas",
-      correctCount,
+      correctCount: receipt.passedCriteria,
       answers,
       attempts: attempted,
       completedAt: new Date().toISOString(),
       sourceId: moduleThreeSource.id,
+      rubricId: receipt.rubricId,
+      criteria: receipt.criteria,
+      evidenceCategory: receipt.evidenceCategory,
+      twinAuthority: receipt.twinAuthority,
     };
     window.localStorage.setItem("luma-latest-learning-event", JSON.stringify(event));
 
@@ -114,6 +122,7 @@ export function PracticeSession() {
     setCompleted(false);
     setSubmitting(false);
     setSyncState("local");
+    setEvidenceReceipt(null);
   };
 
   if (completed) {
@@ -128,8 +137,9 @@ export function PracticeSession() {
           <div className={styles.evidenceReceipt}>
             <div><span>Evento</span><strong>SIMULATION_COMPLETED</strong></div>
             <div><span>Concepto</span><strong>Pensamientos saboteadores</strong></div>
-            <div><span>Resultado</span><strong>3/3 con evidencia</strong></div>
-            <div><span>Impacto estimado</span><strong>Aplicación +8</strong></div>
+            <div><span>Resultado</span><strong>{evidenceReceipt?.passedCriteria ?? correctCount}/{evidenceReceipt?.totalCriteria ?? 3} criterios</strong></div>
+            <div><span>Rúbrica</span><strong>{evidenceReceipt?.rubricId ?? "pas-v1"}</strong></div>
+            <div><span>Tipo de evidencia</span><strong>Puntuada</strong></div>
           </div>
           <div className={styles.completeActions}>
             <Link className="button-primary" href="/learn">Volver a mi ruta <ArrowRight size={17} /></Link>

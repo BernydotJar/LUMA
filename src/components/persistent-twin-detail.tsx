@@ -17,6 +17,19 @@ import {
   type CoachLearnerDetail,
 } from "@/lib/coach-api-client";
 import styles from "./persistent-twin-detail.module.css";
+function eventEvidenceSummary(event: Record<string, unknown>) {
+  const category = typeof event.evidenceCategory === "string" ? event.evidenceCategory : undefined;
+  const rubric = typeof event.rubricId === "string" ? event.rubricId : undefined;
+  const criteria = Array.isArray(event.criteria) ? event.criteria : [];
+  const passed = criteria.filter((item) => Boolean((item as Record<string, unknown>).passed)).length;
+  const pieces = [
+    category === "scored" ? "evidencia puntuada" : category,
+    rubric ? `rúbrica ${rubric}` : undefined,
+    criteria.length ? `${passed}/${criteria.length} criterios` : undefined,
+  ].filter(Boolean);
+  return pieces.join(" · ");
+}
+
 
 export function PersistentTwinDetail({ learnerId }: { learnerId: string }) {
   const { user, loading } = useLumaAuth();
@@ -174,6 +187,7 @@ export function PersistentTwinDetail({ learnerId }: { learnerId: string }) {
                   <strong>{String(event.type ?? "LEARNING_EVENT")}</strong>
                   <p>
                     Concepto {String(event.conceptId ?? "—")} · evento {String(event.eventId ?? event.id ?? "—")}
+                    {eventEvidenceSummary(event) ? ` · ${eventEvidenceSummary(event)}` : ""}
                   </p>
                 </div>
                 <small>{String(event.recordedAt ?? event.completedAt ?? "sin fecha")}</small>
