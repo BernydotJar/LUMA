@@ -1,0 +1,11 @@
+
+Running 6 tests using 6 workers
+
+  ✓  2 [chromium] › e2e/coach-source.spec.ts:4:3 › Coach authoritative learner source › coach API requires authentication (1.3s)
+  ✓  3 [mobile] › e2e/coach-source.spec.ts:4:3 › Coach authoritative learner source › coach API requires authentication (1.3s)
+  ✓  6 [chromium] › e2e/coach-source.spec.ts:17:3 › Coach authoritative learner source › existing showcase coach experience remains available (1.8s)
+  ✓  4 [mobile] › e2e/coach-source.spec.ts:17:3 › Coach authoritative learner source › existing showcase coach experience remains available (2.2s)
+  ✓  5 [chromium] › e2e/coach-source.spec.ts:10:3 › Coach authoritative learner source › persistent learner detail never falls back to showcase data without coach authorization (2.5s)
+  ✓  1 [mobile] › e2e/coach-source.spec.ts:10:3 › Coach authoritative learner source › persistent learner detail never falls back to showcase data without coach authorization (3.7s)
+
+  6 passed (7.5s)

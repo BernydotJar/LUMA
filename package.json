@@ -20,6 +20,7 @@
   "dependencies": {
     "@firebase/app": "0.16.2",
     "@firebase/auth": "1.13.6",
+    "firebase-admin": "^14.5.0",
     "lucide-react": "1.51.0",
     "motion": "14.0.0",
     "next": "16.3.8",
@@ -37,5 +38,9 @@
     "typescript": "^5",
     "vitest": "5.0.3"
   },
-  "type": "module"
+  "type": "module",
+  "overrides": {
+    "gaxios": "^7.3.1",
+    "uuid": "^11.1.1"
+  }
 }
