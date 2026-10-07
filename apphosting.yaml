@@ -21,7 +21,7 @@ env:
     availability:
       - RUNTIME
   - variable: SE_VOICE_DEFAULT_VOICE
-    value: example_public
+    value: se_instructor_v1
     availability:
       - RUNTIME
   - variable: SE_VOICE_ENGINE

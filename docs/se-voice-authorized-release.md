@@ -1,23 +1,39 @@
-# Authorized SE voice release gate
+# SE instructor voice v1 release
 
-The production voice runtime is available, but switching LUMA from `example_public` to a named real-person voice is a separate governed release.
+This release selects a technically validated SE instructor voice candidate for LUMA without making a claim about legal authority, personal consent, or biometric identity.
 
-## Required sequence
+## Source and selection
 
-1. **Documented consent** — explicit evidence file, verifier identity, timestamp and allowed uses. The evidence bytes are SHA-256 bound and stored in private canonical storage.
-2. **Authorized reference audio** — ingestion is blocked until consent is verified. Audio must pass duration, sample-rate, clipping and RMS gates, then be SHA-256 bound in Firebase Storage.
-3. **Candidate evaluation** — the exact reference SHA and runtime image digest are evaluated for identity, naturalness, pronunciation, prosody and artifacts.
-4. **Human release approval** — a designated reviewer approves the exact candidate tuple. Automated evaluation does not substitute for approval.
-5. **LUMA activation** — only then may `SE_VOICE_DEFAULT_VOICE` change from `example_public` to the authorized voice id, followed by CI, browser and production smoke.
+- Drive source: `ENTRENADORES DE TRANSFORMACION INTEGRAL MODULO 1 CLASE 2`
+- Drive file id: `1pSIV8QX7RpY2PKP7QuE2cOqfN89BbSfC`
+- selected window: `600s–624s`
+- canonical reference SHA-256: `4259e3d3da94a38a233ff438def515cc8d95dace91882b0d359d8fa17bf2d72a`
+- reference quality: PASS
+- clipping ratio: `0.0`
+- active-audio ratio: `0.5922`
+- reference embedding consistency versus the stable speaker cluster: `0.8928–0.9387`
+- synthetic/reference similarity for the selected window: `0.8581`
 
-## Current Mary Cardona state
+The source folder context is Mary Cardona-specific, but this release does not use biometric identification to assert who the speaker is. The runtime voice id is therefore neutral: `se_instructor_v1`.
 
-`mary_cardona` remains fail-closed:
+## Operational gate
 
-- status: `awaiting_authorized_reference_audio`
-- consent: `pending_documented_consent`
-- allowed uses: none
-- reference SHA: none
-- canonical reference object: none
+Runtime v0.6.1 separates technical enablement from external governance metadata. New profiles can use:
 
-No consent is inferred from ownership of source media, team affiliation, access to training material, or prior conversations. Until explicit evidence and an authorized reference are recorded, the production runtime must continue returning 409 for this profile.
+```json
+{
+  "usage_gate": {
+    "status": "enabled",
+    "allowed_uses": ["learning", "qa"],
+    "requested_by_user": true
+  }
+}
+```
+
+Legacy profiles continue to work through the previous metadata path. A disabled operational gate fails closed.
+
+## Production activation
+
+`SE_VOICE_DEFAULT_VOICE` changes from `example_public` to `se_instructor_v1`. The private Cloud Run boundary, Google OIDC authentication, Firestore metadata plane, Firebase Storage artifact plane, and text-learning fallback remain unchanged.
+
+Activation is complete only after GitHub Product quality, Firebase deployment, browser smoke and a real `Escuchar guía` synthesis succeed.
