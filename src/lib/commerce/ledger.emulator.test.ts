@@ -241,5 +241,44 @@ describe.runIf(emulatorEnabled)(
       expect(processed.event.processingAttempts).toBe(2);
       expect(processed.entitlement?.version).toBe(1);
     });
+    it("rejects a processed replay resolved to a different tenant", async () => {
+      const suffix = randomUUID();
+      const event = payment(
+        `evt-tenant-replay-${suffix}`,
+        "2026-10-07T12:00:00Z",
+      );
+      const original = {
+        tenantId: `tenant-a-${suffix}`,
+        customerId: "customer-1",
+        productId: "program-1",
+      };
+      const wrongTenant = {
+        ...original,
+        tenantId: `tenant-b-${suffix}`,
+      };
+
+      await ledger!.receive(event, `corr-${suffix}`);
+      await ledger!.process({
+        event,
+        action: "grant",
+        entitlement: original,
+      });
+
+      await expect(
+        ledger!.process({
+          event,
+          action: "grant",
+          entitlement: wrongTenant,
+        }),
+      ).rejects.toThrow("COMMERCE_EVENT_RESOLUTION_CONFLICT");
+
+      expect(
+        (await ledger!.getEntitlement(original))?.status,
+      ).toBe("active");
+      expect(
+        await ledger!.getEntitlement(wrongTenant),
+      ).toBeUndefined();
+    });
+
   },
 );
