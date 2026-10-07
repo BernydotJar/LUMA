@@ -206,7 +206,21 @@ const stopWords = new Set([
   "una",
   "what",
   "you",
+  "corpus",
+  "contenido",
+  "material",
+  "video",
+  "videos",
+  "clase",
+  "existe",
+  "existir",
+  "encuentra",
+  "encontrar",
+  "muestra",
+  "mostrar",
 ]);
+
+const domainShortTokens = new Set(["pas", "pnl"]);
 
 export function normalizeTutorText(value: string) {
   return value
@@ -433,7 +447,9 @@ export function isRagEvidenceRelevant(
 ) {
   const queryTokens = new Set(
     tokenize(query).filter(
-      (token) => token.length >= 4 && !stopWords.has(token),
+      (token) =>
+        (token.length >= 4 || domainShortTokens.has(token)) &&
+        !stopWords.has(token),
     ),
   );
 

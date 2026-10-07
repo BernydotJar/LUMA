@@ -257,6 +257,26 @@ describe("tutor CX control plane", () => {
     expect(decision.response?.answer).toMatch(/no pertenece al alcance/i);
   });
 
+  it("ignores retrieval-meta words when validating RAG evidence", () => {
+    expect(
+      isRagEvidenceRelevant("zxqv no existe en el corpus", {
+        text: "En este material existe contenido general del corpus.",
+        title: "Clase general",
+        module: "Módulo 2",
+      }),
+    ).toBe(false);
+  });
+
+  it("preserves short domain acronyms such as P.A.S. during RAG relevance checks", () => {
+    expect(
+      isRagEvidenceRelevant("¿Qué es un P.A.S.?", {
+        text: "PAS significa pensamiento automático saboteador.",
+        title: "P.A.S.",
+        module: "Módulo 3",
+      }),
+    ).toBe(true);
+  });
+
   it("requires lexical relevance before RAG evidence can support grounding", () => {
     expect(
       isRagEvidenceRelevant("¿Qué es rapport?", {
