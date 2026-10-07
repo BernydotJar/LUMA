@@ -114,23 +114,61 @@ export function commerceIdempotencyKey(
   event: Pick<NormalizedCommerceEvent, "provider" | "externalEventId">,
 ): string {
   const provider = requiredIdentityPart(event.provider, "provider");
-  const externalEventId = requiredIdentityPart(event.externalEventId, "externalEventId");
+  const externalEventId = requiredIdentityPart(
+    event.externalEventId,
+    "externalEventId",
+  );
   return `${provider}:${externalEventId}`;
 }
 
-export function entitlementIdentityKey(identity: EntitlementIdentity): string {
+export function normalizeEntitlementIdentity(
+  identity: EntitlementIdentity,
+): EntitlementIdentity {
+  return {
+    tenantId: requiredIdentityPart(identity.tenantId, "tenantId"),
+    customerId: requiredIdentityPart(identity.customerId, "customerId"),
+    productId: requiredIdentityPart(identity.productId, "productId"),
+  };
+}
+
+export function entitlementIdentityKey(
+  identity: EntitlementIdentity,
+): string {
+  const normalized = normalizeEntitlementIdentity(identity);
   return [
-    requiredIdentityPart(identity.tenantId, "tenantId"),
-    requiredIdentityPart(identity.customerId, "customerId"),
-    requiredIdentityPart(identity.productId, "productId"),
+    normalized.tenantId,
+    normalized.customerId,
+    normalized.productId,
   ].join(":");
 }
 
-export function commerceSourceEvent(event: NormalizedCommerceEvent): CommerceSourceEvent {
+export function commerceSourceEvent(
+  event: NormalizedCommerceEvent,
+): CommerceSourceEvent {
   return {
-    provider: event.provider,
-    externalEventId: event.externalEventId,
+    provider: requiredIdentityPart(event.provider, "provider") as CommerceProviderId,
+    externalEventId: requiredIdentityPart(
+      event.externalEventId,
+      "externalEventId",
+    ),
     type: event.type,
     occurredAt: event.occurredAt,
   };
+}
+
+export function processingIntentMatches(
+  record: Pick<ProviderEventRecord, "resolution">,
+  action: EntitlementAction,
+  identity?: EntitlementIdentity,
+): boolean {
+  if (action === "none") return !record.resolution;
+  if (!identity || !record.resolution) return false;
+
+  const normalized = normalizeEntitlementIdentity(identity);
+  return (
+    record.resolution.action === action &&
+    record.resolution.tenantId === normalized.tenantId &&
+    record.resolution.customerId === normalized.customerId &&
+    record.resolution.productId === normalized.productId
+  );
 }

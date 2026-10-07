@@ -4,7 +4,10 @@ import { applyEntitlementTransition } from "./entitlement";
 import {
   commerceIdempotencyKey,
   entitlementIdentityKey,
+  normalizeEntitlementIdentity,
+  processingIntentMatches,
   type CommerceProcessingOutcome,
+  type CommerceProviderId,
   type EntitlementAction,
   type EntitlementIdentity,
   type EntitlementRecord,
@@ -42,61 +45,84 @@ function validTimestamp(value: string, label: string): string {
   return value;
 }
 
-function sanitizedErrorCode(value: string): string {
-  const normalized = value
-    .trim()
-    .toUpperCase()
-    .replace(/[^A-Z0-9_:.-]/g, "_")
-    .slice(0, 120);
-  if (!normalized) throw new Error("errorCode is required");
+function symbolicErrorCode(value: string): string {
+  const normalized = value.trim().toUpperCase();
+  if (!/^[A-Z][A-Z0-9_]{0,63}$/.test(normalized)) {
+    throw new Error("errorCode must be a symbolic non-sensitive code");
+  }
   return normalized;
 }
 
-function eventMatches(record: ProviderEventRecord, event: NormalizedCommerceEvent): boolean {
+function validCorrelationId(value: string): string {
+  const normalized = value.trim();
+  if (!/^[A-Za-z0-9._:-]{1,128}$/.test(normalized)) {
+    throw new Error("correlationId must be a safe identifier");
+  }
+  return normalized;
+}
+
+function eventMatches(
+  record: ProviderEventRecord,
+  event: NormalizedCommerceEvent,
+): boolean {
   return (
-    record.provider === event.provider &&
-    record.externalEventId === event.externalEventId &&
+    record.provider.trim() === event.provider.trim() &&
+    record.externalEventId.trim() === event.externalEventId.trim() &&
     record.type === event.type &&
-    record.occurredAt === event.occurredAt &&
+    Date.parse(record.occurredAt) === Date.parse(event.occurredAt) &&
     record.customerExternalId === event.customerExternalId &&
     record.productExternalId === event.productExternalId &&
     record.transactionExternalId === event.transactionExternalId
   );
 }
 
-function assertEventMatches(record: ProviderEventRecord, event: NormalizedCommerceEvent) {
-  if (!eventMatches(record, event)) throw new Error("COMMERCE_EVENT_CONFLICT");
+function assertEventMatches(
+  record: ProviderEventRecord,
+  event: NormalizedCommerceEvent,
+) {
+  if (!eventMatches(record, event)) {
+    throw new Error("COMMERCE_EVENT_CONFLICT");
+  }
 }
 
 export class FirestoreCommerceLedger {
   constructor(private readonly firestore: Firestore) {}
 
-  private eventRef(event: Pick<NormalizedCommerceEvent, "provider" | "externalEventId">) {
+  private eventRef(
+    event: Pick<NormalizedCommerceEvent, "provider" | "externalEventId">,
+  ) {
     return this.firestore
       .collection("commerceProviderEvents")
       .doc(hashDocumentId(commerceIdempotencyKey(event)));
   }
 
   private entitlementRef(identity: EntitlementIdentity) {
+    const normalized = normalizeEntitlementIdentity(identity);
     const tenantRef = this.firestore
       .collection("commerceTenants")
-      .doc(hashDocumentId(identity.tenantId.trim()));
+      .doc(hashDocumentId(normalized.tenantId));
 
     return tenantRef
       .collection("entitlements")
-      .doc(hashDocumentId(entitlementIdentityKey(identity)));
+      .doc(hashDocumentId(entitlementIdentityKey(normalized)));
   }
 
   async getEvent(
     event: Pick<NormalizedCommerceEvent, "provider" | "externalEventId">,
   ): Promise<ProviderEventRecord | undefined> {
     const snapshot = await this.eventRef(event).get();
-    return snapshot.exists ? (snapshot.data() as ProviderEventRecord) : undefined;
+    return snapshot.exists
+      ? (snapshot.data() as ProviderEventRecord)
+      : undefined;
   }
 
-  async getEntitlement(identity: EntitlementIdentity): Promise<EntitlementRecord | undefined> {
+  async getEntitlement(
+    identity: EntitlementIdentity,
+  ): Promise<EntitlementRecord | undefined> {
     const snapshot = await this.entitlementRef(identity).get();
-    return snapshot.exists ? (snapshot.data() as EntitlementRecord) : undefined;
+    return snapshot.exists
+      ? (snapshot.data() as EntitlementRecord)
+      : undefined;
   }
 
   async receive(
@@ -107,9 +133,7 @@ export class FirestoreCommerceLedger {
     validTimestamp(event.occurredAt, "event.occurredAt");
     validTimestamp(receivedAt, "receivedAt");
 
-    const normalizedCorrelationId = correlationId.trim();
-    if (!normalizedCorrelationId) throw new Error("correlationId is required");
-
+    const normalizedCorrelationId = validCorrelationId(correlationId);
     const eventRef = this.eventRef(event);
 
     return this.firestore.runTransaction(async (transaction) => {
@@ -123,12 +147,16 @@ export class FirestoreCommerceLedger {
 
       const record: ProviderEventRecord = {
         idempotencyKey: commerceIdempotencyKey(event),
-        provider: event.provider,
-        externalEventId: event.externalEventId,
+        provider: event.provider.trim() as CommerceProviderId,
+        externalEventId: event.externalEventId.trim(),
         type: event.type,
         occurredAt: event.occurredAt,
-        ...(event.customerExternalId ? { customerExternalId: event.customerExternalId } : {}),
-        ...(event.productExternalId ? { productExternalId: event.productExternalId } : {}),
+        ...(event.customerExternalId
+          ? { customerExternalId: event.customerExternalId }
+          : {}),
+        ...(event.productExternalId
+          ? { productExternalId: event.productExternalId }
+          : {}),
         ...(event.transactionExternalId
           ? { transactionExternalId: event.transactionExternalId }
           : {}),
@@ -143,7 +171,9 @@ export class FirestoreCommerceLedger {
     });
   }
 
-  async process(input: ProcessCommerceEventInput): Promise<ProcessCommerceEventResult> {
+  async process(
+    input: ProcessCommerceEventInput,
+  ): Promise<ProcessCommerceEventResult> {
     const processedAt = validTimestamp(
       input.processedAt ?? new Date().toISOString(),
       "processedAt",
@@ -154,31 +184,60 @@ export class FirestoreCommerceLedger {
       throw new Error("ENTITLEMENT_IDENTITY_REQUIRED");
     }
 
+    const identity = input.entitlement
+      ? normalizeEntitlementIdentity(input.entitlement)
+      : undefined;
     const eventRef = this.eventRef(input.event);
-    const entitlementRef = input.entitlement
-      ? this.entitlementRef(input.entitlement)
+    const entitlementRef = identity
+      ? this.entitlementRef(identity)
       : undefined;
 
     return this.firestore.runTransaction(async (transaction) => {
       const eventSnapshot = await transaction.get(eventRef);
-      if (!eventSnapshot.exists) throw new Error("COMMERCE_EVENT_NOT_RECEIVED");
+      if (!eventSnapshot.exists) {
+        throw new Error("COMMERCE_EVENT_NOT_RECEIVED");
+      }
 
       const currentEvent = eventSnapshot.data() as ProviderEventRecord;
       assertEventMatches(currentEvent, input.event);
 
-      const entitlementSnapshot = entitlementRef
-        ? await transaction.get(entitlementRef)
-        : undefined;
-      const currentEntitlement = entitlementSnapshot?.exists
-        ? (entitlementSnapshot.data() as EntitlementRecord)
-        : undefined;
-
       if (currentEvent.processingStatus === "processed") {
+        if (
+          !processingIntentMatches(
+            currentEvent,
+            input.action,
+            identity,
+          )
+        ) {
+          throw new Error("COMMERCE_EVENT_RESOLUTION_CONFLICT");
+        }
+
+        if (input.action === "none") {
+          return {
+            event: currentEvent,
+            duplicate: true,
+            outcome:
+              currentEvent.outcome ??
+              "no_entitlement_change",
+          };
+        }
+
+        const entitlementSnapshot = await transaction.get(
+          entitlementRef!,
+        );
+        const currentEntitlement = entitlementSnapshot.exists
+          ? (entitlementSnapshot.data() as EntitlementRecord)
+          : undefined;
+
         return {
           event: currentEvent,
-          ...(currentEntitlement ? { entitlement: currentEntitlement } : {}),
+          ...(currentEntitlement
+            ? { entitlement: currentEntitlement }
+            : {}),
           duplicate: true,
-          outcome: currentEvent.outcome ?? "no_entitlement_change",
+          outcome:
+            currentEvent.outcome ??
+            "no_entitlement_change",
         };
       }
 
@@ -186,7 +245,8 @@ export class FirestoreCommerceLedger {
         const processedEvent: ProviderEventRecord = {
           ...currentEvent,
           processingStatus: "processed",
-          processingAttempts: currentEvent.processingAttempts + 1,
+          processingAttempts:
+            currentEvent.processingAttempts + 1,
           processedAt,
           outcome: "no_entitlement_change",
         };
@@ -199,12 +259,20 @@ export class FirestoreCommerceLedger {
         };
       }
 
-      const identity = input.entitlement!;
-      const entitlementId = hashDocumentId(entitlementIdentityKey(identity));
+      const entitlementSnapshot = await transaction.get(
+        entitlementRef!,
+      );
+      const currentEntitlement = entitlementSnapshot.exists
+        ? (entitlementSnapshot.data() as EntitlementRecord)
+        : undefined;
+
+      const entitlementId = hashDocumentId(
+        entitlementIdentityKey(identity!),
+      );
 
       const transition = applyEntitlementTransition({
         entitlementId,
-        identity,
+        identity: identity!,
         action: input.action,
         event: input.event,
         appliedAt: processedAt,
@@ -212,17 +280,21 @@ export class FirestoreCommerceLedger {
       });
 
       if (transition.changed) {
-        transaction.set(entitlementRef!, transition.record);
+        transaction.set(
+          entitlementRef!,
+          transition.record,
+        );
       }
 
       const processedEvent: ProviderEventRecord = {
         ...currentEvent,
         processingStatus: "processed",
-        processingAttempts: currentEvent.processingAttempts + 1,
+        processingAttempts:
+          currentEvent.processingAttempts + 1,
         processedAt,
         outcome: transition.outcome,
         resolution: {
-          ...identity,
+          ...identity!,
           entitlementId,
           action: input.action,
         },
@@ -244,24 +316,28 @@ export class FirestoreCommerceLedger {
     failedAt = new Date().toISOString(),
   ): Promise<ProviderEventRecord> {
     validTimestamp(failedAt, "failedAt");
-
     const eventRef = this.eventRef(event);
 
     return this.firestore.runTransaction(async (transaction) => {
       const snapshot = await transaction.get(eventRef);
-      if (!snapshot.exists) throw new Error("COMMERCE_EVENT_NOT_RECEIVED");
+      if (!snapshot.exists) {
+        throw new Error("COMMERCE_EVENT_NOT_RECEIVED");
+      }
 
       const current = snapshot.data() as ProviderEventRecord;
       assertEventMatches(current, event);
 
-      if (current.processingStatus === "processed") return current;
+      if (current.processingStatus === "processed") {
+        return current;
+      }
 
       const failed: ProviderEventRecord = {
         ...current,
         processingStatus: "failed",
-        processingAttempts: current.processingAttempts + 1,
+        processingAttempts:
+          current.processingAttempts + 1,
         failedAt,
-        lastErrorCode: sanitizedErrorCode(errorCode),
+        lastErrorCode: symbolicErrorCode(errorCode),
       };
 
       transaction.set(eventRef, failed);
