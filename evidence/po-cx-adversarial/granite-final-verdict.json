@@ -1,0 +1,46 @@
+{
+  "verdict": "PASS_WITH_RISKS",
+  "scores": {
+    "thesis_clarity": 7,
+    "first_60_seconds": 6,
+    "next_best_action": 5,
+    "adaptive_loop": 4,
+    "differentiation": 5
+  },
+  "strongest_signal": "Practice produces actual evidence rather than only completion",
+  "biggest_failure": "Two different newly calibrated learners receive different experiences",
+  "findings": [
+    {
+      "severity": "MAJOR",
+      "area": "Differentiation",
+      "finding": "Onboarding state is not materially differentiated by the persisted onboarding state",
+      "evidence": "Learner A and Learner B had the same onboarding state and home experience",
+      "user_impact": "Potential for confusion and lack of personalization",
+      "recommended_change": "Ensure that the learner's onboarding state and evidence are effectively incorporated into the home experience",
+      "acceptance_test": "Verify that learners with different onboarding states receive distinct home experiences"
+    },
+    {
+      "severity": "MINOR",
+      "area": "Adaptive Loop",
+      "finding": "New practice evidence does not change the learner's visible Next Best Action",
+      "evidence": "Practice evidence was completed, but the Next Best Action remained unchanged",
+      "user_impact": "Reduced effectiveness of adaptive learning",
+      "recommended_change": "Implement a mechanism to update the Next Best Action based on new evidence",
+      "acceptance_test": "Test that the Next Best Action updates after successful evidence collection"
+    }
+  ],
+  "demo_test": {
+    "two_learners_different": true,
+    "twin_changes_next_action": true,
+    "evidence_not_completion": true,
+    "instructor_learning_intelligence": true,
+    "reason": "Learners received different experiences and the Next Best Action did not change despite evidence collection"
+  },
+  "priority_order": [
+    "Differentiation",
+    "Adaptive Loop",
+    "Evidence-driven Next Best Action",
+    "Integration of Learner State",
+    "User Experience Clarity"
+  ]
+}

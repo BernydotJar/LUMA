@@ -1150,6 +1150,300 @@
         "src/lib/learning-server.ts",
         "src/lib/learning-store.ts"
       ]
+    },
+    {
+      "id": "LUMA-043-learning-pattern-research",
+      "kind": "product-research",
+      "title": "Platzi and AI-EdTech learning pattern research with adoption decisions",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-042-authoritative-twin-production-release"
+      ],
+      "capability": "learning-product-research",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "docs/research/platzi-learning-intelligence-2026.md",
+        "specs/020-ai-native-class-factory.md",
+        "evidence/class-intelligence/**"
+      ]
+    },
+    {
+      "id": "LUMA-044-pedagogy-as-code-contract",
+      "kind": "ai-learning-capability",
+      "title": "Pedagogy-as-code class contract, topologies, invariants and quality gate",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-043-learning-pattern-research"
+      ],
+      "capability": "learning-quality-policy",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/020-ai-native-class-factory.md",
+        "src/lib/class-contract.ts",
+        "src/lib/class-contract.test.ts",
+        "src/lib/learning-content.ts",
+        "evidence/class-intelligence/**"
+      ]
+    },
+    {
+      "id": "LUMA-045-adaptive-entry-diagnostic",
+      "kind": "product-surface",
+      "title": "Capability micro-diagnostic and adaptive class entry routing",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-044-pedagogy-as-code-contract"
+      ],
+      "capability": "adaptive-learning-entry",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/learn/experience/**",
+        "src/components/class-entry-diagnostic*",
+        "src/lib/class-contract*",
+        "e2e/class-intelligence.spec.ts",
+        "evidence/class-intelligence/**"
+      ]
+    },
+    {
+      "id": "LUMA-046-simulation-evidence-runtime",
+      "kind": "ai-learning-capability",
+      "title": "Criterion-based simulation, remediation, replay and evidence authority runtime",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-045-adaptive-entry-diagnostic"
+      ],
+      "capability": "evidence-first-practice",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/learn/session/**",
+        "src/components/practice-session*",
+        "src/lib/simulation-evidence*",
+        "src/lib/persistent-learning.ts",
+        "src/lib/learner-projection.ts",
+        "e2e/class-intelligence.spec.ts",
+        "evidence/class-intelligence/**"
+      ]
+    },
+    {
+      "id": "LUMA-047-self-refreshing-class-factory",
+      "kind": "ai-learning-capability",
+      "title": "Source-grounded class factory with reflection, impact analysis and human promotion",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-044-pedagogy-as-code-contract"
+      ],
+      "capability": "class-generation-reflection",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/020-ai-native-class-factory.md",
+        "src/lib/class-factory*",
+        "src/app/studio/class-intelligence/**",
+        "evidence/class-intelligence/**"
+      ]
+    },
+    {
+      "id": "LUMA-048-learning-impact-observability",
+      "kind": "product-surface",
+      "title": "Learning evidence to coach insight and class-quality observability",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-046-simulation-evidence-runtime",
+        "LUMA-047-self-refreshing-class-factory"
+      ],
+      "capability": "learning-impact-observability",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/studio/class-intelligence/**",
+        "src/components/persistent-twin-detail.tsx",
+        "src/components/studio-dashboard*",
+        "src/lib/coach-api-client.ts",
+        "e2e/class-intelligence.spec.ts",
+        "evidence/class-intelligence/**"
+      ]
+    },
+    {
+      "id": "LUMA-049-class-intelligence-release",
+      "kind": "release",
+      "title": "AI-native class intelligence client-demo release",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-045-adaptive-entry-diagnostic",
+        "LUMA-046-simulation-evidence-runtime",
+        "LUMA-047-self-refreshing-class-factory",
+        "LUMA-048-learning-impact-observability"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "e2e/**",
+        "evidence/**",
+        "scripts/**",
+        "package.json",
+        "package-lock.json",
+        "firebase.json",
+        "apphosting.yaml"
+      ]
+    },
+    {
+      "id": "LUMA-050-v2-post-client-baseline",
+      "kind": "architecture",
+      "title": "V2 post-client architecture baseline and bounded migration plan",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-049-class-intelligence-release"
+      ],
+      "capability": "solution-architecture",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "docs/v2/**",
+        "specs/021-luma-v2-commerce-enrollment-foundation.md",
+        "graph-harness.project.json",
+        "evidence/v2-kickoff/**"
+      ]
+    },
+    {
+      "id": "LUMA-051-commerce-domain-contract",
+      "kind": "domain-foundation",
+      "title": "Provider-neutral commerce events, provider contract, entitlement and enrollment boundaries",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-050-v2-post-client-baseline"
+      ],
+      "capability": "commerce-domain",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/commerce/**",
+        "specs/021-luma-v2-commerce-enrollment-foundation.md",
+        "evidence/v2-kickoff/**"
+      ]
+    },
+    {
+      "id": "LUMA-052-commerce-idempotency-ledger",
+      "kind": "domain-foundation",
+      "title": "Idempotent provider-event ledger and replay-safe processing",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-051-commerce-domain-contract"
+      ],
+      "capability": "commerce-reliability",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/commerce/**",
+        "src/app/api/commerce/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-053-hotmart-provider",
+      "kind": "integration",
+      "title": "Hotmart provider adapter with signed webhook normalization and lifecycle mapping",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-052-commerce-idempotency-ledger"
+      ],
+      "capability": "commerce-provider-hotmart",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/commerce/**",
+        "src/app/api/commerce/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-054-stripe-provider",
+      "kind": "integration",
+      "title": "Stripe provider adapter using the same normalized commerce contract",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-052-commerce-idempotency-ledger"
+      ],
+      "capability": "commerce-provider-stripe",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/commerce/**",
+        "src/app/api/commerce/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-055-v2-enterprise-pilot-gate",
+      "kind": "release",
+      "title": "V2 enterprise pilot readiness gate for commerce-independent learning intelligence",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-053-hotmart-provider",
+        "LUMA-054-stripe-provider"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "evidence/**",
+        "docs/v2/**",
+        "specs/**",
+        "src/lib/commerce/**",
+        "src/app/api/commerce/**"
+      ]
     }
   ]
 }

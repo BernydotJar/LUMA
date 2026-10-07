@@ -1,0 +1,17 @@
+{
+  "model": "ibm/granite3.3:2b",
+  "review_mode": "attempt-to-disprove",
+  "response": {
+    "verdict": "PASS",
+    "blocking_findings": [],
+    "non_blocking_risks": [],
+    "invariant_checks": {
+      "evidence_authority": "PASS",
+      "human_promotion": "PASS",
+      "learner_coach_separation": "PASS",
+      "mobile_accessibility": "PASS",
+      "react_next_quality": "PASS"
+    },
+    "reason": "The provided code snippet appears to be a TypeScript interface definition for class contracts, evidence categories, twin authorities, diagnostic choices, and class quality findings. It does not contain any evident errors or security vulnerabilities. All invariant checks pass, indicating that the code adheres to the defined interfaces and types."
+  }
+}

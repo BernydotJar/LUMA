@@ -7,6 +7,7 @@ import {
   type StoredOnboardingState,
 } from "./learner-projection";
 import type { LearnerState, RankedLearningAction } from "../types/learning";
+import { evaluatePasSimulation } from "./simulation-evidence";
 
 export interface PersistedLearnerRecord {
   schemaVersion: 1;
@@ -53,9 +54,9 @@ export function verifyLearningEvent(value: unknown): StoredLearningEvent | undef
   const normalizedAnswers = Object.fromEntries(
     Object.entries(pasAnswerKey).map(([key]) => [key, String(answers[key] ?? "")]),
   );
-  const correctCount = Object.entries(pasAnswerKey).filter(
-    ([key, expected]) => normalizedAnswers[key] === expected,
-  ).length;
+  const normalizedAttempts = normalizeAttempts(event.attempts);
+  const evidence = evaluatePasSimulation(normalizedAnswers, normalizedAttempts ?? {});
+  const correctCount = evidence.passedCriteria;
 
   const completedAt =
     typeof event.completedAt === "string" && event.completedAt.length <= 64
@@ -71,9 +72,13 @@ export function verifyLearningEvent(value: unknown): StoredLearningEvent | undef
     conceptId: "pas",
     answers: normalizedAnswers,
     correctCount,
-    attempts: normalizeAttempts(event.attempts),
+    attempts: normalizedAttempts,
     completedAt,
     sourceId,
+    evidenceCategory: evidence.evidenceCategory,
+    twinAuthority: evidence.twinAuthority,
+    rubricId: evidence.rubricId,
+    criteria: evidence.criteria,
   };
 }
 

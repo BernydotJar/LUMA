@@ -806,3 +806,22 @@
     min-height: 44px;
   }
 }
+
+.interventionQueue footer > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+@media (max-width: 760px) {
+  .interventionQueue footer > div {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .interventionQueue footer > div a {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+}

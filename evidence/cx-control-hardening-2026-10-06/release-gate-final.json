@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-06",
+  "branch": "feature/luma-cx-control-hardening",
+  "decision": "PASS",
+  "scope": "bounded LUMA CX control-plane hardening",
+  "gates": {
+    "focused_tests": "22/22 PASS",
+    "unit_full": "56/56 PASS; 2 emulator tests skipped by separate gate",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS",
+    "tutor_production_e2e": "2/2 PASS",
+    "production_security": "0 vulnerabilities",
+    "granite_deterministic": "3/3 STRICT_PASS",
+    "granite_critic": "STRICT_PASS",
+    "independent_verifier": "STRICT_PASS",
+    "diff_check": "PASS"
+  },
+  "adversarial_counters": {
+    "unauthorized_disclosures": 0,
+    "unrelated_curricular_fallbacks": 0,
+    "false_grounded": 0,
+    "repeated_response_loops": 0,
+    "fabricated_conversational_memory": 0
+  },
+  "preserved_failures": [
+    "initial Vitest alias/mock harness failures",
+    "initial build timeout with dev server sharing checkout",
+    "Granite 4 llama-server runtime kill",
+    "browser port-3100 conflict",
+    "six-worker dev-server saturation/timeouts"
+  ],
+  "protected_concurrent_work": [
+    "PNL RAG",
+    "SE Voice",
+    "Persistent Learning Twin",
+    "Firebase/App Hosting"
+  ],
+  "merge_to_main": false
+}

@@ -17,11 +17,17 @@ import styles from "./learner-components.module.css";
 type TutorMessage = {
   role: "learner" | "tutor";
   content: string;
+  contextEligible?: boolean;
   evidence?: {
     concept: string;
     source: string;
     url: string;
-    confidence: number;
+    confidence?: number;
+    sourceId?: string;
+    driveFileId?: string;
+    chunkId?: string;
+    startClock?: string;
+    endClock?: string;
   };
   reflection?: {
     artifactId: string;
@@ -30,7 +36,13 @@ type TutorMessage = {
     sourceCount: number;
   };
   trust?: {
-    status: "GROUNDED" | "BLOCKED_CLAIM";
+    status:
+      | "GROUNDED"
+      | "BLOCKED_CLAIM"
+      | "INSUFFICIENT_CONTEXT"
+      | "INSUFFICIENT_EVIDENCE"
+      | "POLICY_BLOCKED"
+      | "RETRIEVAL_UNAVAILABLE";
     reason?: string;
     artifactId?: string;
   };
@@ -44,12 +56,21 @@ export function TutorPanel() {
       role: "tutor",
       content:
         "Estoy contigo en esta parte de la ruta. Puedo explicarlo distinto, darte un ejemplo, probarte o llevarte al momento exacto del material. ¿Qué necesitas?",
+      contextEligible: false,
     },
   ]);
 
   const sendMessage = async (text: string) => {
     const clean = text.trim();
     if (!clean || loading) return;
+
+    const recentContext = messages
+      .filter((item) => item.contextEligible !== false)
+      .slice(-8)
+      .map((item) => ({
+        role: item.role,
+        content: item.content,
+      }));
 
     setMessages((current) => [...current, { role: "learner", content: clean }]);
     setMessage("");
@@ -59,7 +80,10 @@ export function TutorPanel() {
       const response = await fetch("/api/tutor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: clean }),
+        body: JSON.stringify({
+          message: clean,
+          messages: recentContext,
+        }),
       });
       const data = (await response.json()) as {
         answer?: string;
@@ -130,11 +154,16 @@ export function TutorPanel() {
             )}
             <div>
               <p>{item.content}</p>
-              {item.trust?.status === "BLOCKED_CLAIM" && (
+              {(item.trust?.status === "BLOCKED_CLAIM" ||
+                item.trust?.status === "POLICY_BLOCKED") && (
                 <div className={styles.trustWarning}>
                   <AlertTriangle size={14} />
                   <div>
-                    <strong>Afirmación bloqueada por política</strong>
+                    <strong>
+                      {item.trust.status === "POLICY_BLOCKED"
+                        ? "Solicitud bloqueada por acceso"
+                        : "Afirmación bloqueada por política"}
+                    </strong>
                     <span>{item.trust.reason}</span>
                   </div>
                 </div>
@@ -145,9 +174,17 @@ export function TutorPanel() {
                   href={item.evidence.url}
                   target="_blank"
                   rel="noreferrer"
+                  title={
+                    item.evidence.sourceId && item.evidence.chunkId
+                      ? `${item.evidence.sourceId} · ${item.evidence.chunkId}`
+                      : item.evidence.concept
+                  }
                 >
                   <BookOpenCheck size={13} />
-                  {item.evidence.source} · {Math.round(item.evidence.confidence * 100)}%
+                  {item.evidence.source}
+                  {typeof item.evidence.confidence === "number"
+                    ? ` · ${Math.round(item.evidence.confidence * 100)}%`
+                    : ""}
                   <ExternalLink size={11} />
                 </a>
               )}

@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
 import { moduleThreeSource } from "@/lib/luma-data";
+import { extractivePnlAnswer, searchPnlRag } from "@/lib/pnl-rag";
+import {
+  evaluateTutorControl,
+  isRagEvidenceRelevant,
+  normalizeTutorText,
+} from "./cx-control";
 
 const responses = [
   {
@@ -31,7 +37,7 @@ const responses = [
     },
   },
   {
-    keywords: ["emoción", "ira", "miedo", "triste"],
+    keywords: ["emocion", "ira", "miedo", "triste"],
     answer:
       "El material propone empezar por el pensamiento que originó la emoción, porque cambiar la interpretación puede cambiar la respuesta. Eso no significa negar lo que sientes: primero nómbralo, observa qué estabas pensando y decide una acción que no te haga daño. ¿Quieres trabajar con una situación de hoy?",
     concept: "Comunicación emocional",
@@ -46,27 +52,11 @@ const responses = [
   },
 ];
 
-const highStakesKeywords = [
-  "órgano",
-  "organo",
-  "riñón",
-  "rinon",
-  "pulmón",
-  "pulmon",
-  "hígado",
-  "higado",
-  "corazón",
-  "corazon",
-  "enfermedad",
-  "enferman",
-  "cura",
-  "curar",
-  "médico",
-  "medico",
-];
-
 export async function POST(request: Request) {
-  const payload = (await request.json()) as { message?: unknown };
+  const payload = (await request.json()) as {
+    message?: unknown;
+    messages?: unknown;
+  };
   const message = typeof payload.message === "string" ? payload.message.trim() : "";
 
   if (!message) {
@@ -76,9 +66,24 @@ export async function POST(request: Request) {
     );
   }
 
-  const normalized = message.toLocaleLowerCase("es");
+  const control = evaluateTutorControl({
+    message,
+    messages: payload.messages,
+  });
 
-  if (highStakesKeywords.some((keyword) => normalized.includes(keyword))) {
+  if (control.response) {
+    return NextResponse.json({
+      ...control.response,
+      intent: control.intent,
+      outcome: control.outcome,
+      context: {
+        recentTurns: control.context.length,
+        resolvedFromContext: control.resolvedFromContext,
+      },
+    });
+  }
+
+  if (control.outcome === "HIGH_STAKES_ESCALATION") {
     return NextResponse.json({
       answer:
         "El material del curso contiene una afirmación que relaciona emociones, órganos y enfermedad, pero el corpus no aporta evidencia clínica independiente. LUMA no puede presentarla como un hecho médico verificado. Puedo mostrarte exactamente dónde aparece y separar la perspectiva del curso de la evidencia disponible; para una preocupación de salud, corresponde consultar a un profesional cualificado.",
@@ -89,6 +94,8 @@ export async function POST(request: Request) {
         confidence: 1,
       },
       learningMove: "ESCALATE",
+      intent: control.intent,
+      outcome: control.outcome,
       trust: {
         status: "BLOCKED_CLAIM",
         reason:
@@ -98,10 +105,121 @@ export async function POST(request: Request) {
     });
   }
 
-  const matched =
-    responses.find((candidate) =>
-      candidate.keywords.some((keyword) => normalized.includes(keyword)),
-    ) ?? responses[0];
+  const normalized = normalizeTutorText(control.query);
+  const rag = await searchPnlRag(control.query, 5);
+  const relevantRagHits = rag.configured
+    ? rag.results.filter((hit) =>
+        isRagEvidenceRelevant(control.query, {
+          text: hit.text,
+          title: hit.title,
+          module: hit.module,
+        }),
+      )
+    : [];
+
+  if (rag.configured && relevantRagHits.length > 0) {
+    const top = relevantRagHits[0];
+    return NextResponse.json({
+      answer: extractivePnlAnswer(top),
+      evidence: {
+        concept: `Corpus audiovisual · ${top.module}`,
+        source: `${top.title} · ${top.startClock} → ${top.endClock}`,
+        url: top.driveUrl,
+        sourceId: top.sourceId,
+        driveFileId: top.driveFileId,
+        chunkId: top.chunkId,
+        startClock: top.startClock,
+        endClock: top.endClock,
+      },
+      evidenceItems: relevantRagHits.slice(0, 3).map((hit) => ({
+        sourceId: hit.sourceId,
+        driveFileId: hit.driveFileId,
+        chunkId: hit.chunkId,
+        module: hit.module,
+        title: hit.title,
+        startClock: hit.startClock,
+        endClock: hit.endClock,
+        text: hit.text,
+        driveUrl: hit.driveUrl,
+      })),
+      learningMove: "EXPLAIN",
+      intent: control.intent,
+      outcome: control.outcome,
+      context: {
+        recentTurns: control.context.length,
+        resolvedFromContext: control.resolvedFromContext,
+      },
+      trust: {
+        status: "GROUNDED",
+        artifactId: top.chunkId,
+      },
+      retrieval: {
+        backend: `pnl-rag/${rag.backend ?? "unknown"}`,
+        resultCount: relevantRagHits.length,
+        rejectedAsIrrelevant: rag.results.length - relevantRagHits.length,
+      },
+    });
+  }
+
+  if (rag.configured && rag.strict) {
+    if (rag.error) {
+      return NextResponse.json(
+        {
+          answer:
+            "El corpus PNL está configurado, pero la recuperación no está disponible en este momento. No voy a completar la respuesta desde memoria general.",
+          learningMove: "ESCALATE",
+          intent: control.intent,
+          outcome: "NEEDS_CLARIFICATION",
+          trust: {
+            status: "RETRIEVAL_UNAVAILABLE",
+            reason: "El servicio de recuperación del corpus no respondió.",
+          },
+        },
+        { status: 503 },
+      );
+    }
+
+    return NextResponse.json({
+      answer:
+        rag.results.length > 0
+          ? "La recuperación devolvió contenido, pero no puedo demostrar que sea relevante para tu solicitud actual. Necesito una pregunta más específica."
+          : "No encontré evidencia suficiente en el corpus procesado.",
+      learningMove: "ASK",
+      intent: control.intent,
+      outcome: "NEEDS_CLARIFICATION",
+      trust: {
+        status: "INSUFFICIENT_EVIDENCE",
+        reason:
+          rag.results.length > 0
+            ? "Los resultados recuperados no superaron la verificación mínima de relevancia para la solicitud actual."
+            : "El corpus configurado no devolvió evidencia para la solicitud actual.",
+      },
+    });
+  }
+
+  const matched = responses.find((candidate) =>
+    candidate.keywords.some((keyword) =>
+      normalized.includes(normalizeTutorText(keyword)),
+    ),
+  );
+
+  if (!matched) {
+    return NextResponse.json({
+      answer:
+        "No tengo evidencia o contexto suficiente para responder esa solicitud sin inventar una conexión curricular. ¿Qué concepto, práctica o situación de aprendizaje quieres trabajar?",
+      learningMove: "ASK",
+      intent: control.intent,
+      outcome: "NEEDS_CLARIFICATION",
+      trust: {
+        status: rag.configured
+          ? "INSUFFICIENT_EVIDENCE"
+          : "INSUFFICIENT_CONTEXT",
+        reason: rag.configured
+          ? "No hubo evidencia relevante ni una ruta curricular explícita para la solicitud actual."
+          : "No hubo una ruta curricular explícita ni contexto suficiente para responder con seguridad.",
+      },
+    });
+  }
 
   return NextResponse.json({
     answer: matched.answer,
@@ -116,6 +234,12 @@ export async function POST(request: Request) {
       normalized.includes("respuesta") || normalized.includes("dime")
         ? "ASK"
         : "SOCRATIC_QUESTION",
+    intent: control.intent,
+    outcome: control.outcome,
+    context: {
+      recentTurns: control.context.length,
+      resolvedFromContext: control.resolvedFromContext,
+    },
     trust: {
       status: "GROUNDED",
       artifactId: matched.reflection.artifactId,

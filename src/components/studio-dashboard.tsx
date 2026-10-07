@@ -209,7 +209,7 @@ export function StudioDashboard() {
             </div>
           ))}
         </div>
-        <footer><p>Antes de la sesión, el entrenador recibe un resumen breve del objetivo, evidencia, intentos e intervenciones previas.</p><Link href="/studio/learners/mariana">Abrir gemelo de aprendizaje de Mariana <ArrowRight size={15} /></Link></footer>
+        <footer><p>Antes de la sesión, el entrenador recibe un resumen breve del objetivo, evidencia, intentos e intervenciones previas.</p><div><Link href="/studio/class-intelligence">Ver inteligencia de clases <ArrowRight size={15} /></Link><Link href="/studio/learners/mariana">Abrir gemelo de aprendizaje de Mariana <ArrowRight size={15} /></Link></div></footer>
       </section>
     </div>
   );

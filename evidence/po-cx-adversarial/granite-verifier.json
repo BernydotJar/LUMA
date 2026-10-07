@@ -1,0 +1,21 @@
+{
+  "claims": [
+    "two_learners_different",
+    "twin_changes_next_action",
+    "evidence_not_completion",
+    "instructor_learning_intelligence"
+  ],
+  "corrected_verdict": "PASS_WITH_RISKS",
+  "material_corrections": [
+    "The evidence does not directly show two newly diagnosed learners receiving visibly different journeys (two_learners_different: NOT_PROVEN).",
+    "The evidence does not show one learner completing a practice, producing new evidence, and then seeing the Next Best Action change in the same observed session (twin_changes_next_action: NOT_PROVEN).",
+    "The evidence does not show the learner-facing consequences of the Twin evolving, as the dedicated Twin page is currently coach-facing (evidence_not_completion: NOT_PROVEN).",
+    "The evidence directly shows instructor intelligence about learning/application, misconceptions or intervention effectiveness rather than only activity metrics (instructor_learning_intelligence: PROVEN)"
+  ],
+  "top_product_priorities": [
+    "First 60 seconds",
+    "Adaptive loop",
+    "Differentiation",
+    "Next Best Action"
+  ]
+}

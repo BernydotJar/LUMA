@@ -1,0 +1,133 @@
+{
+  "graph": "PNL Video RAG -> LUMA integration",
+  "operating_model": [
+    "Producer",
+    "Critic",
+    "Fixer",
+    "Independent Verifier",
+    "Release Gate",
+    "Evidence"
+  ],
+  "status": "RELEASE_READY",
+  "producer": {
+    "result": "PASS",
+    "changes": [
+      "Added authenticated stdlib HTTP bridge to pnl-rag with /health, /v1/stats and /v1/search.",
+      "Added structural source verifier for SHA/backend/model/language/timestamps/FTS/citations/artifacts/Obsidian.",
+      "Corrected Mac pilot/bootstrap scripts to use $HOME/.venvs/pnl-video-rag.",
+      "Corrected MLX production model identifier to mlx-community/whisper-large-v3-turbo.",
+      "Added LUMA server-side PNL RAG adapter and corpus-first tutor path.",
+      "Added strict insufficient-evidence and retrieval-unavailable behavior.",
+      "Kept local SRT/TXT paths server-side; learner response exposes Drive provenance and timestamps only.",
+      "Added PostgreSQL demo backend under isolated luma_pnl schema with pgvector extension and Spanish FTS.",
+      "Added transactional SQLite-to-PostgreSQL corpus sync while preserving SQLite as fallback.",
+      "LUMA now reports the retrieval backend returned by the bridge instead of hard-coding sqlite-fts5."
+    ]
+  },
+  "critic": {
+    "findings": [
+      {
+        "severity": "high",
+        "finding": "Initial SQLite FTS query used OR across all query tokens, allowing false grounding from common words.",
+        "evidence": "Synthetic E2E query 'zxqv no existe en el corpus' incorrectly returned the only chunk."
+      },
+      {
+        "severity": "blocking",
+        "finding": "Cloud Sandbox runtime is Linux/aarch64 and does not mount the canonical /Users/... Mac paths or the 1,021,031,096-byte production pilot MP4."
+      },
+      {
+        "severity": "blocking",
+        "finding": "The sandbox PNL folder is an untracked mirror under /workspace; it is not an independent Git checkout and the legacy download_subtitles.py is absent there."
+      }
+    ]
+  },
+  "fixer": {
+    "result": "PASS",
+    "changes": [
+      "Added conversational stopword filtering and minimum meaningful-token overlap to FTS retrieval.",
+      "Added regression coverage for natural-language query recall and nonsense-query false positives.",
+      "Removed raw retrieval error detail from the learner-facing LUMA response.",
+      "Kept PostgreSQL private behind the existing authenticated bridge; LUMA never receives DATABASE_URL.",
+      "Kept embedding vector nullable until a real embedding provider is approved; no synthetic semantic vectors are generated."
+    ]
+  },
+  "independent_verifier": {
+    "pnl_rag": {
+      "pytest": "21/21 PASS",
+      "shell_syntax": "PASS",
+      "runtime": "Linux/aarch64",
+      "postgres_contract": "PASS: migration/schema/sync selection covered; real pgvector runtime not available in sandbox",
+      "production_precision": "PASS: relevant query grounded; unrelated query returns no hits"
+    },
+    "luma": {
+      "vitest": "22/22 PASS",
+      "lint": "PASS",
+      "typecheck": "PASS",
+      "next_build": "PASS",
+      "production_build": "build-2026-10-06-005",
+      "production_backend": "pnl-rag/postgres-fts-pgvector",
+      "production_smoke": "PASS"
+    },
+    "synthetic_e2e": {
+      "grounded_query": "PASS",
+      "grounded_window": "00:04:53.000 -> 00:06:25.000",
+      "provenance_fields": [
+        "sourceId",
+        "driveFileId",
+        "chunkId",
+        "module",
+        "title",
+        "startClock",
+        "endClock",
+        "driveUrl"
+      ],
+      "insufficient_evidence_query": "PASS",
+      "insufficient_evidence_response": "No encontré evidencia suficiente en el corpus procesado."
+    }
+  },
+  "release_gate": {
+    "integration_layer": "PASS",
+    "production_mlx_pilot": "BLOCKED_EXTERNAL_ENVIRONMENT",
+    "decision": "PARTIAL_WITH_DOCUMENTED_BLOCKERS",
+    "batch_authorized": false,
+    "reason": "The real Apple Silicon MLX Large V3 Turbo pilot, ASR spot-check, real SHA/provenance verification and canonical Mac output validation have not executed in this environment.",
+    "postgres_code_path": "PASS",
+    "postgres_real_mac_runtime": "PENDING_EXTERNAL_ENVIRONMENT",
+    "postgres_real_runtime": "PASS_POSTGRESQL_15_19_PGVECTOR_0_8_5",
+    "public_rag_edge": "PASS_HTTPS_BEARER_PROTECTED",
+    "firebase_app_hosting": "PASS_BUILD_2026_10_06_005_100_PERCENT_TRAFFIC",
+    "production_grounded_retrieval": "PASS_00:04:53.860_TO_00:06:25.260",
+    "strict_no_hit": "PASS",
+    "anonymous_search_denial": "PASS_HTTP_401",
+    "liquid_glass_v2_preserved": "PASS_MERGED_PRODUCTION_SOURCE"
+  },
+  "real_production_gate_requirements_remaining": [],
+  "changed_files": {
+    "pnl_mirror": [
+      "PNL_VIDEO_RAG.md",
+      "scripts/bootstrap_pnl_video_rag.sh",
+      "scripts/pilot_pnl_video_rag.sh",
+      "scripts/luma_production_gate.sh",
+      "src/pnl_video_rag/cli.py",
+      "src/pnl_video_rag/rag.py",
+      "src/pnl_video_rag/server.py",
+      "src/pnl_video_rag/verify.py",
+      "tests/test_rag_precision.py",
+      "tests/test_server.py",
+      "tests/test_verify.py",
+      "migrations/postgres/001_init.sql",
+      "src/pnl_video_rag/postgres_store.py",
+      "tests/test_postgres_store.py",
+      "pyproject.toml"
+    ],
+    "luma": [
+      "src/app/api/tutor/route.ts",
+      "src/components/tutor-panel.tsx",
+      "src/lib/pnl-rag.ts",
+      "src/lib/pnl-rag.test.ts",
+      "docs/pnl-video-rag-integration.md",
+      "evidence/pnl-rag-integration/release-gate.json"
+    ]
+  },
+  "production_evidence": "/shared-auth/deployment/evidence/luma-pnl-rag/firebase-production-20261006T054959Z.json"
+}
