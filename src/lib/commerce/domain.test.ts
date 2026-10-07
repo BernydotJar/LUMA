@@ -51,6 +51,23 @@ describe("LUMA V2 commerce domain", () => {
     );
   });
 
+
+  it("uses unambiguous entitlement identity encoding even when ids contain delimiters", () => {
+    expect(
+      entitlementIdentityKey({
+        tenantId: "tenant",
+        customerId: "a:b",
+        productId: "c",
+      }),
+    ).not.toBe(
+      entitlementIdentityKey({
+        tenantId: "tenant",
+        customerId: "a",
+        productId: "b:c",
+      }),
+    );
+  });
+
   it("normalizes entitlement identity whitespace", () => {
     expect(
       entitlementIdentityKey({
@@ -58,7 +75,7 @@ describe("LUMA V2 commerce domain", () => {
         customerId: " c-1 ",
         productId: " p-1 ",
       }),
-    ).toBe("tenant-a:c-1:p-1");
+    ).toBe('["tenant-a","c-1","p-1"]');
   });
 
   it("rejects incomplete identities", () => {

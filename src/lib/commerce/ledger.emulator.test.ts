@@ -280,5 +280,39 @@ describe.runIf(emulatorEnabled)(
       ).toBeUndefined();
     });
 
+    it("normalizes empty optional provider ids without making the event unprocessable", async () => {
+      const suffix = randomUUID();
+      const event: NormalizedCommerceEvent = {
+        provider: "stripe",
+        externalEventId: `evt-empty-optional-${suffix}`,
+        type: "commerce.payment.confirmed",
+        occurredAt: "2026-10-07T12:00:00Z",
+        customerExternalId: "   ",
+        productExternalId: "",
+        transactionExternalId: "  ",
+      };
+      const identity = {
+        tenantId: `tenant-empty-${suffix}`,
+        customerId: "customer-1",
+        productId: "program-1",
+      };
+
+      const received = await ledger!.receive(
+        event,
+        `corr-empty-${suffix}`,
+      );
+      const processed = await ledger!.process({
+        event,
+        action: "grant",
+        entitlement: identity,
+      });
+
+      expect(received.record.customerExternalId).toBeUndefined();
+      expect(received.record.productExternalId).toBeUndefined();
+      expect(received.record.transactionExternalId).toBeUndefined();
+      expect(processed.outcome).toBe("granted");
+      expect(processed.entitlement?.status).toBe("active");
+    });
+
   },
 );

@@ -40,6 +40,7 @@ This means an acknowledged payment event can remain durably visible even if prod
 - The idempotency identity is `provider + externalEventId`.
 - A byte-for-byte provider payload is not required for replay, but the normalized semantic identity must remain stable: provider, event id, type, provider timestamp, customer id, product id, and transaction id.
 - Reusing an event id with conflicting normalized semantics is rejected as `COMMERCE_EVENT_CONFLICT`.
+- Optional provider IDs are trimmed and empty values normalize to absent, preventing replay mismatches caused by empty strings.
 - A processed event is never applied to Entitlement twice.
 - A failed or received event remains retryable.
 
@@ -52,7 +53,7 @@ Entitlement state is ordered by provider event time, not delivery time.
 - Refund/revocation can create a revocation tombstone before the original grant arrives.
 
 ### Tenant isolation
-Provider events are globally idempotent per provider event id. Entitlements are stored under a tenant-scoped Firestore document tree, with tenant/customer/product identity hashed into deterministic document ids. Firestore client rules remain deny-all; commerce mutation is a server-side capability.
+Provider events are globally idempotent per provider event id. Entitlements are stored under a tenant-scoped Firestore document tree. Tenant/customer/product identities are normalized, serialized as an unambiguous JSON tuple, then hashed into deterministic document ids; delimiter-bearing IDs cannot collide. Firestore client rules remain deny-all; commerce mutation is a server-side capability.
 
 ### Observability
 Each provider event records:

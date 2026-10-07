@@ -135,11 +135,19 @@ export function entitlementIdentityKey(
   identity: EntitlementIdentity,
 ): string {
   const normalized = normalizeEntitlementIdentity(identity);
-  return [
+  return JSON.stringify([
     normalized.tenantId,
     normalized.customerId,
     normalized.productId,
-  ].join(":");
+  ]);
+}
+
+export function normalizeOptionalExternalId(
+  value: string | undefined,
+): string | undefined {
+  if (value === undefined) return undefined;
+  const normalized = value.trim();
+  return normalized || undefined;
 }
 
 export function commerceSourceEvent(

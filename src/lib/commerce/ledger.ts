@@ -5,6 +5,7 @@ import {
   commerceIdempotencyKey,
   entitlementIdentityKey,
   normalizeEntitlementIdentity,
+  normalizeOptionalExternalId,
   processingIntentMatches,
   type CommerceProcessingOutcome,
   type CommerceProviderId,
@@ -70,9 +71,12 @@ function eventMatches(
     record.externalEventId.trim() === event.externalEventId.trim() &&
     record.type === event.type &&
     Date.parse(record.occurredAt) === Date.parse(event.occurredAt) &&
-    record.customerExternalId === event.customerExternalId &&
-    record.productExternalId === event.productExternalId &&
-    record.transactionExternalId === event.transactionExternalId
+    normalizeOptionalExternalId(record.customerExternalId) ===
+      normalizeOptionalExternalId(event.customerExternalId) &&
+    normalizeOptionalExternalId(record.productExternalId) ===
+      normalizeOptionalExternalId(event.productExternalId) &&
+    normalizeOptionalExternalId(record.transactionExternalId) ===
+      normalizeOptionalExternalId(event.transactionExternalId)
   );
 }
 
@@ -134,6 +138,15 @@ export class FirestoreCommerceLedger {
     validTimestamp(receivedAt, "receivedAt");
 
     const normalizedCorrelationId = validCorrelationId(correlationId);
+    const normalizedCustomerExternalId = normalizeOptionalExternalId(
+      event.customerExternalId,
+    );
+    const normalizedProductExternalId = normalizeOptionalExternalId(
+      event.productExternalId,
+    );
+    const normalizedTransactionExternalId = normalizeOptionalExternalId(
+      event.transactionExternalId,
+    );
     const eventRef = this.eventRef(event);
 
     return this.firestore.runTransaction(async (transaction) => {
@@ -151,14 +164,14 @@ export class FirestoreCommerceLedger {
         externalEventId: event.externalEventId.trim(),
         type: event.type,
         occurredAt: event.occurredAt,
-        ...(event.customerExternalId
-          ? { customerExternalId: event.customerExternalId }
+        ...(normalizedCustomerExternalId !== undefined
+          ? { customerExternalId: normalizedCustomerExternalId }
           : {}),
-        ...(event.productExternalId
-          ? { productExternalId: event.productExternalId }
+        ...(normalizedProductExternalId !== undefined
+          ? { productExternalId: normalizedProductExternalId }
           : {}),
-        ...(event.transactionExternalId
-          ? { transactionExternalId: event.transactionExternalId }
+        ...(normalizedTransactionExternalId !== undefined
+          ? { transactionExternalId: normalizedTransactionExternalId }
           : {}),
         correlationId: normalizedCorrelationId,
         receivedAt,
