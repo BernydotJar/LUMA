@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
 import { moduleThreeSource } from "@/lib/luma-data";
+import {
+  extractivePnlAnswer,
+  isPnlHitRelevant,
+  normalizePnlText,
+  searchPnlRag,
+} from "@/lib/pnl-rag";
 
 const responses = [
   {
@@ -31,7 +37,7 @@ const responses = [
     },
   },
   {
-    keywords: ["emoción", "ira", "miedo", "triste"],
+    keywords: ["emocion", "ira", "miedo", "triste"],
     answer:
       "El material propone empezar por el pensamiento que originó la emoción, porque cambiar la interpretación puede cambiar la respuesta. Eso no significa negar lo que sientes: primero nómbralo, observa qué estabas pensando y decide una acción que no te haga daño. ¿Quieres trabajar con una situación de hoy?",
     concept: "Comunicación emocional",
@@ -47,27 +53,23 @@ const responses = [
 ];
 
 const highStakesKeywords = [
-  "órgano",
-  "organo",
-  "riñón",
-  "rinon",
-  "pulmón",
-  "pulmon",
-  "hígado",
-  "higado",
-  "corazón",
-  "corazon",
-  "enfermedad",
-  "enferman",
-  "cura",
-  "curar",
-  "médico",
-  "medico",
+  "organo", "rinon", "pulmon", "higado", "corazon",
+  "enfermedad", "enferman", "cura", "curar", "medico",
 ];
 
 export async function POST(request: Request) {
-  const payload = (await request.json()) as { message?: unknown };
-  const message = typeof payload.message === "string" ? payload.message.trim() : "";
+  let payload: { message?: unknown };
+  try {
+    payload = (await request.json()) as { message?: unknown };
+  } catch {
+    return NextResponse.json(
+      { error: "La solicitud del tutor no contiene JSON válido." },
+      { status: 400 },
+    );
+  }
+
+  const message =
+    typeof payload.message === "string" ? payload.message.trim() : "";
 
   if (!message) {
     return NextResponse.json(
@@ -76,7 +78,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const normalized = message.toLocaleLowerCase("es");
+  const normalized = normalizePnlText(message);
 
   if (highStakesKeywords.some((keyword) => normalized.includes(keyword))) {
     return NextResponse.json({
@@ -94,6 +96,83 @@ export async function POST(request: Request) {
         reason:
           "La afirmación es de alto impacto y no tiene evidencia independiente ni aprobación cualificada dentro del corpus.",
         artifactId: "finding-health-claims",
+      },
+    });
+  }
+
+  const rag = await searchPnlRag(message, 5);
+  const relevantRagHits = rag.configured
+    ? rag.results.filter((hit) => isPnlHitRelevant(message, hit))
+    : [];
+
+  if (rag.configured && relevantRagHits.length > 0) {
+    const top = relevantRagHits[0];
+    return NextResponse.json({
+      answer: extractivePnlAnswer(top),
+      evidence: {
+        concept: `Corpus audiovisual · ${top.module}`,
+        source: `${top.title} · ${top.startClock} → ${top.endClock}`,
+        url: top.driveUrl,
+        sourceId: top.sourceId,
+        driveFileId: top.driveFileId,
+        chunkId: top.chunkId,
+        startClock: top.startClock,
+        endClock: top.endClock,
+      },
+      evidenceItems: relevantRagHits.slice(0, 3).map((hit) => ({
+        sourceId: hit.sourceId,
+        driveFileId: hit.driveFileId,
+        chunkId: hit.chunkId,
+        module: hit.module,
+        title: hit.title,
+        startClock: hit.startClock,
+        endClock: hit.endClock,
+        text: hit.text,
+        driveUrl: hit.driveUrl,
+      })),
+      learningMove: "EXPLAIN",
+      trust: {
+        status: "GROUNDED",
+        artifactId: top.chunkId,
+      },
+      retrieval: {
+        backend: `pnl-rag/${rag.backend ?? "unknown"}`,
+        resultCount: relevantRagHits.length,
+        rejectedAsIrrelevant:
+          rag.results.length - relevantRagHits.length,
+      },
+    });
+  }
+
+  if (rag.configured && rag.strict) {
+    if (rag.error) {
+      return NextResponse.json(
+        {
+          answer:
+            "El corpus PNL está configurado, pero la recuperación no está disponible en este momento. No voy a completar la respuesta desde memoria general.",
+          learningMove: "ESCALATE",
+          trust: {
+            status: "RETRIEVAL_UNAVAILABLE",
+            reason:
+              "El servicio de recuperación del corpus no respondió.",
+          },
+        },
+        { status: 503 },
+      );
+    }
+
+    return NextResponse.json({
+      answer:
+        rag.results.length > 0
+          ? "La recuperación devolvió contenido, pero no puedo demostrar que sea relevante para tu solicitud actual. Necesito una pregunta más específica."
+          : "No encontré evidencia suficiente en el corpus procesado.",
+      learningMove: "ASK",
+      trust: {
+        status: "INSUFFICIENT_EVIDENCE",
+        reason:
+          rag.results.length > 0
+            ? "Los resultados recuperados no superaron la verificación mínima de relevancia para la solicitud actual."
+            : "El corpus configurado no devolvió evidencia para la solicitud actual.",
       },
     });
   }

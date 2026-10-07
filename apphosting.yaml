@@ -33,3 +33,14 @@ env:
     availability:
       - BUILD
       - RUNTIME
+
+  - variable: LUMA_PNL_RAG_URL
+    value: https://luma-rag.textilesdemedellin.com
+    availability:
+      - RUNTIME
+  - variable: LUMA_PNL_RAG_STRICT
+    value: "true"
+    availability:
+      - RUNTIME
+  - variable: LUMA_PNL_RAG_TOKEN
+    secret: luma-pnl-rag-token

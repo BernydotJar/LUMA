@@ -21,7 +21,12 @@ type TutorMessage = {
     concept: string;
     source: string;
     url: string;
-    confidence: number;
+    confidence?: number;
+    sourceId?: string;
+    driveFileId?: string;
+    chunkId?: string;
+    startClock?: string;
+    endClock?: string;
   };
   reflection?: {
     artifactId: string;
@@ -30,7 +35,11 @@ type TutorMessage = {
     sourceCount: number;
   };
   trust?: {
-    status: "GROUNDED" | "BLOCKED_CLAIM";
+    status:
+      | "GROUNDED"
+      | "BLOCKED_CLAIM"
+      | "INSUFFICIENT_EVIDENCE"
+      | "RETRIEVAL_UNAVAILABLE";
     reason?: string;
     artifactId?: string;
   };
@@ -145,9 +154,17 @@ export function TutorPanel() {
                   href={item.evidence.url}
                   target="_blank"
                   rel="noreferrer"
+                  title={
+                    item.evidence.sourceId && item.evidence.chunkId
+                      ? `${item.evidence.sourceId} · ${item.evidence.chunkId}`
+                      : item.evidence.concept
+                  }
                 >
                   <BookOpenCheck size={13} />
-                  {item.evidence.source} · {Math.round(item.evidence.confidence * 100)}%
+                  {item.evidence.source}
+                  {typeof item.evidence.confidence === "number"
+                    ? ` · ${Math.round(item.evidence.confidence * 100)}%`
+                    : ""}
                   <ExternalLink size={11} />
                 </a>
               )}
