@@ -222,6 +222,10 @@
 }
 
 @media (max-width: 760px) {
+  :global(html) {
+    scroll-padding-bottom: 104px;
+  }
+
   .section {
     border-radius: 24px;
   }
@@ -251,6 +255,7 @@
   .actions button {
     width: 100%;
     justify-content: center;
+    scroll-margin-block: 96px;
   }
 
   .result {
@@ -267,5 +272,6 @@
   .resultActions button {
     width: 100%;
     justify-content: center;
+    scroll-margin-block: 96px;
   }
 }

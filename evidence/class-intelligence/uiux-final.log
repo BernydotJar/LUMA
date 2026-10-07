@@ -1,3 +1,7 @@
+
+> luma-learning-intelligence@0.1.0 audit:uiux
+> node scripts/uiux-adversarial-audit.mjs
+
 # LUMA UI/UX Adversarial Audit
 
 Scenarios: 108
@@ -15,3 +19,4 @@ Focus-order warning scenarios: 0
 - Repeated sibling patterns: mobile-375:/library, mobile-375:/experience, mobile-375:/studio/class-intelligence, mobile-390:/library, mobile-390:/experience, mobile-390:/studio/class-intelligence, mobile-430:/library, mobile-430:/experience, mobile-430:/studio/class-intelligence, tablet-1024:/library, tablet-1024:/experience, tablet-1024:/studio/class-intelligence, desktop-1280:/library, desktop-1280:/experience, desktop-1280:/studio/class-intelligence, desktop-1440:/library, desktop-1440:/experience, desktop-1440:/studio/class-intelligence
 - Reduced-motion active animation: none
 - Focus order: none
+

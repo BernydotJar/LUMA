@@ -97,9 +97,9 @@ export default function ClassIntelligencePage() {
           </div>
           <span>{classContracts.length} experiencias</span>
         </div>
-        <div className={styles.classList}>
+        <ol className={styles.classList}>
           {classContracts.map((contract) => (
-            <article key={contract.experienceSlug}>
+            <li key={contract.experienceSlug}>
               <div className={styles.classTopline}>
                 <span><Target size={14} /> {contract.capabilityId}</span>
                 <span data-authority={contract.evidenceContract.twinAuthority}>
@@ -113,9 +113,9 @@ export default function ClassIntelligencePage() {
                 <div><dt>Autoridad</dt><dd>{contract.evidenceContract.twinAuthority === "eligible" ? "Puede actualizar progreso tras verificación" : "Apoya contexto; no certifica dominio"}</dd></div>
                 <div><dt>Recheck</dt><dd>{contract.deferredRecheck.delayHours} h</dd></div>
               </dl>
-            </article>
+            </li>
           ))}
-        </div>
+        </ol>
       </section>
 
       <section className={`${styles.refreshCard} glass`}>

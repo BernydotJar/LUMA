@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-05T05:37:00.123Z",
-  "baseURL": "http://127.0.0.1:3100",
+  "generatedAt": "2026-10-07T02:27:54.591Z",
+  "baseURL": "http://127.0.0.1:3150",
   "scenarios": [
     {
       "route": "/login",
@@ -24,8 +24,8 @@
         "Explorar LUMA",
         "Continuar con Google",
         "Continuar en modo demostración",
-        "NEXTJS-PORTAL",
-        "LLUMAExplorar LUMA Tu experiencia LUMATu aprendizaje, con continuidad.Accede con"
+        "LLUMAExplorar LUMA Tu experiencia LUMATu aprendizaje, con continuidad.Accede con",
+        "LUMA para Seres de Excelencia, inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -36,7 +36,7 @@
       "viewport": "mobile-375",
       "width": 375,
       "height": 667,
-      "bodyTextLength": 4835,
+      "bodyTextLength": 4973,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -92,7 +92,7 @@
       "viewport": "mobile-375",
       "width": 375,
       "height": 667,
-      "bodyTextLength": 2412,
+      "bodyTextLength": 2439,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -120,7 +120,7 @@
       "viewport": "mobile-375",
       "width": 375,
       "height": 667,
-      "bodyTextLength": 1181,
+      "bodyTextLength": 1780,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -136,8 +136,8 @@
         "Cambiar tema. Tema actual: Seres de Excelencia",
         "Acceder",
         "Volver",
-        "Tu reflexión",
-        "Hoy"
+        "AEstá molesto conmigo.",
+        "BHizo una pausa de cinco segundos antes de responder y bajó el volumen de la voz"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -237,7 +237,7 @@
       "viewport": "mobile-375",
       "width": 375,
       "height": 667,
-      "bodyTextLength": 3756,
+      "bodyTextLength": 3786,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -305,6 +305,51 @@
       "blocking": false
     },
     {
+      "route": "/studio/class-intelligence",
+      "theme": "se",
+      "viewport": "mobile-375",
+      "width": 375,
+      "height": 667,
+      "bodyTextLength": 3157,
+      "horizontalOverflow": 0,
+      "outOfBounds": [],
+      "clippedText": [],
+      "smallTargets": [],
+      "topbarCollision": false,
+      "activeAnimations": [],
+      "siblingPatternWarnings": [
+        {
+          "repeated": 8,
+          "container": {
+            "tag": "div",
+            "text": "01Fuente autorizada02Objetivo observable03Topología de clase04Práctica05Evidencia06Remediación07Tran",
+            "className": "page-module__hq-Hea__pipeline",
+            "rect": {
+              "x": 35,
+              "y": 1458,
+              "width": 305,
+              "height": 760,
+              "right": 340,
+              "bottom": 2218
+            }
+          }
+        }
+      ],
+      "errorOverlay": false,
+      "primaryHeadingVisible": true,
+      "mobileNavObstructions": [],
+      "focusOrder": [
+        "LUMA para Seres de Excelencia, inicio",
+        "Cambiar tema. Tema actual: Seres de Excelencia",
+        "Acceder",
+        "Volver al estudio",
+        "Consola de experiencia",
+        "Estudio del entrenador"
+      ],
+      "a11yViolationIds": [],
+      "blocking": false
+    },
+    {
       "route": "/login",
       "theme": "light",
       "viewport": "mobile-375",
@@ -322,12 +367,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Explorar LUMA",
-        "Continuar con Google"
+        "Continuar con Google",
+        "Continuar en modo demostración",
+        "LLUMAlearning intelligenceExplorar LUMA Tu experiencia LUMATu aprendizaje, con c",
+        "LUMA inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -338,7 +383,7 @@
       "viewport": "mobile-375",
       "width": 375,
       "height": 667,
-      "bodyTextLength": 4835,
+      "bodyTextLength": 4973,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -350,12 +395,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Luz Líquida",
-        "Acceder"
+        "Acceder",
+        "Accede para personalizar tu experiencia",
+        "Continuar mi ruta",
+        "Continuar · 12 min"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -378,12 +423,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Luz Líquida",
-        "Acceder"
+        "Acceder",
+        "Seleccionar Despertando tu Excelencia",
+        "Seleccionar Comunicación Emocional",
+        "Seleccionar Redescubriendo y transformando tu poder"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -394,7 +439,7 @@
       "viewport": "mobile-375",
       "width": 375,
       "height": 667,
-      "bodyTextLength": 2412,
+      "bodyTextLength": 2439,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -406,12 +451,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Luz Líquida",
-        "Acceder"
+        "Acceder",
+        "Módulo 3",
+        "Últimos 7 días",
+        "P.A.S. en contexto49%41% con oportunidad"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -434,12 +479,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Explorar LUMA",
-        "Continuar con Google"
+        "Continuar con Google",
+        "Continuar en modo demostración",
+        "LLUMAlearning intelligenceExplorar LUMA Tu experiencia LUMATu aprendizaje, con c",
+        "LUMA inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -450,7 +495,7 @@
       "viewport": "mobile-375",
       "width": 375,
       "height": 667,
-      "bodyTextLength": 4835,
+      "bodyTextLength": 4973,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -462,12 +507,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Inteligencia Nocturna",
-        "Acceder"
+        "Acceder",
+        "Accede para personalizar tu experiencia",
+        "Continuar mi ruta",
+        "Continuar · 12 min"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -490,12 +535,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Inteligencia Nocturna",
-        "Acceder"
+        "Acceder",
+        "Seleccionar Despertando tu Excelencia",
+        "Seleccionar Comunicación Emocional",
+        "Seleccionar Redescubriendo y transformando tu poder"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -506,7 +551,7 @@
       "viewport": "mobile-375",
       "width": 375,
       "height": 667,
-      "bodyTextLength": 2412,
+      "bodyTextLength": 2439,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -518,12 +563,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Inteligencia Nocturna",
-        "Acceder"
+        "Acceder",
+        "Módulo 3",
+        "Últimos 7 días",
+        "P.A.S. en contexto49%41% con oportunidad"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -550,8 +595,8 @@
         "Explorar LUMA",
         "Continuar con Google",
         "Continuar en modo demostración",
-        "NEXTJS-PORTAL",
-        "LLUMAExplorar LUMA Tu experiencia LUMATu aprendizaje, con continuidad.Accede con"
+        "LLUMAExplorar LUMA Tu experiencia LUMATu aprendizaje, con continuidad.Accede con",
+        "LUMA para Seres de Excelencia, inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -562,7 +607,7 @@
       "viewport": "mobile-390",
       "width": 390,
       "height": 844,
-      "bodyTextLength": 4835,
+      "bodyTextLength": 4973,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -618,7 +663,7 @@
       "viewport": "mobile-390",
       "width": 390,
       "height": 844,
-      "bodyTextLength": 2412,
+      "bodyTextLength": 2439,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -646,7 +691,7 @@
       "viewport": "mobile-390",
       "width": 390,
       "height": 844,
-      "bodyTextLength": 1181,
+      "bodyTextLength": 1780,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -662,8 +707,8 @@
         "Cambiar tema. Tema actual: Seres de Excelencia",
         "Acceder",
         "Volver",
-        "Tu reflexión",
-        "Hoy"
+        "AEstá molesto conmigo.",
+        "BHizo una pausa de cinco segundos antes de responder y bajó el volumen de la voz"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -763,7 +808,7 @@
       "viewport": "mobile-390",
       "width": 390,
       "height": 844,
-      "bodyTextLength": 3756,
+      "bodyTextLength": 3786,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -831,6 +876,51 @@
       "blocking": false
     },
     {
+      "route": "/studio/class-intelligence",
+      "theme": "se",
+      "viewport": "mobile-390",
+      "width": 390,
+      "height": 844,
+      "bodyTextLength": 3157,
+      "horizontalOverflow": 0,
+      "outOfBounds": [],
+      "clippedText": [],
+      "smallTargets": [],
+      "topbarCollision": false,
+      "activeAnimations": [],
+      "siblingPatternWarnings": [
+        {
+          "repeated": 8,
+          "container": {
+            "tag": "div",
+            "text": "01Fuente autorizada02Objetivo observable03Topología de clase04Práctica05Evidencia06Remediación07Tran",
+            "className": "page-module__hq-Hea__pipeline",
+            "rect": {
+              "x": 35,
+              "y": 1464,
+              "width": 320,
+              "height": 760,
+              "right": 355,
+              "bottom": 2224
+            }
+          }
+        }
+      ],
+      "errorOverlay": false,
+      "primaryHeadingVisible": true,
+      "mobileNavObstructions": [],
+      "focusOrder": [
+        "LUMA para Seres de Excelencia, inicio",
+        "Cambiar tema. Tema actual: Seres de Excelencia",
+        "Acceder",
+        "Volver al estudio",
+        "Consola de experiencia",
+        "Estudio del entrenador"
+      ],
+      "a11yViolationIds": [],
+      "blocking": false
+    },
+    {
       "route": "/login",
       "theme": "light",
       "viewport": "mobile-390",
@@ -848,12 +938,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Explorar LUMA",
-        "Continuar con Google"
+        "Continuar con Google",
+        "Continuar en modo demostración",
+        "LLUMAlearning intelligenceExplorar LUMA Tu experiencia LUMATu aprendizaje, con c",
+        "LUMA inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -864,7 +954,7 @@
       "viewport": "mobile-390",
       "width": 390,
       "height": 844,
-      "bodyTextLength": 4835,
+      "bodyTextLength": 4973,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -876,12 +966,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Luz Líquida",
-        "Acceder"
+        "Acceder",
+        "Accede para personalizar tu experiencia",
+        "Continuar mi ruta",
+        "Continuar · 12 min"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -904,12 +994,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Luz Líquida",
-        "Acceder"
+        "Acceder",
+        "Seleccionar Despertando tu Excelencia",
+        "Seleccionar Comunicación Emocional",
+        "Seleccionar Redescubriendo y transformando tu poder"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -920,7 +1010,7 @@
       "viewport": "mobile-390",
       "width": 390,
       "height": 844,
-      "bodyTextLength": 2412,
+      "bodyTextLength": 2439,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -932,12 +1022,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Luz Líquida",
-        "Acceder"
+        "Acceder",
+        "Módulo 3",
+        "Últimos 7 días",
+        "P.A.S. en contexto49%41% con oportunidad"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -960,12 +1050,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Explorar LUMA",
-        "Continuar con Google"
+        "Continuar con Google",
+        "Continuar en modo demostración",
+        "LLUMAlearning intelligenceExplorar LUMA Tu experiencia LUMATu aprendizaje, con c",
+        "LUMA inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -976,7 +1066,7 @@
       "viewport": "mobile-390",
       "width": 390,
       "height": 844,
-      "bodyTextLength": 4835,
+      "bodyTextLength": 4973,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -988,12 +1078,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Inteligencia Nocturna",
-        "Acceder"
+        "Acceder",
+        "Accede para personalizar tu experiencia",
+        "Continuar mi ruta",
+        "Continuar · 12 min"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1016,12 +1106,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Inteligencia Nocturna",
-        "Acceder"
+        "Acceder",
+        "Seleccionar Despertando tu Excelencia",
+        "Seleccionar Comunicación Emocional",
+        "Seleccionar Redescubriendo y transformando tu poder"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1032,7 +1122,7 @@
       "viewport": "mobile-390",
       "width": 390,
       "height": 844,
-      "bodyTextLength": 2412,
+      "bodyTextLength": 2439,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1044,12 +1134,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Inteligencia Nocturna",
-        "Acceder"
+        "Acceder",
+        "Módulo 3",
+        "Últimos 7 días",
+        "P.A.S. en contexto49%41% con oportunidad"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1076,8 +1166,8 @@
         "Explorar LUMA",
         "Continuar con Google",
         "Continuar en modo demostración",
-        "NEXTJS-PORTAL",
-        "LLUMAExplorar LUMA Tu experiencia LUMATu aprendizaje, con continuidad.Accede con"
+        "LLUMAExplorar LUMA Tu experiencia LUMATu aprendizaje, con continuidad.Accede con",
+        "LUMA para Seres de Excelencia, inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1088,7 +1178,7 @@
       "viewport": "mobile-430",
       "width": 430,
       "height": 932,
-      "bodyTextLength": 4835,
+      "bodyTextLength": 4973,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1144,7 +1234,7 @@
       "viewport": "mobile-430",
       "width": 430,
       "height": 932,
-      "bodyTextLength": 2412,
+      "bodyTextLength": 2439,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1172,7 +1262,7 @@
       "viewport": "mobile-430",
       "width": 430,
       "height": 932,
-      "bodyTextLength": 1181,
+      "bodyTextLength": 1780,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1188,8 +1278,8 @@
         "Cambiar tema. Tema actual: Seres de Excelencia",
         "Acceder",
         "Volver",
-        "Tu reflexión",
-        "Hoy"
+        "AEstá molesto conmigo.",
+        "BHizo una pausa de cinco segundos antes de responder y bajó el volumen de la voz"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1289,7 +1379,7 @@
       "viewport": "mobile-430",
       "width": 430,
       "height": 932,
-      "bodyTextLength": 3756,
+      "bodyTextLength": 3786,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1357,6 +1447,51 @@
       "blocking": false
     },
     {
+      "route": "/studio/class-intelligence",
+      "theme": "se",
+      "viewport": "mobile-430",
+      "width": 430,
+      "height": 932,
+      "bodyTextLength": 3157,
+      "horizontalOverflow": 0,
+      "outOfBounds": [],
+      "clippedText": [],
+      "smallTargets": [],
+      "topbarCollision": false,
+      "activeAnimations": [],
+      "siblingPatternWarnings": [
+        {
+          "repeated": 8,
+          "container": {
+            "tag": "div",
+            "text": "01Fuente autorizada02Objetivo observable03Topología de clase04Práctica05Evidencia06Remediación07Tran",
+            "className": "page-module__hq-Hea__pipeline",
+            "rect": {
+              "x": 35,
+              "y": 1460,
+              "width": 360,
+              "height": 760,
+              "right": 395,
+              "bottom": 2220
+            }
+          }
+        }
+      ],
+      "errorOverlay": false,
+      "primaryHeadingVisible": true,
+      "mobileNavObstructions": [],
+      "focusOrder": [
+        "LUMA para Seres de Excelencia, inicio",
+        "Cambiar tema. Tema actual: Seres de Excelencia",
+        "Acceder",
+        "Volver al estudio",
+        "Consola de experiencia",
+        "Estudio del entrenador"
+      ],
+      "a11yViolationIds": [],
+      "blocking": false
+    },
+    {
       "route": "/login",
       "theme": "light",
       "viewport": "mobile-430",
@@ -1374,12 +1509,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Explorar LUMA",
-        "Continuar con Google"
+        "Continuar con Google",
+        "Continuar en modo demostración",
+        "LLUMAlearning intelligenceExplorar LUMA Tu experiencia LUMATu aprendizaje, con c",
+        "LUMA inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1390,7 +1525,7 @@
       "viewport": "mobile-430",
       "width": 430,
       "height": 932,
-      "bodyTextLength": 4835,
+      "bodyTextLength": 4973,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1402,12 +1537,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Luz Líquida",
-        "Acceder"
+        "Acceder",
+        "Accede para personalizar tu experiencia",
+        "Continuar mi ruta",
+        "Continuar · 12 min"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1430,12 +1565,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Luz Líquida",
-        "Acceder"
+        "Acceder",
+        "Seleccionar Despertando tu Excelencia",
+        "Seleccionar Comunicación Emocional",
+        "Seleccionar Redescubriendo y transformando tu poder"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1446,7 +1581,7 @@
       "viewport": "mobile-430",
       "width": 430,
       "height": 932,
-      "bodyTextLength": 2412,
+      "bodyTextLength": 2439,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1458,12 +1593,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Luz Líquida",
-        "Acceder"
+        "Acceder",
+        "Módulo 3",
+        "Últimos 7 días",
+        "P.A.S. en contexto49%41% con oportunidad"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1486,12 +1621,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Explorar LUMA",
-        "Continuar con Google"
+        "Continuar con Google",
+        "Continuar en modo demostración",
+        "LLUMAlearning intelligenceExplorar LUMA Tu experiencia LUMATu aprendizaje, con c",
+        "LUMA inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1502,7 +1637,7 @@
       "viewport": "mobile-430",
       "width": 430,
       "height": 932,
-      "bodyTextLength": 4835,
+      "bodyTextLength": 4973,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1514,12 +1649,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Inteligencia Nocturna",
-        "Acceder"
+        "Acceder",
+        "Accede para personalizar tu experiencia",
+        "Continuar mi ruta",
+        "Continuar · 12 min"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1542,12 +1677,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Inteligencia Nocturna",
-        "Acceder"
+        "Acceder",
+        "Seleccionar Despertando tu Excelencia",
+        "Seleccionar Comunicación Emocional",
+        "Seleccionar Redescubriendo y transformando tu poder"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1558,7 +1693,7 @@
       "viewport": "mobile-430",
       "width": 430,
       "height": 932,
-      "bodyTextLength": 2412,
+      "bodyTextLength": 2439,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1570,12 +1705,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Cambiar tema. Tema actual: Inteligencia Nocturna",
-        "Acceder"
+        "Acceder",
+        "Módulo 3",
+        "Últimos 7 días",
+        "P.A.S. en contexto49%41% con oportunidad"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1602,8 +1737,8 @@
         "Explorar LUMA",
         "Continuar con Google",
         "Continuar en modo demostración",
-        "NEXTJS-PORTAL",
-        "LLUMAExplorar LUMA Tu experiencia LUMATu aprendizaje, con continuidad.Accede con"
+        "LLUMAExplorar LUMA Tu experiencia LUMATu aprendizaje, con continuidad.Accede con",
+        "LUMA para Seres de Excelencia, inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1614,7 +1749,7 @@
       "viewport": "tablet-1024",
       "width": 1024,
       "height": 768,
-      "bodyTextLength": 4894,
+      "bodyTextLength": 5032,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1670,7 +1805,7 @@
       "viewport": "tablet-1024",
       "width": 1024,
       "height": 768,
-      "bodyTextLength": 2628,
+      "bodyTextLength": 2655,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1698,7 +1833,7 @@
       "viewport": "tablet-1024",
       "width": 1024,
       "height": 768,
-      "bodyTextLength": 1283,
+      "bodyTextLength": 1882,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1815,7 +1950,7 @@
       "viewport": "tablet-1024",
       "width": 1024,
       "height": 768,
-      "bodyTextLength": 3797,
+      "bodyTextLength": 3827,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1883,6 +2018,51 @@
       "blocking": false
     },
     {
+      "route": "/studio/class-intelligence",
+      "theme": "se",
+      "viewport": "tablet-1024",
+      "width": 1024,
+      "height": 768,
+      "bodyTextLength": 3233,
+      "horizontalOverflow": 0,
+      "outOfBounds": [],
+      "clippedText": [],
+      "smallTargets": [],
+      "topbarCollision": false,
+      "activeAnimations": [],
+      "siblingPatternWarnings": [
+        {
+          "repeated": 8,
+          "container": {
+            "tag": "div",
+            "text": "01Fuente autorizada02Objetivo observable03Topología de clase04Práctica05Evidencia06Remediación07Tran",
+            "className": "page-module__hq-Hea__pipeline",
+            "rect": {
+              "x": 146,
+              "y": 772,
+              "width": 806,
+              "height": 216,
+              "right": 951,
+              "bottom": 988
+            }
+          }
+        }
+      ],
+      "errorOverlay": false,
+      "primaryHeadingVisible": true,
+      "mobileNavObstructions": [],
+      "focusOrder": [
+        "LUMA para Seres de Excelencia, inicio",
+        "Consola de experiencia",
+        "Estudio del entrenador",
+        "Gemelo de aprendizaje",
+        "Inteligencia de contenido",
+        "Reflexión curricular"
+      ],
+      "a11yViolationIds": [],
+      "blocking": false
+    },
+    {
       "route": "/login",
       "theme": "light",
       "viewport": "tablet-1024",
@@ -1900,12 +2080,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Explorar LUMA",
-        "Continuar con Google"
+        "Continuar con Google",
+        "Continuar en modo demostración",
+        "LLUMAlearning intelligenceExplorar LUMA Tu experiencia LUMATu aprendizaje, con c",
+        "LUMA inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1916,7 +2096,7 @@
       "viewport": "tablet-1024",
       "width": 1024,
       "height": 768,
-      "bodyTextLength": 4894,
+      "bodyTextLength": 5032,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1928,12 +2108,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Hoy",
-        "Ruta"
+        "Ruta",
+        "Programa",
+        "LUMA",
+        "Superusuario"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1956,12 +2136,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Hoy",
-        "Ruta"
+        "Ruta",
+        "Programa",
+        "LUMA",
+        "Superusuario"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -1972,7 +2152,7 @@
       "viewport": "tablet-1024",
       "width": 1024,
       "height": 768,
-      "bodyTextLength": 2628,
+      "bodyTextLength": 2655,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -1984,12 +2164,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Consola de experiencia",
-        "Estudio del entrenador"
+        "Estudio del entrenador",
+        "Gemelo de aprendizaje",
+        "Inteligencia de contenido",
+        "Reflexión curricular"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2012,12 +2192,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Explorar LUMA",
-        "Continuar con Google"
+        "Continuar con Google",
+        "Continuar en modo demostración",
+        "LLUMAlearning intelligenceExplorar LUMA Tu experiencia LUMATu aprendizaje, con c",
+        "LUMA inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2028,7 +2208,7 @@
       "viewport": "tablet-1024",
       "width": 1024,
       "height": 768,
-      "bodyTextLength": 4894,
+      "bodyTextLength": 5032,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2040,12 +2220,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Hoy",
-        "Ruta"
+        "Ruta",
+        "Programa",
+        "LUMA",
+        "Superusuario"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2068,12 +2248,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Hoy",
-        "Ruta"
+        "Ruta",
+        "Programa",
+        "LUMA",
+        "Superusuario"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2084,7 +2264,7 @@
       "viewport": "tablet-1024",
       "width": 1024,
       "height": 768,
-      "bodyTextLength": 2628,
+      "bodyTextLength": 2655,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2096,12 +2276,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Consola de experiencia",
-        "Estudio del entrenador"
+        "Estudio del entrenador",
+        "Gemelo de aprendizaje",
+        "Inteligencia de contenido",
+        "Reflexión curricular"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2128,8 +2308,8 @@
         "Explorar LUMA",
         "Continuar con Google",
         "Continuar en modo demostración",
-        "NEXTJS-PORTAL",
-        "LLUMAExplorar LUMA Tu experiencia LUMATu aprendizaje, con continuidad.Accede con"
+        "LLUMAExplorar LUMA Tu experiencia LUMATu aprendizaje, con continuidad.Accede con",
+        "LUMA para Seres de Excelencia, inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2140,7 +2320,7 @@
       "viewport": "desktop-1280",
       "width": 1280,
       "height": 800,
-      "bodyTextLength": 4973,
+      "bodyTextLength": 5111,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2196,7 +2376,7 @@
       "viewport": "desktop-1280",
       "width": 1280,
       "height": 800,
-      "bodyTextLength": 2838,
+      "bodyTextLength": 2865,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2224,7 +2404,7 @@
       "viewport": "desktop-1280",
       "width": 1280,
       "height": 800,
-      "bodyTextLength": 1362,
+      "bodyTextLength": 1961,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2325,7 +2505,7 @@
       "viewport": "desktop-1280",
       "width": 1280,
       "height": 800,
-      "bodyTextLength": 4007,
+      "bodyTextLength": 4037,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2393,6 +2573,51 @@
       "blocking": false
     },
     {
+      "route": "/studio/class-intelligence",
+      "theme": "se",
+      "viewport": "desktop-1280",
+      "width": 1280,
+      "height": 800,
+      "bodyTextLength": 3443,
+      "horizontalOverflow": 0,
+      "outOfBounds": [],
+      "clippedText": [],
+      "smallTargets": [],
+      "topbarCollision": false,
+      "activeAnimations": [],
+      "siblingPatternWarnings": [
+        {
+          "repeated": 8,
+          "container": {
+            "tag": "div",
+            "text": "01Fuente autorizada02Objetivo observable03Topología de clase04Práctica05Evidencia06Remediación07Tran",
+            "className": "page-module__hq-Hea__pipeline",
+            "rect": {
+              "x": 299,
+              "y": 922,
+              "width": 895,
+              "height": 216,
+              "right": 1194,
+              "bottom": 1138
+            }
+          }
+        }
+      ],
+      "errorOverlay": false,
+      "primaryHeadingVisible": true,
+      "mobileNavObstructions": [],
+      "focusOrder": [
+        "LUMA para Seres de Excelencia, inicio",
+        "Consola de experiencia",
+        "Estudio del entrenador",
+        "Gemelo de aprendizaje",
+        "Inteligencia de contenido",
+        "Reflexión curricular"
+      ],
+      "a11yViolationIds": [],
+      "blocking": false
+    },
+    {
       "route": "/login",
       "theme": "light",
       "viewport": "desktop-1280",
@@ -2410,12 +2635,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Explorar LUMA",
-        "Continuar con Google"
+        "Continuar con Google",
+        "Continuar en modo demostración",
+        "LLUMAlearning intelligenceExplorar LUMA Tu experiencia LUMATu aprendizaje, con c",
+        "LUMA inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2426,7 +2651,7 @@
       "viewport": "desktop-1280",
       "width": 1280,
       "height": 800,
-      "bodyTextLength": 4995,
+      "bodyTextLength": 5133,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2438,12 +2663,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Hoy",
-        "Ruta"
+        "Ruta",
+        "Programa",
+        "LUMA",
+        "Ajustar mi perfil"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2466,12 +2691,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Hoy",
-        "Ruta"
+        "Ruta",
+        "Programa",
+        "LUMA",
+        "Ajustar mi perfil"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2482,7 +2707,7 @@
       "viewport": "desktop-1280",
       "width": 1280,
       "height": 800,
-      "bodyTextLength": 2860,
+      "bodyTextLength": 2887,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2494,12 +2719,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Consola de experiencia",
-        "Estudio del entrenador"
+        "Estudio del entrenador",
+        "Gemelo de aprendizaje",
+        "Inteligencia de contenido",
+        "Reflexión curricular"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2522,12 +2747,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Explorar LUMA",
-        "Continuar con Google"
+        "Continuar con Google",
+        "Continuar en modo demostración",
+        "LLUMAlearning intelligenceExplorar LUMA Tu experiencia LUMATu aprendizaje, con c",
+        "LUMA inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2538,7 +2763,7 @@
       "viewport": "desktop-1280",
       "width": 1280,
       "height": 800,
-      "bodyTextLength": 4995,
+      "bodyTextLength": 5133,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2550,12 +2775,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Hoy",
-        "Ruta"
+        "Ruta",
+        "Programa",
+        "LUMA",
+        "Ajustar mi perfil"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2578,12 +2803,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Hoy",
-        "Ruta"
+        "Ruta",
+        "Programa",
+        "LUMA",
+        "Ajustar mi perfil"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2594,7 +2819,7 @@
       "viewport": "desktop-1280",
       "width": 1280,
       "height": 800,
-      "bodyTextLength": 2860,
+      "bodyTextLength": 2887,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2606,12 +2831,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Consola de experiencia",
-        "Estudio del entrenador"
+        "Estudio del entrenador",
+        "Gemelo de aprendizaje",
+        "Inteligencia de contenido",
+        "Reflexión curricular"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2638,8 +2863,8 @@
         "Explorar LUMA",
         "Continuar con Google",
         "Continuar en modo demostración",
-        "NEXTJS-PORTAL",
-        "LLUMAExplorar LUMA Tu experiencia LUMATu aprendizaje, con continuidad.Accede con"
+        "LLUMAExplorar LUMA Tu experiencia LUMATu aprendizaje, con continuidad.Accede con",
+        "LUMA para Seres de Excelencia, inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2650,7 +2875,7 @@
       "viewport": "desktop-1440",
       "width": 1440,
       "height": 1000,
-      "bodyTextLength": 4973,
+      "bodyTextLength": 5111,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2706,7 +2931,7 @@
       "viewport": "desktop-1440",
       "width": 1440,
       "height": 1000,
-      "bodyTextLength": 2838,
+      "bodyTextLength": 2865,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2734,7 +2959,7 @@
       "viewport": "desktop-1440",
       "width": 1440,
       "height": 1000,
-      "bodyTextLength": 1362,
+      "bodyTextLength": 1961,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2851,7 +3076,7 @@
       "viewport": "desktop-1440",
       "width": 1440,
       "height": 1000,
-      "bodyTextLength": 4007,
+      "bodyTextLength": 4037,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2919,6 +3144,51 @@
       "blocking": false
     },
     {
+      "route": "/studio/class-intelligence",
+      "theme": "se",
+      "viewport": "desktop-1440",
+      "width": 1440,
+      "height": 1000,
+      "bodyTextLength": 3443,
+      "horizontalOverflow": 0,
+      "outOfBounds": [],
+      "clippedText": [],
+      "smallTargets": [],
+      "topbarCollision": false,
+      "activeAnimations": [],
+      "siblingPatternWarnings": [
+        {
+          "repeated": 8,
+          "container": {
+            "tag": "div",
+            "text": "01Fuente autorizada02Objetivo observable03Topología de clase04Práctica05Evidencia06Remediación07Tran",
+            "className": "page-module__hq-Hea__pipeline",
+            "rect": {
+              "x": 299,
+              "y": 946,
+              "width": 1048,
+              "height": 216,
+              "right": 1347,
+              "bottom": 1162
+            }
+          }
+        }
+      ],
+      "errorOverlay": false,
+      "primaryHeadingVisible": true,
+      "mobileNavObstructions": [],
+      "focusOrder": [
+        "LUMA para Seres de Excelencia, inicio",
+        "Consola de experiencia",
+        "Estudio del entrenador",
+        "Gemelo de aprendizaje",
+        "Inteligencia de contenido",
+        "Reflexión curricular"
+      ],
+      "a11yViolationIds": [],
+      "blocking": false
+    },
+    {
       "route": "/login",
       "theme": "light",
       "viewport": "desktop-1440",
@@ -2936,12 +3206,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Explorar LUMA",
-        "Continuar con Google"
+        "Continuar con Google",
+        "Continuar en modo demostración",
+        "LLUMAlearning intelligenceExplorar LUMA Tu experiencia LUMATu aprendizaje, con c",
+        "LUMA inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2952,7 +3222,7 @@
       "viewport": "desktop-1440",
       "width": 1440,
       "height": 1000,
-      "bodyTextLength": 4995,
+      "bodyTextLength": 5133,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -2964,12 +3234,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Hoy",
-        "Ruta"
+        "Ruta",
+        "Programa",
+        "LUMA",
+        "Ajustar mi perfil"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -2992,12 +3262,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Hoy",
-        "Ruta"
+        "Ruta",
+        "Programa",
+        "LUMA",
+        "Ajustar mi perfil"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -3008,7 +3278,7 @@
       "viewport": "desktop-1440",
       "width": 1440,
       "height": 1000,
-      "bodyTextLength": 2860,
+      "bodyTextLength": 2887,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -3020,12 +3290,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Consola de experiencia",
-        "Estudio del entrenador"
+        "Estudio del entrenador",
+        "Gemelo de aprendizaje",
+        "Inteligencia de contenido",
+        "Reflexión curricular"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -3048,12 +3318,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Explorar LUMA",
-        "Continuar con Google"
+        "Continuar con Google",
+        "Continuar en modo demostración",
+        "LLUMAlearning intelligenceExplorar LUMA Tu experiencia LUMATu aprendizaje, con c",
+        "LUMA inicio"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -3064,7 +3334,7 @@
       "viewport": "desktop-1440",
       "width": 1440,
       "height": 1000,
-      "bodyTextLength": 4995,
+      "bodyTextLength": 5133,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -3076,12 +3346,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Hoy",
-        "Ruta"
+        "Ruta",
+        "Programa",
+        "LUMA",
+        "Ajustar mi perfil"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -3104,12 +3374,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Hoy",
-        "Ruta"
+        "Ruta",
+        "Programa",
+        "LUMA",
+        "Ajustar mi perfil"
       ],
       "a11yViolationIds": [],
       "blocking": false
@@ -3120,7 +3390,7 @@
       "viewport": "desktop-1440",
       "width": 1440,
       "height": 1000,
-      "bodyTextLength": 2860,
+      "bodyTextLength": 2887,
       "horizontalOverflow": 0,
       "outOfBounds": [],
       "clippedText": [],
@@ -3132,12 +3402,12 @@
       "primaryHeadingVisible": true,
       "mobileNavObstructions": [],
       "focusOrder": [
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
-        "NEXTJS-PORTAL",
         "LUMA inicio",
         "Consola de experiencia",
-        "Estudio del entrenador"
+        "Estudio del entrenador",
+        "Gemelo de aprendizaje",
+        "Inteligencia de contenido",
+        "Reflexión curricular"
       ],
       "a11yViolationIds": [],
       "blocking": false

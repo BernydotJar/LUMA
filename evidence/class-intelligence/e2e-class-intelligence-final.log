@@ -1,0 +1,14 @@
+[WebServer] ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+
+Running 8 tests using 1 worker
+
+  ✓  1 [chromium] › e2e/class-intelligence.spec.ts:4:3 › AI-native class entry › P.A.S. diagnostic records routing evidence without claiming mastery (812ms)
+  ✓  2 [chromium] › e2e/class-intelligence.spec.ts:57:3 › AI-native class entry › every published experience exposes a learning contract (1.0s)
+  ✓  3 [chromium] › e2e/class-intelligence.spec.ts:77:3 › AI-native class entry › P.A.S. simulation emits rubric-based scored evidence (663ms)
+  ✓  4 [chromium] › e2e/class-intelligence.spec.ts:105:3 › AI-native class entry › coach can inspect the class intelligence operating model (428ms)
+  ✓  5 [mobile] › e2e/class-intelligence.spec.ts:4:3 › AI-native class entry › P.A.S. diagnostic records routing evidence without claiming mastery (1.1s)
+  ✓  6 [mobile] › e2e/class-intelligence.spec.ts:57:3 › AI-native class entry › every published experience exposes a learning contract (1.1s)
+  ✓  7 [mobile] › e2e/class-intelligence.spec.ts:77:3 › AI-native class entry › P.A.S. simulation emits rubric-based scored evidence (1.1s)
+  ✓  8 [mobile] › e2e/class-intelligence.spec.ts:105:3 › AI-native class entry › coach can inspect the class intelligence operating model (838ms)
+
+  8 passed (8.7s)

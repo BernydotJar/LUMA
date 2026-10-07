@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, Check, CircleHelp, RotateCcw, Target } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { getClassContract } from "@/lib/class-contract";
 import styles from "./class-entry-diagnostic.module.css";
 
@@ -28,6 +28,11 @@ export function ClassEntryDiagnostic({ slug }: { slug: string }) {
   const contract = useMemo(() => getClassContract(slug), [slug]);
   const [selected, setSelected] = useState<string>("");
   const [result, setResult] = useState<ResultState | null>(null);
+  const interactive = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   if (!contract) return null;
   const activeContract = contract;
@@ -127,7 +132,7 @@ export function ClassEntryDiagnostic({ slug }: { slug: string }) {
               key={choice.id}
               aria-pressed={selected === choice.id}
               data-selected={selected === choice.id || undefined}
-              disabled={Boolean(result)}
+              disabled={!interactive || Boolean(result)}
               onClick={() => setSelected(choice.id)}
             >
               <span>{String.fromCharCode(65 + index)}</span>
@@ -146,7 +151,7 @@ export function ClassEntryDiagnostic({ slug }: { slug: string }) {
             <button
               className="button-primary"
               type="button"
-              disabled={!selected}
+              disabled={!interactive || !selected}
               onClick={checkAnswer}
             >
               Comprobar <ArrowRight size={15} />

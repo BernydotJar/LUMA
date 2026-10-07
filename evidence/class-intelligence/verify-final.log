@@ -1,0 +1,91 @@
+
+> luma-learning-intelligence@0.1.0 verify
+> npm run lint && npm run typecheck && npm run test:run && npm run build
+
+
+> luma-learning-intelligence@0.1.0 lint
+> eslint .
+
+
+> luma-learning-intelligence@0.1.0 typecheck
+> tsc --noEmit
+
+
+> luma-learning-intelligence@0.1.0 test:run
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/tmp/luma-class-release[39m
+
+ [32m✓[39m src/lib/learning-engine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/se-voice-contract.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/themes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/simulation-evidence.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/reflection-engine.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/lib/class-contract.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/lib/google-oidc.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/lib/learner-projection.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/class-factory.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/lib/persistent-learning.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/lib/experience-themes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/profile-name.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [2m[90m↓[39m[22m src/lib/learning-store.emulator.test.ts [2m([22m[2m2 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m
+
+[2m Test Files [22m [1m[32m12 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (13)[39m
+[2m      Tests [22m [1m[32m45 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (47)[39m
+[2m   Start at [22m 02:23:39
+[2m   Duration [22m 503ms[2m (transform 68%, import 26%, tests 3%, worker 3%)[22m
+
+
+> luma-learning-intelligence@0.1.0 build
+> next build
+
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 36ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.9s
+  Running TypeScript ...
+  Finished TypeScript in 3.5s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/29) ...
+  Generating static pages using 11 workers (7/29) 
+  Generating static pages using 11 workers (14/29) 
+  Generating static pages using 11 workers (21/29) 
+✓ Generating static pages using 11 workers (29/29) in 614ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/coach/learners
+├ ƒ /api/coach/learners/[learnerId]
+├ ƒ /api/learning/events
+├ ƒ /api/learning/plan
+├ ƒ /api/reflections
+├ ƒ /api/tutor
+├ ○ /experience
+├ ○ /iconography
+├ ○ /learn
+├   /learn/experience/[slug]
+│ ├ ● /learn/experience/congruencia-tres-canales
+│ ├ ● /learn/experience/calibracion-observar-antes-de-interpretar
+│ ├ ● /learn/experience/rapport-sintonia-con-respeto
+│ └ ● [+4 more paths]
+├ ○ /learn/experiences
+├ ○ /learn/session/pas
+├ ○ /library
+├ ○ /login
+├ ○ /onboarding
+├ ○ /studio
+├ ○ /studio/class-intelligence
+├ ƒ /studio/learners/[learnerId]
+├ ○ /studio/learners/mariana
+├ ○ /studio/reflections
+└ ○ /twin
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
