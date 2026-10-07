@@ -92,6 +92,26 @@ describe("PNL RAG adapter", () => {
     expect(isPnlHitRelevant("explicame rapport", hit)).toBe(true);
   });
 
+  it("ignores retrieval-meta words when deciding whether evidence is relevant", () => {
+    const hit = {
+      chunkId: "chunk-meta",
+      sourceId: "gdrive_meta",
+      driveFileId: "meta",
+      module: "Modulo 2",
+      title: "clase.mp4",
+      startSeconds: 0,
+      endSeconds: 60,
+      startClock: "00:00:00",
+      endClock: "00:01:00",
+      text: "En este material existe contenido general del curso.",
+      driveUrl: "https://drive.google.com/file/d/meta/view",
+      srtPath: "/outputs/meta.srt",
+      transcriptPath: "/outputs/meta.txt",
+    };
+
+    expect(isPnlHitRelevant("zxqv no existe en el corpus", hit)).toBe(false);
+  });
+
   it("preserves domain acronyms during relevance normalization", () => {
     expect(normalizePnlText("¿Qué es un P.A.S.?")).toContain("pas");
 

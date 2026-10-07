@@ -49,6 +49,8 @@ const stopWords = new Set([
   "es", "esa", "ese", "eso", "esta", "este", "esto", "explica", "explicame",
   "la", "las", "lo", "los", "me", "mi", "para", "por", "que", "quiero",
   "sobre", "un", "una", "y",
+  "corpus", "contenido", "material", "video", "videos", "clase",
+  "existe", "existir", "encuentra", "encontrar", "muestra", "mostrar",
 ]);
 
 const domainShortTokens = new Set(["pas", "pnl"]);
