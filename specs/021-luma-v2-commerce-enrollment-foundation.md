@@ -19,8 +19,57 @@ LUMA V2 is independent of the commerce channel. Hotmart remains a valid acquisit
 4. Idempotency key derivation.
 5. Hotmart and Stripe adapters remain subsequent gated nodes.
 
+## LUMA-052 — Provider Event Ledger + Entitlement Lifecycle
+The provider-event ledger is intentionally split into receipt and processing phases:
+
+```text
+provider webhook
+   ↓
+normalized commerce event
+   ↓
+receive(event)       -> durable provider-event record
+   ↓
+resolve tenant/customer/product
+   ↓
+process(event)       -> entitlement mutation in a Firestore transaction
+```
+
+This means an acknowledged payment event can remain durably visible even if product mapping, entitlement processing, AI, voice, or another downstream capability is temporarily unavailable.
+
+### Replay and conflict rules
+- The idempotency identity is `provider + externalEventId`.
+- A byte-for-byte provider payload is not required for replay, but the normalized semantic identity must remain stable: provider, event id, type, provider timestamp, customer id, product id, and transaction id.
+- Reusing an event id with conflicting normalized semantics is rejected as `COMMERCE_EVENT_CONFLICT`.
+- A processed event is never applied to Entitlement twice.
+- A failed or received event remains retryable.
+
+### Ordering rules
+Entitlement state is ordered by provider event time, not delivery time.
+
+- A later refund/revocation cannot be undone by an older delayed payment event.
+- If grant and revoke have the same provider timestamp, revoke wins.
+- A newer legitimate grant/renewal may reactivate a previously revoked entitlement.
+- Refund/revocation can create a revocation tombstone before the original grant arrives.
+
+### Tenant isolation
+Provider events are globally idempotent per provider event id. Entitlements are stored under a tenant-scoped Firestore document tree, with tenant/customer/product identity hashed into deterministic document ids. Firestore client rules remain deny-all; commerce mutation is a server-side capability.
+
+### Observability
+Each provider event records:
+- correlation id;
+- received / failed / processed state;
+- processing attempts;
+- sanitized failure code;
+- processing outcome;
+- resolved tenant/customer/product;
+- resulting entitlement id.
+
+This provides the basis for answering: “Why does this learner/customer have access?”
+
 ## Deliberately deferred
 - Checkout UI.
 - Customer-specific pricing.
 - Hard-coded Hotmart fees.
+- Provider signature verification until HotmartProvider / StripeProvider nodes.
 - Production webhook endpoints until signature/auth contracts are implemented and adversarially verified.
+- Enrollment persistence/activation until the entitlement-to-enrollment orchestration slice; Payment remains distinct from Enrollment.
