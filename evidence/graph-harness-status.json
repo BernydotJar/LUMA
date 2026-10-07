@@ -2,9 +2,11 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "794324fd-6264-4373-94db-41fabde0e90d",
-  "event_count": 396,
-  "ready_nodes": [],
+  "last_event_id": "c3565c71-e119-4b02-b3c1-a12400319916",
+  "event_count": 493,
+  "ready_nodes": [
+    "LUMA-036-liquid-glass-refraction-v2"
+  ],
   "nodes": [
     {
       "id": "LUMA-001-foundation",
@@ -808,6 +810,20 @@
       "approval_count": 0
     },
     {
+      "id": "LUMA-036-liquid-glass-refraction-v2",
+      "kind": "product-surface",
+      "title": "Bounded Liquid Light refraction and lens-material v2",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-035-auth-uiux-client-release"
+      ],
+      "capability": "liquid-glass-refraction-v2",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
       "id": "LUMA-037-persistent-learning-twin",
       "kind": "product-capability",
       "title": "Firestore-backed persistent learner state and append-only evidence ledger",
@@ -877,8 +893,228 @@
         "ea4506c6-e73c-49c8-9225-f7d632c6261a"
       ],
       "approval_count": 0
+    },
+    {
+      "id": "LUMA-040-production-persistent-twin-deployment",
+      "kind": "deployment",
+      "title": "Production deployment of Persistent Learning Twin and deny-all Firestore client boundary",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-039-persistent-twin-release"
+      ],
+      "capability": "production-persistent-learning-twin",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "0bda6b2b-f763-4b5d-952c-9da7ea0b7ca2",
+        "32e086dc-1ade-4eb6-949c-89348f852272",
+        "b1349f6f-f8db-4cb8-a689-c2f9b353173a",
+        "b46bfb42-9f72-40e4-9a4e-8a63205f9f7f"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-041-coach-authoritative-learning-state",
+      "kind": "product-capability",
+      "title": "Role-authorized Coach Studio reads the same authoritative learner state and evidence ledger",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-040-production-persistent-twin-deployment"
+      ],
+      "capability": "coach-authoritative-learning-state",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "2b00f397-ae89-4fc9-9576-fc3eb91b72da",
+        "9a5f1546-5f3b-4d5a-999d-05e4906dab49",
+        "ad829181-8e40-4ad2-9417-e232316fc73f",
+        "bb42edd3-dd29-400c-a140-a08bf2b7cc03"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-042-authoritative-twin-production-release",
+      "kind": "release",
+      "title": "Production release of shared learner and coach authoritative Learning Twin",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-040-production-persistent-twin-deployment",
+        "LUMA-041-coach-authoritative-learning-state"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "03b1075e-bf60-4be7-9da8-a2546d899d8b",
+        "22861279-e70d-4be7-90a6-341e1af23cc6",
+        "3837ab20-f915-4444-b90e-a26094eb80b2",
+        "55cae2bd-dba6-4aa7-9f36-71e811e9a92c",
+        "7075a8f2-eb2d-46fb-809b-6bd2d8e3bcb0",
+        "c51200c9-67b7-48df-aa5e-898f7985872f",
+        "c9afbfb7-b01f-472c-b80b-2eff2a61d18f",
+        "e105d5b8-0736-488c-82aa-a1733fd9c20f"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-043-learning-pattern-research",
+      "kind": "product-research",
+      "title": "Platzi and AI-EdTech learning pattern research with adoption decisions",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-042-authoritative-twin-production-release"
+      ],
+      "capability": "learning-product-research",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "1957970b-aaf9-4a4b-8962-f452872ec802",
+        "4c5f96c3-991c-4f25-838a-08891254f3b5"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-044-pedagogy-as-code-contract",
+      "kind": "ai-learning-capability",
+      "title": "Pedagogy-as-code class contract, topologies, invariants and quality gate",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-043-learning-pattern-research"
+      ],
+      "capability": "learning-quality-policy",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "08b414a6-1a06-4ec1-9962-651744624ce4",
+        "70153528-94db-40da-a33e-5c0aeac952f1",
+        "c257d3eb-1c05-4c6e-85d5-0222ad6900c5"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-045-adaptive-entry-diagnostic",
+      "kind": "product-surface",
+      "title": "Capability micro-diagnostic and adaptive class entry routing",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-044-pedagogy-as-code-contract"
+      ],
+      "capability": "adaptive-learning-entry",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "8161d884-75a7-4059-8b34-f28e6a888ae4",
+        "a4989ffe-3894-491b-ae5b-85423c0d0444",
+        "fef2a3ae-ce9a-4f36-9d2b-63c83c0b9216"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-046-simulation-evidence-runtime",
+      "kind": "ai-learning-capability",
+      "title": "Criterion-based simulation, remediation, replay and evidence authority runtime",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-045-adaptive-entry-diagnostic"
+      ],
+      "capability": "evidence-first-practice",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "6c5115fc-4a21-4148-8cf5-d04c26300332",
+        "917172f7-39f0-4636-8941-8353faaf55dc",
+        "996a246d-18f9-4c9e-996a-abc6fe0b471a",
+        "bf3285ea-8e58-43ff-9db6-91062138c6e4"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-047-self-refreshing-class-factory",
+      "kind": "ai-learning-capability",
+      "title": "Source-grounded class factory with reflection, impact analysis and human promotion",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-044-pedagogy-as-code-contract"
+      ],
+      "capability": "class-generation-reflection",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "6ea1ca46-fca2-4252-aecb-fa5c2508f0dd",
+        "c33e5dc0-8790-46ab-b2b6-8e21bea3c063",
+        "d82faf8b-a8e2-43d1-abbe-1103ffbef500"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-048-learning-impact-observability",
+      "kind": "product-surface",
+      "title": "Learning evidence to coach insight and class-quality observability",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-046-simulation-evidence-runtime",
+        "LUMA-047-self-refreshing-class-factory"
+      ],
+      "capability": "learning-impact-observability",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "05cac77d-4ed7-4988-bb30-00793f2266b0",
+        "3cab815b-e54d-4d66-815b-05d3762ec7ef",
+        "676b0d86-13c6-4548-b5b9-56a3956a90c9",
+        "e3dcb83d-9aa5-495f-af7f-23b4eb4cdcca",
+        "f81c1d34-078e-4ba0-a4c6-902aef3484bc"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-049-class-intelligence-release",
+      "kind": "release",
+      "title": "AI-native class intelligence client-demo release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-045-adaptive-entry-diagnostic",
+        "LUMA-046-simulation-evidence-runtime",
+        "LUMA-047-self-refreshing-class-factory",
+        "LUMA-048-learning-impact-observability"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "038f8dc1-4174-4971-babd-ce172da39235",
+        "046d989c-1bdc-4127-aa95-25f318a1e842",
+        "366ca360-7aca-4fa5-8874-89aeaccac5f8",
+        "75336ee1-e29f-4959-96f8-58022feb036f",
+        "bf9fc19f-a49a-449a-b498-45c8768ae6c1",
+        "c2648509-cbdc-4b27-a208-5a016275ed2c",
+        "f4d8b399-56b7-4da6-aac3-bb3930b63dfd"
+      ],
+      "approval_count": 0
     }
   ],
-  "checkpoint_count": 10,
+  "checkpoint_count": 12,
   "repair_plan_count": 0
 }
