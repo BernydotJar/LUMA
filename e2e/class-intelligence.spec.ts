@@ -67,10 +67,17 @@ test.describe("AI-native class entry", () => {
 
     for (const slug of slugs) {
       await page.goto(`/learn/experience/${slug}`);
+      const learningContract = page.getByRole("region", {
+        name: /Empieza desde donde realmente estás/i,
+      });
       await expect(
-        page.getByRole("heading", { name: /Empieza desde donde realmente estás/i }),
+        learningContract.getByRole("heading", {
+          name: /Empieza desde donde realmente estás/i,
+        }),
       ).toBeVisible();
-      await expect(page.getByText(/Cómo lo vas a demostrar/i)).toBeVisible();
+      await expect(
+        learningContract.getByText(/Cómo lo vas a demostrar/i),
+      ).toBeVisible();
     }
   });
 
