@@ -1,0 +1,47 @@
+{
+  "schema_version": "luma.v2-commerce-ledger.release-evidence.v1",
+  "reviewed_commit": "582435630301ef5bff938bcec262a7e99ad2c711",
+  "generated_from": {
+    "github_actions_push_run_id": 37798623241,
+    "github_actions_pr_run_id": 37798632988,
+    "codex_review_commit": "582435630301ef5bff938bcec262a7e99ad2c711"
+  },
+  "gates": {
+    "verify": {
+      "conclusion": "success",
+      "unit_integration": {
+        "passed": 94,
+        "skipped": 10
+      },
+      "build": "PASS",
+      "lint": "PASS",
+      "typecheck": "PASS"
+    },
+    "firestore": {
+      "conclusion": "success",
+      "passed": 10,
+      "suites": {
+        "commerce_ledger": 8,
+        "persistent_learning_store": 2
+      }
+    },
+    "browser": {
+      "conclusion": "success",
+      "passed": 67,
+      "skipped": 5,
+      "failed": 0
+    },
+    "production_dependency_audit": {
+      "conclusion": "success",
+      "vulnerabilities": 0,
+      "command": "npm audit --omit=dev --audit-level=high"
+    }
+  },
+  "independent_review": {
+    "code_review": "PASS",
+    "security_review": "PASS",
+    "active_review_threads": 0,
+    "note": "Final Codex review on 5824356303 reported no major issues; final security review reported no security issues."
+  },
+  "decision": "PASS"
+}

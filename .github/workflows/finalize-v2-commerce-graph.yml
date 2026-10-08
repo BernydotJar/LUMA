@@ -1,0 +1,36 @@
+name: Finalize V2 commerce graph
+
+on:
+  push:
+    branches: ["feat/v2-commerce-ledger-entitlements"]
+    paths:
+      - "evidence/v2-commerce-ledger/finalize.request"
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install pinned Graph Harness
+        run: python -m pip install "git+https://github.com/BernydotJar/Graph-harness-sdlc.git@168b740045293089720964bdc0d2bda79828b5c8"
+      - name: Finalize LUMA-050 through LUMA-052
+        run: python scripts/finalize_v2_commerce_graph.py --commit 582435630301ef5bff938bcec262a7e99ad2c711
+      - name: Validate projected graph
+        run: graph-harness --project graph-harness.project.json --events graph-harness.events.jsonl validate
+      - name: Commit append-only graph evidence
+        run: |
+          git config user.name "LUMA Graph Release Bot"
+          git config user.email "release-bot@openai.invalid"
+          git add graph-harness.events.jsonl evidence/graph-harness-status.json evidence/v2-commerce-ledger/graph-finalization.json
+          git diff --cached --exit-code && exit 1 || true
+          git commit -m "chore: close LUMA-050 through LUMA-052 graph gates"
+          git push origin HEAD:feat/v2-commerce-ledger-entitlements
