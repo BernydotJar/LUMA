@@ -140,7 +140,7 @@ export function commerceTimestampNanos(
   const match = commerceTimestampPattern.exec(value);
   if (!match) {
     throw new Error(
-      \`\${label} must be RFC3339 with at most nanosecond precision\`,
+      `${label} must be RFC3339 with at most nanosecond precision`,
     );
   }
 
@@ -185,7 +185,7 @@ export function commerceTimestampNanos(
     offsetMinute <= 59;
 
   if (!calendarValid) {
-    throw new Error(\`\${label} must be a valid RFC3339 timestamp\`);
+    throw new Error(`${label} must be a valid RFC3339 timestamp`);
   }
 
   const wholeSecond = new Date(0);
@@ -201,7 +201,7 @@ export function commerceTimestampNanos(
   const wholeMilliseconds =
     wholeSecond.getTime() - offsetMinutes * 60_000;
   if (!Number.isFinite(wholeMilliseconds)) {
-    throw new Error(\`\${label} is outside the supported timestamp range\`);
+    throw new Error(`${label} is outside the supported timestamp range`);
   }
 
   const fractionalNanos = BigInt(fraction.padEnd(9, "0"));
