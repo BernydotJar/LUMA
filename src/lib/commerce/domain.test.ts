@@ -17,7 +17,21 @@ describe("LUMA V2 commerce domain", () => {
     };
 
     expect(commerceIdempotencyKey(event)).toBe(
-      "hotmart:purchase-42",
+      '["hotmart","purchase-42"]',
+    );
+  });
+
+  it("encodes provider and event ids without delimiter collisions", () => {
+    expect(
+      commerceIdempotencyKey({
+        provider: "a:b",
+        externalEventId: "c",
+      }),
+    ).not.toBe(
+      commerceIdempotencyKey({
+        provider: "a",
+        externalEventId: "b:c",
+      }),
     );
   });
 

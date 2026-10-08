@@ -37,7 +37,7 @@ process(event)       -> entitlement mutation in a Firestore transaction
 This means an acknowledged payment event can remain durably visible even if product mapping, entitlement processing, AI, voice, or another downstream capability is temporarily unavailable.
 
 ### Replay and conflict rules
-- The idempotency identity is `provider + externalEventId`.
+- The idempotency identity is `provider + externalEventId`, encoded as an unambiguous serialized tuple before hashing so delimiter-bearing provider/event IDs cannot collide.
 - A byte-for-byte provider payload is not required for replay, but the normalized semantic identity must remain stable: provider, event id, type, provider timestamp, customer id, product id, and transaction id.
 - Reusing an event id with conflicting normalized semantics is rejected as `COMMERCE_EVENT_CONFLICT`.
 - Optional provider IDs are trimmed and empty values normalize to absent, preventing replay mismatches caused by empty strings.

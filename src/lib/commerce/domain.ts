@@ -118,7 +118,7 @@ export function commerceIdempotencyKey(
     event.externalEventId,
     "externalEventId",
   );
-  return `${provider}:${externalEventId}`;
+  return JSON.stringify([provider, externalEventId]);
 }
 
 export function normalizeEntitlementIdentity(
