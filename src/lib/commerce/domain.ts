@@ -105,7 +105,7 @@ export interface EntitlementRecord extends EntitlementIdentity {
 }
 
 const commerceTimestampPattern =
-  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,9}))?(Z|([+-])(\d{2}):(\d{2}))$/;
+  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,9}))?(Z|([+-])(\d{2}):(\d{2}))$/i;
 
 function integerPart(value: string): number {
   return Number.parseInt(value, 10);
@@ -167,6 +167,7 @@ export function commerceTimestampNanos(
   const second = integerPart(secondText);
   const offsetHour = offsetHourText ? integerPart(offsetHourText) : 0;
   const offsetMinute = offsetMinuteText ? integerPart(offsetMinuteText) : 0;
+  const normalizedZone = zone.toUpperCase();
 
   const calendarValid =
     month >= 1 &&
