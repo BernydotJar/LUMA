@@ -3,6 +3,8 @@ import type { Firestore } from "firebase-admin/firestore";
 import { applyEntitlementTransition } from "./entitlement";
 import {
   commerceIdempotencyKey,
+  commerceTimestampNanos,
+  compareCommerceEventTimes,
   entitlementIdentityKey,
   normalizeEntitlementIdentity,
   normalizeOptionalExternalId,
@@ -40,9 +42,7 @@ function hashDocumentId(value: string): string {
 }
 
 function validTimestamp(value: string, label: string): string {
-  if (!Number.isFinite(Date.parse(value))) {
-    throw new Error(`${label} must be a valid ISO timestamp`);
-  }
+  commerceTimestampNanos(value, label);
   return value;
 }
 
@@ -70,7 +70,7 @@ function eventMatches(
     record.provider.trim() === event.provider.trim() &&
     record.externalEventId.trim() === event.externalEventId.trim() &&
     record.type === event.type &&
-    Date.parse(record.occurredAt) === Date.parse(event.occurredAt) &&
+    compareCommerceEventTimes(record.occurredAt, event.occurredAt) === 0 &&
     normalizeOptionalExternalId(record.customerExternalId) ===
       normalizeOptionalExternalId(event.customerExternalId) &&
     normalizeOptionalExternalId(record.productExternalId) ===

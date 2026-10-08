@@ -104,6 +104,37 @@ export interface EntitlementRecord extends EntitlementIdentity {
   lastSourceEvent: CommerceSourceEvent;
 }
 
+const commerceTimestampPattern =
+  /^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2})(?:\\.(\\d{1,9}))?(Z|[+-]\\d{2}:\\d{2})$/;
+
+export function commerceTimestampNanos(
+  value: string,
+  label = "timestamp",
+): bigint {
+  const match = commerceTimestampPattern.exec(value);
+  if (!match) {
+    throw new Error(`${label} must be RFC3339 with at most nanosecond precision`);
+  }
+
+  const [, wholeSecond, fraction = "", zone] = match;
+  const wholeMilliseconds = Date.parse(`${wholeSecond}${zone}`);
+  if (!Number.isFinite(wholeMilliseconds)) {
+    throw new Error(`${label} must be a valid RFC3339 timestamp`);
+  }
+
+  const fractionalNanos = BigInt(fraction.padEnd(9, "0"));
+  return BigInt(wholeMilliseconds) * 1_000_000n + fractionalNanos;
+}
+
+export function compareCommerceEventTimes(
+  left: string,
+  right: string,
+): number {
+  const a = commerceTimestampNanos(left, "left timestamp");
+  const b = commerceTimestampNanos(right, "right timestamp");
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
 function requiredIdentityPart(value: string, label: string): string {
   const normalized = value.trim();
   if (!normalized) throw new Error(`${label} is required`);

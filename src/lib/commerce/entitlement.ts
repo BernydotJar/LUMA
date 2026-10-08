@@ -1,5 +1,7 @@
 import {
   commerceSourceEvent,
+  commerceTimestampNanos,
+  compareCommerceEventTimes,
   type CommerceProcessingOutcome,
   type EffectiveEntitlementAction,
   type EntitlementIdentity,
@@ -27,31 +29,25 @@ const actionPriority: Record<EffectiveEntitlementAction, number> = {
   revoke: 2,
 };
 
-function timestamp(value: string, label: string): number {
-  const parsed = Date.parse(value);
-  if (!Number.isFinite(parsed)) {
-    throw new Error(`${label} must be a valid ISO timestamp`);
-  }
-  return parsed;
-}
-
 function isStaleOrLowerPriority(
   current: EntitlementRecord,
   event: NormalizedCommerceEvent,
   action: EffectiveEntitlementAction,
 ): boolean {
-  const incomingTime = timestamp(event.occurredAt, "event.occurredAt");
-  const currentTime = timestamp(current.lastEffectiveAt, "entitlement.lastEffectiveAt");
-  if (incomingTime < currentTime) return true;
-  if (incomingTime > currentTime) return false;
+  const comparison = compareCommerceEventTimes(
+    event.occurredAt,
+    current.lastEffectiveAt,
+  );
+  if (comparison < 0) return true;
+  if (comparison > 0) return false;
   return actionPriority[action] <= actionPriority[current.lastAction];
 }
 
 export function applyEntitlementTransition(
   input: EntitlementTransitionInput,
 ): EntitlementTransitionResult {
-  timestamp(input.appliedAt, "appliedAt");
-  timestamp(input.event.occurredAt, "event.occurredAt");
+  commerceTimestampNanos(input.appliedAt, "appliedAt");
+  commerceTimestampNanos(input.event.occurredAt, "event.occurredAt");
 
   if (input.current && isStaleOrLowerPriority(input.current, input.event, input.action)) {
     return {

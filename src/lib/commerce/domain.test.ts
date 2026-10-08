@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   commerceIdempotencyKey,
+  compareCommerceEventTimes,
+  commerceTimestampNanos,
   entitlementIdentityKey,
   processingIntentMatches,
   type NormalizedCommerceEvent,
@@ -8,6 +10,29 @@ import {
 } from "./domain";
 
 describe("LUMA V2 commerce domain", () => {
+  it("preserves sub-millisecond ordering through nanoseconds", () => {
+    expect(
+      compareCommerceEventTimes(
+        "2026-10-07T12:00:00.000001Z",
+        "2026-10-07T12:00:00.000999Z",
+      ),
+    ).toBe(-1);
+    expect(
+      compareCommerceEventTimes(
+        "2026-10-07T12:00:00.000999Z",
+        "2026-10-07T12:00:00.000001Z",
+      ),
+    ).toBe(1);
+  });
+
+  it("rejects provider timestamps beyond nanosecond precision", () => {
+    expect(() =>
+      commerceTimestampNanos(
+        "2026-10-07T12:00:00.1234567891Z",
+      ),
+    ).toThrow(/nanosecond precision/i);
+  });
+
   it("derives a provider-scoped idempotency key", () => {
     const event: NormalizedCommerceEvent = {
       provider: "hotmart",

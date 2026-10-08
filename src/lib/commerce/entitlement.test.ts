@@ -101,6 +101,36 @@ describe("entitlement lifecycle", () => {
     expect(revoke.outcome).toBe("revoked");
   });
 
+  it("preserves sub-millisecond provider ordering", () => {
+    const revoked = applyEntitlementTransition({
+      entitlementId: "ent-1",
+      identity,
+      action: "revoke",
+      event: event(
+        "evt-refund",
+        "commerce.payment.refunded",
+        "2026-10-07T12:00:00.000001Z",
+      ),
+      appliedAt: "2026-10-07T12:00:01Z",
+    });
+
+    const newerGrant = applyEntitlementTransition({
+      entitlementId: "ent-1",
+      identity,
+      action: "grant",
+      event: event(
+        "evt-renew",
+        "commerce.subscription.renewed",
+        "2026-10-07T12:00:00.000999Z",
+      ),
+      appliedAt: "2026-10-07T12:00:02Z",
+      current: revoked.record,
+    });
+
+    expect(newerGrant.outcome).toBe("reactivated");
+    expect(newerGrant.record.status).toBe("active");
+  });
+
   it("reactivates only from a newer grant", () => {
     const revoked = applyEntitlementTransition({
       entitlementId: "ent-1",

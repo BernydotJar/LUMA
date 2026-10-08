@@ -111,6 +111,29 @@ describe.runIf(emulatorEnabled)(
       ).rejects.toThrow("COMMERCE_EVENT_CONFLICT");
     });
 
+    it("rejects a replay whose timestamp differs below millisecond precision", async () => {
+      const suffix = randomUUID();
+      const event = payment(
+        `evt-sub-ms-${suffix}`,
+        "2026-10-07T12:00:00.000001Z",
+      );
+
+      await ledger!.receive(
+        event,
+        `corr-${suffix}`,
+      );
+
+      await expect(
+        ledger!.receive(
+          {
+            ...event,
+            occurredAt: "2026-10-07T12:00:00.000999Z",
+          },
+          `corr-retry-${suffix}`,
+        ),
+      ).rejects.toThrow("COMMERCE_EVENT_CONFLICT");
+    });
+
     it("preserves revocation when events arrive out of order", async () => {
       const suffix = randomUUID();
       const identity = {
