@@ -33,6 +33,30 @@ describe("LUMA V2 commerce domain", () => {
     ).toThrow(/nanosecond precision/i);
   });
 
+  it("rejects calendar-invalid RFC3339 timestamps instead of normalizing them", () => {
+    expect(() =>
+      commerceTimestampNanos("2026-02-30T00:00:00Z"),
+    ).toThrow(/valid RFC3339 timestamp/i);
+    expect(() =>
+      commerceTimestampNanos("2026-04-31T00:00:00Z"),
+    ).toThrow(/valid RFC3339 timestamp/i);
+    expect(() =>
+      commerceTimestampNanos("2026-01-01T24:00:00Z"),
+    ).toThrow(/valid RFC3339 timestamp/i);
+  });
+
+  it("accepts leap-day and compares equivalent timezone offsets", () => {
+    expect(() =>
+      commerceTimestampNanos("2028-02-29T23:59:59.123456789Z"),
+    ).not.toThrow();
+    expect(
+      compareCommerceEventTimes(
+        "2026-10-07T12:00:00.123456789Z",
+        "2026-10-07T14:00:00.123456789+02:00",
+      ),
+    ).toBe(0);
+  });
+
   it("derives a provider-scoped idempotency key", () => {
     const event: NormalizedCommerceEvent = {
       provider: "hotmart",

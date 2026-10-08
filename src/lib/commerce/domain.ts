@@ -105,7 +105,33 @@ export interface EntitlementRecord extends EntitlementIdentity {
 }
 
 const commerceTimestampPattern =
-  /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,9}))?(Z|[+-]\d{2}:\d{2})$/;
+  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,9}))?(Z|([+-])(\d{2}):(\d{2}))$/;
+
+function integerPart(value: string): number {
+  return Number.parseInt(value, 10);
+}
+
+function isLeapYear(year: number): boolean {
+  return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+}
+
+function daysInMonth(year: number, month: number): number {
+  const days = [
+    31,
+    isLeapYear(year) ? 29 : 28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31,
+  ];
+  return days[month - 1] ?? 0;
+}
 
 export function commerceTimestampNanos(
   value: string,
@@ -113,17 +139,76 @@ export function commerceTimestampNanos(
 ): bigint {
   const match = commerceTimestampPattern.exec(value);
   if (!match) {
-    throw new Error(`${label} must be RFC3339 with at most nanosecond precision`);
+    throw new Error(
+      \`\${label} must be RFC3339 with at most nanosecond precision\`,
+    );
   }
 
-  const [, wholeSecond, fraction = "", zone] = match;
-  const wholeMilliseconds = Date.parse(`${wholeSecond}${zone}`);
+  const [
+    ,
+    yearText,
+    monthText,
+    dayText,
+    hourText,
+    minuteText,
+    secondText,
+    fraction = "",
+    zone,
+    offsetSign,
+    offsetHourText,
+    offsetMinuteText,
+  ] = match;
+
+  const year = integerPart(yearText);
+  const month = integerPart(monthText);
+  const day = integerPart(dayText);
+  const hour = integerPart(hourText);
+  const minute = integerPart(minuteText);
+  const second = integerPart(secondText);
+  const offsetHour = offsetHourText ? integerPart(offsetHourText) : 0;
+  const offsetMinute = offsetMinuteText ? integerPart(offsetMinuteText) : 0;
+
+  const calendarValid =
+    month >= 1 &&
+    month <= 12 &&
+    day >= 1 &&
+    day <= daysInMonth(year, month) &&
+    hour >= 0 &&
+    hour <= 23 &&
+    minute >= 0 &&
+    minute <= 59 &&
+    second >= 0 &&
+    second <= 59 &&
+    offsetHour >= 0 &&
+    offsetHour <= 23 &&
+    offsetMinute >= 0 &&
+    offsetMinute <= 59;
+
+  if (!calendarValid) {
+    throw new Error(\`\${label} must be a valid RFC3339 timestamp\`);
+  }
+
+  const wholeSecond = new Date(0);
+  wholeSecond.setUTCFullYear(year, month - 1, day);
+  wholeSecond.setUTCHours(hour, minute, second, 0);
+
+  let offsetMinutes = 0;
+  if (zone !== "Z") {
+    const magnitude = offsetHour * 60 + offsetMinute;
+    offsetMinutes = offsetSign === "+" ? magnitude : -magnitude;
+  }
+
+  const wholeMilliseconds =
+    wholeSecond.getTime() - offsetMinutes * 60_000;
   if (!Number.isFinite(wholeMilliseconds)) {
-    throw new Error(`${label} must be a valid RFC3339 timestamp`);
+    throw new Error(\`\${label} is outside the supported timestamp range\`);
   }
 
   const fractionalNanos = BigInt(fraction.padEnd(9, "0"));
-  return BigInt(wholeMilliseconds) * BigInt(1_000_000) + fractionalNanos;
+  return (
+    BigInt(wholeMilliseconds) * BigInt(1_000_000) +
+    fractionalNanos
+  );
 }
 
 export function compareCommerceEventTimes(
@@ -134,6 +219,7 @@ export function compareCommerceEventTimes(
   const b = commerceTimestampNanos(right, "right timestamp");
   return a < b ? -1 : a > b ? 1 : 0;
 }
+
 
 function requiredIdentityPart(value: string, label: string): string {
   const normalized = value.trim();
