@@ -45,7 +45,7 @@ This means an acknowledged payment event can remain durably visible even if prod
 - A failed or received event remains retryable.
 
 ### Ordering rules
-Entitlement state is ordered by provider event time, not delivery time. RFC3339 provider timestamps are compared with their full declared fractional precision up to nanoseconds; higher precision is rejected rather than silently truncated.
+Entitlement state is ordered by provider event time, not delivery time. RFC3339 provider timestamps are compared with their full declared fractional precision up to nanoseconds; higher precision is rejected rather than silently truncated. The RFC3339 `-00:00` unknown-offset form is rejected because it does not identify an orderable instant; `Z` and `+00:00` remain valid UTC representations.
 
 - A later refund/revocation cannot be undone by an older delayed payment event.
 - If grant and revoke have the same provider timestamp, revoke wins.

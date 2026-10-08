@@ -45,6 +45,18 @@ describe("LUMA V2 commerce domain", () => {
     ).toThrow(/valid RFC3339 timestamp/i);
   });
 
+  it("rejects RFC3339 unknown local offsets instead of treating them as UTC", () => {
+    expect(() =>
+      commerceTimestampNanos("2026-10-07T12:00:00-00:00"),
+    ).toThrow(/valid RFC3339 timestamp/i);
+    expect(
+      compareCommerceEventTimes(
+        "2026-10-07T12:00:00Z",
+        "2026-10-07T12:00:00+00:00",
+      ),
+    ).toBe(0);
+  });
+
   it("accepts leap-day and compares equivalent timezone offsets", () => {
     expect(() =>
       commerceTimestampNanos("2028-02-29T23:59:59.123456789Z"),

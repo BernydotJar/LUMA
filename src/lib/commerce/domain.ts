@@ -182,7 +182,8 @@ export function commerceTimestampNanos(
     offsetHour >= 0 &&
     offsetHour <= 23 &&
     offsetMinute >= 0 &&
-    offsetMinute <= 59;
+    offsetMinute <= 59 &&
+    zone !== "-00:00";
 
   if (!calendarValid) {
     throw new Error(`${label} must be a valid RFC3339 timestamp`);
