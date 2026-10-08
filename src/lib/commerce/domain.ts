@@ -183,7 +183,7 @@ export function commerceTimestampNanos(
     offsetHour <= 23 &&
     offsetMinute >= 0 &&
     offsetMinute <= 59 &&
-    zone !== "-00:00";
+    normalizedZone !== "-00:00";
 
   if (!calendarValid) {
     throw new Error(`${label} must be a valid RFC3339 timestamp`);
@@ -194,7 +194,7 @@ export function commerceTimestampNanos(
   wholeSecond.setUTCHours(hour, minute, second, 0);
 
   let offsetMinutes = 0;
-  if (zone !== "Z") {
+  if (normalizedZone !== "Z") {
     const magnitude = offsetHour * 60 + offsetMinute;
     offsetMinutes = offsetSign === "+" ? magnitude : -magnitude;
   }

@@ -57,6 +57,15 @@ describe("LUMA V2 commerce domain", () => {
     ).toBe(0);
   });
 
+  it("accepts lowercase RFC3339 date-time designators", () => {
+    expect(
+      compareCommerceEventTimes(
+        "2026-10-07t12:00:00.123456789z",
+        "2026-10-07T12:00:00.123456789Z",
+      ),
+    ).toBe(0);
+  });
+
   it("accepts leap-day and compares equivalent timezone offsets", () => {
     expect(() =>
       commerceTimestampNanos("2028-02-29T23:59:59.123456789Z"),
