@@ -105,7 +105,7 @@ export interface EntitlementRecord extends EntitlementIdentity {
 }
 
 const commerceTimestampPattern =
-  /^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2})(?:\\.(\\d{1,9}))?(Z|[+-]\\d{2}:\\d{2})$/;
+  /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,9}))?(Z|[+-]\d{2}:\d{2})$/;
 
 export function commerceTimestampNanos(
   value: string,
@@ -123,7 +123,7 @@ export function commerceTimestampNanos(
   }
 
   const fractionalNanos = BigInt(fraction.padEnd(9, "0"));
-  return BigInt(wholeMilliseconds) * 1_000_000n + fractionalNanos;
+  return BigInt(wholeMilliseconds) * BigInt(1_000_000) + fractionalNanos;
 }
 
 export function compareCommerceEventTimes(
