@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "c3565c71-e119-4b02-b3c1-a12400319916",
-  "event_count": 493,
+  "last_event_id": "920c78ca-ed65-4a68-aac0-33e3d2791a0d",
+  "event_count": 526,
   "ready_nodes": [
     "LUMA-036-liquid-glass-refraction-v2"
   ],
@@ -1113,8 +1113,119 @@
         "f4d8b399-56b7-4da6-aac3-bb3930b63dfd"
       ],
       "approval_count": 0
+    },
+    {
+      "id": "LUMA-050-v2-post-client-baseline",
+      "kind": "architecture",
+      "title": "V2 post-client architecture baseline and bounded migration plan",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-049-class-intelligence-release"
+      ],
+      "capability": "solution-architecture",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "0248a823-fa55-4f5a-98a2-b6ff019a9b71",
+        "7f92ee4b-0a62-453e-ae02-ca4bac08a7c3"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-051-commerce-domain-contract",
+      "kind": "domain-foundation",
+      "title": "Provider-neutral commerce events, provider contract, entitlement and enrollment boundaries",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-050-v2-post-client-baseline"
+      ],
+      "capability": "commerce-domain",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "257f03c4-2b11-4d53-882f-a7d635c74dee",
+        "5f381bf6-bd00-4452-81fa-eea61653942b",
+        "67e08b2b-ad93-418b-aa19-ffffed5a975b",
+        "eb2bd949-f821-4761-9036-bf8d141ebc8c",
+        "ed8cb44d-8430-429d-a7b5-653f360708b3",
+        "fa08443d-8ea4-4fd8-8f38-39fd9b2e079b"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-052-commerce-idempotency-ledger",
+      "kind": "domain-foundation",
+      "title": "Idempotent provider-event ledger and replay-safe processing",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-051-commerce-domain-contract"
+      ],
+      "capability": "commerce-reliability",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "07f7eee5-4522-41a8-9c58-bdb5d9728ece",
+        "2db6741c-e8f1-4708-b1cd-34cc36474a2a",
+        "40ac40e5-16c9-4db3-b526-2ab2f5a9613c",
+        "55194769-6c1d-4094-a5a7-60d0379a01ec",
+        "6b38422a-c12c-4178-9ccf-f3cd805c6701",
+        "8c5a8662-9bf8-4e38-aff6-e49920f79de5",
+        "99844edd-6841-4789-9dec-f1ff2caf4aa6",
+        "db2fa612-d3bf-4d91-8856-c0a4942416ff",
+        "ffb1acb8-f6ad-443c-9785-7225f38f548c"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-053-hotmart-provider",
+      "kind": "integration",
+      "title": "Hotmart provider adapter with signed webhook normalization and lifecycle mapping",
+      "status": "ready",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-052-commerce-idempotency-ledger"
+      ],
+      "capability": "commerce-provider-hotmart",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-054-stripe-provider",
+      "kind": "integration",
+      "title": "Stripe provider adapter using the same normalized commerce contract",
+      "status": "ready",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-052-commerce-idempotency-ledger"
+      ],
+      "capability": "commerce-provider-stripe",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-055-v2-enterprise-pilot-gate",
+      "kind": "release",
+      "title": "V2 enterprise pilot readiness gate for commerce-independent learning intelligence",
+      "status": "ready",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-053-hotmart-provider",
+        "LUMA-054-stripe-provider"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
     }
   ],
-  "checkpoint_count": 12,
+  "checkpoint_count": 14,
   "repair_plan_count": 0
 }
