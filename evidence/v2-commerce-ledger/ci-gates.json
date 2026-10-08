@@ -1,16 +1,15 @@
 {
-  "schema_version": "luma.v2-commerce-ledger.release-evidence.v1",
-  "reviewed_commit": "582435630301ef5bff938bcec262a7e99ad2c711",
+  "schema_version": "luma.v2-commerce-ledger.release-evidence.v2",
+  "reviewed_commit": "bb7b8aa4ca7bf5ec8d2d2d82070e1227d5560817",
   "generated_from": {
-    "github_actions_push_run_id": 37798623241,
-    "github_actions_pr_run_id": 37798632988,
-    "codex_review_commit": "582435630301ef5bff938bcec262a7e99ad2c711"
+    "github_actions_push_run_id": 37803323097,
+    "codex_review_commit": "bb7b8aa4ca7bf5ec8d2d2d82070e1227d5560817"
   },
   "gates": {
     "verify": {
       "conclusion": "success",
       "unit_integration": {
-        "passed": 94,
+        "passed": 95,
         "skipped": 10
       },
       "build": "PASS",
@@ -41,7 +40,7 @@
     "code_review": "PASS",
     "security_review": "PASS",
     "active_review_threads": 0,
-    "note": "Final Codex review on 5824356303 reported no major issues; final security review reported no security issues."
+    "note": "Final Codex code review on bb7b8aa4ca reported no major issues; final security review reported no security issues."
   },
   "decision": "PASS"
 }
