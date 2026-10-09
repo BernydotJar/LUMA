@@ -50,7 +50,7 @@
 
 .metricGrid {
   display: grid;
-  grid-template-columns: 1.65fr repeat(4, minmax(0, 1fr));
+  grid-template-columns: 1.65fr repeat(3, minmax(0, 1fr));
   gap: 9px;
 }
 
@@ -250,7 +250,7 @@
   border: 1px solid var(--line);
   border-radius: 17px;
   display: grid;
-  grid-template-columns: 150px minmax(80px, 1fr) 35px;
+  grid-template-columns: minmax(110px, 1fr) minmax(64px, .55fr) auto;
   align-items: center;
   gap: 10px;
   color: var(--ink);
@@ -615,7 +615,7 @@
 
 @media (max-width: 1350px) {
   .metricGrid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .heroMetric {
@@ -690,7 +690,7 @@
   }
 
   .bottleneckChart button {
-    grid-template-columns: 120px minmax(50px, 1fr) 33px;
+    grid-template-columns: minmax(95px, 1fr) minmax(45px, .5fr) auto;
   }
 
   .interventionEffect {

@@ -58,7 +58,7 @@ test.describe("LUMA product showcase", () => {
     await expect(page.getByRole("heading", { name: /Mariana: estado de aprendizaje con evidencia y confianza/i })).toBeVisible();
     await expect(page.getByText(/© 2026 LUMA · Modelo de gemelo de aprendizaje y marco de evidencia/i).first()).toBeVisible();
     await expect(page.getByText(/Evidencia del participante/i)).toBeVisible();
-    await expect(page.getByRole("link", { name: "Gemelo de aprendizaje", exact: true }).last()).toBeVisible();
+    await expect(page.getByRole("link", { name: "Objetivos de aprendizaje", exact: true }).last()).toBeVisible();
   });
 
   test("learner can inspect recommendation and ask the grounded tutor", async ({ page }) => {
@@ -87,15 +87,15 @@ test.describe("LUMA product showcase", () => {
   test("curriculum reflection creates a reviewable artifact without updating learner state", async ({ page }) => {
     await page.goto("/studio/reflections");
     await expect(
-      page.getByRole("heading", { name: /El corpus aprende con trazabilidad y revisión/i }),
+      page.getByRole("heading", { name: /Mantén el contenido del programa relevante y confiable/i }),
     ).toBeVisible();
     await page.getByRole("button", { name: /Generar reflexión/i }).click();
     await expect(
-      page.getByText(/Borrador generado. Estado: revisión humana antes de participar en respuestas al participante/i),
+      page.getByText(/Actualización preparada. Revisa el contenido y sus fuentes antes de aprobarla/i),
     ).toBeVisible();
-    await expect(page.getByText(/autoridad de estado: ninguna/i)).toBeVisible();
+    await expect(page.getByText(/Sin cambios automáticos en el progreso del participante/i)).toBeVisible();
     await page.getByRole("button", { name: /Aprobar con recibo/i }).click();
-    await expect(page.getByText(/Aprobado con recibo/i)).toBeVisible();
+    await expect(page.getByText(/Actualización aprobada/i)).toBeVisible();
     const decision = await page.evaluate(() =>
       window.localStorage.getItem("luma-latest-curriculum-decision"),
     );
@@ -181,7 +181,8 @@ test.describe("LUMA product showcase", () => {
 
     await page.goto("/studio");
     await expect(page.locator('[data-variant="strata"]').first()).toBeVisible();
-    await expect(page.locator('[data-variant="bridge"]').first()).toBeVisible();
+    await expect(page.locator('[data-variant="bridge"]')).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /Iniciar sesión/i })).toBeVisible();
   });
 
   test("Content Intelligence leads with transformation, not the AI operating model", async ({ page }) => {
