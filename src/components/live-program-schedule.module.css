@@ -84,6 +84,36 @@
   border: 1px solid var(--line);
 }
 
+
+.statusNote {
+  margin-top: 12px;
+  color: var(--muted-strong);
+  font-size: .77rem;
+  line-height: 1.5;
+}
+
+.retry {
+  min-height: 42px;
+  padding: 0 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-size: .73rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.retry:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 @media (max-width: 760px) {
   .heading {
     display: grid;
