@@ -29,3 +29,7 @@ Work **incrementally on main** through reviewed PRs. Do not replace existing abs
 ### Adversarial security review (current product increment)
 
 The certificate endpoints were found to accept an unrestricted administrative role; this could cross tenant boundaries. The fix introduces explicit tenant authorization for issuer configuration, revocation, coach completion, issuance, certificate status, and the coach's cohort list. A tenant admin without the correct claim fails closed; `superuser` remains explicitly global. **Full authorization regression and CI results must be captured before merge.**
+
+### Operational capability: group admission
+
+A separate, bounded CSV/column batch entry point extends institutional admissions to groups of up to 100 seats per request. Each row uses the same Firestore transaction/audit as individual seats; batch retries are idempotent and partial failures are explicit. Production acceptance requires an authorized administrator real-identity test and observed grant+claim+revoke for at least one uploaded batch; the implementation itself does not assert that an external email notification was sent.
