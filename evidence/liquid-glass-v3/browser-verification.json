@@ -1,0 +1,61 @@
+{
+  "baseURL": "http://127.0.0.1:3197",
+  "results": [
+    {
+      "case": "experience-desktop",
+      "route": "/experience",
+      "status": 200,
+      "theme": "light",
+      "overflow": 0,
+      "glassCount": 2,
+      "contentSurfaceCount": 0,
+      "nestedGlass": 0,
+      "refractionReady": "true",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "badResponses": []
+    },
+    {
+      "case": "learn-desktop",
+      "route": "/learn",
+      "status": 200,
+      "theme": "light",
+      "overflow": 0,
+      "glassCount": 2,
+      "contentSurfaceCount": 3,
+      "nestedGlass": 0,
+      "refractionReady": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "badResponses": []
+    },
+    {
+      "case": "studio-desktop",
+      "route": "/studio",
+      "status": 200,
+      "theme": "light",
+      "overflow": 0,
+      "glassCount": 2,
+      "contentSurfaceCount": 5,
+      "nestedGlass": 0,
+      "refractionReady": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "badResponses": []
+    },
+    {
+      "case": "library-mobile",
+      "route": "/library",
+      "status": 200,
+      "theme": "light",
+      "overflow": 0,
+      "glassCount": 2,
+      "contentSurfaceCount": 4,
+      "nestedGlass": 0,
+      "refractionReady": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "badResponses": []
+    }
+  ]
+}
