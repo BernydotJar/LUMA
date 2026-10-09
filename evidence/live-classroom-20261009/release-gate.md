@@ -53,3 +53,10 @@ This evidence is intentionally dated to the tested commit: green checks for `ce3
 GitHub Actions **Product quality #141** (`run 37987468371`) completed with all four jobs **PASS**: `verify` (ESLint, TypeScript, unit, Next production build), `security` (production dependency audit), `firestore` (**46/46** emulator tests) and `browser` (Playwright Chromium and mobile profile). The room closure timestamp normalization and same-second token revocation cutoff were included.
 
 Post-gate additive work introduces the instructor-only paginated attendance projection (`dataStatus=provisional`) and adds pagination/guest-denial tests; these changes require **their own subsequent CI run** to preserve commit-level traceability. The LiveKit Cloud credentialed E2E, provider auto-create setting, revoked-connected-member enforcement, metrics, data retention and large-scale performance gates remain **open**. The feature remains disabled by default and the PR stays draft.
+
+## Public webhook request hardening — incremental verification
+
+- Bounded byte-stream reader and fail-closed UTF-8 decode added to LiveKit webhook ingress.
+- Local focused Vitest: **4/4 PASS** (`src/lib/live-classroom-webhook-body.test.ts`).
+- Focused ESLint: **PASS**.
+- Production regression suite for this follow-up commit requires its own GitHub Actions run before merge.

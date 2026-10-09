@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { WebhookReceiver } from "livekit-server-sdk";
 import { recordClassroomPresence } from "@/lib/live-classroom-attendance";
+import { ClassroomWebhookBodyTooLarge, readClassroomWebhookBody } from "@/lib/live-classroom-webhook-body";
 import { ClassroomError, liveKitConfiguration } from "@/lib/live-classroom-server";
 
 export const runtime = "nodejs";
@@ -13,9 +14,14 @@ export async function POST(request: Request) {
     const status = error instanceof ClassroomError ? error.status : 503;
     return NextResponse.json({ error: "webhook_unavailable" }, { status });
   }
-  const rawBody = await request.text();
-  if (rawBody.length > 256_000) {
-    return NextResponse.json({ error: "payload_too_large" }, { status: 413 });
+  let rawBody: string;
+  try {
+    rawBody = await readClassroomWebhookBody(request);
+  } catch (error) {
+    return NextResponse.json({
+      error: error instanceof ClassroomWebhookBodyTooLarge
+        ? "payload_too_large" : "invalid_payload",
+    }, { status: error instanceof ClassroomWebhookBodyTooLarge ? 413 : 400 });
   }
   let event;
   try {
