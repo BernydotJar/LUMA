@@ -1,30 +1,22 @@
 {
-  "schema_version": "luma.v2-client-capabilities.remote-gates.v1",
-  "reviewed_commit": "f447656ebcf8b756281e2fd6312949b043b3e59a",
-  "product_commit": "e1ec9fef3ffbcf6fbb3d817c452dc718d4f715ec",
+  "schema_version": "luma.v2-final-release.v2",
+  "product_commit": "c9c59a55e6c2136798b44aedd750560cf4b5ed4d",
   "pull_request": 12,
   "github_actions": {
-    "run_id": 37886145209,
-    "verify_job_id": 113676471548,
-    "firestore_job_id": 113676471595,
-    "browser_job_id": 113676471487,
-    "security_job_id": 113676471285
+    "run_id": 37896689116,
+    "url": "https://github.com/BernydotJar/LUMA/actions/runs/37896689116"
   },
   "gates": {
     "verify": {
       "conclusion": "success",
-      "unit_integration_passed": 115,
-      "emulator_tests_skipped_outside_emulator": 21,
+      "unit_tests": 158,
       "build": "PASS",
-      "static_pages": 37
+      "lint": "PASS",
+      "typecheck": "PASS"
     },
     "firestore": {
       "conclusion": "success",
-      "passed": 21,
-      "ledger": 8,
-      "commerce_orchestration": 6,
-      "program_delivery": 4,
-      "learning_store": 3
+      "tests": 44
     },
     "browser": {
       "conclusion": "success",
@@ -32,18 +24,19 @@
       "skipped": 5,
       "failed": 0
     },
-    "production_dependency_audit": {
+    "production_audit": {
       "conclusion": "success",
-      "vulnerabilities": 0,
-      "note": "npm ci reported dev-dependency advisories, while npm audit --omit=dev returned 0 production vulnerabilities"
+      "vulnerabilities": 0
     }
   },
   "independent_review": {
-    "initial_findings": 4,
-    "repaired_findings": 4,
-    "active_review_threads": 0,
-    "outdated_historical_threads": 3,
-    "decision": "PASS_WITH_REPAIRS"
+    "code": "PASS",
+    "security": "PASS",
+    "active_findings": 0
   },
-  "decision": "PASS"
+  "decision": "PASS",
+  "deferred_nodes": [
+    "LUMA-062-capacity-resilience-validation",
+    "LUMA-055-v2-enterprise-pilot-gate"
+  ]
 }
