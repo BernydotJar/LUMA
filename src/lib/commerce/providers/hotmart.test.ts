@@ -69,6 +69,8 @@ describe("HotmartProvider", () => {
       rawBody: JSON.stringify(data),
     });
     expect(event.type).toBe("commerce.subscription.created");
+    expect(event.customerExternalId).toBe("sub-1");
+    expect(event.transactionExternalId).toBe("sub-1");
   });
 
   it("normalizes documented subscription cancellation subscriber identity", async () => {

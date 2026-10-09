@@ -229,6 +229,45 @@ export class FirestoreCommerceEnrollmentStore {
     );
   }
 
+  async listActiveLearnerIdsByTenants(
+    tenantIds: string[],
+  ): Promise<string[]> {
+    const normalized = [...new Set(tenantIds.map((id) => id.trim()).filter(Boolean))];
+    if (normalized.length === 0) return [];
+
+    const snapshots = await Promise.all(
+      normalized.map((tenantId) =>
+        this.firestore
+          .collection("commerceEnrollments")
+          .where("tenantId", "==", tenantId)
+          .get(),
+      ),
+    );
+
+    const learnerIds = new Set<string>();
+    for (const snapshot of snapshots) {
+      for (const doc of snapshot.docs) {
+        const record = doc.data() as CommerceEnrollmentRecord;
+        if (record.status === "active" && record.learnerId) {
+          learnerIds.add(record.learnerId);
+        }
+      }
+    }
+    return [...learnerIds].sort();
+  }
+
+  async learnerHasActiveTenantAccess(
+    learnerId: string,
+    tenantIds: string[],
+  ): Promise<boolean> {
+    const allowed = new Set(tenantIds.map((id) => id.trim()).filter(Boolean));
+    if (allowed.size === 0) return false;
+    const enrollments = await this.listByLearner(learnerId);
+    return enrollments.some(
+      (record) => record.status === "active" && allowed.has(record.tenantId),
+    );
+  }
+
   async listByLearner(
     learnerId: string,
   ): Promise<CommerceEnrollmentRecord[]> {

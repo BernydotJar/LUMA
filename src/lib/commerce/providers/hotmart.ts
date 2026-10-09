@@ -114,15 +114,26 @@ function productExternalId(data: JsonRecord): string | undefined {
   );
 }
 
-function customerExternalId(data: JsonRecord): string | undefined {
+function customerExternalId(
+  eventName: string,
+  data: JsonRecord,
+): string | undefined {
   const buyer = record(data.buyer);
   const subscription = record(data.subscription);
   const subscriptionSubscriber = record(subscription.subscriber);
   const topLevelSubscriber = record(data.subscriber);
+  const subscriberCode =
+    stringValue(subscriptionSubscriber.code) ??
+    stringValue(topLevelSubscriber.code);
+  const subscriptionLifecycle =
+    eventName === "SUBSCRIPTION_CANCELLATION" ||
+    Object.keys(subscription).length > 0;
+
+  if (subscriptionLifecycle && subscriberCode) return subscriberCode;
+
   return (
     stringValue(buyer.ucode) ??
-    stringValue(subscriptionSubscriber.code) ??
-    stringValue(topLevelSubscriber.code) ??
+    subscriberCode ??
     stringValue(buyer.email) ??
     stringValue(topLevelSubscriber.email)
   );
@@ -230,8 +241,8 @@ export class HotmartProvider implements CommerceProvider {
       externalEventId,
       type: hotmartType(eventName, data),
       occurredAt: occurrenceIso(payload.creation_date),
-      ...(customerExternalId(data)
-        ? { customerExternalId: customerExternalId(data) }
+      ...(customerExternalId(eventName, data)
+        ? { customerExternalId: customerExternalId(eventName, data) }
         : {}),
       ...(productExternalId(data)
         ? { productExternalId: productExternalId(data) }

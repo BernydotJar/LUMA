@@ -1,12 +1,27 @@
 import { NextResponse } from "next/server";
-import { learningStore, requireLearningCoach } from "@/lib/learning-server";
+import { commerceEnrollments } from "@/lib/commerce/server";
+import { learningStore, requireLearningCoachAccess } from "@/lib/learning-server";
 
 export const runtime = "nodejs";
 
 export async function GET(request: Request) {
   try {
-    await requireLearningCoach(request);
-    const results = await learningStore.list(50);
+    const { access } = await requireLearningCoachAccess(request);
+    let results;
+    if (access.unrestricted) {
+      results = await learningStore.list(50);
+    } else {
+      const allowed = new Set(access.learnerIds);
+      for (const learnerId of await commerceEnrollments.listActiveLearnerIdsByTenants(access.tenantIds)) {
+        allowed.add(learnerId);
+      }
+      results = (
+        await Promise.all([...allowed].map((learnerId) => learningStore.get(learnerId)))
+      )
+        .filter((item): item is NonNullable<typeof item> => Boolean(item))
+        .sort((a, b) => b.record.updatedAt.localeCompare(a.record.updatedAt))
+        .slice(0, 50);
+    }
 
     return NextResponse.json({
       learners: results.map(({ record, plan }) => ({
@@ -25,6 +40,9 @@ export async function GET(request: Request) {
     }
     if (message === "COACH_REQUIRED") {
       return NextResponse.json({ error: "coach_role_required" }, { status: 403 });
+    }
+    if (message === "COACH_SCOPE_REQUIRED") {
+      return NextResponse.json({ error: "coach_scope_required" }, { status: 403 });
     }
     return NextResponse.json({ error: "coach_learners_unavailable" }, { status: 500 });
   }

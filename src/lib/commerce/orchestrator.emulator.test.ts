@@ -224,6 +224,55 @@ describe.runIf(emulatorEnabled)(
       });
     });
 
+    it("scopes active learner ids by tenant for coach authorization", async () => {
+      const suffixA = randomUUID();
+      const suffixB = randomUUID();
+
+      await mappings!.upsert({
+        provider: "hotmart",
+        externalProductId: `external-program-${suffixA}`,
+        tenantId: `tenant-a-${suffixA}`,
+        productId: "pnl-practitioner",
+        programId: "pnl-practitioner",
+      });
+      await mappings!.upsert({
+        provider: "hotmart",
+        externalProductId: `external-program-${suffixB}`,
+        tenantId: `tenant-b-${suffixB}`,
+        productId: "pnl-practitioner",
+        programId: "pnl-practitioner",
+      });
+
+      await orchestrator!.handle(event(suffixA), `corr-${suffixA}`);
+      await orchestrator!.handle(event(suffixB), `corr-${suffixB}`);
+      await enrollments!.claimByEmail(
+        `learner-a-${suffixA}`,
+        `learner-${suffixA}@example.com`,
+      );
+      await enrollments!.claimByEmail(
+        `learner-b-${suffixB}`,
+        `learner-${suffixB}@example.com`,
+      );
+
+      const tenantA = await enrollments!.listActiveLearnerIdsByTenants([
+        `tenant-a-${suffixA}`,
+      ]);
+      expect(tenantA).toContain(`learner-a-${suffixA}`);
+      expect(tenantA).not.toContain(`learner-b-${suffixB}`);
+      expect(
+        await enrollments!.learnerHasActiveTenantAccess(
+          `learner-a-${suffixA}`,
+          [`tenant-a-${suffixA}`],
+        ),
+      ).toBe(true);
+      expect(
+        await enrollments!.learnerHasActiveTenantAccess(
+          `learner-a-${suffixA}`,
+          [`tenant-b-${suffixB}`],
+        ),
+      ).toBe(false);
+    });
+
     it("keeps a newer revocation when an older payment arrives late", async () => {
       const suffix = randomUUID();
       await mappings!.upsert({

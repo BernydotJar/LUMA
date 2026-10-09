@@ -1,5 +1,6 @@
 import { firebaseAdminAuth, firebaseAdminFirestore } from "./firebase-admin";
 import { FirestoreLearningStore } from "./learning-store";
+import { coachAccessHasScope, learningCoachAccessFromClaims } from "./coach-access";
 
 export const learningStore = new FirestoreLearningStore(firebaseAdminFirestore);
 
@@ -44,4 +45,14 @@ export async function requireLearningAdmin(request: Request) {
   }
 
   return decoded;
+}
+
+
+export async function requireLearningCoachAccess(request: Request) {
+  const decoded = await requireLearningCoach(request);
+  const access = learningCoachAccessFromClaims(decoded as Record<string, unknown>);
+  if (!coachAccessHasScope(access)) {
+    throw new Error("COACH_SCOPE_REQUIRED");
+  }
+  return { decoded, access };
 }

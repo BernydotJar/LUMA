@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { enforceCommerceWebhookRateLimit, readCommerceWebhookBody } from "@/lib/commerce/webhook-security";
 import {
   commerceCorrelationId,
   commerceOrchestrator,
@@ -19,6 +20,17 @@ function providerName(value: string): ProviderName | undefined {
 function errorResponse(error: unknown) {
   const message =
     error instanceof Error ? error.message : "UNKNOWN";
+
+  if (message === "WEBHOOK_BODY_TOO_LARGE") {
+    return NextResponse.json({ error: "webhook_body_too_large" }, { status: 413 });
+  }
+
+  if (message === "WEBHOOK_RATE_LIMITED") {
+    return NextResponse.json(
+      { error: "webhook_rate_limited" },
+      { status: 429, headers: { "Retry-After": "60" } },
+    );
+  }
 
   if (
     message.endsWith("_EVENT_UNSUPPORTED") ||
@@ -88,7 +100,8 @@ export async function POST(
   }
 
   try {
-    const rawBody = await request.text();
+    enforceCommerceWebhookRateLimit(provider, request);
+    const rawBody = await readCommerceWebhookBody(request);
     const event = await commerceProvider(provider).handleWebhook(
       webhookInput(request, rawBody),
     );
