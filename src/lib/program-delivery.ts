@@ -263,7 +263,7 @@ export class FirestoreProgramDeliveryStore {
     sessionIdValue: string,
     now = new Date().toISOString(),
   ): Promise<LiveProgramSession> {
-    validIso(now, "now");
+    const normalizedNow = validIso(now, "now");
     const existing = await this.getClassroomSession(offeringIdValue, sessionIdValue);
     if (!existing) throw new Error("CLASSROOM_NOT_FOUND");
     if (existing.session.classroomProvider !== "livekit") {
@@ -278,7 +278,7 @@ export class FirestoreProgramDeliveryStore {
       if (session.status !== "scheduled") {
         throw new Error("CLASSROOM_ALREADY_CANCELLED");
       }
-      const updated = { ...session, status: "completed" as const, updatedAt: now };
+      const updated = { ...session, status: "completed" as const, updatedAt: normalizedNow };
       transaction.set(ref, updated);
       return updated;
     });

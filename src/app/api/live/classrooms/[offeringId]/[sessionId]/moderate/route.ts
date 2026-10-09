@@ -40,7 +40,8 @@ export async function POST(
     }, { merge: true });
     // LiveKit Cloud also invalidates previously-issued media tokens.
     await roomService(configuration).removeParticipant(classroom.roomName, identity, {
-      revokeTokenTs: BigInt(Math.floor(Date.now() / 1000)),
+      // Move cutoff one second ahead: a token issued in the same second is also revoked.
+      revokeTokenTs: BigInt(Math.floor(Date.now() / 1000) + 1),
     });
     return NextResponse.json({ removed: true }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
