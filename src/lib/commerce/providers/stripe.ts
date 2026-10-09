@@ -233,6 +233,25 @@ function transactionExternalId(
   );
 }
 
+function invoicePaymentIntents(object: JsonRecord): string[] {
+  const ids = new Set<string>();
+  const direct = stringValue(object.payment_intent) ??
+    stringValue(record(object.payment_intent).id);
+  if (direct) ids.add(direct);
+  // Stripe permits multiple Invoice Payments (including partial payments).
+  // Bind all IDs present in the signed invoice payload, never only the first.
+  const payments = record(object.payments).data;
+  if (Array.isArray(payments)) {
+    for (const item of payments) {
+      const payment = record(record(item).payment);
+      const id = stringValue(payment.payment_intent) ??
+        stringValue(record(payment.payment_intent).id);
+      if (id) ids.add(id);
+    }
+  }
+  return [...ids];
+}
+
 function normalizedMetadata(
   eventType: string,
   object: JsonRecord,
@@ -243,8 +262,17 @@ function normalizedMetadata(
     ["currency", stringValue(object.currency)],
     ["paymentStatus", stringValue(object.payment_status)],
     ["subscriptionStatus", stringValue(object.status)],
+    ["paymentIntentExternalId", eventType.startsWith("invoice.")
+      ? invoicePaymentIntents(object)[0]
+      : (eventType.startsWith("checkout.session.") &&
+        stringValue(object.mode) === "subscription")
+        ? stringValue(object.payment_intent) : undefined],
+    ["paymentIntentExternalIds", eventType.startsWith("invoice.")
+      ? JSON.stringify(invoicePaymentIntents(object)) : undefined],
     ["chargeExternalId", eventType === "payment_intent.succeeded"
-      ? stringValue(object.latest_charge) : undefined],
+      ? stringValue(object.latest_charge)
+      : eventType.startsWith("invoice.")
+        ? stringValue(object.charge) : undefined],
   ];
   return Object.fromEntries(
     entries.filter((item): item is [string, string] => Boolean(item[1])),

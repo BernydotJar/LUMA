@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { deleteApp, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { afterAll, describe, expect, it } from "vitest";
-import { FirestoreProgramDeliveryStore } from "./program-delivery";
+import { FirestoreProgramDeliveryStore, type LiveProgramSession } from "./program-delivery";
 
 const emulatorEnabled = Boolean(process.env.FIRESTORE_EMULATOR_HOST);
 const app = emulatorEnabled
@@ -322,9 +322,45 @@ describe.runIf(emulatorEnabled)("FirestoreProgramDeliveryStore emulator", () => 
       );
     }
     await batch.commit();
-    const sessions = await store!.listSessions(offering.offeringId, 40);
+    const sessions: LiveProgramSession[] = [];
+    let cursor: string | undefined;
+    let pageCount = 0;
+    do {
+      const page = await store!.listSessionsPage(offering.offeringId, 40, cursor);
+      expect(page.sessions.length).toBeLessThanOrEqual(40);
+      sessions.push(...page.sessions);
+      pageCount += 1;
+      cursor = page.nextCursor ?? undefined;
+    } while (cursor);
+    expect(pageCount).toBe(3);
     expect(sessions).toHaveLength(105);
+    expect(new Set(sessions.map((item) => item.sessionId)).size).toBe(105);
     expect(sessions.some((item) => item.sessionId === "admin-104")).toBe(true);
+    await expect(store!.listSessionsPage(offering.offeringId, 40, "wrong"))
+      .rejects.toThrow("PROGRAM_SESSION_CURSOR_INVALID");
+    await expect(store!.listSessionsPage(offering.offeringId, 0))
+      .rejects.toThrow("PROGRAM_SESSION_PAGE_LIMIT_INVALID");
+  });
+
+  it("accepts cursors emitted for valid dotted session document IDs", async () => {
+    const suffix = randomUUID();
+    const offering = await store!.upsertOffering({
+      tenantId: `cursor-${suffix}`, programId: `cursor-${suffix}`,
+      cohortKey: "cursor", title: "Dotted IDs",
+      deliveryMode: "live", timezone: "America/Bogota",
+    });
+    for (const sessionId of ["session.1", "session.2"]) {
+      await store!.scheduleSession(offering.offeringId, {
+        sessionId, title: sessionId, startsAt: "2026-10-12T10:00:00Z",
+        durationMinutes: 60,
+      });
+    }
+    const first = await store!.listSessionsPage(offering.offeringId, 1);
+    expect(first.sessions[0].sessionId).toBe("session.1");
+    expect(first.nextCursor).toBeTruthy();
+    const second = await store!.listSessionsPage(offering.offeringId, 1, first.nextCursor!);
+    expect(second.sessions[0].sessionId).toBe("session.2");
+    expect(second.nextCursor).toBeNull();
   });
 
   it("keeps asynchronous workshops free of live-session assumptions", async () => {

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { webhookDeliveryHttp } from "@/lib/commerce/webhook-delivery";
+import { isCommerceProviderConfigurationError } from "@/lib/commerce/webhook-errors";
 import {
   enforceCommerceWebhookClientRateLimit,
   enforceCommerceWebhookProviderRateLimit,
@@ -48,13 +49,9 @@ function errorResponse(error: unknown) {
     });
   }
 
-  if (
-    message.includes("SIGNATURE") ||
-    message === "HOTMART_HOTTOK_REQUIRED"
-  ) {
-    const configurationError =
-      message.endsWith("_REQUIRED") &&
-      !message.includes("SIGNATURE");
+  if (message.includes("SIGNATURE") ||
+      isCommerceProviderConfigurationError(message)) {
+    const configurationError = isCommerceProviderConfigurationError(message);
     return NextResponse.json(
       {
         error: configurationError

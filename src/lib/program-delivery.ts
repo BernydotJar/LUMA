@@ -51,6 +51,29 @@ export interface LiveProgramSession {
   updatedAt: string;
 }
 
+export interface LiveProgramSessionPage {
+  sessions: LiveProgramSession[];
+  nextCursor: string | null;
+}
+
+function decodeSessionCursor(cursor: string): [string, string] {
+  if (!/^[A-Za-z0-9_-]{1,1024}$/.test(cursor)) {
+    throw new Error("PROGRAM_SESSION_CURSOR_INVALID");
+  }
+  try {
+    const value: unknown = JSON.parse(Buffer.from(cursor, "base64url").toString("utf8"));
+    if (!Array.isArray(value) || value.length !== 2 ||
+        typeof value[0] !== "string" || typeof value[1] !== "string" ||
+        value[0] !== validIso(value[0], "cursor.startsAt") ||
+        !value[1].trim() || value[1].length > 128 || value[1].includes("/")) {
+      throw new Error("PROGRAM_SESSION_CURSOR_INVALID");
+    }
+    return [value[0], value[1]];
+  } catch {
+    throw new Error("PROGRAM_SESSION_CURSOR_INVALID");
+  }
+}
+
 export interface LiveProgramSessionInput {
   sessionId?: string;
   title: string;
@@ -241,42 +264,35 @@ export class FirestoreProgramDeliveryStore {
     return offerings.sort((a, b) => a.title.localeCompare(b.title));
   }
 
-  async listSessions(
+  async listSessionsPage(
     offeringIdValue: string,
-    pageSize = 100,
-  ): Promise<LiveProgramSession[]> {
-    const boundedPageSize = Number.isFinite(pageSize)
-      ? Math.min(Math.max(Math.round(pageSize), 1), 250)
-      : 100;
+    limit = 100,
+    cursor?: string,
+  ): Promise<LiveProgramSessionPage> {
+    if (!Number.isInteger(limit) || limit < 1 || limit > 250) {
+      throw new Error("PROGRAM_SESSION_PAGE_LIMIT_INVALID");
+    }
     const collection = this.offeringRef(
       required(offeringIdValue, "offeringId", 128),
     ).collection("sessions");
-    const sessions: LiveProgramSession[] = [];
-    let cursorStartsAt: string | undefined;
-    let cursorId: string | undefined;
-
-    for (;;) {
-      let query = collection
-        .orderBy("startsAt", "asc")
-        .orderBy(FieldPath.documentId(), "asc")
-        .limit(boundedPageSize);
-      if (cursorStartsAt && cursorId) {
-        query = query.startAfter(cursorStartsAt, cursorId);
-      }
-
-      const snapshot = await query.get();
-      sessions.push(
-        ...snapshot.docs.map((doc) => doc.data() as LiveProgramSession),
-      );
-      if (snapshot.size < boundedPageSize) break;
-      const last = snapshot.docs.at(-1);
-      if (!last) break;
-      const lastSession = last.data() as LiveProgramSession;
-      cursorStartsAt = lastSession.startsAt;
-      cursorId = last.id;
+    let query = collection
+      .orderBy("startsAt", "asc")
+      .orderBy(FieldPath.documentId(), "asc")
+      .limit(limit + 1);
+    if (cursor) {
+      query = query.startAfter(...decodeSessionCursor(cursor));
     }
-
-    return sessions;
+    const snapshot = await query.get();
+    const docs = snapshot.docs.slice(0, limit);
+    const last = docs.at(-1);
+    return {
+      sessions: docs.map((doc) => doc.data() as LiveProgramSession),
+      nextCursor: snapshot.size > limit && last
+        ? Buffer.from(JSON.stringify([
+            (last.data() as LiveProgramSession).startsAt, last.id,
+          ])).toString("base64url")
+        : null,
+    };
   }
 
   async listUpcomingSessions(

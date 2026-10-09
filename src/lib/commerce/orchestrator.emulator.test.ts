@@ -586,6 +586,59 @@ describe.runIf(emulatorEnabled)(
       expect(revoked.enrollment?.enrollmentId).toBe(initial.enrollment?.enrollmentId);
     });
 
+    it("aliases subscription invoice payments to the original entitlement for refunds and disputes", async () => {
+      const suffix = randomUUID();
+      const subId = `sub_invoice_${suffix}`;
+      const piId = `pi_invoice_${suffix}`;
+      const secondPiId = `pi_second_${suffix}`;
+      const chargeId = `ch_invoice_${suffix}`;
+      await mappings!.upsert({ provider: "stripe",
+        externalProductId: `external-program-${suffix}`,
+        tenantId: `tenant-${suffix}`, productId: `product-${suffix}`,
+        programId: `program-${suffix}`,
+      });
+      const checkout = event(suffix, { provider: "stripe",
+        externalEventId: `checkout-${suffix}`, type: "commerce.subscription.created",
+        transactionExternalId: subId,
+      });
+      const granted = await orchestrator!.handle(checkout, `checkout-${suffix}`);
+      expect(granted.enrollment?.status).toBe("active");
+      const invoice = event(suffix, { provider: "stripe",
+        externalEventId: `invoice-${suffix}`, type: "commerce.subscription.renewed",
+        occurredAt: "2026-10-08T12:10:00Z", transactionExternalId: subId,
+        productExternalId: undefined, customerExternalId: undefined,
+        metadata: { paymentIntentExternalId: piId, chargeExternalId: chargeId,
+          paymentIntentExternalIds: JSON.stringify([piId, secondPiId]) },
+      });
+      const renewed = await orchestrator!.handle(invoice, `invoice-${suffix}`);
+      expect(renewed.status).toBe("processed");
+      const piBinding = await bindings!.get("stripe", piId);
+      const secondPiBinding = await bindings!.get("stripe", secondPiId);
+      const chargeBinding = await bindings!.get("stripe", chargeId);
+      expect(secondPiBinding?.entitlementId).toBe(granted.enrollment?.entitlementId);
+      expect(piBinding?.purchaseKey).toBe(`stripe:${subId}`);
+      expect(chargeBinding?.purchaseKey).toBe(piBinding?.purchaseKey);
+      expect(chargeBinding?.entitlementId).toBe(granted.enrollment?.entitlementId);
+      const refund = event(suffix, { provider: "stripe",
+        externalEventId: `refunded-${suffix}`, type: "commerce.payment.refunded",
+        occurredAt: "2026-10-08T12:20:00Z", transactionExternalId: secondPiId,
+        productExternalId: undefined, customerExternalId: undefined, metadata: {},
+      });
+      const revoked = await orchestrator!.handle(refund, `refund-${suffix}`);
+      expect(revoked.status).toBe("processed");
+      expect(revoked.enrollment?.status).toBe("revoked");
+      expect(revoked.enrollment?.enrollmentId).toBe(granted.enrollment?.enrollmentId);
+      const won = event(suffix, { provider: "stripe",
+        externalEventId: `won-${suffix}`, type: "commerce.payment.confirmed",
+        occurredAt: "2026-10-08T12:30:00Z", transactionExternalId: chargeId,
+        productExternalId: undefined, customerExternalId: undefined, metadata: {},
+      });
+      const restored = await orchestrator!.handle(won, `won-${suffix}`);
+      expect(restored.status).toBe("processed");
+      expect(restored.enrollment?.status).toBe("active");
+      expect(restored.enrollment?.enrollmentId).toBe(granted.enrollment?.enrollmentId);
+    });
+
     it("durably retains an event when product mapping is not ready", async () => {
       const suffix = randomUUID();
       const commerceEvent = event(suffix);

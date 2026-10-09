@@ -172,18 +172,35 @@ export class CommerceEnrollmentOrchestrator {
         email: buyerEmail,
         entitlementId: processed.entitlement.entitlementId,
       });
-      // PaymentIntent and its latest Charge identify the same purchase.
-      // Persist a Charge alias so later dispute objects can resolve their
-      // original entitlement without granting or revoking an unrelated order.
-      const chargeExternalId = event.metadata?.chargeExternalId;
-      if (event.provider === "stripe" && chargeExternalId &&
-          chargeExternalId !== transactionExternalId) {
-        await this.bindings.upsert({
-          provider: event.provider,
-          transactionExternalId: chargeExternalId,
-          purchaseKey, mapping, customerId, email: buyerEmail,
-          entitlementId: processed.entitlement.entitlementId,
-        });
+      // Invoice payments and Charges must resolve to the subscription's
+      // original purchase key, including refunds/disputes without metadata.
+      // Never create a separate entitlement for the same subscription charge.
+      if (event.provider === "stripe") {
+        let invoicePaymentIds: string[] = [];
+        try {
+          const parsed: unknown = JSON.parse(event.metadata?.paymentIntentExternalIds ?? "[]");
+          if (Array.isArray(parsed)) {
+            invoicePaymentIds = parsed.filter((id): id is string =>
+              typeof id === "string" && /^pi_[A-Za-z0-9_-]{1,160}$/.test(id),
+            ).slice(0, 100);
+          }
+        } catch {
+          // Older normalized events only provide the scalar alias.
+        }
+        const aliases = new Set([
+          event.metadata?.paymentIntentExternalId,
+          event.metadata?.chargeExternalId,
+          ...invoicePaymentIds,
+        ].filter((value): value is string => Boolean(value)));
+        aliases.delete(transactionExternalId);
+        for (const alias of aliases) {
+          await this.bindings.upsert({
+            provider: event.provider,
+            transactionExternalId: alias,
+            purchaseKey, mapping, customerId, email: buyerEmail,
+            entitlementId: processed.entitlement.entitlementId,
+          });
+        }
       }
     }
 

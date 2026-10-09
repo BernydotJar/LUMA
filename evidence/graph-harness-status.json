@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "c4967d92-404a-4157-8804-ec066bbbb028",
-  "event_count": 601,
+  "last_event_id": "6f48e441-2eff-4153-80e7-25bfb42f6cb8",
+  "event_count": 630,
   "ready_nodes": [
     "LUMA-036-liquid-glass-refraction-v2"
   ],
@@ -1199,7 +1199,10 @@
         "156ac061-e0b2-404b-9c59-1a7a6e27e2ee",
         "44e81b46-3461-401f-b69d-cf62d0c5558a",
         "5716fd9d-e2bf-47dc-95ae-b16421ed3d65",
-        "775c3ba0-62d5-4044-9f9d-f74064de5745"
+        "775c3ba0-62d5-4044-9f9d-f74064de5745",
+        "e64059c8-30ab-4ef1-a152-e72dd44c1723",
+        "edfdf918-491d-4d50-ab5f-e8596253b78a",
+        "f3aec051-54c6-4130-8f4c-ec1b8050e46c"
       ],
       "approval_count": 0
     },
@@ -1218,8 +1221,11 @@
       },
       "active_evidence_ids": [
         "047a0d8b-4991-4a79-8fd7-bd67b315f7e6",
+        "2fb6816f-a077-4b7d-a252-f5b5032f8fe7",
         "5d8f43b6-e1a4-4670-8219-8f227d3e0e0c",
+        "69ce135e-03cb-433a-966a-9f7f5a7f7ecb",
         "d562ffa1-3029-4792-8fd2-af9fd1f79183",
+        "dcb44661-29c2-4cf8-8e58-e19ed35017fc",
         "f3c5b003-1f27-49da-9bd1-7302c852afd6"
       ],
       "approval_count": 0
@@ -1277,11 +1283,14 @@
         "independent-review": "PASS"
       },
       "active_evidence_ids": [
+        "2181f541-3052-4956-98b8-82d8e776a654",
         "6decc97a-0c57-4912-bdbf-b6de16274e9e",
         "910f9867-1ed9-4029-9936-5a139979aa64",
         "96b0e5af-3e1d-41d3-a0a6-21ba6ac0af43",
+        "b0e7b709-55d6-43d4-8c75-f9450cac972e",
         "db738280-cdd2-4ee0-8d6c-eebbf87a5d73",
-        "e3004532-6645-4b5c-a194-abe5ae4377eb"
+        "e3004532-6645-4b5c-a194-abe5ae4377eb",
+        "e9e96b9c-88f7-480b-bfbd-8b76e7c34a91"
       ],
       "approval_count": 0
     },
@@ -1300,8 +1309,11 @@
       },
       "active_evidence_ids": [
         "36c378e1-a6ab-4b9e-ad4c-dcf6b5645421",
+        "38ed9d8d-0081-418b-a75c-4d19b1c79e9a",
+        "50419a56-c95e-43aa-8f82-1571e867bd35",
         "797dd48c-5f8c-4811-8d77-c18d6cd21911",
         "ad98500c-6d2e-4d87-8567-235c193dd499",
+        "ca71b985-e7df-431f-8a8c-bc297b11b686",
         "ecd48fef-1541-4b07-93d3-a1670645a49a"
       ],
       "approval_count": 0
@@ -1320,7 +1332,10 @@
         "independent-review": "PASS"
       },
       "active_evidence_ids": [
+        "0ed45958-83b8-4166-ad3f-95cebfbf9b3c",
         "0fa7173c-05d8-4fa1-bb18-bfbb8abce0e2",
+        "23f2c981-9ba7-44fa-a9f7-451e679c2ba3",
+        "34a79028-85e9-49b7-a1cd-7ebf3fbaf93e",
         "5bc6f1a3-c857-4238-9e1f-b52d4456e271",
         "a5dbc3c0-0db1-4042-adeb-dbb0ff1b7dc7",
         "bb0c31ee-82cb-402b-9c6b-040fafbc91aa",
@@ -1344,6 +1359,9 @@
       },
       "active_evidence_ids": [
         "02004041-7831-45d5-a23f-ae5ffc0c5a96",
+        "053a17e5-c840-4f9c-b8bc-6df15ca6f474",
+        "1aa711ab-435f-41b6-88b3-4ae74e6f5346",
+        "62f644c1-8e54-47e7-8b57-476986dae16a",
         "867ca05e-0b2d-45a7-a759-886b26756060",
         "d6c03187-fc85-493a-8216-b55b1754c6ee",
         "e3c1838e-380b-4843-b88f-29be446e5497",
@@ -1370,6 +1388,9 @@
         "043cb68f-c5b1-4d81-8ffb-1aab3e212fe9",
         "2a6777fd-b335-4b5f-8517-e98c3608bd6a",
         "34c903c7-246b-470f-93e5-74baf6a3be90",
+        "53dcf6e7-4c25-492f-ac9f-7c97e1bc67d1",
+        "7057382e-117d-4082-a261-f3aacb18dc48",
+        "7aebcf27-f50b-467e-ad60-28456a6222f4",
         "a8d51242-a3eb-490c-aef2-49acfe0702b2",
         "fd596437-1cd9-40bf-a018-99ce9ab6fc0e"
       ],
@@ -1390,6 +1411,6 @@
       "approval_count": 0
     }
   ],
-  "checkpoint_count": 16,
+  "checkpoint_count": 17,
   "repair_plan_count": 0
 }
