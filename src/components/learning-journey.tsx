@@ -4,7 +4,7 @@ import styles from "./learner-components.module.css";
 
 export function LearningJourney({ steps }: { steps: JourneyStep[] }) {
   return (
-    <section className={`${styles.journeyCard} glass`} id="journey" aria-labelledby="journey-title">
+    <section className={`${styles.journeyCard} content-surface`} id="journey" aria-labelledby="journey-title">
       <div className={styles.cardHeading}>
         <div>
           <span className="eyebrow"><span className="eyebrow-dot" /> Tu ruta</span>
