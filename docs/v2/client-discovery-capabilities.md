@@ -36,6 +36,7 @@ LUMA learner identity
 - Hotmart subscription cancellation respects the already-paid access period (`date_next_charge`) and expires access by effective time; newer renewals supersede the scheduled expiry.
 - Enrollment activation/revocation.
 - Verified-email claim to bind commerce enrollment to Firebase learner identity.
+- Live/hybrid enrollment is associated with a specific offering (`offeringId`); an enrollment without an offering assignment does not expose another cohort's private schedule.
 - Admin-only product mapping endpoint.
 - Provider webhook endpoints return `202` when an event is durably retained but awaits mapping/customer context.
 

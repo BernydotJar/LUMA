@@ -39,7 +39,7 @@ describe.runIf(emulatorEnabled)("FirestoreProgramDeliveryStore emulator", () => 
     });
 
     const upcoming = await store!.upcomingForPrograms(
-      [{ tenantId: offering.tenantId, programId: offering.programId }],
+      [{ tenantId: offering.tenantId, programId: offering.programId, offeringId: offering.offeringId }],
       "2026-10-08T00:00:00Z",
     );
 
@@ -82,13 +82,32 @@ describe.runIf(emulatorEnabled)("FirestoreProgramDeliveryStore emulator", () => 
     });
 
     const upcoming = await store!.upcomingForPrograms(
-      [{ tenantId: tenantA.tenantId, programId }],
+      [{ tenantId: tenantA.tenantId, programId, offeringId: tenantA.offeringId }],
       "2026-10-08T00:00:00Z",
     );
 
     expect(upcoming).toHaveLength(1);
     expect(upcoming[0].offering.tenantId).toBe(tenantA.tenantId);
     expect(upcoming[0].session.joinUrl).toContain("tenant-a");
+  });
+
+  it("limits a learner to the assigned cohort within one tenant and program", async () => {
+    const suffix = randomUUID();
+    const tenantId = `one-tenant-${suffix}`;
+    const programId = `one-program-${suffix}`;
+    const a = await store!.upsertOffering({ tenantId, programId, cohortKey: "A",
+      title: "Cohort A", deliveryMode: "live", timezone: "America/Bogota" });
+    const b = await store!.upsertOffering({ tenantId, programId, cohortKey: "B",
+      title: "Cohort B", deliveryMode: "live", timezone: "America/Bogota" });
+    await store!.scheduleSession(a.offeringId, { title: "A private",
+      startsAt: "2026-10-20T20:00:00Z", durationMinutes: 60, joinUrl: "https://example.com/A" });
+    await store!.scheduleSession(b.offeringId, { title: "B private",
+      startsAt: "2026-10-20T20:00:00Z", durationMinutes: 60, joinUrl: "https://example.com/B" });
+    const visible = await store!.upcomingForPrograms([{ tenantId, programId, offeringId: a.offeringId }],
+      "2026-10-08T00:00:00Z");
+    expect(visible).toHaveLength(1);
+    expect(visible[0].offering.offeringId).toBe(a.offeringId);
+    expect(visible[0].session.joinUrl).toBe("https://example.com/A");
   });
 
   it("rejects non-finite session durations", async () => {
@@ -150,7 +169,7 @@ describe.runIf(emulatorEnabled)("FirestoreProgramDeliveryStore emulator", () => 
     });
 
     const upcoming = await store!.upcomingForPrograms(
-      [{ tenantId: target.tenantId, programId: target.programId }],
+      [{ tenantId: target.tenantId, programId: target.programId, offeringId: target.offeringId }],
       "2026-10-08T00:00:00Z",
     );
 
@@ -204,7 +223,7 @@ describe.runIf(emulatorEnabled)("FirestoreProgramDeliveryStore emulator", () => 
     });
 
     const upcoming = await store!.upcomingForPrograms(
-      [{ tenantId: offering.tenantId, programId: offering.programId }],
+      [{ tenantId: offering.tenantId, programId: offering.programId, offeringId: offering.offeringId }],
       "2026-10-08T00:00:00Z",
     );
 

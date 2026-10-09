@@ -3,6 +3,7 @@
 import { FormEvent, useState, useSyncExternalStore } from "react";
 import { Mic, Search, Sparkles } from "lucide-react";
 import { firebaseAuth } from "@/lib/firebase-client";
+import { useLumaAuth } from "@/components/auth-provider";
 import styles from "./content-intelligence-search.module.css";
 
 type SearchHit = {
@@ -43,6 +44,11 @@ function speechConstructor(): SpeechRecognitionConstructor | undefined {
 }
 
 export function ContentIntelligenceSearch() {
+  const { user } = useLumaAuth();
+  return <ContentIntelligenceSearchForm key={user?.uid ?? "guest"} />;
+}
+
+function ContentIntelligenceSearchForm() {
   const [query, setQuery] = useState("¿Qué se explica sobre P.A.S. y emoción?");
   const [results, setResults] = useState<SearchHit[]>([]);
   const [status, setStatus] = useState<"idle" | "searching" | "error">("idle");

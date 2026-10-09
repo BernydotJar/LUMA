@@ -69,6 +69,7 @@ export async function POST(request: Request) {
       tenantId: stringField(body.tenantId, "tenantId"),
       productId: stringField(body.productId, "productId"),
       programId: stringField(body.programId, "programId"),
+      ...(typeof body.offeringId === "string" && body.offeringId.trim() ? { offeringId: body.offeringId.trim() } : {}),
       active:
         typeof body.active === "boolean"
           ? body.active

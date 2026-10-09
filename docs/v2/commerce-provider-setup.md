@@ -25,6 +25,7 @@ Before enabling a provider product, an admin creates a mapping:
   "tenantId": "<tenant>",
   "productId": "<canonical product>",
   "programId": "<canonical learning program>",
+  "offeringId": "<specific live cohort offering id, when applicable>",
   "active": true
 }
 ```
@@ -60,3 +61,5 @@ The provider sandbox checklist should include all three cases before real-money 
 For Hotmart V2 `SUBSCRIPTION_CANCELLATION`, the documented `data.date_next_charge` is the last paid-access boundary. LUMA schedules effective expiration rather than revoking immediately when the boundary is in the future. Missing/invalid boundaries are retried for reconciliation rather than interpreted as immediate cancellation. A successful later renewal clears the pending expiration.
 
 The effective-access predicate must be enforced on every protected learner feature; do not use the raw `status` field alone to grant access. Provider webhook rate limits are best-effort per instance; production ingress protections should be managed separately at the edge.
+
+For live/hybrid products, `offeringId` must reference the exact cohort in `programOfferings`. The learner schedule fails closed if no offering assignment exists. Configure distinct provider product/offer mappings for parallel cohorts. An asynchronous product may omit `offeringId`.
