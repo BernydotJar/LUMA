@@ -1,0 +1,27 @@
+{
+  "project": "LUMA",
+  "date": "2026-10-09",
+  "node": "LUMA-064-scoped-rag-retrieval-backend",
+  "baseline": "origin/main@214028ea4a398f0a547b2a05866727c02f57b962",
+  "python_ruff": "VERIFIED_PASS_LOCAL",
+  "postgres_15_pgvector_migration": "VERIFIED_EXECUTED_LOCAL",
+  "python_unit_real_pgvector_integration": "VERIFIED_19_PASS",
+  "typescript_scoped_rag_contract": "VERIFIED_9_PASS_LOCAL",
+  "full_typescript_typecheck": "NOT_YET_VERIFIED_SANDBOX_OOM",
+  "github_ci": "PENDING",
+  "reusable_service": "IMPLEMENTED_NOT_DEPLOYED",
+  "current_legacy_rag": "UNTOUCHED",
+  "real_vertex_embedding": "NOT_YET_VERIFIED",
+  "se_corpus_ingest": "NOT_YET_VERIFIED",
+  "secret_manager_iam_cloud_sql": "NOT_YET_VERIFIED",
+  "independent_granite_critic": "NOT_YET_VERIFIED",
+  "capacity_recovery_privacy": "NOT_YET_VERIFIED",
+  "enterprise_pilot_gate": "BLOCKED",
+  "firebase_deployment": "NOT_PERFORMED",
+  "sources": [
+    "python-lint.log",
+    "python-pgvector-integration.log",
+    "typescript-contract.log",
+    "adversarial-review.md"
+  ]
+}

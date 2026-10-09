@@ -25,7 +25,7 @@ Source: inspected `origin/main` at `e819b16`; fixes in separate `audit/commerce-
 | Learning Twin evidence-backed | PARTIALLY VERIFIED | Scored practices and learner store; payment alone must not create mastery |
 | Learner risk explainable | VERIFIED — source unit tests; effectiveness NOT YET VERIFIED | Rule-based inactivity/practice, `insufficient_evidence` state |
 | Coach prioritized around actionable need | PARTIALLY VERIFIED | Sample-based 100/8 intervention API; not a full-tenant census |
-| Knowledge retrieval with video timestamp and provenance | PARTIALLY VERIFIED | Separate scoped RAG adapter validates tenant/program envelope and hits; backend index enforcement and actual source ingestion NOT YET VERIFIED |
+| Knowledge retrieval with video timestamp and provenance | PARTIALLY VERIFIED | LUMA-064 implements dedicated backend, HMAC-granted scopes, forced PostgreSQL RLS and pre-ranking exact pgvector filtering; local integration and TypeScript contract tests pass, but production backend/SE corpus/right-to-index are NOT YET VERIFIED |
 | Fully operational Stripe Checkout creation | NOT YET VERIFIED | Webhook ingest exists but direct checkout creation is not implemented |
 | Manual/bulk non-purchase enrollment | NOT YET VERIFIED | Conceptual extensibility, no audited public adapter |
 | Provider test-mode products and signatures live | NOT YET VERIFIED | Merchant credentials, product mapping, signed full integration receipts not inspected |

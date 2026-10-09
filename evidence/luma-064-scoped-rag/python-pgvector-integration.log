@@ -1,0 +1,12 @@
+...................                                                      [100%]
+=============================== warnings summary ===============================
+../../../../_tmp/luma064-venv/lib/python3.11/site-packages/starlette/testclient.py:37
+  /workspace/_tmp/luma064-venv/lib/python3.11/site-packages/starlette/testclient.py:37: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+
+tests/test_api.py::test_large_json_is_rejected_without_using_embedding
+  /workspace/_tmp/luma064-venv/lib/python3.11/site-packages/httpx/_models.py:408: DeprecationWarning: Use 'content=<...>' to upload raw bytes/text content.
+    headers, stream = encode_request(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+19 passed, 2 warnings in 0.71s
