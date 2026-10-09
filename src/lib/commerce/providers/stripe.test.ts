@@ -115,6 +115,19 @@ describe("StripeProvider", () => {
     expect(event.transactionExternalId).toBe("sub_1");
   });
 
+  it("normalizes basil invoice.paid using parent.subscription_details.subscription", async () => {
+    const rawBody = JSON.stringify({
+      id: "evt_invoice_basil", type: "invoice.paid", created: now,
+      data: { object: { id: "in_basil", customer: "cus_1",
+        payment_intent: "pi_basil", parent: { type: "subscription_details",
+          subscription_details: { subscription: "sub_basil" } } } },
+    });
+    const event = await new StripeProvider(secret, { nowSeconds: () => now })
+      .handleWebhook({ headers: { "stripe-signature": sign(rawBody) }, rawBody });
+    expect(event.type).toBe("commerce.subscription.renewed");
+    expect(event.transactionExternalId).toBe("sub_basil");
+  });
+
   it("activates delayed Checkout payments on async success", async () => {
     const rawBody = JSON.stringify({
       id: "evt_async_success",

@@ -99,6 +99,11 @@ function verifyStripeSignature(
   }
 }
 
+function invoiceSubscriptionId(object: JsonRecord): string | undefined {
+  const details = record(record(object.parent).subscription_details);
+  return stringValue(object.subscription) ?? stringValue(details.subscription);
+}
+
 function stripeType(type: string, object: JsonRecord): CommerceEventType {
   switch (type) {
     case "payment_intent.succeeded":
@@ -119,7 +124,7 @@ function stripeType(type: string, object: JsonRecord): CommerceEventType {
     case "customer.subscription.deleted":
       return "commerce.subscription.cancelled";
     case "invoice.paid":
-      return stringValue(object.subscription)
+      return invoiceSubscriptionId(object)
         ? "commerce.subscription.renewed"
         : "commerce.payment.confirmed";
     case "checkout.session.completed":
@@ -193,7 +198,7 @@ function transactionExternalId(
 
   if (subscriptionLifecycle) {
     return (
-      stringValue(object.subscription) ??
+      invoiceSubscriptionId(object) ??
       stringValue(object.id) ??
       stringValue(object.payment_intent)
     );
