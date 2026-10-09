@@ -40,7 +40,7 @@ const modules = [
 export default function LibraryPage() {
   return (
     <AppShell mode="studio" title="Inteligencia de contenido" subtitle="El corpus aporta estructura; LUMA lo conecta con capacidades, evidencia y decisiones de aprendizaje.">
-      <section className={`${styles.hero} glass`}>
+      <section className={`${styles.hero} content-surface`}>
         <div>
           <span className="eyebrow"><span className="eyebrow-dot" /> Corpus conectado</span>
           <h2>Módulo 3: Redescubriendo y transformando tu poder</h2>
@@ -78,7 +78,7 @@ export default function LibraryPage() {
       </section>
 
       <div className={styles.mainGrid}>
-        <section className={`${styles.graphCard} glass`}>
+        <section className={`${styles.graphCard} content-surface`}>
           <div className={styles.cardHeading}>
             <div><span className="eyebrow"><GitFork size={14} /> Mapa de aprendizaje</span><h2>El contenido se convierte en relaciones.</h2></div>
             <span className="status-pill" data-tone="positive">47 relaciones</span>
@@ -100,7 +100,7 @@ export default function LibraryPage() {
         </section>
 
         <aside className={styles.assetColumn}>
-          <section className={`${styles.assetCard} glass`}>
+          <section className={`${styles.assetCard} content-surface`}>
             <div className={styles.cardHeading}><div><span className="eyebrow"><BookOpen size={14} /> Fuentes del slice</span><h2>4 activos principales</h2></div></div>
             <div className={styles.assetList}>
               <a href={moduleThreeSource.url} target="_blank" rel="noreferrer"><span><FileText size={18} /></span><div><strong>Redescubriendo y transformando tu poder</strong><small>PDF · 0.88 MB · 8 secciones</small></div></a>
@@ -111,7 +111,7 @@ export default function LibraryPage() {
             </div>
           </section>
 
-          <section className={`${styles.authoringCard} glass`}>
+          <section className={`${styles.authoringCard} content-surface`}>
             <span className="eyebrow"><Sparkles size={14} /> Inteligencia de aprendizaje</span>
             <h2>De contenido experto a inteligencia de aprendizaje.</h2>
             <p>Cada concepto conserva su fuente, contexto y criterio de calidad para convertirse en experiencias de aprendizaje precisas.</p>
