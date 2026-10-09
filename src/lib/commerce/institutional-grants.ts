@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { validLearningScopeId } from "@/lib/learning-entitlement";
+import { assertTenantAdmin } from "@/lib/tenant-admin-access";
 
 export interface InstitutionalGrantRequest {
   tenantId: string;
@@ -63,14 +64,14 @@ export function parseInstitutionalGrant(input: unknown, now = Date.now()): Insti
 
 /** Only a platform superuser or a tenant-scoped admin may issue/revoke grants. */
 export function authorizeInstitutionalAdmin(claims: Record<string, unknown>, tenantId: string): void {
-  if (!validLearningScopeId(tenantId)) throw new Error("INSTITUTIONAL_SCOPE_INVALID");
-  const role = typeof claims.role === "string" ? claims.role : "";
-  if (claims.superuser === true || role === "superuser") return;
-  if (claims.admin !== true && role !== "admin") throw new Error("INSTITUTIONAL_ADMIN_REQUIRED");
-  const values = [claims.adminTenantIds, claims.tenantIds, claims.tenantId]
-    .flatMap(value => typeof value === "string" ? [value] :
-      Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : []);
-  if (!values.includes(tenantId)) throw new Error("INSTITUTIONAL_TENANT_FORBIDDEN");
+  try {
+    assertTenantAdmin(claims, tenantId);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    if (message === "TENANT_ADMIN_REQUIRED") throw new Error("INSTITUTIONAL_ADMIN_REQUIRED");
+    if (message === "TENANT_ADMIN_FORBIDDEN") throw new Error("INSTITUTIONAL_TENANT_FORBIDDEN");
+    throw new Error("INSTITUTIONAL_SCOPE_INVALID");
+  }
 }
 
 export function parseInstitutionalRevocationReason(value: unknown) {

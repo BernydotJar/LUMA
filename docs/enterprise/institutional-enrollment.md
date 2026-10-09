@@ -35,3 +35,7 @@ High-ticket programs often have scholarships, corporate seats, cohort invitation
 ## Evidence and testing
 
 Unit: `src/lib/commerce/institutional-grants.test.ts`. Firestore integration: `src/lib/commerce/institutional-grant.emulator.test.ts`; registered in the CI emulator job. Browser navigation: `e2e/showcase.spec.ts`. Full production readiness additionally needs Firebase identity E2E, role provisioning, tenant selection and a restoration drill.
+
+### Shared tenant administration policy
+
+The same tenant-bound admin authorization is enforced for **certificate issuer configuration, certificate revocation, issuing/approving certificates and the certificate coach-console list**. A plain `admin=true` claim without a tenant grant is not sufficient to control another institution's credentials; only explicit `superuser=true` has platform-wide authority. This cross-module hardening is verified by `src/lib/tenant-admin-access.test.ts`.

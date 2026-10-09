@@ -4,6 +4,8 @@ import { firebaseAdminAuth, firebaseAdminFirestore } from "@/lib/firebase-admin"
 import { requireLearningCoachAccess } from "@/lib/learning-server";
 import { certificates } from "@/lib/certificates/server";
 import { certificateError } from "@/lib/certificates/http";
+import { assertCertificateTenantAccess } from "@/lib/certificates/authorization";
+import { authorizedAdminTenants, isInstitutionalAdmin, isPlatformSuperuser } from "@/lib/tenant-admin-access";
 import { completionId, canManageCertificates, documentId, type CompletionAttestation } from "@/lib/certificates/domain";
 import { isActiveCommerceEnrollment, type CommerceEnrollmentRecord } from "@/lib/commerce/enrollment";
 import type { ProgramOffering } from "@/lib/program-delivery";
@@ -16,12 +18,23 @@ export async function GET(request: Request) {
     const { decoded, access } = await requireLearningCoachAccess(request);
     const url = new URL(request.url);
     const selectedId = url.searchParams.get("offeringId");
+    const claims = decoded as Record<string, unknown>;
     if (!selectedId) {
-      const snapshot = access.unrestricted
-        ? await firebaseAdminFirestore.collection("programOfferings").limit(100).get()
-        : await firebaseAdminFirestore.collection("programOfferings")
-            .where("coachIds", "array-contains", decoded.uid).limit(100).get();
-      const offerings = snapshot.docs
+      const documents = isPlatformSuperuser(claims)
+        ? (await firebaseAdminFirestore.collection("programOfferings").limit(100).get()).docs
+        : isInstitutionalAdmin(claims)
+          ? await (async () => {
+            const tenantIds = authorizedAdminTenants(claims);
+            if (!tenantIds.length) throw new Error("TENANT_ADMIN_FORBIDDEN");
+            if (tenantIds.length > 20) throw new Error("TENANT_ADMIN_SCOPE_INVALID");
+            const pages = await Promise.all(tenantIds.map(tenantId =>
+              firebaseAdminFirestore.collection("programOfferings")
+                .where("tenantId", "==", tenantId).limit(100).get()));
+            return pages.flatMap(page => page.docs);
+          })()
+          : (await firebaseAdminFirestore.collection("programOfferings")
+              .where("coachIds", "array-contains", decoded.uid).limit(100).get()).docs;
+      const offerings = documents
         .map(s => s.data() as ProgramOffering)
         .filter(o => canManageCertificates(access, decoded.uid, o) &&
           ["active", "completed"].includes(o.status))
@@ -31,6 +44,7 @@ export async function GET(request: Request) {
     }
     const offering = await certificates.authorizedOffering(
       { uid: decoded.uid, access }, documentId(selectedId, "offering_id"));
+    assertCertificateTenantAccess(claims, offering.tenantId);
     const rawCursor = url.searchParams.get("cursor");
     if (rawCursor && !/^[a-f0-9]{64}$/.test(rawCursor)) {
       return NextResponse.json({ error: "invalid_cursor" }, { status: 400 });

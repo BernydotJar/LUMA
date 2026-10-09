@@ -25,3 +25,7 @@ Work **incrementally on main** through reviewed PRs. Do not replace existing abs
 - Add institutional cohort admissions without fake commerce events, with admin tenant scope, reason, expiry, email claim, revocation and immutable audit.
 - Update CI emulator coverage and index management.
 - Fix source-level regressions and leave production external-provider gates explicit.
+
+### Adversarial security review (current product increment)
+
+The certificate endpoints were found to accept an unrestricted administrative role; this could cross tenant boundaries. The fix introduces explicit tenant authorization for issuer configuration, revocation, coach completion, issuance, certificate status, and the coach's cohort list. A tenant admin without the correct claim fails closed; `superuser` remains explicitly global. **Full authorization regression and CI results must be captured before merge.**
