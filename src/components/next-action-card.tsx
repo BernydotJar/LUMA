@@ -30,7 +30,7 @@ export function NextActionCard({ action }: { action: RankedLearningAction }) {
             : "Práctica guiada";
 
   return (
-    <section className={`${styles.nextAction} glass`} aria-labelledby="next-action-title">
+    <section className={`${styles.nextAction} content-surface`} aria-labelledby="next-action-title">
       <div className={styles.nextActionGlow} aria-hidden="true" />
       <div className={styles.nextActionTop}>
         <span className="eyebrow"><span className="eyebrow-dot" /> Tu siguiente movimiento</span>
