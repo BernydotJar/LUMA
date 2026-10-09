@@ -21,6 +21,8 @@ Cohort-level adoption and outcomes with traceable denominators
 
 **Rules:** Payment is not mastery. Attendance is not mastery. A diagnostic is not mastery. A sampled coach API is not a whole-organization statistic. Recordings are never assumed for live sessions. A voice/AI outage cannot revoke a valid entitlement. No raw internal data or graph implementation labels in user-facing surfaces.
 
+**Current privacy boundary caveat:** The publicly reachable `/studio/learners/mariana` example renders non-production example evidence without role checks. Coach-only access describes the required real-data product boundary, not the present public showcase behavior. Before connecting any real learner data, require authenticated, tenant-scoped coach authorization at the server and secure evidence exports. Treat this as a blocking security gate, not a cosmetic copy adjustment.
+
 ## Surface contracts
 | Role | Job to be done | Explicit exclusions |
 | --- | --- | --- |

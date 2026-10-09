@@ -49,6 +49,8 @@ The LUMA source tree includes provider-neutral commerce adapters, a durable even
 
 **This is code-level implementation evidence, not confirmation** that any particular merchant account is activated, provider webhook is configured in production, contractual service level is signed, or a third-party organization is using the product.
 
+**Learning Twin authorization is an acceptance requirement, not yet an enforced property of every showcase route.** The current public example at `/studio/learners/mariana` renders example data without role authorization. It must not contain real participant evidence; an enterprise rollout requires server-side coach/tenant protection on all identifiable learner views and exports. Do not present the public example as proof of production access control.
+
 When a schedule API is unreachable, malformed or denies access, the learner must not see a misleading zero. When a real authorized API returns an empty list, it may legitimately indicate no sessions are scheduled.
 
 Media indexing and AI voice are independent, optional features. Source rights, voice permissions, privacy and learner opt-out must be established before activation.

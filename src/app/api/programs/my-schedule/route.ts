@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
 import { commerceEnrollments } from "@/lib/commerce/server";
 import { isActiveCommerceEnrollment } from "@/lib/commerce/enrollment";
 import { requireLearningUser } from "@/lib/learning-server";
@@ -38,7 +39,7 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "UNKNOWN";
-    if (message === "AUTH_REQUIRED") {
+    if (message === "AUTH_REQUIRED" || isRejectedFirebaseToken(error)) {
       return NextResponse.json({ error: "authentication_required" }, { status: 401 });
     }
     return NextResponse.json({ error: "program_schedule_unavailable" }, { status: 500 });
