@@ -33,6 +33,7 @@ LUMA learner identity
 - Delayed Stripe Checkout success is fulfilled from the asynchronous success webhook rather than the earlier unpaid Checkout event.
 - Partial Stripe refunds are auditable but do not revoke the full learning entitlement.
 - Entitlement lifecycle with stale-event protection.
+- Hotmart subscription cancellation respects the already-paid access period (`date_next_charge`) and expires access by effective time; newer renewals supersede the scheduled expiry.
 - Enrollment activation/revocation.
 - Verified-email claim to bind commerce enrollment to Firebase learner identity.
 - Admin-only product mapping endpoint.

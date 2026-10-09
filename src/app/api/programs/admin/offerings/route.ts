@@ -57,9 +57,9 @@ export async function POST(request: Request) {
       deliveryMode: mode,
       timezone: text(body.timezone, "timezone"),
       ...(status ? { status } : {}),
-      coachIds: Array.isArray(body.coachIds)
-        ? body.coachIds.filter((value): value is string => typeof value === "string")
-        : [],
+      ...(Array.isArray(body.coachIds)
+        ? { coachIds: body.coachIds.filter((value): value is string => typeof value === "string") }
+        : {}),
     });
 
     return NextResponse.json({ offering });

@@ -38,7 +38,7 @@ export class CommerceEnrollmentOrchestrator {
     const received = await this.ledger.receive(event, correlationId);
     const action = entitlementActionForCommerceEvent(event);
 
-    if (action === "none") {
+    if (action === "none" && event.type !== "commerce.subscription.cancellation_scheduled") {
       const processed = await this.ledger.process({ event, action });
       return {
         status: "processed",
@@ -80,6 +80,21 @@ export class CommerceEnrollmentOrchestrator {
       return {
         status: "pending_customer",
         duplicate: received.duplicate,
+      };
+    }
+
+    if (event.type === "commerce.subscription.cancellation_scheduled") {
+      const accessEndsAt = event.metadata?.accessEndsAt;
+      if (!accessEndsAt) throw new Error("COMMERCE_ACCESS_END_REQUIRED");
+      const enrollment = await this.enrollments.scheduleExpiry({
+        mapping, customerId, event, accessEndsAt,
+      });
+      const processed = await this.ledger.process({ event, action: "none" });
+      return {
+        status: "processed",
+        duplicate: received.duplicate || processed.duplicate,
+        outcome: processed.outcome,
+        enrollment,
       };
     }
 

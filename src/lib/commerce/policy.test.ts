@@ -8,6 +8,7 @@ describe("commerce entitlement policy", () => {
     ["commerce.subscription.created", "grant"],
     ["commerce.subscription.renewed", "grant"],
     ["commerce.payment.refunded", "revoke"],
+    ["commerce.subscription.cancellation_scheduled", "none"],
     ["commerce.subscription.cancelled", "revoke"],
     ["commerce.subscription.expired", "revoke"],
     ["commerce.payment.failed", "none"],

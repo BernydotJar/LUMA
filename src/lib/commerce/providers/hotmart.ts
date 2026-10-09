@@ -54,6 +54,7 @@ function header(
 function hotmartType(
   eventName: string,
   data: JsonRecord,
+  occurredAt: string,
 ): CommerceEventType {
   const subscription = record(data.subscription);
   const purchase = record(data.purchase);
@@ -75,8 +76,15 @@ function hotmartType(
     case "PURCHASE_REFUNDED":
     case "PURCHASE_CHARGEBACK":
       return "commerce.payment.refunded";
-    case "SUBSCRIPTION_CANCELLATION":
-      return "commerce.subscription.cancelled";
+    case "SUBSCRIPTION_CANCELLATION": {
+      const accessEndMs = numberValue(data.date_next_charge);
+      if (accessEndMs === undefined || !Number.isFinite(new Date(accessEndMs).getTime())) {
+        throw new Error("HOTMART_ACCESS_END_DATE_REQUIRED");
+      }
+      return accessEndMs > Date.parse(occurredAt)
+        ? "commerce.subscription.cancellation_scheduled"
+        : "commerce.subscription.cancelled";
+    }
     case "PURCHASE_CANCELED":
       return hasSubscription
         ? "commerce.subscription.cancelled"
@@ -193,6 +201,9 @@ function normalizedMetadata(
         stringValue(topLevelSubscriber.code),
     ],
     ["purchaseStatus", stringValue(purchase.status)],
+    ["accessEndsAt", numberValue(data.date_next_charge) !== undefined &&
+      Number.isFinite(new Date(numberValue(data.date_next_charge)!).getTime())
+      ? new Date(numberValue(data.date_next_charge)!).toISOString() : undefined],
   ];
 
   return Object.fromEntries(
@@ -236,11 +247,12 @@ export class HotmartProvider implements CommerceProvider {
 
     const data = record(payload.data);
 
+    const occurredAt = occurrenceIso(payload.creation_date);
     return {
       provider: this.id,
       externalEventId,
-      type: hotmartType(eventName, data),
-      occurredAt: occurrenceIso(payload.creation_date),
+      type: hotmartType(eventName, data, occurredAt),
+      occurredAt,
       ...(customerExternalId(eventName, data)
         ? { customerExternalId: customerExternalId(eventName, data) }
         : {}),

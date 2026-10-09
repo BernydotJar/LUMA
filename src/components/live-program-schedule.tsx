@@ -26,20 +26,23 @@ function sessionDate(
 
 export function LiveProgramSchedule() {
   const { user, loading } = useLumaAuth();
-  const [schedule, setSchedule] = useState<
-    LearnerScheduledSession[] | null
-  >(null);
+  const [snapshot, setSnapshot] = useState<{
+    uid: string;
+    items: LearnerScheduledSession[];
+  } | null>(null);
+  const schedule = user && snapshot?.uid === user.uid ? snapshot.items : [];
 
   useEffect(() => {
     if (loading || !user) return;
 
     let cancelled = false;
+    const uid = user.uid;
     void fetchLearnerSchedule()
       .then((items) => {
-        if (!cancelled) setSchedule(items ?? []);
+        if (!cancelled) setSnapshot({ uid, items: items ?? [] });
       })
       .catch(() => {
-        if (!cancelled) setSchedule([]);
+        if (!cancelled) setSnapshot({ uid, items: [] });
       });
 
     return () => {
@@ -47,7 +50,7 @@ export function LiveProgramSchedule() {
     };
   }, [loading, user]);
 
-  if (!user || !schedule?.length) return null;
+  if (!user || !schedule.length) return null;
 
   return (
     <section

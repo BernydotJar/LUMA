@@ -35,6 +35,7 @@ export interface ProgramOfferingInput {
 export interface ProgramAccess {
   tenantId: string;
   programId: string;
+  offeringId: string;
 }
 
 export interface LiveProgramSession {
@@ -177,7 +178,9 @@ export class FirestoreProgramDeliveryStore {
         throw new Error("durationMinutes must be between 10 and 720");
       }
 
-      const joinUrl = input.joinUrl?.trim();
+      const joinUrl = input.joinUrl === undefined
+        ? current?.joinUrl
+        : input.joinUrl.trim();
       if (joinUrl) {
         let parsed: URL;
         try {
@@ -218,50 +221,62 @@ export class FirestoreProgramDeliveryStore {
       const normalized = {
         tenantId: required(item.tenantId, "tenantId"),
         programId: required(item.programId, "programId"),
+        offeringId: required(item.offeringId, "offeringId", 128),
       };
-      uniqueAccess.set(
-        JSON.stringify([normalized.tenantId, normalized.programId]),
-        normalized,
-      );
+      uniqueAccess.set(normalized.offeringId, normalized);
     }
     if (uniqueAccess.size === 0) return [];
-
     const snapshots = await Promise.all(
-      [...uniqueAccess.values()].map((item) =>
-        this.firestore
-          .collection("programOfferings")
-          .where("tenantId", "==", item.tenantId)
-          .where("programId", "==", item.programId)
-          .get(),
-      ),
+      [...uniqueAccess.values()].map((item) => this.offeringRef(item.offeringId).get()),
     );
-
-    const offerings = new Map<string, ProgramOffering>();
+    const offerings: ProgramOffering[] = [];
     for (const snapshot of snapshots) {
-      for (const doc of snapshot.docs) {
-        const offering = doc.data() as ProgramOffering;
-        if (offering.status === "active") {
-          offerings.set(offering.offeringId, offering);
-        }
-      }
+      if (!snapshot.exists) continue;
+      const offering = snapshot.data() as ProgramOffering;
+      const allowed = uniqueAccess.get(snapshot.id);
+      if (allowed && offering.status === "active" &&
+          offering.tenantId === allowed.tenantId &&
+          offering.programId === allowed.programId) offerings.push(offering);
     }
-
-    return [...offerings.values()].sort((a, b) =>
-      a.title.localeCompare(b.title),
-    );
+    return offerings.sort((a, b) => a.title.localeCompare(b.title));
   }
 
   async listSessions(
     offeringIdValue: string,
+    pageSize = 100,
   ): Promise<LiveProgramSession[]> {
-    const snapshot = await this.offeringRef(
+    const boundedPageSize = Number.isFinite(pageSize)
+      ? Math.min(Math.max(Math.round(pageSize), 1), 250)
+      : 100;
+    const collection = this.offeringRef(
       required(offeringIdValue, "offeringId", 128),
-    )
-      .collection("sessions")
-      .orderBy("startsAt", "asc")
-      .limit(100)
-      .get();
-    return snapshot.docs.map((doc) => doc.data() as LiveProgramSession);
+    ).collection("sessions");
+    const sessions: LiveProgramSession[] = [];
+    let cursorStartsAt: string | undefined;
+    let cursorId: string | undefined;
+
+    for (;;) {
+      let query = collection
+        .orderBy("startsAt", "asc")
+        .orderBy(FieldPath.documentId(), "asc")
+        .limit(boundedPageSize);
+      if (cursorStartsAt && cursorId) {
+        query = query.startAfter(cursorStartsAt, cursorId);
+      }
+
+      const snapshot = await query.get();
+      sessions.push(
+        ...snapshot.docs.map((doc) => doc.data() as LiveProgramSession),
+      );
+      if (snapshot.size < boundedPageSize) break;
+      const last = snapshot.docs.at(-1);
+      if (!last) break;
+      const lastSession = last.data() as LiveProgramSession;
+      cursorStartsAt = lastSession.startsAt;
+      cursorId = last.id;
+    }
+
+    return sessions;
   }
 
   async listUpcomingSessions(

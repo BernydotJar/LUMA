@@ -54,3 +54,9 @@ No real-money product should be enabled until this sequence passes.
 - **Hotmart subscription cancellation:** the adapter supports the V2 cancellation payload where subscriber identity is provided at `data.subscriber`; the stable subscriber code is used to correlate the subscription lifecycle.
 
 The provider sandbox checklist should include all three cases before real-money activation.
+
+## Paid-through cancellation
+
+For Hotmart V2 `SUBSCRIPTION_CANCELLATION`, the documented `data.date_next_charge` is the last paid-access boundary. LUMA schedules effective expiration rather than revoking immediately when the boundary is in the future. Missing/invalid boundaries are retried for reconciliation rather than interpreted as immediate cancellation. A successful later renewal clears the pending expiration.
+
+The effective-access predicate must be enforced on every protected learner feature; do not use the raw `status` field alone to grant access. Provider webhook rate limits are best-effort per instance; production ingress protections should be managed separately at the edge.

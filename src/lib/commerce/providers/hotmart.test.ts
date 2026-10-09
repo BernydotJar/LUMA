@@ -87,6 +87,7 @@ describe("HotmartProvider", () => {
           email: "subscriber@example.com",
         },
         subscription: { id: 471681 },
+        date_next_charge: 1791482400000,
       },
     });
 
@@ -96,15 +97,24 @@ describe("HotmartProvider", () => {
     });
 
     expect(event).toMatchObject({
-      type: "commerce.subscription.cancelled",
+      type: "commerce.subscription.cancellation_scheduled",
       customerExternalId: "QO4THU04",
       productExternalId: "3526906",
       transactionExternalId: "QO4THU04",
       metadata: {
         buyerEmail: "subscriber@example.com",
         subscriptionCode: "QO4THU04",
+        accessEndsAt: new Date(1791482400000).toISOString(),
       },
     });
+  });
+
+  it("requires the paid-through date to avoid premature access revocation", async () => {
+    const data = JSON.parse(payload("SUBSCRIPTION_CANCELLATION"));
+    data.data.subscriber = { code: "sub-paid", email: "paid@example.com" };
+    await expect(new HotmartProvider(secret).handleWebhook({
+      headers: { "x-hotmart-hottok": secret }, rawBody: JSON.stringify(data),
+    })).rejects.toThrow("HOTMART_ACCESS_END_DATE_REQUIRED");
   });
 
   it("rejects invalid Hottok before parsing business payload", async () => {

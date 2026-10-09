@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { commerceEnrollments } from "@/lib/commerce/server";
+import { isActiveCommerceEnrollment } from "@/lib/commerce/enrollment";
 import { requireLearningUser } from "@/lib/learning-server";
 import { programDeliveryStore } from "@/lib/program-delivery-server";
 
@@ -16,10 +17,11 @@ export async function GET(request: Request) {
 
     const enrollments = await commerceEnrollments.listByLearner(user.uid);
     const activePrograms = enrollments
-      .filter((record) => record.status === "active")
+      .filter((record) => isActiveCommerceEnrollment(record) && Boolean(record.offeringId))
       .map((record) => ({
         tenantId: record.tenantId,
         programId: record.programId,
+        offeringId: record.offeringId!,
       }));
 
     const schedule = await programDeliveryStore.upcomingForPrograms(activePrograms);

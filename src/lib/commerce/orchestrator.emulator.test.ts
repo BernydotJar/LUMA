@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { deleteApp, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { afterAll, describe, expect, it } from "vitest";
-import { FirestoreCommerceEnrollmentStore } from "./enrollment";
+import { FirestoreCommerceEnrollmentStore, isActiveCommerceEnrollment } from "./enrollment";
 import { FirestoreCommerceProviderBindingStore } from "./binding";
 import { FirestoreCommerceLedger } from "./ledger";
 import { FirestoreCommerceProductMappingStore } from "./mapping";
@@ -188,6 +188,95 @@ describe.runIf(emulatorEnabled)(
         outcome: "revoked",
         enrollment: { status: "revoked" },
       });
+    });
+
+    it("keeps paid subscription access active until the scheduled Hotmart cutoff", async () => {
+      const suffix = randomUUID();
+      await mappings!.upsert({
+        provider: "hotmart",
+        externalProductId: `external-program-${suffix}`,
+        tenantId: "seres-de-excelencia",
+        productId: "pnl-practitioner",
+        programId: "pnl-practitioner",
+      });
+
+      const subscriptionId = `sub-${suffix}`;
+      const purchase = event(suffix, {
+        type: "commerce.subscription.created",
+        customerExternalId: subscriptionId,
+        transactionExternalId: subscriptionId,
+        occurredAt: "2026-10-08T12:00:00Z",
+      });
+      await orchestrator!.handle(purchase, `corr-sub-${suffix}`);
+
+      const cancellation = event(suffix, {
+        externalEventId: `cancel-${suffix}`,
+        type: "commerce.subscription.cancellation_scheduled",
+        occurredAt: "2026-10-08T12:10:00Z",
+        customerExternalId: undefined,
+        productExternalId: undefined,
+        transactionExternalId: subscriptionId,
+        metadata: { accessEndsAt: "2026-10-20T12:00:00Z" },
+      });
+      const result = await orchestrator!.handle(
+        cancellation,
+        `corr-cancel-${suffix}`,
+      );
+
+      expect(result).toMatchObject({
+        status: "processed",
+        outcome: "no_entitlement_change",
+        enrollment: {
+          status: "active",
+          accessEndsAt: "2026-10-20T12:00:00Z",
+        },
+      });
+      expect(
+        isActiveCommerceEnrollment(
+          result.enrollment!,
+          "2026-10-19T12:00:00Z",
+        ),
+      ).toBe(true);
+      expect(
+        isActiveCommerceEnrollment(
+          result.enrollment!,
+          "2026-10-21T12:00:00Z",
+        ),
+      ).toBe(false);
+    });
+
+    it("keeps paid Hotmart subscription access until its billing-period deadline", async () => {
+      const suffix = randomUUID();
+      await mappings!.upsert({
+        provider: "hotmart",
+        externalProductId: `external-program-${suffix}`,
+        tenantId: "seres-de-excelencia",
+        productId: "pnl-practitioner",
+        programId: "pnl-practitioner",
+      });
+      await orchestrator!.handle(event(suffix, {
+        type: "commerce.subscription.created",
+      }), `corr-sub-${suffix}`);
+      const cancelled = event(suffix, {
+        externalEventId: `cancel-${suffix}`,
+        type: "commerce.subscription.cancellation_scheduled",
+        occurredAt: "2026-10-08T12:10:00Z",
+        metadata: { accessEndsAt: "2026-10-10T12:10:00Z" },
+      });
+      const scheduled = await orchestrator!.handle(cancelled, `corr-cancel-${suffix}`);
+      expect(scheduled.outcome).toBe("no_entitlement_change");
+      expect(scheduled.enrollment?.status).toBe("active");
+      expect(scheduled.enrollment?.accessEndsAt).toBe("2026-10-10T12:10:00Z");
+      expect(isActiveCommerceEnrollment(scheduled.enrollment!, "2026-10-09T00:00:00Z")).toBe(true);
+      expect(isActiveCommerceEnrollment(scheduled.enrollment!, "2026-10-11T00:00:00Z")).toBe(false);
+
+      const renewed = await orchestrator!.handle(event(suffix, {
+        externalEventId: `renew-${suffix}`,
+        type: "commerce.subscription.renewed",
+        occurredAt: "2026-10-11T12:00:00Z",
+      }), `corr-renew-${suffix}`);
+      expect(renewed.enrollment?.accessEndsAt).toBeUndefined();
+      expect(isActiveCommerceEnrollment(renewed.enrollment!, "2026-10-12T00:00:00Z")).toBe(true);
     });
 
     it("durably retains an event when product mapping is not ready", async () => {

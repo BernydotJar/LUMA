@@ -212,6 +212,85 @@ describe.runIf(emulatorEnabled)("FirestoreProgramDeliveryStore emulator", () => 
     expect(upcoming[0].session.sessionId).toBe("future-session");
   });
 
+  it("preserves coach assignments when an offering update omits coachIds", async () => {
+    const suffix = randomUUID();
+    const first = await store!.upsertOffering({
+      tenantId: `coach-tenant-${suffix}`,
+      programId: `coach-program-${suffix}`,
+      cohortKey: "coach-cohort",
+      title: "Coach cohort",
+      deliveryMode: "live",
+      timezone: "America/Bogota",
+      coachIds: ["coach-a", "coach-b"],
+    });
+    const updated = await store!.upsertOffering({
+      tenantId: first.tenantId,
+      programId: first.programId,
+      cohortKey: first.cohortKey,
+      title: "Coach cohort updated",
+      deliveryMode: "live",
+      timezone: first.timezone,
+    });
+    expect(updated.coachIds).toEqual(["coach-a", "coach-b"]);
+  });
+
+  it("preserves an existing join URL when a session update omits joinUrl", async () => {
+    const suffix = randomUUID();
+    const offering = await store!.upsertOffering({
+      tenantId: `join-tenant-${suffix}`,
+      programId: `join-program-${suffix}`,
+      cohortKey: "join",
+      title: "Join URL cohort",
+      deliveryMode: "live",
+      timezone: "America/Bogota",
+    });
+    const first = await store!.scheduleSession(offering.offeringId, {
+      sessionId: "stable-session",
+      title: "Original",
+      startsAt: "2026-10-20T20:00:00Z",
+      durationMinutes: 60,
+      joinUrl: "https://meet.example.com/stable",
+    });
+    const updated = await store!.scheduleSession(offering.offeringId, {
+      sessionId: first.sessionId,
+      title: "Updated",
+      startsAt: first.startsAt,
+      durationMinutes: 75,
+      status: "completed",
+    });
+    expect(updated.joinUrl).toBe("https://meet.example.com/stable");
+  });
+
+  it("returns admin sessions beyond the first 100 records", async () => {
+    const suffix = randomUUID();
+    const offering = await store!.upsertOffering({
+      tenantId: `admin-history-${suffix}`,
+      programId: `admin-history-${suffix}`,
+      cohortKey: "history",
+      title: "Admin history",
+      deliveryMode: "live",
+      timezone: "America/Bogota",
+    });
+    const firestore = getFirestore(app!);
+    const batch = firestore.batch();
+    for (let index = 0; index < 105; index += 1) {
+      const startsAt = new Date(Date.UTC(2025, 0, 1 + index, 12)).toISOString();
+      const id = `admin-${String(index).padStart(3, "0")}`;
+      batch.set(
+        firestore.collection("programOfferings").doc(offering.offeringId).collection("sessions").doc(id),
+        {
+          sessionId: id, offeringId: offering.offeringId, title: `Admin ${index}`,
+          startsAt, durationMinutes: 60, recordingPolicy: "none", status: "completed",
+          createdAt: startsAt, updatedAt: startsAt,
+        },
+      );
+    }
+    await batch.commit();
+    const sessions = await store!.listSessions(offering.offeringId, 40);
+    expect(sessions).toHaveLength(105);
+    expect(sessions.some((item) => item.sessionId === "admin-104")).toBe(true);
+  });
+
   it("keeps asynchronous workshops free of live-session assumptions", async () => {
     const suffix = randomUUID();
     const offering = await store!.upsertOffering({

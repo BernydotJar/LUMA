@@ -15,11 +15,13 @@ export interface CommerceEnrollmentRecord {
   tenantId: string;
   programId: string;
   productId: string;
+  offeringId?: string;
   customerId: string;
   email?: string;
   learnerId?: string;
   entitlementId: string;
   status: CommerceEnrollmentStatus;
+  accessEndsAt?: string;
   createdAt: string;
   updatedAt: string;
   lastProvider: CommerceProviderId;
@@ -27,10 +29,18 @@ export interface CommerceEnrollmentRecord {
   lastEventAt: string;
 }
 
+export function isActiveCommerceEnrollment(
+  record: CommerceEnrollmentRecord,
+  now = new Date().toISOString(),
+): boolean {
+  return record.status === "active" &&
+    (!record.accessEndsAt || Date.parse(record.accessEndsAt) > Date.parse(now));
+}
+
 export interface ApplyCommerceEnrollmentInput {
   mapping: Pick<
     CommerceProductMapping,
-    "tenantId" | "productId" | "programId"
+    "tenantId" | "productId" | "programId" | "offeringId"
   >;
   entitlement: EntitlementRecord;
   event: NormalizedCommerceEvent;
@@ -148,6 +158,9 @@ export class FirestoreCommerceEnrollmentStore {
         tenantId: input.mapping.tenantId,
         programId: input.mapping.programId,
         productId: input.mapping.productId,
+        ...(input.mapping.offeringId
+          ? { offeringId: input.mapping.offeringId }
+          : current?.offeringId ? { offeringId: current.offeringId } : {}),
         customerId: input.entitlement.customerId,
         ...(email
           ? { email }
@@ -178,6 +191,38 @@ export class FirestoreCommerceEnrollmentStore {
     });
   }
 
+  async scheduleExpiry(input: {
+    mapping: Pick<CommerceProductMapping, "tenantId" | "productId" | "programId">;
+    customerId: string;
+    event: NormalizedCommerceEvent;
+    accessEndsAt: string;
+  }): Promise<CommerceEnrollmentRecord> {
+    if (!Number.isFinite(Date.parse(input.accessEndsAt))) {
+      throw new Error("COMMERCE_ACCESS_END_INVALID");
+    }
+    const ref = this.ref(input.mapping.tenantId, input.customerId, input.mapping.programId);
+    return this.firestore.runTransaction(async (transaction) => {
+      const snapshot = await transaction.get(ref);
+      if (!snapshot.exists) throw new Error("COMMERCE_ENROLLMENT_NOT_FOUND");
+      const current = snapshot.data() as CommerceEnrollmentRecord;
+      if (current.lastProvider === input.event.provider &&
+          current.lastProviderEventId === input.event.externalEventId) return current;
+      if (compareCommerceEventTimes(input.event.occurredAt, current.lastEventAt) < 0) {
+        return current;
+      }
+      const updated: CommerceEnrollmentRecord = {
+        ...current,
+        accessEndsAt: input.accessEndsAt,
+        updatedAt: new Date().toISOString(),
+        lastProvider: input.event.provider,
+        lastProviderEventId: input.event.externalEventId,
+        lastEventAt: input.event.occurredAt,
+      };
+      transaction.set(ref, updated);
+      return updated;
+    });
+  }
+
   async claimByEmail(
     learnerId: string,
     email: string,
@@ -195,7 +240,7 @@ export class FirestoreCommerceEnrollmentStore {
     const claimed: CommerceEnrollmentRecord[] = [];
     for (const doc of snapshot.docs) {
       const record = doc.data() as CommerceEnrollmentRecord;
-      if (record.status !== "active") continue;
+      if (!isActiveCommerceEnrollment(record)) continue;
 
       const updated = await this.firestore.runTransaction(
         async (transaction) => {
@@ -203,7 +248,7 @@ export class FirestoreCommerceEnrollmentStore {
           if (!freshSnapshot.exists) return undefined;
           const fresh =
             freshSnapshot.data() as CommerceEnrollmentRecord;
-          if (fresh.status !== "active") return undefined;
+          if (!isActiveCommerceEnrollment(fresh)) return undefined;
           if (
             fresh.learnerId &&
             fresh.learnerId !== normalizedLearnerId
@@ -248,7 +293,7 @@ export class FirestoreCommerceEnrollmentStore {
     for (const snapshot of snapshots) {
       for (const doc of snapshot.docs) {
         const record = doc.data() as CommerceEnrollmentRecord;
-        if (record.status === "active" && record.learnerId) {
+        if (isActiveCommerceEnrollment(record) && record.learnerId) {
           learnerIds.add(record.learnerId);
         }
       }
@@ -264,7 +309,7 @@ export class FirestoreCommerceEnrollmentStore {
     if (allowed.size === 0) return false;
     const enrollments = await this.listByLearner(learnerId);
     return enrollments.some(
-      (record) => record.status === "active" && allowed.has(record.tenantId),
+      (record) => isActiveCommerceEnrollment(record) && allowed.has(record.tenantId),
     );
   }
 

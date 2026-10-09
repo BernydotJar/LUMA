@@ -42,8 +42,10 @@ const learners = [
 
 export function StudioDashboard() {
   const { user, loading } = useLumaAuth();
-  const [persistentLearners, setPersistentLearners] = useState<CoachLearnerSummary[] | null>(null);
-  const [interventions, setInterventions] = useState<CoachInterventionSignal[] | null>(null);
+  const [learnerSnapshot, setLearnerSnapshot] = useState<{ uid: string; items: CoachLearnerSummary[] } | null>(null);
+  const [interventionSnapshot, setInterventionSnapshot] = useState<{ uid: string; items: CoachInterventionSignal[] } | null>(null);
+  const persistentLearners = user && learnerSnapshot?.uid === user.uid ? learnerSnapshot.items : null;
+  const interventions = user && interventionSnapshot?.uid === user.uid ? interventionSnapshot.items : null;
   const [selectedBottleneck, setSelectedBottleneck] = useState("pas");
   const [period, setPeriod] = useState("Últimos 7 días");
   const [assigned, setAssigned] = useState<string[]>([]);
@@ -52,11 +54,12 @@ export function StudioDashboard() {
   useEffect(() => {
     if (loading || !user) return;
     let cancelled = false;
+    const uid = user.uid;
     void Promise.all([fetchCoachLearners(), fetchCoachInterventions()])
       .then(([items, signals]) => {
         if (cancelled) return;
-        if (items) setPersistentLearners(items);
-        if (signals) setInterventions(signals);
+        if (items) setLearnerSnapshot({ uid, items });
+        if (signals) setInterventionSnapshot({ uid, items: signals });
       })
       .catch(() => {
         // Unauthorized coaches and transient API failures keep the curated showcase surface.
