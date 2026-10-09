@@ -83,3 +83,11 @@ A verified webhook that is durably received but cannot yet resolve its product m
 Ledger entitlements are keyed by tenant, customer, canonical product and **stable purchase/subscription identity** (`purchaseKey = provider:transactionExternalId`). Two purchases of the same product create two enrollments; cancellation/refund of one leaves the other purchase active. Stripe PaymentIntent `latest_charge` is retained as an alias to route dispute webhooks (`charge.dispute.created`, `closed: won/lost`, and `funds_reinstated`) back to the original entitlement. Dispute restoration re-grants only the corresponding purchase.
 
 The coach intervention dashboard samples up to 100 learner records and returns the top eight signals **from the sample**; the summary is sample-based, not a full-tenant population or SLA count. Large-scale ranking needs a persistent projection/queue under the capacity-resilience workstream.
+
+## Stripe subscription invoice refund aliases
+
+Subscription Checkout is keyed by the Stripe `sub_` identifier. On `invoice.paid`, when the invoice includes an actual PaymentIntent (`payment_intent` or its embedded `payments.data[].payment.payment_intent`) and/or Charge identifier (`charge`), LUMA records those identifiers as aliases of the **same subscription entitlement**. Refund and dispute webhooks using a `pi_` or `ch_` identifier then resolve that original binding rather than granting/revoking a second enrollment. If a provider event contains no usable reference and no existing binding, the durable event stays pending with an HTTP 503 retry; do not infer a subscription from an invoice ID.
+
+`GET /api/programs/admin/offerings/{offeringId}/sessions` returns one stable, ascending page by `startsAt` and document ID (`limit` 1–250, default 100). Follow `nextCursor` until null. Cursors encode both ordering keys; invalid ones receive HTTP 400.
+
+A missing `STRIPE_WEBHOOK_SECRET` returns HTTP 503 `commerce_provider_not_configured` to distinguish deployment misconfiguration from malformed signatures (401).

@@ -32,10 +32,23 @@ export async function GET(
   try {
     await requireLearningAdmin(request);
     const { offeringId } = await context.params;
-    const sessions = await programDeliveryStore.listSessions(offeringId);
-    return NextResponse.json({ sessions });
+    const query = new URL(request.url).searchParams;
+    const rawLimit = query.get("limit");
+    const limit = rawLimit === null ? 100 : Number(rawLimit);
+    if (!Number.isInteger(limit) || limit < 1 || limit > 250) {
+      return NextResponse.json({ error: "invalid_page_limit" }, { status: 400 });
+    }
+    const cursor = query.get("cursor") ?? undefined;
+    if (cursor && !/^[A-Za-z0-9_-]{1,1024}$/.test(cursor)) {
+      return NextResponse.json({ error: "invalid_page_cursor" }, { status: 400 });
+    }
+    const page = await programDeliveryStore.listSessionsPage(offeringId, limit, cursor);
+    return NextResponse.json(page);
   } catch (error) {
     const message = error instanceof Error ? error.message : "UNKNOWN";
+    if (message === "PROGRAM_SESSION_CURSOR_INVALID") {
+      return NextResponse.json({ error: "invalid_page_cursor" }, { status: 400 });
+    }
     return (
       authResponse(message) ??
       NextResponse.json({ error: "program_sessions_unavailable" }, { status: 500 })

@@ -172,18 +172,23 @@ export class CommerceEnrollmentOrchestrator {
         email: buyerEmail,
         entitlementId: processed.entitlement.entitlementId,
       });
-      // PaymentIntent and its latest Charge identify the same purchase.
-      // Persist a Charge alias so later dispute objects can resolve their
-      // original entitlement without granting or revoking an unrelated order.
-      const chargeExternalId = event.metadata?.chargeExternalId;
-      if (event.provider === "stripe" && chargeExternalId &&
-          chargeExternalId !== transactionExternalId) {
-        await this.bindings.upsert({
-          provider: event.provider,
-          transactionExternalId: chargeExternalId,
-          purchaseKey, mapping, customerId, email: buyerEmail,
-          entitlementId: processed.entitlement.entitlementId,
-        });
+      // Invoice payments and Charges must resolve to the subscription's
+      // original purchase key, including refunds/disputes without metadata.
+      // Never create a separate entitlement for the same subscription charge.
+      if (event.provider === "stripe") {
+        const aliases = new Set([
+          event.metadata?.paymentIntentExternalId,
+          event.metadata?.chargeExternalId,
+        ].filter((value): value is string => Boolean(value)));
+        aliases.delete(transactionExternalId);
+        for (const alias of aliases) {
+          await this.bindings.upsert({
+            provider: event.provider,
+            transactionExternalId: alias,
+            purchaseKey, mapping, customerId, email: buyerEmail,
+            entitlementId: processed.entitlement.entitlementId,
+          });
+        }
       }
     }
 

@@ -233,6 +233,22 @@ function transactionExternalId(
   );
 }
 
+function invoicePaymentIntent(object: JsonRecord): string | undefined {
+  const direct = stringValue(object.payment_intent);
+  if (direct) return direct;
+  // Basil invoice payments link the invoice to its payment object. The
+  // collection may be absent/unexpanded; never infer a PI from an invoice ID.
+  const payments = record(object.payments).data;
+  if (!Array.isArray(payments)) return undefined;
+  for (const entry of payments) {
+    const payment = record(record(entry).payment);
+    const id = stringValue(payment.payment_intent) ??
+      stringValue(record(payment.payment_intent).id);
+    if (id) return id;
+  }
+  return undefined;
+}
+
 function normalizedMetadata(
   eventType: string,
   object: JsonRecord,
@@ -243,8 +259,15 @@ function normalizedMetadata(
     ["currency", stringValue(object.currency)],
     ["paymentStatus", stringValue(object.payment_status)],
     ["subscriptionStatus", stringValue(object.status)],
+    ["paymentIntentExternalId", eventType.startsWith("invoice.")
+      ? invoicePaymentIntent(object)
+      : (eventType.startsWith("checkout.session.") &&
+        stringValue(object.mode) === "subscription")
+        ? stringValue(object.payment_intent) : undefined],
     ["chargeExternalId", eventType === "payment_intent.succeeded"
-      ? stringValue(object.latest_charge) : undefined],
+      ? stringValue(object.latest_charge)
+      : eventType.startsWith("invoice.")
+        ? stringValue(object.charge) : undefined],
   ];
   return Object.fromEntries(
     entries.filter((item): item is [string, string] => Boolean(item[1])),

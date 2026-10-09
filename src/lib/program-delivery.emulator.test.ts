@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { deleteApp, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { afterAll, describe, expect, it } from "vitest";
-import { FirestoreProgramDeliveryStore } from "./program-delivery";
+import { FirestoreProgramDeliveryStore, type LiveProgramSession } from "./program-delivery";
 
 const emulatorEnabled = Boolean(process.env.FIRESTORE_EMULATOR_HOST);
 const app = emulatorEnabled
@@ -322,9 +322,24 @@ describe.runIf(emulatorEnabled)("FirestoreProgramDeliveryStore emulator", () => 
       );
     }
     await batch.commit();
-    const sessions = await store!.listSessions(offering.offeringId, 40);
+    const sessions: LiveProgramSession[] = [];
+    let cursor: string | undefined;
+    let pageCount = 0;
+    do {
+      const page = await store!.listSessionsPage(offering.offeringId, 40, cursor);
+      expect(page.sessions.length).toBeLessThanOrEqual(40);
+      sessions.push(...page.sessions);
+      pageCount += 1;
+      cursor = page.nextCursor ?? undefined;
+    } while (cursor);
+    expect(pageCount).toBe(3);
     expect(sessions).toHaveLength(105);
+    expect(new Set(sessions.map((item) => item.sessionId)).size).toBe(105);
     expect(sessions.some((item) => item.sessionId === "admin-104")).toBe(true);
+    await expect(store!.listSessionsPage(offering.offeringId, 40, "wrong"))
+      .rejects.toThrow("PROGRAM_SESSION_CURSOR_INVALID");
+    await expect(store!.listSessionsPage(offering.offeringId, 0))
+      .rejects.toThrow("PROGRAM_SESSION_PAGE_LIMIT_INVALID");
   });
 
   it("keeps asynchronous workshops free of live-session assumptions", async () => {

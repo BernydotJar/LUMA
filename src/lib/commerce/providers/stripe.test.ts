@@ -222,6 +222,37 @@ describe("StripeProvider", () => {
     expect(event.transactionExternalId).toBe("sub_checkout");
   });
 
+  it("extracts subscription invoice payment intent from Basil payments", async () => {
+    const rawBody = JSON.stringify({
+      id: "evt_invoice_alias", type: "invoice.paid", created: now,
+      data: { object: { id: "in_alias", customer: "cus_alias",
+        parent: { subscription_details: { subscription: "sub_alias" } },
+        payments: { data: [{ payment: { type: "payment_intent",
+          payment_intent: "pi_alias" } }] },
+      } },
+    });
+    const event = await new StripeProvider(secret, { nowSeconds: () => now }).handleWebhook({
+      headers: { "stripe-signature": sign(rawBody) }, rawBody,
+    });
+    expect(event.transactionExternalId).toBe("sub_alias");
+    expect(event.metadata?.paymentIntentExternalId).toBe("pi_alias");
+  });
+
+  it("extracts charge aliases from legacy subscription invoice payment", async () => {
+    const rawBody = JSON.stringify({
+      id: "evt_invoice_charge", type: "invoice.paid", created: now,
+      data: { object: { id: "in_charge", customer: "cus_alias",
+        subscription: "sub_alias", payment_intent: "pi_alias",
+        charge: "ch_alias" } },
+    });
+    const event = await new StripeProvider(secret, { nowSeconds: () => now }).handleWebhook({
+      headers: { "stripe-signature": sign(rawBody) }, rawBody,
+    });
+    expect(event.metadata).toMatchObject({
+      paymentIntentExternalId: "pi_alias", chargeExternalId: "ch_alias",
+    });
+  });
+
   it("activates delayed Checkout payments on async success", async () => {
     const rawBody = JSON.stringify({
       id: "evt_async_success",
