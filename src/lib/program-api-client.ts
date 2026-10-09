@@ -1,4 +1,5 @@
 import { firebaseAuth } from "./firebase-client";
+import { parseLearnerScheduleResponse } from "./program-schedule-status";
 import type {
   LiveProgramSession,
   ProgramDeliveryMode,
@@ -33,8 +34,5 @@ export async function fetchLearnerSchedule(): Promise<
     throw new Error(`PROGRAM_SCHEDULE_FAILED_${response.status}`);
   }
 
-  const body = (await response.json()) as {
-    schedule?: LearnerScheduledSession[];
-  };
-  return Array.isArray(body.schedule) ? body.schedule : [];
+  return parseLearnerScheduleResponse(await response.json());
 }
