@@ -120,7 +120,7 @@ function ContentIntelligenceSearchForm() {
   }
 
   return (
-    <section className={`${styles.searchCard} glass`} aria-labelledby="content-intelligence-search-title">
+    <section className={`${styles.searchCard} content-surface`} aria-labelledby="content-intelligence-search-title">
       <div className={styles.heading}>
         <div>
           <span className="eyebrow"><Sparkles size={14} /> Inteligencia de contenido</span>
