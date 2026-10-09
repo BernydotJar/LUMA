@@ -52,3 +52,19 @@ test("institutional admissions reject anonymous requests and hide admin controls
   });
   expect(response.status()).toBe(401);
 });
+
+test("academic operations are available only to authenticated administrators", async ({ page, request }) => {
+  await page.goto("/studio/programs");
+  await expect(page.getByText(/Inicia sesión con una cuenta administradora/i)).toBeVisible();
+  await expect(page.getByRole("button", { name: /Guardar cohorte/i })).toHaveCount(0);
+  const list = await request.get("/api/programs/admin/offerings?tenantId=seres");
+  expect(list.status()).toBe(401);
+  const create = await request.post("/api/programs/admin/offerings", {
+    data: { tenantId: "seres", programId: "p", cohortKey: "c", title: "Private",
+      deliveryMode: "live", timezone: "America/Guatemala" },
+  });
+  expect(create.status()).toBe(401);
+  const sessions = await request.get("/api/programs/admin/offerings/" +
+    "a".repeat(64) + "/sessions");
+  expect(sessions.status()).toBe(401);
+});
