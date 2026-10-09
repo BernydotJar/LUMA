@@ -1,12 +1,12 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("Google authentication entry points", () => {
-  test("login explains Google access and preserves a demo path", async ({ page }) => {
+  test("login explains Google access and lets a learner explore experiences", async ({ page }) => {
     await page.goto("/login");
     await expect(page.getByRole("heading", { name: /Tu aprendizaje, con continuidad/i })).toBeVisible();
     await expect(page.getByRole("button", { name: /Continuar con Google/i })).toBeVisible();
     await expect(page.getByText(/podrás elegir cómo quieres que te llamemos/i)).toBeVisible();
-    await expect(page.getByRole("link", { name: /Continuar en modo demostración/i })).toHaveAttribute("href", "/learn");
+    await expect(page.getByRole("link", { name: /Explorar las experiencias de aprendizaje/i })).toHaveAttribute("href", "/learn");
   });
 
   test("guest learner surface offers access without pretending to know the learner name", async ({ page }) => {
