@@ -9,7 +9,7 @@ export const runtime = "nodejs";
 export async function POST(request: Request) {
   try {
     const { decoded, access } = await requireLearningCoachAccess(request);
-    const body = await request.json() as { offeringId: unknown };
+    const body = await request.json() as { offeringId: unknown; learnerId: unknown };
     const offering = await certificates.offering(documentId(body.offeringId, "offering_id"));
     assertCertificateTenantAccess(decoded as Record<string, unknown>, offering.tenantId);
     const result = await certificates.issue({ uid: decoded.uid, access }, body);

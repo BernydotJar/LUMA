@@ -9,7 +9,7 @@ export const runtime = "nodejs";
 export async function PUT(request: Request) {
   try {
     const admin = await requireLearningAdmin(request);
-    const payload = await request.json() as { tenantId?: unknown; legalName?: unknown; signerName?: unknown; signerEmail?: unknown; institutionalSigningAuthorized?: unknown };
+    const payload = await request.json() as { tenantId: unknown; legalName: unknown; signerName: unknown; signerEmail: unknown; institutionalSigningAuthorized?: unknown };
     assertTenantAdmin(admin as Record<string, unknown>, documentId(payload.tenantId, "tenant_id"));
     const settings = await certificates.configureIssuer(payload, admin.uid);
     return NextResponse.json({
