@@ -187,8 +187,8 @@ const blocking = report.filter((item) =>
   item.nestedGlass.length > 0 ||
   item.activeAnimations.length > 0 ||
   item.fixedGlassOverlaps.length > 0 ||
-  item.backdropCount > 18 ||
-  item.aboveFoldGlassCoverage > 1.15 ||
+  item.backdropCount > 14 ||
+  item.aboveFoldGlassCoverage > 0.95 ||
   item.a11yViolationIds.length > 0,
 );
 const themeMismatch = report.filter((item) => item.theme !== item.requestedTheme);
