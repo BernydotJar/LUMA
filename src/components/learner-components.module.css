@@ -21,8 +21,8 @@
   background:
     radial-gradient(circle at 90% 3%, rgba(201, 241, 90, 0.19), transparent 29%),
     radial-gradient(circle at 8% 100%, rgba(117, 223, 194, 0.12), transparent 30%),
-    linear-gradient(145deg, rgba(255,255,255,.11), rgba(255,255,255,.025)),
-    rgba(255,255,255,.065);
+    linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02)),
+    var(--surface);
 }
 
 .nextActionGlow {
