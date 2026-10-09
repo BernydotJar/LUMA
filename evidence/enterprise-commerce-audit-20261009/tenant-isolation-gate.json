@@ -45,15 +45,33 @@
       "status": "PENDING_GITHUB_CI"
     },
     "adversarial_granite": {
-      "status": "NOT_YET_VERIFIED",
-      "reason": "Local Ollama Granite generation returned HTTP 500; no critique or independent approval obtained"
+      "status": "UNAVAILABLE",
+      "reason": "ollama server returns HTTP 500 process killed due memory pressure"
     },
     "external_rag_gateway": {
-      "status": "NOT_YET_VERIFIED",
-      "reason": "Dedicated backend must enforce tenant+program filters before retrieval"
+      "status": "UNVERIFIED",
+      "reason": "Legacy endpoint healthy and enforces 401 unauthenticated; per-tenant pre-retrieval isolation absent/unproven"
     },
     "deployment": {
       "status": "NOT_PERFORMED"
+    },
+    "atomic_revocation": {
+      "status": "PASS_EMULATOR",
+      "cases": [
+        "active scope required inside transaction",
+        "revocation blocks event append and replay",
+        "denied write keeps learner version unchanged"
+      ],
+      "source": "atomic-entitlement-emulator.log"
+    },
+    "rag_payload_hardening": {
+      "status": "PASS_UNIT",
+      "cases": [
+        "max response 256 KiB",
+        "limit results to requested hits",
+        "reject unsafe URL and timestamps",
+        "bound source metadata"
+      ]
     }
   },
   "enterprise_pilot_gate": "BLOCKED",

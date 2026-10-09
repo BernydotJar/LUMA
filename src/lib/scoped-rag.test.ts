@@ -62,6 +62,44 @@ describe("tenant/program isolated RAG", () => {
     }
   });
 
+  it("rejects unsafe source URLs, impossible timestamps and oversized hits", async () => {
+    for (const value of [
+      { ...hit, drive_url: "javascript:alert(1)" },
+      { ...hit, drive_url: "https://user:secret@drive.example.test" },
+      { ...hit, end_seconds: 0 },
+      { ...hit, text: "X".repeat(4097) },
+      { ...hit, start_clock: "tomorrow" },
+    ]) {
+      const result = await searchScopedPnlRag("search", scope, 5, env, mockFetch({
+        ...okBody, results: [value],
+      }));
+      expect(result).toMatchObject({ configured: true, strict: true,
+        error: "SCOPED_RAG_HIT_INVALID", results: [] });
+    }
+  });
+
+  it("bounds provider payloads before parsing and rejects more than requested results", async () => {
+    const tooMany = await searchScopedPnlRag("search", scope, 2, env, mockFetch({
+      ...okBody, results: [hit, hit, hit],
+    }));
+    expect(tooMany).toMatchObject({ error: "SCOPED_RAG_TOO_MANY_HITS", results: [] });
+
+    const huge = await searchScopedPnlRag("search", scope, 5, env, mockFetch({
+      ...okBody, filler: "X".repeat(300_000),
+    }));
+    expect(huge).toMatchObject({ configured: true, strict: true,
+      error: "SCOPED_RAG_UNAVAILABLE", results: [] });
+  });
+
+  it("rejects an invalid server scope without calling the RAG service", async () => {
+    const transport = vi.fn() as unknown as typeof fetch;
+    const result = await searchScopedPnlRag("search", {
+      tenantId: "tenant-a", programId: "../program-b",
+    }, 5, env, transport);
+    expect(result).toMatchObject({ error: "SCOPED_RAG_SCOPE_INVALID", results: [] });
+    expect(transport).not.toHaveBeenCalled();
+  });
+
   it("rejects non-HTTPS credentials in URL and unexpected provider failures", async () => {
     const transport = vi.fn() as unknown as typeof fetch;
     const invalid = await searchScopedPnlRag("search", scope, 5, {
