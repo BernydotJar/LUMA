@@ -40,6 +40,8 @@
 .roster li small{font-size:10px;color:#dbb7c6}
 .roster button{border:1px solid rgba(255,255,255,.2);border-radius:9px;background:transparent;color:#fff;cursor:pointer;padding:7px 9px;font-size:11px}
 .roster button:disabled{opacity:.5;cursor:default}
+.roster .endSession{margin-top:20px;width:100%;padding:12px 10px;background:rgba(151,57,72,.16);border:1px solid rgba(247,146,159,.4);color:#ffccd2;font-size:12px;font-weight:700;border-radius:12px}
+.roster .endSession:hover:not(:disabled){background:rgba(151,57,72,.32)}
 .error{position:sticky;bottom:20px;align-self:center;background:#66233a;color:#fff;border-radius:14px;padding:13px 19px;display:flex;gap:18px;align-items:center;font-size:13px;box-shadow:0 10px 35px rgba(60,20,30,.2)}
 .error button{color:inherit;background:none;border:1px solid currentColor;border-radius:8px;padding:6px}
 .footer{margin-top:auto;text-align:center;font-size:11px;opacity:.6;padding:15px}

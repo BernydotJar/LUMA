@@ -1,4 +1,4 @@
-import { AccessToken, RoomServiceClient, TrackSource } from "livekit-server-sdk";
+import { RoomServiceClient } from "livekit-server-sdk";
 import type { DecodedIdToken } from "firebase-admin/auth";
 import { firebaseAdminFirestore } from "./firebase-admin";
 import { commerceEnrollments } from "./commerce/server";
@@ -10,10 +10,12 @@ import {
   classroomParticipantId,
   classroomRoomName,
   resolveClassroomRole,
+  reserveClassroomTokenQuota,
   type ClassroomClaims,
   type LiveClassroomRole,
 } from "./live-classroom";
 import type { LiveProgramSession, ProgramOffering } from "./program-delivery";
+import { signClassroomJoinToken } from "./live-classroom-token";
 
 export class ClassroomError extends Error {
   constructor(readonly reason: string, readonly status: number) {
@@ -141,10 +143,22 @@ export async function createClassroomToken(
   await registerRoom(classroom);
   const rosterRef = roomReference(classroom.roomName)
     .collection("authorized").doc(classroom.identity);
-  const currentAdmission = await rosterRef.get();
-  if (currentAdmission.get("bannedAt")) {
-    throw new ClassroomError("classroom_access_revoked", 403);
-  }
+  // Atomic and tenant-scoped. No client can bypass this distributed issuance budget.
+  await firebaseAdminFirestore.runTransaction(async (transaction) => {
+    const current = await transaction.get(rosterRef);
+    if (current.get("bannedAt")) {
+      throw new ClassroomError("classroom_access_revoked", 403);
+    }
+    const quota = reserveClassroomTokenQuota(current.exists ? current.data() : undefined);
+    if (!quota) throw new ClassroomError("classroom_rate_limited", 429);
+    transaction.set(rosterRef, {
+      uid: classroom.uid,
+      role: classroom.role,
+      displayName: classroom.displayName,
+      ...quota,
+      issuedAt: quota.lastIssuedAt,
+    }, { merge: true });
+  });
   const service = roomService(configuration);
   try {
     await service.createRoom({
@@ -165,38 +179,22 @@ export async function createClassroomToken(
     }
   }
 
-  // Only a previously admitted, server-issued identity may count in attendance.
-  await firebaseAdminFirestore.runTransaction(async (transaction) => {
-    const current = await transaction.get(rosterRef);
-    if (current.get("bannedAt")) {
-      throw new ClassroomError("classroom_access_revoked", 403);
-    }
-    transaction.set(rosterRef, {
-      uid: classroom.uid,
-      role: classroom.role,
-      displayName: classroom.displayName,
-      issuedAt: new Date().toISOString(),
-    }, { merge: true });
-  });
+  // Race guard: moderator may have banned this identity while the provider room was created.
+  const latestRoster = await rosterRef.get();
+  if (latestRoster.get("bannedAt")) {
+    throw new ClassroomError("classroom_access_revoked", 403);
+  }
 
-  const token = new AccessToken(configuration.apiKey, configuration.apiSecret, {
+  const token = await signClassroomJoinToken({
+    apiKey: configuration.apiKey,
+    apiSecret: configuration.apiSecret,
+    roomName: classroom.roomName,
     identity: classroom.identity,
-    name: classroom.displayName,
-    ttl: "10m",
+    displayName: classroom.displayName,
+    role: classroom.role,
   });
-  token.metadata = JSON.stringify({ role: classroom.role });
-  token.addGrant({
-    room: classroom.roomName,
-    roomJoin: true,
-    roomCreate: false,
-    roomAdmin: false,
-    roomRecord: false,
-    canPublishData: true,
-    canSubscribe: true,
-    canPublishSources: classroom.role === "instructor"
-      ? [TrackSource.CAMERA, TrackSource.MICROPHONE,
-        TrackSource.SCREEN_SHARE, TrackSource.SCREEN_SHARE_AUDIO]
-      : [TrackSource.CAMERA, TrackSource.MICROPHONE],
-  });
-  return { serverUrl: configuration.serverUrl, token: await token.toJwt(), role: classroom.role };
+  if ((await rosterRef.get()).get("bannedAt")) {
+    throw new ClassroomError("classroom_access_revoked", 403);
+  }
+  return { serverUrl: configuration.serverUrl, token, role: classroom.role };
 }

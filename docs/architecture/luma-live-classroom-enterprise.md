@@ -46,10 +46,12 @@ A room name hashes `[tenantId, offeringId, sessionId]` to prevent recognizable t
 1. Browser sends a Firebase ID token via `Authorization: Bearer ...`; server verifies token. Anonymous callers receive 401.
 2. Server directly loads the exact offering and session. A learner is admitted **only** when their active, non-expired, claimed enrollment matches tenantId + programId + offeringId + learnerId. A coach is admitted only if explicitly assigned in `coachIds` **and** has verified coach claim. Global admin/superuser claims authorize instructors.
 3. Session must be scheduled, offering active and live/hybrid, provider `livekit`, and current time between 30 minutes before start and 30 minutes after scheduled end.
-4. Backend creates/reuses the room, registers the participant and issues a room-scoped, 10-minute **joining token**. A learner may publish microphone/camera, instructor also publishes screen-share sources. No client tokens have roomAdmin, roomCreate or roomRecord.
+4. Backend creates/reuses the room, registers the participant and issues a room-scoped, 10-minute **joining token**. A distributed Firestore quota limits each room identity to **24 tokens per 15 minutes**, with at least 2 seconds between issuance attempts. A learner may publish microphone/camera, instructor also publishes screen-share sources. No client tokens have roomAdmin, roomCreate or roomRecord.
 5. A coach can remove a participant through an authenticated server moderation endpoint. The policy persists a ban in the authorized roster before using LiveKit Cloud's removeParticipant token revocation. Subsequent LUMA token requests reject banned identities. Instructor unlock is a separately auditable future capability, not automatic.
 6. Webhooks must have a valid LiveKit provider signature over the exact raw payload; data ingestion accepts only authorized pseudonymous identities in known LUMA rooms. Duplicate provider IDs are idempotent, and out-of-order timestamps reconcile.
 7. API tokens use `Cache-Control: no-store, private`. Session links are stable and do not expose media credentials. Tokens and secrets must never be sent to logs or stored in client localStorage.
+
+**Administration boundary:** Platform `superuser` can enter globally; regular `admin` claims must be explicitly scoped to the offering tenant (`tenantId`, `tenantIds` or `adminTenantIds`). Unscoped admin claims do not grant classroom instructor privileges. Instructors can **terminate a class for everyone**, atomically marking the scheduled session completed and requesting room deletion; a failed provider deletion is retried through the same authenticated endpoint. **LiveKit Cloud automatic room creation must be disabled in project settings** before a live launch, so a cached token cannot recreate a deleted room.
 
 **Remaining security release gates:** verify role changes/refunds disconnect currently connected attendees, anti-bot rate limiting and token issuance quotas, security review on CSRF/origin/CORS and exact provider token revocation, Firestore policy and rules auditing, webhook replay across multiple concurrent callbacks, PII retention and deletion schedule.
 
@@ -98,10 +100,10 @@ Browser flow: `/learn` → scheduled session → LUMA classroom device preflight
 
 ### Release gate: no production claims before evidence
 
-- [ ] Provider project provisioned, secrets injected through deployment secret manager (never committed).
+- [ ] Provider project provisioned, secrets injected through deployment secret manager (never committed), and **automatic room creation disabled**.
 - [ ] Admin creates live program and assigned trainer; paid/active learner joins correct cohort; forbidden learner and different tenant denied.
-- [ ] Revoked/expired commerce enrollment denied and active users disconnected if needed; coach removed user cannot rejoin.
-- [ ] Full device matrix (Chrome, Safari iOS/macOS, Firefox, Android), role-specific screen-share, reconnect after network loss.
+- [ ] Revoked/expired commerce enrollment denied; refund-triggered removal of **already-connected** attendees proven; coach removed user cannot rejoin; terminated rooms cannot be recreated with cached tokens.
+- [ ] Full device matrix (Chrome, Safari iOS/macOS, Firefox, Android), role-specific screen-share, instructor finish-for-everyone and reconnect after network loss.
 - [ ] Load and soak tests at 20, 50, 100 and chosen 500+ stage/broadcast operating mode; outbound bandwidth measured; capacity limits verified.
 - [ ] Webhook signature, replay, ordering, duplication and failure recovery tested using actual LiveKit Cloud events.
 - [ ] End-to-end tracing, cost alerts, support playbooks and circuit breaker validated; privacy/retention and consent reviewed.
@@ -113,3 +115,7 @@ Browser flow: `/learn` → scheduled session → LUMA classroom device preflight
 ## 7. Engineering change control
 
 Built on a separate branch from current origin/main to avoid overwriting ongoing LUMA product, commerce and accessibility work. Changes retain old external meeting URL behavior and use additive fields. Follow Graph Engineering: Producer → Critic → Fixer → Independent Verifier → Release Gate → Evidence. Integration needs merge review, staged activation and rollback through `LUMA_LIVE_CLASSROOM_ENABLED=false`, with no loss of stored enrollments or program schedules.
+
+### Hardened join contracts (October 9, 2026)
+
+Tests verify the exact room-only LiveKit JWT video grants and 10-minute `nbf` to `exp` lifetime; token signature fails with a mismatched API key, and signed webhook parsing rejects missing/modified signature payloads. Firestore emulator coverage now includes out-of-order presence, deduplication, unauthorized pseudonymous identities, and tenant/cohort/expiry lookup. Scopes, quotas and staff-initiated session closure have been added; all require their updated CI/Firestore gates before merge.

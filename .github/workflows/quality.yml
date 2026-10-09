@@ -61,7 +61,8 @@ jobs:
           src/lib/commerce/ledger.emulator.test.ts
           src/lib/commerce/orchestrator.emulator.test.ts
           src/lib/program-delivery.emulator.test.ts
-          src/lib/learning-store.emulator.test.ts"
+          src/lib/learning-store.emulator.test.ts
+          src/lib/live-classroom-attendance.emulator.test.ts"
 
   browser:
     runs-on: ubuntu-latest

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   classroomAdmission, classroomCapacity, classroomParticipantId, classroomRoomName,
-  resolveClassroomRole, summarizeClassroomPresence,
+  resolveClassroomRole, reserveClassroomTokenQuota, summarizeClassroomPresence,
 } from "./live-classroom";
 import type { CommerceEnrollmentRecord } from "./commerce/enrollment";
 import type { LiveProgramSession, ProgramOffering } from "./program-delivery";
@@ -45,7 +45,10 @@ describe("LUMA integrated classroom authorization", () => {
     expect(resolveClassroomRole({ uid: "not-assigned", role: "coach" }, offering, [])).toBeNull();
     expect(resolveClassroomRole({ uid: "coach-1", role: "coach" }, offering, [])).toBe("instructor");
     expect(resolveClassroomRole({ uid: "coach-1" }, offering, [])).toBeNull();
-    expect(resolveClassroomRole({ uid: "admin", admin: true }, offering, [])).toBe("instructor");
+    expect(resolveClassroomRole({ uid: "admin", admin: true }, offering, [])).toBeNull();
+    expect(resolveClassroomRole({ uid: "admin", admin: true, adminTenantIds: ["other"] }, offering, [])).toBeNull();
+    expect(resolveClassroomRole({ uid: "admin", admin: true, adminTenantIds: ["seres"] }, offering, [])).toBe("instructor");
+    expect(resolveClassroomRole({ uid: "owner", superuser: true }, offering, [])).toBe("instructor");
   });
   it("isolates room names and participant IDs without exposing UIDs or emails", () => {
     const first = classroomRoomName("tenant-a", offering.offeringId, session.sessionId);
@@ -88,5 +91,23 @@ describe("LUMA verified presence ledger", () => {
     expect(summary.attendedSeconds).toBe(0);
     expect(summary.connectionCount).toBe(1);
     expect(summary.connected).toBe(true);
+  });
+});
+
+describe("distributed LiveKit admission budget", () => {
+  it("rejects rapid repeat token issuance and caps each 15-minute period", () => {
+    const initial = new Date("2026-10-20T20:00:00Z");
+    const first = reserveClassroomTokenQuota(undefined, initial);
+    expect(first?.issuedInWindow).toBe(1);
+    expect(reserveClassroomTokenQuota(first!, new Date(initial.getTime() + 1000))).toBeNull();
+    let state = first!;
+    for (let index = 1; index < 24; index += 1) {
+      const next = reserveClassroomTokenQuota(state, new Date(initial.getTime() + index * 3000));
+      expect(next).not.toBeNull();
+      state = next!;
+    }
+    expect(state.issuedInWindow).toBe(24);
+    expect(reserveClassroomTokenQuota(state, new Date(initial.getTime() + 77_000))).toBeNull();
+    expect(reserveClassroomTokenQuota(state, new Date(initial.getTime() + 15 * 60_000))?.issuedInWindow).toBe(1);
   });
 });

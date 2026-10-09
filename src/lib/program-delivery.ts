@@ -254,6 +254,36 @@ export class FirestoreProgramDeliveryStore {
     });
   }
 
+  /**
+   * Instructor-driven early finish. Transactionally disable re-admission first;
+   * the controller then closes the provider room. Retries remain idempotent.
+   */
+  async completeClassroomSession(
+    offeringIdValue: string,
+    sessionIdValue: string,
+    now = new Date().toISOString(),
+  ): Promise<LiveProgramSession> {
+    validIso(now, "now");
+    const existing = await this.getClassroomSession(offeringIdValue, sessionIdValue);
+    if (!existing) throw new Error("CLASSROOM_NOT_FOUND");
+    if (existing.session.classroomProvider !== "livekit") {
+      throw new Error("CLASSROOM_PROVIDER_INVALID");
+    }
+    const ref = this.offeringRef(offeringIdValue).collection("sessions").doc(sessionIdValue);
+    return this.firestore.runTransaction(async (transaction) => {
+      const current = await transaction.get(ref);
+      if (!current.exists) throw new Error("CLASSROOM_NOT_FOUND");
+      const session = current.data() as LiveProgramSession;
+      if (session.status === "completed") return session;
+      if (session.status !== "scheduled") {
+        throw new Error("CLASSROOM_ALREADY_CANCELLED");
+      }
+      const updated = { ...session, status: "completed" as const, updatedAt: now };
+      transaction.set(ref, updated);
+      return updated;
+    });
+  }
+
   /** Direct reads only; caller MUST authorize the requesting user before disclosure. */
   async getClassroomSession(
     offeringIdValue: string,

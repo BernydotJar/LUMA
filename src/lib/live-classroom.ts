@@ -12,6 +12,9 @@ export interface ClassroomClaims {
   admin?: unknown;
   superuser?: unknown;
   coach?: unknown;
+  tenantId?: unknown;
+  tenantIds?: unknown;
+  adminTenantIds?: unknown;
   name?: unknown;
 }
 
@@ -33,6 +36,37 @@ export interface ClassroomPresenceSummary {
 /** The media provider never owns a LUMA offering, session or entitlement. */
 export function isLiveKitClassroom(session: LiveProgramSession): boolean {
   return session.classroomProvider === "livekit";
+}
+
+
+export interface ClassroomTokenQuota {
+  windowStartedAt: string;
+  issuedInWindow: number;
+  lastIssuedAt: string;
+}
+
+/** Distributed issuance guard: 24 short-lived admission tokens per 15-minute window. */
+export function reserveClassroomTokenQuota(
+  previous: Partial<ClassroomTokenQuota> | undefined,
+  now = new Date(),
+): ClassroomTokenQuota | null {
+  const nowMs = now.getTime();
+  if (!Number.isFinite(nowMs)) throw new Error("CLASSROOM_TIME_INVALID");
+  const lastMs = Date.parse(previous?.lastIssuedAt ?? "");
+  if (Number.isFinite(lastMs) && nowMs >= lastMs && nowMs - lastMs < 2000) {
+    return null;
+  }
+  const windowMs = Date.parse(previous?.windowStartedAt ?? "");
+  const sameWindow = Number.isFinite(windowMs) &&
+    nowMs >= windowMs && nowMs - windowMs < 15 * 60_000;
+  const count = sameWindow && Number.isInteger(previous?.issuedInWindow)
+    ? previous!.issuedInWindow! : 0;
+  if (count >= 24) return null;
+  return {
+    windowStartedAt: sameWindow ? previous!.windowStartedAt! : now.toISOString(),
+    issuedInWindow: count + 1,
+    lastIssuedAt: now.toISOString(),
+  };
 }
 
 export function classroomRoomName(
@@ -91,12 +125,16 @@ export function resolveClassroomRole(
   now = new Date().toISOString(),
 ): LiveClassroomRole | null {
   const role = typeof claims.role === "string" ? claims.role : "";
-  if (
-    claims.admin === true ||
-    claims.superuser === true ||
-    role === "admin" ||
-    role === "superuser"
-  ) {
+  // Superusers are platform-wide; ordinary tenant admins must have an explicit scope.
+  if (claims.superuser === true || role === "superuser") {
+    return "instructor";
+  }
+  const tenantScopes = [claims.tenantId, claims.tenantIds, claims.adminTenantIds]
+    .flatMap((scope) => typeof scope === "string" ? [scope] :
+      Array.isArray(scope) ? scope.filter((id): id is string => typeof id === "string") : [])
+    .map((id) => id.trim());
+  if ((claims.admin === true || role === "admin") &&
+      tenantScopes.includes(offering.tenantId)) {
     return "instructor";
   }
   if (

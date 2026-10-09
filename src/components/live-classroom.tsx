@@ -7,6 +7,7 @@ import {
   LiveKitRoom, PreJoin, VideoConference, useParticipants, useRoomContext,
 } from "@livekit/components-react";
 import { ArrowLeft, Radio, ShieldCheck, Users, VideoOff } from "lucide-react";
+import { DisconnectReason } from "livekit-client";
 import { useLumaAuth } from "./auth-provider";
 import { firebaseAuth } from "@/lib/firebase-client";
 import styles from "./live-classroom.module.css";
@@ -33,11 +34,14 @@ const accessErrors: Record<string, string> = {
   authentication_required: "Inicia sesión para ingresar al aula.",
 };
 
-function InstructorModeration({ offeringId, sessionId }: { offeringId: string; sessionId: string }) {
+function InstructorModeration({ offeringId, sessionId, onSessionClosed }: {
+  offeringId: string; sessionId: string; onSessionClosed: () => void;
+}) {
   const participants = useParticipants();
   const room = useRoomContext();
   const { user } = useLumaAuth();
   const [pending, setPending] = useState<string | null>(null);
+  const [closing, setClosing] = useState(false);
   const [notice, setNotice] = useState("");
   const others = participants.filter((participant) => participant.identity !== room.localParticipant.identity);
   async function removeParticipant(identity: string) {
@@ -62,6 +66,25 @@ function InstructorModeration({ offeringId, sessionId }: { offeringId: string; s
       setPending(null);
     }
   }
+  async function closeSession() {
+    if (!user || closing || !window.confirm("¿Terminar esta clase ahora para todas las personas? Esta acción no puede deshacerse.")) return;
+    setClosing(true);
+    setNotice("");
+    try {
+      const response = await fetch(`/api/live/classrooms/${offeringId}/${sessionId}/close`, {
+        method: "POST",
+        headers: { authorization: `Bearer ${await user.getIdToken()}` },
+        cache: "no-store",
+      });
+      if (!response.ok) throw new Error("classroom_close_failed");
+      onSessionClosed();
+    } catch {
+      setNotice("No se logró cerrar completamente la sesión. Puedes volver a intentarlo.");
+    } finally {
+      setClosing(false);
+    }
+  }
+
   return (
     <aside className={styles.roster} aria-label="Moderación del instructor">
       <h2><Users size={16} /> Participantes <span>{participants.length}</span></h2>
@@ -89,6 +112,9 @@ function InstructorModeration({ offeringId, sessionId }: { offeringId: string; s
         })}
       </ul>
       {notice && <p role="status">{notice}</p>}
+      <button className={styles.endSession} type="button" disabled={closing || pending !== null} onClick={() => void closeSession()}>
+        {closing ? "Cerrando el aula…" : "Terminar clase para todos"}
+      </button>
     </aside>
   );
 }
@@ -99,6 +125,7 @@ export function LiveClassroom({
   const { user, loading } = useLumaAuth();
   const [joined, setJoined] = useState<{ credentials: Credentials; choices: UserChoices; uid: string } | null>(null);
   const [connecting, setConnecting] = useState(false);
+  const [closed, setClosed] = useState(false);
   const [error, setError] = useState("");
   const current = joined?.uid === user?.uid ? joined : null;
 
@@ -151,6 +178,12 @@ export function LiveClassroom({
             <p>Inicia sesión con la cuenta vinculada a tu matrícula.</p>
             <Link href="/login" className={styles.primary}>Iniciar sesión</Link>
           </div>
+        ) : closed ? (
+          <div className={styles.state} role="status">
+            <h1>La clase ha finalizado.</h1>
+            <p>El aula se cerró para todas las personas. Puedes regresar a tu programa para continuar aprendiendo.</p>
+            <Link href="/learn" className={styles.primary}>Volver al programa</Link>
+          </div>
         ) : current ? (
           <section className={styles.classroom} aria-label="Sala de clase en vivo">
             <div className={styles.roomTitle}>
@@ -169,13 +202,17 @@ export function LiveClassroom({
               connect
               audio={current.choices.audioEnabled}
               video={current.choices.videoEnabled}
-              onDisconnected={() => setJoined(null)}
+              onDisconnected={(reason) => {
+                setJoined(null);
+                if (reason === DisconnectReason.ROOM_DELETED) setClosed(true);
+              }}
               onError={() => setError("Se perdió la conexión audiovisual. Puedes volver a ingresar.")}
               className={styles.media}
             >
               <div className={styles.video}><VideoConference /></div>
               {current.credentials.role === "instructor" && (
-                <InstructorModeration offeringId={offeringId} sessionId={sessionId} />
+                <InstructorModeration offeringId={offeringId} sessionId={sessionId}
+                  onSessionClosed={() => { setJoined(null); setClosed(true); }} />
               )}
             </LiveKitRoom>
           </section>
