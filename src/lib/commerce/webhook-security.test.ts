@@ -46,6 +46,23 @@ describe("commerce webhook ingress security", () => {
     })).toThrow("WEBHOOK_RATE_LIMITED");
   });
 
+  it("bounds the fingerprint table during a rotating-IP burst", () => {
+    for (let index = 0; index < 2_300; index++) {
+      const request = new Request("https://example.test/webhook", {
+        headers: { "x-forwarded-for": `192.0.${Math.floor(index / 256)}.${index % 256}` },
+      });
+      enforceCommerceWebhookClientRateLimit("hotmart", request, {
+        nowMs: 900_000, clientLimit: 1,
+      });
+    }
+    const state = (globalThis as typeof globalThis & {
+      __lumaCommerceWebhookRateState?: Map<string, unknown>
+    }).__lumaCommerceWebhookRateState;
+    expect(state?.size).toBeLessThanOrEqual(2_048);
+    // Attackers cannot evict the authenticated provider quota by changing IPs.
+    enforceCommerceWebhookProviderRateLimit("hotmart", { nowMs: 900_001, providerLimit: 2 });
+  });
+
   it("rate limits a repeated client before body parsing", () => {
     const request = new Request("https://example.test/webhook", {
       headers: { "x-forwarded-for": "203.0.113.77" },

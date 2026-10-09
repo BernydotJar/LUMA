@@ -125,7 +125,8 @@ assert.notEqual(event.body.plan.nextAction.id, beforeAction);
 const ordinaryList = await api("/api/coach/learners", ordinary.token);
 assert.equal(ordinaryList.status, 403);
 
-await adminAuth.setCustomUserClaims(coach.uid, { coach: true });
+// Coaching grants must always include an explicit learner or tenant scope.
+await adminAuth.setCustomUserClaims(coach.uid, { coach: true, coachLearnerIds: [learner.uid] });
 const coachToken = await signIn(coach);
 
 const coachList = await api("/api/coach/learners", coachToken);
@@ -149,6 +150,7 @@ console.log(JSON.stringify({
   ordinaryUserStatus: ordinaryList.status,
   coachStatus: coachList.status,
   coachClaim: true,
+  scope: "explicit-learner",
   learnerId: learner.uid,
   beforeAction,
   afterAction: event.body.plan.nextAction.id,

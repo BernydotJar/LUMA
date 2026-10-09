@@ -32,7 +32,21 @@ function clientFingerprint(request: Request): string {
 
 function consumeBucket(state: RateState, key: string, nowMs: number, limit: number): boolean {
   const current = state.get(key);
-  if (!current || nowMs - current.windowStart >= WINDOW_MS) {
+  if (!current) {
+    // Client fingerprints are untrusted. Keep the process-global table bounded
+    // even during a burst of rotating IPs; preserve authenticated provider buckets.
+    if (state.size >= MAX_BUCKETS) {
+      prune(state, nowMs);
+      if (state.size >= MAX_BUCKETS) {
+        const victim = [...state.keys()].find((entry) => entry.startsWith("client:"));
+        if (!victim) return false;
+        state.delete(victim);
+      }
+    }
+    state.set(key, { windowStart: nowMs, count: 1 });
+    return true;
+  }
+  if (nowMs - current.windowStart >= WINDOW_MS) {
     state.set(key, { windowStart: nowMs, count: 1 });
     return true;
   }

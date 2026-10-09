@@ -173,6 +173,7 @@ function buyerEmail(object: JsonRecord): string | undefined {
     stringValue(customerDetails.email) ??
     stringValue(billingDetails.email) ??
     stringValue(object.customer_email) ??
+    stringValue(object.receipt_email) ??
     stringValue(metadataOf(object).buyer_email)
   )?.toLowerCase();
 }

@@ -77,6 +77,23 @@ describe("StripeProvider", () => {
     expect(event.type).toBe("commerce.subscription.created");
   });
 
+  it("uses PaymentIntent receipt_email to enable customerless purchases", async () => {
+    const rawBody = JSON.stringify({
+      id: "evt_pi_receipt", type: "payment_intent.succeeded", created: now,
+      data: { object: { id: "pi_receipt", receipt_email: "Customer@Example.com",
+        status: "succeeded", metadata: { luma_product_id: "pnl-practitioner" } } },
+    });
+    const event = await new StripeProvider(secret, { nowSeconds: () => now }).handleWebhook({
+      headers: { "stripe-signature": sign(rawBody) }, rawBody,
+    });
+    expect(event).toMatchObject({
+      type: "commerce.payment.confirmed",
+      customerExternalId: "customer@example.com",
+      metadata: { buyerEmail: "customer@example.com" },
+      productExternalId: "pnl-practitioner",
+    });
+  });
+
   it("maps subscription deletion to cancellation", async () => {
     const rawBody = payload("customer.subscription.deleted");
     const event = await new StripeProvider(secret, {
