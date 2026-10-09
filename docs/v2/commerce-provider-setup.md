@@ -63,3 +63,11 @@ For Hotmart V2 `SUBSCRIPTION_CANCELLATION`, the documented `data.date_next_charg
 The effective-access predicate must be enforced on every protected learner feature; do not use the raw `status` field alone to grant access. Provider webhook rate limits are best-effort per instance; production ingress protections should be managed separately at the edge.
 
 For live/hybrid products, `offeringId` must reference the exact cohort in `programOfferings`. The learner schedule fails closed if no offering assignment exists. Configure distinct provider product/offer mappings for parallel cohorts. An asynchronous product may omit `offeringId`.
+
+## Mapping administration and webhook ingress
+
+`GET /api/commerce/admin/mappings` is cursor paginated. Use `?limit=100` (1–250) and then the returned `nextCursor` on the following request (`?limit=100&cursor=<nextCursor>`). Ordering is stable by Firestore document ID; `nextCursor: null` signals the final page. Admin authorization is required on every page.
+
+A mapped `offeringId` assigns a learner to a specific live cohort. Explicitly send `offeringId: null` on an administrator mapping update to clear the cohort for future enrollments. On a new grant/renewal with a resolved cohortless mapping, the enrollment no longer retains a stale cohort; existing durable provider bindings retain their original purchase identity and may require an explicit migration for previously sold live cohort access.
+
+Webhook ingress applies a per-client throttle before reading the bounded body. The provider-wide shared throttle is debited **only after** Stripe signature/Hotmart Hottok validation. Those limits are per-instance defense-in-depth; edge/global protection and provider retry behavior remain operational requirements.

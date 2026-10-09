@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { enforceCommerceWebhookRateLimit, readCommerceWebhookBody } from "./webhook-security";
+import {
+  enforceCommerceWebhookClientRateLimit,
+  enforceCommerceWebhookProviderRateLimit,
+  readCommerceWebhookBody,
+} from "./webhook-security";
 
 describe("commerce webhook ingress security", () => {
   it("rejects declared oversized bodies before buffering", async () => {
@@ -19,14 +23,37 @@ describe("commerce webhook ingress security", () => {
     await expect(readCommerceWebhookBody(request, 1024)).rejects.toThrow("WEBHOOK_BODY_TOO_LARGE");
   });
 
+  it("an unauthenticated flood does not spend the shared provider quota", () => {
+    const attacker = new Request("https://example.test/webhook", {
+      headers: { "x-forwarded-for": "198.51.100.99" },
+    });
+    const legitimate = new Request("https://example.test/webhook", {
+      headers: { "x-forwarded-for": "198.51.100.22" },
+    });
+    // These client-only calls represent events rejected at signature verification.
+    for (let index = 0; index < 180; index++) {
+      enforceCommerceWebhookClientRateLimit("hotmart", attacker, { nowMs: 70_000, clientLimit: 180 });
+    }
+    expect(() => enforceCommerceWebhookClientRateLimit("hotmart", attacker, {
+      nowMs: 70_001, clientLimit: 180,
+    })).toThrow("WEBHOOK_RATE_LIMITED");
+    // A different client still gets in, and authentic events spend the provider bucket.
+    enforceCommerceWebhookClientRateLimit("hotmart", legitimate, { nowMs: 70_001, clientLimit: 180 });
+    enforceCommerceWebhookProviderRateLimit("hotmart", { nowMs: 70_001, providerLimit: 2 });
+    enforceCommerceWebhookProviderRateLimit("hotmart", { nowMs: 70_002, providerLimit: 2 });
+    expect(() => enforceCommerceWebhookProviderRateLimit("hotmart", {
+      nowMs: 70_003, providerLimit: 2,
+    })).toThrow("WEBHOOK_RATE_LIMITED");
+  });
+
   it("rate limits a repeated client before body parsing", () => {
     const request = new Request("https://example.test/webhook", {
       headers: { "x-forwarded-for": "203.0.113.77" },
     });
-    enforceCommerceWebhookRateLimit("stripe", request, { nowMs: 10_000, clientLimit: 2, providerLimit: 10 });
-    enforceCommerceWebhookRateLimit("stripe", request, { nowMs: 10_001, clientLimit: 2, providerLimit: 10 });
+    enforceCommerceWebhookClientRateLimit("stripe", request, { nowMs: 10_000, clientLimit: 2 });
+    enforceCommerceWebhookClientRateLimit("stripe", request, { nowMs: 10_001, clientLimit: 2 });
     expect(() =>
-      enforceCommerceWebhookRateLimit("stripe", request, { nowMs: 10_002, clientLimit: 2, providerLimit: 10 }),
+      enforceCommerceWebhookClientRateLimit("stripe", request, { nowMs: 10_002, clientLimit: 2 }),
     ).toThrow("WEBHOOK_RATE_LIMITED");
   });
 });

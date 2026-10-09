@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { deleteApp, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { afterAll, describe, expect, it } from "vitest";
@@ -346,6 +346,61 @@ describe.runIf(emulatorEnabled)(
       expect(persisted.find((item) => item.productId === "product-a")?.status).toBe("revoked");
       expect(persisted.find((item) => item.productId === "product-b")?.status).toBe("active");
       expect(persisted.find((item) => item.productId === "product-b")?.offeringId).toBe("offering-b");
+    });
+
+    it("removes a prior live cohort after mapping is explicitly cleared", async () => {
+      const suffix = randomUUID();
+      const mapping = { provider: "hotmart" as const,
+        externalProductId: `external-program-${suffix}`, tenantId: `tenant-${suffix}`,
+        productId: `product-${suffix}`, programId: `program-${suffix}` };
+      await mappings!.upsert({ ...mapping, offeringId: `old-cohort-${suffix}` });
+      const original = await orchestrator!.handle(event(suffix), `corr-original-${suffix}`);
+      expect(original.enrollment?.offeringId).toBe(`old-cohort-${suffix}`);
+      await mappings!.upsert({ ...mapping, offeringId: null });
+      const replacement = await orchestrator!.handle(event(suffix, {
+        externalEventId: `renewed-${suffix}`,
+        transactionExternalId: `other-tx-${suffix}`,
+        occurredAt: "2026-10-08T12:30:00Z",
+      }), `corr-renewed-${suffix}`);
+      expect(replacement.enrollment?.status).toBe("active");
+      expect(replacement.enrollment?.offeringId).toBeUndefined();
+    });
+
+    it("paginates more than 250 commerce mappings without omissions", async () => {
+      const suffix = randomUUID();
+      const batch = firestore!.batch();
+      const ids = new Set<string>();
+      for (let index = 0; index < 257; index++) {
+        const externalProductId = `page-${suffix}-${index}`;
+        const id = createHash("sha256").update(externalProductId).digest("hex");
+        ids.add(id);
+        batch.set(firestore!.collection("commerceProductMappings").doc(id), {
+          provider: "hotmart", externalProductId, tenantId: suffix,
+          productId: `p-${index}`, programId: `program-${suffix}`,
+          active: true, createdAt: "2026-10-08T12:00:00Z",
+          updatedAt: "2026-10-08T12:00:00Z",
+        });
+      }
+      await batch.commit();
+      // Other tests' data may coexist. Every page must be complete, ordered, unique.
+      const seen = new Set<string>();
+      let cursor: string | undefined;
+      for (let pageIndex = 0; pageIndex < 50; pageIndex++) {
+        const page = await mappings!.listPage(47, cursor);
+        expect(page.mappings.length).toBeLessThanOrEqual(47);
+        for (const item of page.mappings) {
+          if (item.tenantId === suffix) {
+            seen.add(createHash("sha256").update(item.externalProductId).digest("hex"));
+          }
+          expect(item.provider === "stripe" || item.provider === "hotmart").toBe(true);
+        }
+        if (!page.nextCursor) break;
+        expect(page.nextCursor).toMatch(/^[a-f0-9]{64}$/);
+        cursor = page.nextCursor;
+      }
+      expect(seen.size).toBe(257);
+      expect([...seen].every((id) => ids.has(id))).toBe(true);
+      await expect(mappings!.listPage(10, "invalid_cursor")).rejects.toThrow("COMMERCE_MAPPING_CURSOR_INVALID");
     });
 
     it("durably retains an event when product mapping is not ready", async () => {

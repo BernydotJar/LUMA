@@ -33,8 +33,18 @@ function authError(message: string) {
 export async function GET(request: Request) {
   try {
     await requireLearningAdmin(request);
-    const mappings = await commerceMappings.list(250);
-    return NextResponse.json({ mappings });
+    const params = new URL(request.url).searchParams;
+    const rawLimit = params.get("limit");
+    const limit = rawLimit === null ? 100 : Number(rawLimit);
+    if (!Number.isInteger(limit) || limit < 1 || limit > 250) {
+      return NextResponse.json({ error: "invalid_page_limit" }, { status: 400 });
+    }
+    const cursor = params.get("cursor") ?? undefined;
+    if (cursor && !/^[a-f0-9]{64}$/.test(cursor)) {
+      return NextResponse.json({ error: "invalid_page_cursor" }, { status: 400 });
+    }
+    const page = await commerceMappings.listPage(limit, cursor);
+    return NextResponse.json(page);
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "UNKNOWN";

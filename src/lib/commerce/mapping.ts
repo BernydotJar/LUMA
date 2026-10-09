@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { Firestore } from "firebase-admin/firestore";
+import { FieldPath, type Firestore } from "firebase-admin/firestore";
 import type { CommerceProviderId } from "./domain";
 
 export interface CommerceProductMapping {
@@ -24,6 +24,11 @@ export interface CommerceProductMappingInput {
   active?: boolean;
 }
 
+export interface CommerceMappingPage {
+  mappings: CommerceProductMapping[];
+  nextCursor: string | null;
+}
+
 export interface CommerceProductMappingStore {
   resolve(
     provider: CommerceProviderId,
@@ -34,6 +39,7 @@ export interface CommerceProductMappingStore {
     updatedAt?: string,
   ): Promise<CommerceProductMapping>;
   list(limit?: number): Promise<CommerceProductMapping[]>;
+  listPage(limit?: number, cursor?: string): Promise<CommerceMappingPage>;
 }
 
 function required(value: string, label: string): string {
@@ -127,12 +133,27 @@ export class FirestoreCommerceProductMappingStore
   }
 
   async list(limit = 100): Promise<CommerceProductMapping[]> {
-    const snapshot = await this.firestore
+    const page = await this.listPage(limit);
+    return page.mappings;
+  }
+
+  async listPage(limit = 100, cursor?: string): Promise<CommerceMappingPage> {
+    if (!Number.isInteger(limit) || limit < 1 || limit > 250) {
+      throw new Error("COMMERCE_MAPPING_PAGE_LIMIT_INVALID");
+    }
+    if (cursor && !/^[a-f0-9]{64}$/.test(cursor)) {
+      throw new Error("COMMERCE_MAPPING_CURSOR_INVALID");
+    }
+    let query = this.firestore
       .collection("commerceProductMappings")
-      .limit(Math.max(1, Math.min(limit, 250)))
-      .get();
-    return snapshot.docs
-      .map((doc) => doc.data() as CommerceProductMapping)
-      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+      .orderBy(FieldPath.documentId(), "asc")
+      .limit(limit + 1);
+    if (cursor) query = query.startAfter(cursor);
+    const snapshot = await query.get();
+    const docs = snapshot.docs.slice(0, limit);
+    return {
+      mappings: docs.map((doc) => doc.data() as CommerceProductMapping),
+      nextCursor: snapshot.size > limit ? docs.at(-1)?.id ?? null : null,
+    };
   }
 }

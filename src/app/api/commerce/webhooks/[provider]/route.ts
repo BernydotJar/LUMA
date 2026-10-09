@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import { enforceCommerceWebhookRateLimit, readCommerceWebhookBody } from "@/lib/commerce/webhook-security";
+import {
+  enforceCommerceWebhookClientRateLimit,
+  enforceCommerceWebhookProviderRateLimit,
+  readCommerceWebhookBody,
+} from "@/lib/commerce/webhook-security";
 import {
   commerceCorrelationId,
   commerceOrchestrator,
@@ -100,11 +104,13 @@ export async function POST(
   }
 
   try {
-    enforceCommerceWebhookRateLimit(provider, request);
+    enforceCommerceWebhookClientRateLimit(provider, request);
     const rawBody = await readCommerceWebhookBody(request);
     const event = await commerceProvider(provider).handleWebhook(
       webhookInput(request, rawBody),
     );
+    // Signature/Hottok authentication has succeeded; only now charge the shared quota.
+    enforceCommerceWebhookProviderRateLimit(provider);
 
     const result = await commerceOrchestrator.handle(
       event,

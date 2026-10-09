@@ -48,24 +48,29 @@ function prune(state: RateState, nowMs: number) {
   }
 }
 
-export function enforceCommerceWebhookRateLimit(
+export function enforceCommerceWebhookClientRateLimit(
   provider: CommerceProviderId,
   request: Request,
-  options: { nowMs?: number; clientLimit?: number; providerLimit?: number } = {},
+  options: { nowMs?: number; clientLimit?: number } = {},
 ) {
   const nowMs = options.nowMs ?? Date.now();
   const state = rateState();
   prune(state, nowMs);
-
-  const providerLimit = options.providerLimit ?? DEFAULT_PROVIDER_LIMIT;
-  const clientLimit = options.clientLimit ?? DEFAULT_CLIENT_LIMIT;
-  const providerKey = `provider:${provider}`;
   const clientKey = `client:${provider}:${clientFingerprint(request)}`;
-
-  if (!consumeBucket(state, providerKey, nowMs, providerLimit)) {
+  if (!consumeBucket(state, clientKey, nowMs, options.clientLimit ?? DEFAULT_CLIENT_LIMIT)) {
     throw new Error("WEBHOOK_RATE_LIMITED");
   }
-  if (!consumeBucket(state, clientKey, nowMs, clientLimit)) {
+}
+
+// Only authenticated provider events may consume the quota shared by paying clients.
+export function enforceCommerceWebhookProviderRateLimit(
+  provider: CommerceProviderId,
+  options: { nowMs?: number; providerLimit?: number } = {},
+) {
+  const nowMs = options.nowMs ?? Date.now();
+  const state = rateState();
+  prune(state, nowMs);
+  if (!consumeBucket(state, `provider:${provider}`, nowMs, options.providerLimit ?? DEFAULT_PROVIDER_LIMIT)) {
     throw new Error("WEBHOOK_RATE_LIMITED");
   }
 }

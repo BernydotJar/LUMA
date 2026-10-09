@@ -164,9 +164,9 @@ export class FirestoreCommerceEnrollmentStore {
         tenantId: input.mapping.tenantId,
         programId: input.mapping.programId,
         productId: input.mapping.productId,
-        ...(input.mapping.offeringId
-          ? { offeringId: input.mapping.offeringId }
-          : current?.offeringId ? { offeringId: current.offeringId } : {}),
+        // The resolved mapping is authoritative: omitted offeringId means async.
+        // Do not revive an obsolete live cohort from the previous enrollment.
+        ...(input.mapping.offeringId ? { offeringId: input.mapping.offeringId } : {}),
         customerId: input.entitlement.customerId,
         ...(email
           ? { email }
