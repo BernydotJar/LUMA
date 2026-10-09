@@ -163,7 +163,7 @@ export function ReflectionWorkbench() {
 
   return (
     <div className={styles.workbench}>
-      <section className={`${styles.hero} glass`}>
+      <section className={`${styles.hero} content-surface`}>
         <div className={styles.heroCopy}>
           <span className="eyebrow">
             <span className="eyebrow-dot" /> Reflexión de conocimiento
@@ -226,7 +226,7 @@ export function ReflectionWorkbench() {
       )}
 
       <div className={styles.mainGrid}>
-        <section className={`${styles.artifactRail} glass`}>
+        <section className={`${styles.artifactRail} content-surface`}>
           <div className={styles.panelHeading}>
             <div>
               <span className="eyebrow"><FileSearch size={14} /> Artefactos</span>
@@ -272,7 +272,7 @@ export function ReflectionWorkbench() {
           </div>
         </section>
 
-        <section className={`${styles.detailPanel} glass`} data-kind={selected.kind}>
+        <section className={`${styles.detailPanel} content-surface`} data-kind={selected.kind}>
           <header className={styles.detailHeader}>
             <div>
               <div className={styles.detailMeta}>
@@ -371,7 +371,7 @@ export function ReflectionWorkbench() {
         </section>
 
         <aside className={styles.rightColumn}>
-          <section className={`${styles.retrievalLab} glass`}>
+          <section className={`${styles.retrievalLab} content-surface`}>
             <div className={styles.panelHeading}>
               <div><span className="eyebrow"><Search size={14} /> Retrieval lab</span><h2>La intención cambia el ranking</h2></div>
             </div>
@@ -408,7 +408,7 @@ export function ReflectionWorkbench() {
             </div>
           </section>
 
-          <section className={`${styles.guardrailCard} glass`}>
+          <section className={`${styles.guardrailCard} content-surface`}>
             <div className={styles.guardrailIcon}><ShieldCheck size={22} /></div>
             <div>
               <span className="eyebrow">Autoridad explícita</span>

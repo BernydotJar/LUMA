@@ -16,7 +16,7 @@
     radial-gradient(circle at 85% 20%, rgba(117, 223, 194, .17), transparent 26rem),
     radial-gradient(circle at 60% 110%, rgba(123, 92, 255, .1), transparent 34rem),
     linear-gradient(145deg, rgba(255,255,255,.11), rgba(255,255,255,.025)),
-    var(--glass);
+    var(--surface);
 }
 
 .heroCopy {
@@ -389,14 +389,14 @@
   background:
     radial-gradient(circle at 95% 0%, rgba(117,223,194,.095), transparent 26rem),
     linear-gradient(145deg, rgba(255,255,255,.09), rgba(255,255,255,.02)),
-    var(--glass);
+    var(--surface);
 }
 
 .detailPanel[data-kind="quality-finding"] {
   background:
     radial-gradient(circle at 95% 0%, rgba(241,163,108,.13), transparent 25rem),
     linear-gradient(145deg, rgba(255,255,255,.09), rgba(255,255,255,.02)),
-    var(--glass);
+    var(--surface);
 }
 
 .detailHeader h2 {
@@ -814,7 +814,7 @@
   background:
     radial-gradient(circle at 92% 0%, rgba(201,241,90,.11), transparent 18rem),
     linear-gradient(145deg, rgba(255,255,255,.09), rgba(255,255,255,.025)),
-    var(--glass);
+    var(--surface);
 }
 
 .guardrailIcon {

@@ -129,7 +129,7 @@ export function PracticeSession() {
     return (
       <main className={styles.completePage}>
         <div className="page-noise" />
-        <section className={`${styles.completeCard} glass`}>
+        <section className={`${styles.completeCard} content-surface`}>
           <div className={styles.completeOrb}><Check size={54} /></div>
           <span className="eyebrow"><span className="eyebrow-dot" /> Evidencia registrada</span>
           <h1>Demostraste transferencia.</h1>
@@ -206,13 +206,13 @@ export function PracticeSession() {
         </section>
 
         <aside className={styles.contextPanel}>
-          <section className={`${styles.contextCard} glass`}>
+          <section className={`${styles.contextCard} content-surface`}>
             <span className="eyebrow"><BookOpenCheck size={14} /> Fuente activa</span>
             <h2>Pensamientos automáticos saboteadores</h2>
             <p>El material los describe como automáticos, rápidos, rígidos y frecuentemente expresados con absolutos como “siempre”, “jamás” o “imposible”.</p>
             <a href={moduleThreeSource.url} target="_blank" rel="noreferrer">Abrir material original <ExternalLink size={13} /></a>
           </section>
-          <section className={`${styles.twinImpact} glass`}>
+          <section className={`${styles.twinImpact} content-surface`}>
             <span className="eyebrow"><Sparkles size={14} /> Tu práctica fortalece</span>
             <ul>
               <li><CircleHelp size={15} /><span><strong>Distinción</strong> Acontecimiento vs. interpretación</span></li>
