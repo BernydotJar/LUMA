@@ -110,7 +110,7 @@ export function ReflectionWorkbench() {
       setSelectedId(data.artifact.id);
       setReceipt(data.receipt);
       setFilter("all");
-      setNotice("Borrador generado. Estado: revisión humana antes de participar en respuestas al participante.");
+      setNotice("Actualización preparada. Revisa el contenido y sus fuentes antes de aprobarla.");
     } catch (error) {
       setNotice(
         error instanceof Error
@@ -156,8 +156,8 @@ export function ReflectionWorkbench() {
     );
     setNotice(
       status === "approved"
-        ? "Aprobado con recibo. La reflexión ya puede apoyar recuperación conceptual."
-        : "Bloqueado con recibo. La fuente original permanece intacta.",
+        ? "Actualización aprobada. Disponible como material de apoyo."
+        : "Actualización no aprobada. El contenido publicado permanece sin cambios.",
     );
   };
 
@@ -168,7 +168,7 @@ export function ReflectionWorkbench() {
           <span className="eyebrow">
             <span className="eyebrow-dot" /> Reflexión de conocimiento
           </span>
-          <h2>El corpus aprende con trazabilidad y revisión.</h2>
+          <h2>Mantén el contenido del programa relevante y confiable.</h2>
           <p>
             LUMA detecta conexiones, contradicciones y vacíos entre fuentes; los guarda
             como artefactos derivados, versionados y revisables. La fuente original sigue
@@ -177,7 +177,7 @@ export function ReflectionWorkbench() {
           <div className={styles.policyRow} aria-label="Políticas de reflexión">
             <span><Database size={14} /> RAW inmutable</span>
             <span><BadgeCheck size={14} /> Aprobación humana</span>
-            <span><LockKeyhole size={14} /> Autoridad: reflexión curricular</span>
+            <span><LockKeyhole size={14} /> Revisión de contenido</span>
           </div>
         </div>
         <div className={styles.heroAction}>
@@ -332,9 +332,8 @@ export function ReflectionWorkbench() {
 
           <footer className={styles.detailFooter}>
             <div>
-              <span>Flujo</span>
-              <strong>{selected.pipelineVersion}</strong>
-              {selected.promptVersion && <small>{selected.promptVersion}</small>}
+              <span>Revisión</span>
+              <strong>{selected.status === "approved" ? "Aprobado" : "Pendiente de decisión"}</strong>
             </div>
             {selected.kind !== "raw-source" && selected.status !== "approved" && (
               <div className={styles.reviewActions}>
@@ -364,8 +363,8 @@ export function ReflectionWorkbench() {
             <div className={styles.executionReceipt}>
               <BrainCircuit size={17} />
               <div>
-                <strong>Recibo de ejecución</strong>
-                <p>{receipt.executionMode} · {receipt.sourceIds.length} fuentes · autoridad de estado: ninguna</p>
+                <strong>Resultado de la revisión</strong>
+                <p>{receipt.sourceIds.length} fuentes consultadas · Sin cambios automáticos en el progreso del participante</p>
               </div>
             </div>
           )}

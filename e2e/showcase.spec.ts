@@ -144,25 +144,12 @@ test.describe("LUMA product showcase", () => {
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   });
 
-  test("superuser review lab exposes real gated assets without leaking private source locators", async ({ page }) => {
+  test("experience configuration focuses on learning actions", async ({ page }) => {
     await page.goto("/experience");
-    await expect(
-      page.getByRole("heading", { name: /Activos reales, visibles antes de publicarlos/i }),
-    ).toBeVisible();
-    await expect(page.getByText(/Práctica \/ P\.A\.S\. · SE/i)).toBeVisible();
-    await expect(page.getByText(/En espera de aprobación de producto/i)).toBeVisible();
-    await expect(page.getByText("Movimiento", { exact: true })).toBeVisible();
-    await expect(page.getByText("Bloqueado hasta aprobación", { exact: true })).toBeVisible();
-    await expect(page.getByText(/Voz del entrenador Seres · Prototipo 01/i)).toBeVisible();
-    await expect(page.getByText(/12\.4s/i)).toBeVisible();
-    await expect(page.locator('audio[src="/audio/seres-coach-prototype-01.mp3"]')).toBeVisible();
-    await expect(page.getByRole("heading", { name: /PASO 58 · Semillas de Esperanza/i })).toBeVisible();
-    await page.getByRole("button", { name: /Reproducir video público/i }).click();
-    await expect(page.locator('iframe[title*="PASO 58"]')).toBeVisible();
-    await expect(page.getByText(/5 clases privadas · 15\.82 GiB/i)).toBeVisible();
-    await expect(page.getByAltText(/Candidato 3D de práctica P\.A\.S\./i)).toBeVisible();
-    await expect(page.locator("body")).not.toContainText("drive.google.com");
-    await expect(page.locator("body")).not.toContainText("6997a8d1");
+    await expect(page.getByRole("heading", { name: /Una experiencia de aprendizaje conectada/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Definir objetivo/i })).toBeVisible();
+    await expect(page.getByText(/Grafos de entrega/i)).toHaveCount(0);
+    await expect(page.getByText(/Prototipo 01/i)).toHaveCount(0);
   });
 
   test("adult progress is expressed as capability, transfer and next demonstration", async ({ page }) => {
@@ -179,9 +166,9 @@ test.describe("LUMA product showcase", () => {
 
   test("iconography catalog changes material while preserving semantics", async ({ page }) => {
     await page.goto("/iconography");
-    await expect(page.getByRole("heading", { name: /El significado permanece. El material cambia con el tema/i })).toBeVisible();
-    await expect(page.getByText("Prisma refractivo", { exact: true })).toBeVisible();
-    await expect(page.getByText("Campo orbital", { exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Un lenguaje visual claro para cada experiencia/i })).toBeVisible();
+    await expect(page.getByText("Práctica", { exact: true }).first()).toBeVisible();
+    await expect(page.getByText("Progreso", { exact: true }).first()).toBeVisible();
     await page.getByRole("button", { name: "Claro Luz Líquida", exact: true }).click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
     await expect(page.locator('img[src*="/iconography/light/practice.svg"]')).toBeVisible();
@@ -208,12 +195,10 @@ test.describe("LUMA product showcase", () => {
     await expect(page.getByText(/Procedencia preservada/i)).toBeVisible();
   });
 
-  test("studio lets an instructor assign human intervention", async ({ page }) => {
+  test("studio requires authorized access to participant evidence", async ({ page }) => {
     await page.goto("/studio");
-    await expect(page.getByRole("heading", { name: /Estudio del entrenador/i })).toBeVisible();
-    const assignButton = page.getByRole("button", { name: "Asignar" }).first();
-    await assignButton.click();
-    await expect(page.getByRole("button", { name: /Asignado/i }).first()).toBeVisible();
+    await expect(page.getByText(/Accede para consultar a tus participantes/i)).toBeVisible();
+    await expect(page.getByRole("link", { name: /Iniciar sesión/i })).toBeVisible();
   });
 
   test("key client-facing views satisfy automated WCAG checks", async ({ page }, testInfo) => {

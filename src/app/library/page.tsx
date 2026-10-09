@@ -4,68 +4,63 @@ import {
   ArrowRight,
   BookOpen,
   Check,
-  FileArchive,
-  FileText,
   GitFork,
-  PlayCircle,
   Search,
   Sparkles,
   Video,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { ContentIntelligenceSearch } from "@/components/content-intelligence-search";
-import { moduleThreeSource } from "@/lib/luma-data";
 import styles from "./library.module.css";
 
 export const metadata: Metadata = { title: "Contenido inteligente" };
 
 const concepts = [
-  ["Comunicación emocional", "6 relaciones", "Fuerte"],
-  ["Pensamientos automáticos saboteadores", "9 relaciones", "En práctica"],
-  ["Niveles lógicos", "7 relaciones", "En desarrollo"],
-  ["Creencias y valores", "12 relaciones", "Prerrequisitos"],
-  ["Virus mentales", "8 relaciones", "Pendiente"],
-  ["Identidad", "5 relaciones", "Pendiente"],
+  ["Comunicación emocional", "Comprender", "Conectar ideas"],
+  ["Pensamientos automáticos saboteadores", "Identificar", "Practicar"],
+  ["Niveles lógicos", "Reconocer", "Aplicar"],
+  ["Creencias y valores", "Contrastar", "Reflexionar"],
+  ["Virus mentales", "Explorar", "Distinguir"],
+  ["Identidad", "Integrar", "Transferir"],
 ];
 
 const modules = [
-  { id: 1, title: "Fundamentos", assets: "Clases + material de apoyo", state: "Inventariado" },
-  { id: 2, title: "Practitioner · Módulo 2", assets: "5 videos · 1 PDF", state: "Inventariado" },
-  { id: 3, title: "Redescubriendo tu poder", assets: "3 videos · 1 PDF · libros", state: "Vertical slice" },
-  { id: 4, title: "Practitioner · Módulo 4", assets: "5 videos · material extra", state: "Inventariado" },
-  { id: 5, title: "Practitioner · Módulo 5", assets: "5 videos", state: "Inventariado" },
-  { id: 6, title: "Practitioner · Módulo 6", assets: "5 videos", state: "Inventariado" },
-  { id: 7, title: "Lenguaje corporal", assets: "5 videos · material adicional", state: "Inventariado" },
+  { id: 1, title: "Fundamentos", assets: "Base del programa", state: "Tema de referencia" },
+  { id: 2, title: "Comunicación emocional", assets: "Comprender y relacionarse", state: "Tema de referencia" },
+  { id: 3, title: "Redescubriendo tu poder", assets: "Reflexión y práctica", state: "Tema de referencia" },
+  { id: 4, title: "Creencias y valores", assets: "Revisar interpretaciones", state: "Tema de referencia" },
+  { id: 5, title: "Aplicación personal", assets: "Practicar en contexto", state: "Tema de referencia" },
+  { id: 6, title: "Integración de aprendizajes", assets: "Consolidar capacidades", state: "Tema de referencia" },
+  { id: 7, title: "Lenguaje corporal", assets: "Comunicación consciente", state: "Tema de referencia" },
 ];
 
 export default function LibraryPage() {
   return (
-    <AppShell mode="studio" title="Inteligencia de contenido" subtitle="El corpus aporta estructura; LUMA lo conecta con capacidades, evidencia y decisiones de aprendizaje.">
+    <AppShell mode="studio" title="Inteligencia de contenido" subtitle="Encuentra conceptos, fuentes y experiencias que apoyan los objetivos de aprendizaje.">
       <section className={`${styles.hero} content-surface`}>
         <div>
-          <span className="eyebrow"><span className="eyebrow-dot" /> Corpus conectado</span>
+          <span className="eyebrow"><span className="eyebrow-dot" /> Contenido del programa</span>
           <h2>Módulo 3: Redescubriendo y transformando tu poder</h2>
-          <p>Este vertical slice fue seleccionado porque combina clases extensas, documento estructurado y material de apoyo. LUMA preserva la procedencia de cada concepto, evaluación y recomendación.</p>
+          <p>Explora los temas del programa y lleva sus conceptos a la práctica. Las recomendaciones se apoyan en fuentes y objetivos de aprendizaje identificables.</p>
           <div className={styles.heroActions}>
-            <a className="button-primary" href={moduleThreeSource.url} target="_blank" rel="noreferrer"><FileText size={17} /> Abrir fuente original</a>
-            <Link className="button-secondary" href="/learn">Ver experiencia generada <ArrowRight size={16} /></Link>
+            <Link className="button-primary" href="/learn/experiences"><BookOpen size={17} /> Explorar experiencias</Link>
+            <Link className="button-secondary" href="/studio/class-intelligence">Revisar objetivos <ArrowRight size={16} /></Link>
           </div>
         </div>
         <div className={styles.qualityScore}>
-          <span>Calidad de aprendizaje</span>
-          <strong>86</strong>
-          <div><i style={{ width: "86%" }} /></div>
-          <p>Alta cobertura conceptual; 2 objetivos están en revisión de alineación.</p>
+          <span>Tu siguiente acción</span>
+          <strong>Explorar</strong>
+          <p>Busca un concepto, revisa su contexto y elige una práctica para aplicarlo.</p>
         </div>
       </section>
 
       <section className={styles.pipeline}>
         {[
-          [Video, "Video y audio", "3 clases conectadas"],
-          [FileText, "Extracción", "8 secciones estructuradas"],
-          [Sparkles, "Conceptos", "24 nodos propuestos"],
-          [GitFork, "Grafo", "47 relaciones trazables"],
-          [Search, "Búsqueda", "Segmentos recuperables"],
+          [BookOpen, "Comprender", "Revisa los conceptos del programa"],
+          [Search, "Encontrar", "Busca una respuesta en su contexto"],
+          [Sparkles, "Practicar", "Aplica ideas a un caso concreto"],
+          [Video, "Profundizar", "Continúa con una experiencia"],
+          [Check, "Revisar", "Comprueba tu siguiente paso"],
         ].map(([Icon, label, detail], index) => {
           const PipelineIcon = Icon as typeof Video;
           return (
@@ -84,10 +79,10 @@ export default function LibraryPage() {
       <div className={styles.mainGrid}>
         <section className={`${styles.graphCard} content-surface`}>
           <div className={styles.cardHeading}>
-            <div><span className="eyebrow"><GitFork size={14} /> Mapa de aprendizaje</span><h2>El contenido se convierte en relaciones.</h2></div>
-            <span className="status-pill" data-tone="positive">47 relaciones</span>
+            <div><span className="eyebrow"><GitFork size={14} /> Mapa temático</span><h2>Ideas que puedes conectar y poner en práctica.</h2></div>
+            <span className="status-pill" data-tone="positive">Referencia temática</span>
           </div>
-          <div className={styles.graphCanvas} aria-label="Vista del grafo de conocimiento">
+          <div className={styles.graphCanvas} aria-label="Esquema de temas relacionados del programa">
             <div className={styles.graphCenter}>Cambio personal<span>competencia</span></div>
             <div className={`${styles.graphNode} ${styles.nodeOne}`}>Emoción<span>prerrequisito</span></div>
             <div className={`${styles.graphNode} ${styles.nodeTwo}`}>P.A.S.<span>concepto</span></div>
@@ -105,13 +100,10 @@ export default function LibraryPage() {
 
         <aside className={styles.assetColumn}>
           <section className={`${styles.assetCard} content-surface`}>
-            <div className={styles.cardHeading}><div><span className="eyebrow"><BookOpen size={14} /> Fuentes del slice</span><h2>4 activos principales</h2></div></div>
+            <div className={styles.cardHeading}><div><span className="eyebrow"><BookOpen size={14} /> Recursos para continuar</span><h2>Elige una acción de aprendizaje</h2></div></div>
             <div className={styles.assetList}>
-              <a href={moduleThreeSource.url} target="_blank" rel="noreferrer"><span><FileText size={18} /></span><div><strong>Redescubriendo y transformando tu poder</strong><small>PDF · 0.88 MB · 8 secciones</small></div></a>
-              <div><span><PlayCircle size={18} /></span><div><strong>Clase 1 PM · miércoles</strong><small>Video · 2.45 GB · transcripción pendiente</small></div></div>
-              <div><span><PlayCircle size={18} /></span><div><strong>Clase 2 PM</strong><small>Video · 3.21 GB · transcripción pendiente</small></div></div>
-              <div><span><PlayCircle size={18} /></span><div><strong>Clase 3 PM</strong><small>Video · 2.88 GB · transcripción pendiente</small></div></div>
-              <div><span><FileArchive size={18} /></span><div><strong>Libros de apoyo</strong><small>ZIP · 6.78 MB · revisión de licencia requerida</small></div></div>
+              <Link href="/learn/experiences"><span><BookOpen size={18} /></span><div><strong>Explorar experiencias</strong><small>Conoce objetivos, ejemplos y prácticas</small></div></Link>
+              <Link href="/studio/class-intelligence"><span><Sparkles size={18} /></span><div><strong>Revisar aprendizajes</strong><small>Consulta la evidencia esperada de cada experiencia</small></div></Link>
             </div>
           </section>
 
@@ -125,7 +117,7 @@ export default function LibraryPage() {
       </div>
 
       <section className={styles.moduleSection}>
-        <div className={styles.sectionHeading}><div><span className="eyebrow"><BookOpen size={14} /> Vista complementaria del currículo</span><h2>Los módulos conservan la estructura editorial; la ruta se organiza por capacidades y evidencia.</h2></div><span>7 módulos detectados</span></div>
+        <div className={styles.sectionHeading}><div><span className="eyebrow"><BookOpen size={14} /> Temas de formación</span><h2>Conoce las áreas que conecta este programa.</h2></div><span>Mapa de referencia</span></div>
         <div className={styles.moduleGrid}>
           {modules.map((module) => (
             <article className="glass-subtle" key={module.id} data-active={module.id === 3}>

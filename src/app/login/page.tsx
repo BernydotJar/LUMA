@@ -68,7 +68,7 @@ export default function LoginPage() {
           </div>
 
           <Link className={styles.demoLink} href="/learn">
-            Continuar en modo demostración
+            Explorar las experiencias de aprendizaje
           </Link>
         </div>
 

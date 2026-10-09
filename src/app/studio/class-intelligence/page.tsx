@@ -20,7 +20,7 @@ export const metadata: Metadata = { title: "Inteligencia de clases · LUMA" };
 const pipeline = [
   "Fuente autorizada",
   "Objetivo observable",
-  "Topología de clase",
+  "Actividad de aprendizaje",
   "Práctica",
   "Evidencia",
   "Remediación",
@@ -44,7 +44,7 @@ export default function ClassIntelligencePage() {
     <AppShell
       mode="studio"
       title="Inteligencia de clases"
-      subtitle="Cómo LUMA convierte conocimiento experto en práctica, evidencia y mejora continua sin perder trazabilidad."
+      subtitle="Consulta qué se aprende, cómo se practica y qué evidencia permite orientar el seguimiento."
     >
       <Link className={styles.back} href="/studio">
         <ArrowLeft size={15} /> Volver al estudio
@@ -52,10 +52,10 @@ export default function ClassIntelligencePage() {
 
       <section className={styles.hero}>
         <div>
-          <span className="eyebrow"><Sparkles size={14} /> Pedagogía como sistema</span>
-          <h2>La clase también aprende.</h2>
+          <span className="eyebrow"><Sparkles size={14} /> Diseño de aprendizaje</span>
+          <h2>Cada experiencia tiene un objetivo concreto.</h2>
           <p>
-            Cada experiencia declara qué capacidad busca desarrollar, qué evidencia acepta y qué debe ocurrir si la persona necesita refuerzo. Las nuevas fuentes generan propuestas de cambio; no modifican una clase publicada de forma silenciosa.
+            Revisa la capacidad que trabaja cada experiencia, la práctica que propone y cómo identificar si una persona necesita refuerzo.
           </p>
         </div>
         <div className={styles.heroMark} aria-hidden="true">
@@ -64,17 +64,17 @@ export default function ClassIntelligencePage() {
       </section>
 
       <section className={styles.metrics} aria-label="Cobertura de inteligencia de clases">
-        <article><span>Contratos activos</span><strong>{classContracts.length}</strong><p>uno por experiencia publicada</p></article>
-        <article><span>Diagnósticos</span><strong>{classContracts.length}</strong><p>rutean el punto de entrada</p></article>
-        <article><span>Evidencia puntuada</span><strong>{scored}</strong><p>la simulación P.A.S. es la referencia</p></article>
-        <article><span>Actualización silenciosa</span><strong>0</strong><p>todo refresh requiere promoción</p></article>
+        <article><span>Experiencias definidas</span><strong>{classContracts.length}</strong><p>con objetivos de aprendizaje</p></article>
+        <article><span>Diagnósticos</span><strong>{classContracts.length}</strong><p>ayudan a elegir por dónde comenzar</p></article>
+        <article><span>Prácticas evaluables</span><strong>{scored}</strong><p>con criterios de evaluación</p></article>
+        <article><span>Cambios de contenido</span><strong>Con revisión</strong><p>antes de incorporarlos al programa</p></article>
       </section>
 
       <section className={`${styles.pipelineCard} glass`}>
         <div className={styles.heading}>
           <div>
-            <span className="eyebrow"><GitBranch size={14} /> Protocolo de clase</span>
-            <h3>De fuente a transferencia</h3>
+            <span className="eyebrow"><GitBranch size={14} /> Recorrido de aprendizaje</span>
+            <h3>De la comprensión a la aplicación</h3>
           </div>
           <span className="status-pill" data-tone="positive"><ShieldCheck size={13} /> gobernado</span>
         </div>
@@ -92,8 +92,8 @@ export default function ClassIntelligencePage() {
       <section className={styles.classSection}>
         <div className={styles.heading}>
           <div>
-            <span className="eyebrow"><BookOpenCheck size={14} /> Contratos publicados</span>
-            <h3>Qué exige cada experiencia</h3>
+            <span className="eyebrow"><BookOpenCheck size={14} /> Experiencias del programa</span>
+            <h3>Qué practica y cómo avanza cada persona</h3>
           </div>
           <span>{classContracts.length} experiencias</span>
         </div>
@@ -101,7 +101,7 @@ export default function ClassIntelligencePage() {
           {classContracts.map((contract) => (
             <li key={contract.experienceSlug}>
               <div className={styles.classTopline}>
-                <span><Target size={14} /> {contract.capabilityId}</span>
+                <span><Target size={14} /> Objetivo de aprendizaje</span>
                 <span data-authority={contract.evidenceContract.twinAuthority}>
                   {contract.evidenceContract.category === "scored" ? "Puntuada" : "De apoyo"}
                 </span>
@@ -110,8 +110,8 @@ export default function ClassIntelligencePage() {
               <p>{topologyLabels[contract.topology]}</p>
               <dl>
                 <div><dt>Evidencia</dt><dd>{contract.evidenceContract.label}</dd></div>
-                <div><dt>Autoridad</dt><dd>{contract.evidenceContract.twinAuthority === "eligible" ? "Puede actualizar progreso tras verificación" : "Apoya contexto; no certifica dominio"}</dd></div>
-                <div><dt>Recheck</dt><dd>{contract.deferredRecheck.delayHours} h</dd></div>
+                <div><dt>Registro de progreso</dt><dd>{contract.evidenceContract.twinAuthority === "eligible" ? "Se confirma con evidencia" : "Orienta la práctica; requiere más evidencia"}</dd></div>
+                <div><dt>Próxima comprobación</dt><dd>Tras {contract.deferredRecheck.delayHours} h</dd></div>
               </dl>
             </li>
           ))}
@@ -121,15 +121,15 @@ export default function ClassIntelligencePage() {
       <section className={`${styles.refreshCard} glass`}>
         <div className={styles.refreshIcon}><RefreshCw size={22} /></div>
         <div>
-          <span className="eyebrow">Reflexión de conocimiento</span>
-          <h3>Una fuente nueva crea una propuesta, no una mutación.</h3>
+          <span className="eyebrow">Actualización de contenidos</span>
+          <h3>Los cambios se revisan antes de actualizar la experiencia.</h3>
           <p>
-            LUMA identifica las clases afectadas, propone cambios sobre ideas, práctica, rúbrica y remediación, ejecuta regresiones y espera una promoción humana antes de publicar.
+            Consulta qué conceptos o actividades necesitan una actualización, revisa las fuentes y aprueba los cambios pertinentes antes de publicarlos.
           </p>
           <div className={styles.guardrails}>
             <span><Check size={13} /> procedencia preservada</span>
             <span><Check size={13} /> impacto inspeccionable</span>
-            <span><Check size={13} /> promoción humana</span>
+            <span><Check size={13} /> revisión del entrenador</span>
           </div>
         </div>
       </section>
