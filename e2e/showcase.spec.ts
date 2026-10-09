@@ -120,9 +120,9 @@ test.describe("LUMA product showcase", () => {
 
   test("superuser can compare roles and persist a visual theme", async ({ page }, testInfo) => {
     await page.goto("/experience");
-    await expect(page.getByRole("heading", { name: /Una plataforma. Dos experiencias. Tres expresiones visuales/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Abrir participante/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Abrir entrenador", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Una experiencia de aprendizaje conectada/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Ir a mi aprendizaje/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Abrir seguimiento/i }).first()).toBeVisible();
 
     if (testInfo.project.name === "mobile") {
       await page.getByRole("button", { name: /Cambiar tema\. Tema actual: Seres de Excelencia/i }).click();
@@ -139,7 +139,7 @@ test.describe("LUMA product showcase", () => {
       await page.getByRole("button", { name: "Usar tema Inteligencia Nocturna" }).click();
     }
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    await page.getByRole("link", { name: /Abrir participante/i }).click();
+    await page.getByRole("link", { name: /Ir a mi aprendizaje/i }).click();
     await expect(page).toHaveURL(/\/learn$/);
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   });
