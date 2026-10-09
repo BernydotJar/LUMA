@@ -1,7 +1,10 @@
+import { createHash } from "node:crypto";
 import type {
   CommerceProcessingOutcome,
   NormalizedCommerceEvent,
+  EntitlementIdentity,
 } from "./domain";
+import { entitlementIdentityKey } from "./domain";
 import type { FirestoreCommerceLedger } from "./ledger";
 import type { CommerceProductMappingStore } from "./mapping";
 import type { FirestoreCommerceProviderBindingStore } from "./binding";
@@ -37,6 +40,33 @@ export class CommerceEnrollmentOrchestrator {
   ): Promise<CommerceOrchestrationResult> {
     const received = await this.ledger.receive(event, correlationId);
     const action = entitlementActionForCommerceEvent(event);
+
+    if (event.type === "commerce.subscription.pending") {
+      const externalProductId = event.productExternalId?.trim();
+      const transactionId = event.transactionExternalId?.trim();
+      const customerId = event.customerExternalId?.trim();
+      const mapping = externalProductId
+        ? await this.mappings.resolve(event.provider, externalProductId)
+        : undefined;
+      if (!mapping || !transactionId) {
+        await this.ledger.markFailed(event, "PRODUCT_MAPPING_UNAVAILABLE");
+        return { status: "pending_mapping", duplicate: received.duplicate };
+      }
+      if (!customerId) {
+        await this.ledger.markFailed(event, "CUSTOMER_ID_UNAVAILABLE");
+        return { status: "pending_customer", duplicate: received.duplicate };
+      }
+      const identity: EntitlementIdentity = { tenantId: mapping.tenantId, customerId,
+        productId: mapping.productId };
+      await this.bindings.upsert({
+        provider: event.provider, transactionExternalId: transactionId,
+        mapping, customerId, email: event.metadata?.buyerEmail,
+        entitlementId: createHash("sha256").update(entitlementIdentityKey(identity)).digest("hex"),
+      });
+      const processed = await this.ledger.process({ event, action: "none" });
+      return { status: "processed", duplicate: received.duplicate || processed.duplicate,
+        outcome: processed.outcome };
+    }
 
     if (action === "none" && event.type !== "commerce.subscription.cancellation_scheduled") {
       const processed = await this.ledger.process({ event, action });

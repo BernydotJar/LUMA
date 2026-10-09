@@ -279,6 +279,31 @@ describe.runIf(emulatorEnabled)(
       expect(isActiveCommerceEnrollment(renewed.enrollment!, "2026-10-12T00:00:00Z")).toBe(true);
     });
 
+    it("keeps an incomplete Stripe subscription unentitled until its paid invoice arrives", async () => {
+      const suffix = randomUUID();
+      const customerId = `stripe-customer-${suffix}`;
+      const subscriptionId = `stripe-sub-${suffix}`;
+      const productId = `product-${suffix}`;
+      const tenantId = `tenant-${suffix}`;
+      const externalProductId = `external-stripe-${suffix}`;
+      await mappings!.upsert({ provider: "stripe", externalProductId, tenantId,
+        productId, programId: `program-${suffix}` });
+      const pending = event(suffix, { provider: "stripe", externalEventId: `pending-${suffix}`,
+        type: "commerce.subscription.pending", customerExternalId: customerId,
+        transactionExternalId: subscriptionId, productExternalId: externalProductId });
+      const before = await orchestrator!.handle(pending, `corr-pending-${suffix}`);
+      expect(before.outcome).toBe("no_entitlement_change");
+      expect(await ledger!.getEntitlement({ tenantId, customerId, productId })).toBeUndefined();
+      const paid = event(suffix, { provider: "stripe", externalEventId: `invoice-paid-${suffix}`,
+        type: "commerce.subscription.renewed", occurredAt: "2026-10-08T12:20:00Z",
+        customerExternalId: undefined, productExternalId: undefined,
+        transactionExternalId: subscriptionId, metadata: {} });
+      const activated = await orchestrator!.handle(paid, `corr-paid-${suffix}`);
+      expect(activated.outcome).toBe("granted");
+      expect(activated.enrollment?.status).toBe("active");
+      expect(activated.enrollment?.email).toBe(`learner-${suffix}@example.com`);
+    });
+
     it("keeps a second product entitlement active when the first product is refunded", async () => {
       const suffix = randomUUID();
       const tenantId = `tenant-two-products-${suffix}`;

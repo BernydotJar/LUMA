@@ -36,7 +36,7 @@ LUMA learner identity
 - Hotmart subscription cancellation respects the already-paid access period (`date_next_charge`) and expires access by effective time; newer renewals supersede the scheduled expiry.
 - Enrollment activation/revocation.
 - Each product entitlement has its own enrollment record: revoking one product never revokes access purchased through a different product to the same program.
-- Stripe subscriptions with `incomplete` or other non-active states are recorded as pending and never grant access until a paid/active event arrives.
+- Stripe subscriptions with `incomplete` or other non-active states are recorded as pending and never grant access until a paid/active event arrives. They retain a durable provider transaction binding for a later invoice webhook that omits product metadata.
 - Verified-email claim to bind commerce enrollment to Firebase learner identity.
 - Live/hybrid enrollment is associated with a specific offering (`offeringId`); an enrollment without an offering assignment does not expose another cohort's private schedule.
 - Admin-only product mapping endpoint.
