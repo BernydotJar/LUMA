@@ -20,7 +20,7 @@ import {
   Users,
 } from "lucide-react";
 import { studioSignals } from "@/lib/luma-data";
-import { fetchCoachLearners, type CoachLearnerSummary } from "@/lib/coach-api-client";
+import { fetchCoachInterventions, fetchCoachLearners, type CoachInterventionSignal, type CoachLearnerSummary } from "@/lib/coach-api-client";
 import { useLumaAuth } from "@/components/auth-provider";
 import { SemanticObject } from "@/components/semantic-object";
 import styles from "./studio-dashboard.module.css";
@@ -42,7 +42,10 @@ const learners = [
 
 export function StudioDashboard() {
   const { user, loading } = useLumaAuth();
-  const [persistentLearners, setPersistentLearners] = useState<CoachLearnerSummary[] | null>(null);
+  const [learnerSnapshot, setLearnerSnapshot] = useState<{ uid: string; items: CoachLearnerSummary[] } | null>(null);
+  const [interventionSnapshot, setInterventionSnapshot] = useState<{ uid: string; items: CoachInterventionSignal[] } | null>(null);
+  const persistentLearners = user && learnerSnapshot?.uid === user.uid ? learnerSnapshot.items : null;
+  const interventions = user && interventionSnapshot?.uid === user.uid ? interventionSnapshot.items : null;
   const [selectedBottleneck, setSelectedBottleneck] = useState("pas");
   const [period, setPeriod] = useState("Últimos 7 días");
   const [assigned, setAssigned] = useState<string[]>([]);
@@ -51,9 +54,12 @@ export function StudioDashboard() {
   useEffect(() => {
     if (loading || !user) return;
     let cancelled = false;
-    void fetchCoachLearners()
-      .then((items) => {
-        if (!cancelled && items) setPersistentLearners(items);
+    const uid = user.uid;
+    void Promise.all([fetchCoachLearners(), fetchCoachInterventions()])
+      .then(([items, signals]) => {
+        if (cancelled) return;
+        if (items) setLearnerSnapshot({ uid, items });
+        if (signals) setInterventionSnapshot({ uid, items: signals });
       })
       .catch(() => {
         // Unauthorized coaches and transient API failures keep the curated showcase surface.
@@ -64,6 +70,18 @@ export function StudioDashboard() {
   }, [loading, user]);
 
   const visibleLearners = useMemo(() => {
+    if (interventions?.length) {
+      return interventions.slice(0, 8).map((item) => ({
+        id: item.learnerId,
+        initials: "LI",
+        name: `Participante ${item.learnerId.slice(0, 6)}`,
+        signal: item.reasons[0] ?? "Seguimiento estable",
+        confidence: `${item.score}/100`,
+        action: item.recommendation,
+        urgency: item.priority,
+        persistent: true,
+      }));
+    }
     if (!persistentLearners?.length) return learners;
     return persistentLearners.map((item) => ({
       id: item.learnerId,
@@ -75,7 +93,7 @@ export function StudioDashboard() {
       urgency: "medium",
       persistent: true,
     }));
-  }, [persistentLearners]);
+  }, [interventions, persistentLearners]);
 
   const assign = (id: string) => setAssigned((current) => current.includes(id) ? current : [...current, id]);
 
@@ -185,10 +203,10 @@ export function StudioDashboard() {
         <SemanticObject variant="bridge" size="sm" className={styles.interventionObject} />
         <div className={styles.cardHeading}>
           <div><span className="eyebrow"><CircleUserRound size={14} /> Entrenador en el circuito</span><h2>Participantes con oportunidad de acompañamiento</h2></div>
-          <span>7 activas · 5 mostradas</span>
+          <span>{interventions?.length ? `${interventions.length} señales · ${visibleLearners.length} mostradas` : "7 activas · 5 mostradas"}</span>
         </div>
         <div className={styles.table} role="table" aria-label="Cola de intervención humana">
-          <div className={styles.tableHead} role="row"><span role="columnheader">Persona</span><span role="columnheader">Señal</span><span role="columnheader">Confianza</span><span role="columnheader">Recomendación</span><span role="columnheader">Acción</span></div>
+          <div className={styles.tableHead} role="row"><span role="columnheader">Persona</span><span role="columnheader">Señal</span><span role="columnheader">Prioridad</span><span role="columnheader">Recomendación</span><span role="columnheader">Acción</span></div>
           {visibleLearners.map((learner) => (
             <div className={styles.tableRow} role="row" key={learner.id} data-urgency={learner.urgency}>
               <span className={styles.person} role="cell"><i>{learner.initials}</i><strong>{learner.name}</strong></span>

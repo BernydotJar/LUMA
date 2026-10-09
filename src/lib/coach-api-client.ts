@@ -11,6 +11,19 @@ export interface CoachLearnerSummary {
   updatedAt: string;
 }
 
+export interface CoachInterventionSignal {
+  learnerId: string;
+  priority: "low" | "medium" | "high";
+  score: number;
+  inactivityDays: number;
+  averageMastery: number;
+  completionRate: number;
+  maxConsecutiveFailures: number;
+  reasons: string[];
+  recommendation: string;
+  updatedAt: string;
+}
+
 export interface CoachLearnerDetail {
   record: PersistedLearnerRecord;
   plan: AdaptiveLearningPlan;
@@ -49,4 +62,17 @@ export async function fetchCoachLearner(
   if (!response.ok) throw new Error(`COACH_LEARNER_FAILED_${response.status}`);
 
   return response.json();
+}
+
+
+export async function fetchCoachInterventions(): Promise<CoachInterventionSignal[] | undefined> {
+  const headers = await coachHeaders();
+  if (!headers) return undefined;
+
+  const response = await fetch("/api/coach/interventions", { headers, cache: "no-store" });
+  if (response.status === 401 || response.status === 403) return undefined;
+  if (!response.ok) throw new Error(`COACH_INTERVENTIONS_FAILED_${response.status}`);
+
+  const body = (await response.json()) as { interventions: CoachInterventionSignal[] };
+  return body.interventions;
 }

@@ -15,6 +15,7 @@ import { ExperienceShelf } from "@/components/experience-shelf";
 import { LearningJourney } from "@/components/learning-journey";
 import { LearnerGreeting } from "@/components/learner-greeting";
 import { LearningPulse } from "@/components/learning-pulse";
+import { LiveProgramSchedule } from "@/components/live-program-schedule";
 import { ModuleCoverFlow } from "@/components/module-cover-flow";
 import { NextActionCard } from "@/components/next-action-card";
 import { ProgressStory } from "@/components/progress-story";
@@ -142,6 +143,8 @@ export function AdaptiveLearningHome() {
         <NextActionCard action={plan.nextAction} />
         <LearningPulse dimensions={plan.dimensions} />
       </div>
+
+      <LiveProgramSchedule />
 
       <ProgressStory />
       <ExperienceShelf />

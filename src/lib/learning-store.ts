@@ -1,4 +1,4 @@
-import type { Firestore } from "firebase-admin/firestore";
+import { FieldPath, type Firestore } from "firebase-admin/firestore";
 import {
   applyEventToPersistentLearner,
   createPersistentLearnerRecord,
@@ -54,6 +54,43 @@ export class FirestoreLearningStore {
     return snapshot.docs.map((doc) =>
       this.resultForRecord(doc.data() as PersistedLearnerRecord, false),
     );
+  }
+
+  async listAll(pageSize = 250): Promise<LearningStoreResult[]> {
+    const boundedPageSize = Number.isFinite(pageSize)
+      ? Math.min(Math.max(Math.round(pageSize), 1), 500)
+      : 250;
+    const results: LearningStoreResult[] = [];
+    let cursorUpdatedAt: string | undefined;
+    let cursorId: string | undefined;
+
+    for (;;) {
+      let query = this.firestore
+        .collection("learners")
+        .orderBy("updatedAt", "asc")
+        .orderBy(FieldPath.documentId(), "asc")
+        .limit(boundedPageSize);
+
+      if (cursorUpdatedAt && cursorId) {
+        query = query.startAfter(cursorUpdatedAt, cursorId);
+      }
+
+      const snapshot = await query.get();
+      for (const doc of snapshot.docs) {
+        results.push(
+          this.resultForRecord(doc.data() as PersistedLearnerRecord, false),
+        );
+      }
+
+      if (snapshot.size < boundedPageSize) break;
+      const last = snapshot.docs.at(-1);
+      if (!last) break;
+      const lastRecord = last.data() as PersistedLearnerRecord;
+      cursorUpdatedAt = lastRecord.updatedAt;
+      cursorId = last.id;
+    }
+
+    return results;
   }
 
   async listEvents(learnerId: string, limit = 20) {

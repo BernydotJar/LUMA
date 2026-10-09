@@ -1,0 +1,137 @@
+import { describe, expect, it } from "vitest";
+import { HotmartProvider } from "./hotmart";
+
+const secret = "hotmart-secret";
+
+function payload(event = "PURCHASE_APPROVED") {
+  return JSON.stringify({
+    id: "evt-hotmart-1",
+    creation_date: 1791396000000,
+    event,
+    version: "2.0.0",
+    data: {
+      product: {
+        id: 213344,
+        ucode: "product-ucode",
+        external_id: "pnl-practitioner",
+        name: "Practitioner PNL",
+      },
+      buyer: {
+        ucode: "buyer-ucode",
+        email: "Buyer@Example.com",
+        name: "Buyer Name",
+      },
+      purchase: {
+        transaction: "HP123",
+        status: "APPROVED",
+        recurrence_number: 1,
+      },
+    },
+  });
+}
+
+describe("HotmartProvider", () => {
+  it("verifies Hottok and normalizes approved purchase", async () => {
+    const event = await new HotmartProvider(secret).handleWebhook({
+      headers: { "X-HOTMART-HOTTOK": secret },
+      rawBody: payload(),
+    });
+
+    expect(event).toMatchObject({
+      provider: "hotmart",
+      externalEventId: "evt-hotmart-1",
+      type: "commerce.payment.confirmed",
+      customerExternalId: "buyer-ucode",
+      productExternalId: "pnl-practitioner",
+      transactionExternalId: "HP123",
+      metadata: {
+        buyerEmail: "buyer@example.com",
+        productName: "Practitioner PNL",
+      },
+    });
+  });
+
+  it("maps refund to a revoking payment event", async () => {
+    const event = await new HotmartProvider(secret).handleWebhook({
+      headers: { "x-hotmart-hottok": secret },
+      rawBody: payload("PURCHASE_REFUNDED"),
+    });
+    expect(event.type).toBe("commerce.payment.refunded");
+  });
+
+  it("maps recurring approved purchase to subscription creation", async () => {
+    const data = JSON.parse(payload());
+    data.data.subscription = {
+      subscriber: { code: "sub-1" },
+    };
+    const event = await new HotmartProvider(secret).handleWebhook({
+      headers: { "x-hotmart-hottok": secret },
+      rawBody: JSON.stringify(data),
+    });
+    expect(event.type).toBe("commerce.subscription.created");
+    expect(event.customerExternalId).toBe("sub-1");
+    expect(event.transactionExternalId).toBe("sub-1");
+  });
+
+  it("normalizes documented subscription cancellation subscriber identity", async () => {
+    const rawBody = JSON.stringify({
+      id: "evt-cancel-1",
+      creation_date: 1791396000000,
+      event: "SUBSCRIPTION_CANCELLATION",
+      version: "2.0.0",
+      data: {
+        product: { id: 3526906, name: "Subscription Product" },
+        subscriber: {
+          code: "QO4THU04",
+          name: "Subscriber Name",
+          email: "subscriber@example.com",
+        },
+        subscription: { id: 471681 },
+        date_next_charge: 1791482400000,
+      },
+    });
+
+    const event = await new HotmartProvider(secret).handleWebhook({
+      headers: { "x-hotmart-hottok": secret },
+      rawBody,
+    });
+
+    expect(event).toMatchObject({
+      type: "commerce.subscription.cancellation_scheduled",
+      customerExternalId: "QO4THU04",
+      productExternalId: "3526906",
+      transactionExternalId: "QO4THU04",
+      metadata: {
+        buyerEmail: "subscriber@example.com",
+        subscriptionCode: "QO4THU04",
+        accessEndsAt: new Date(1791482400000).toISOString(),
+      },
+    });
+  });
+
+  it("requires the paid-through date to avoid premature access revocation", async () => {
+    const data = JSON.parse(payload("SUBSCRIPTION_CANCELLATION"));
+    data.data.subscriber = { code: "sub-paid", email: "paid@example.com" };
+    await expect(new HotmartProvider(secret).handleWebhook({
+      headers: { "x-hotmart-hottok": secret }, rawBody: JSON.stringify(data),
+    })).rejects.toThrow("HOTMART_ACCESS_END_DATE_REQUIRED");
+  });
+
+  it("rejects invalid Hottok before parsing business payload", async () => {
+    await expect(
+      new HotmartProvider(secret).handleWebhook({
+        headers: { "x-hotmart-hottok": "wrong" },
+        rawBody: payload(),
+      }),
+    ).rejects.toThrow("HOTMART_SIGNATURE_INVALID");
+  });
+
+  it("rejects unsupported events", async () => {
+    await expect(
+      new HotmartProvider(secret).handleWebhook({
+        headers: { "x-hotmart-hottok": secret },
+        rawBody: payload("CART_ABANDONMENT"),
+      }),
+    ).rejects.toThrow("HOTMART_EVENT_UNSUPPORTED");
+  });
+});

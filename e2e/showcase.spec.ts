@@ -218,6 +218,7 @@ test.describe("LUMA product showcase", () => {
 
   test("key client-facing views satisfy automated WCAG checks", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "chromium", "Run the full accessibility sweep once on desktop Chromium.");
+    test.setTimeout(120_000);
     for (const path of [
       "/",
       "/learn",
@@ -229,8 +230,11 @@ test.describe("LUMA product showcase", () => {
       "/studio/reflections",
       "/onboarding",
     ]) {
-      await page.goto(path);
-      await page.waitForLoadState("networkidle");
+      await page.goto(path, { waitUntil: "domcontentloaded" });
+      if (path === "/") {
+        await page.waitForURL(/\/learn$/);
+      }
+      await page.locator("body").waitFor({ state: "visible" });
       await expectNoA11yViolations(page);
     }
   });

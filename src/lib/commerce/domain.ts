@@ -4,8 +4,11 @@ export type CommerceEventType =
   | "commerce.payment.confirmed"
   | "commerce.payment.failed"
   | "commerce.payment.refunded"
+  | "commerce.payment.partially_refunded"
+  | "commerce.subscription.pending"
   | "commerce.subscription.created"
   | "commerce.subscription.renewed"
+  | "commerce.subscription.cancellation_scheduled"
   | "commerce.subscription.cancelled"
   | "commerce.subscription.expired";
 
@@ -34,6 +37,8 @@ export interface EntitlementIdentity {
   tenantId: string;
   customerId: string;
   productId: string;
+  /** Stable provider + purchase/subscription identity. Distinct purchases remain independent. */
+  purchaseKey?: string;
 }
 
 export type CommerceSourceEvent = Pick<
@@ -247,6 +252,9 @@ export function normalizeEntitlementIdentity(
     tenantId: requiredIdentityPart(identity.tenantId, "tenantId"),
     customerId: requiredIdentityPart(identity.customerId, "customerId"),
     productId: requiredIdentityPart(identity.productId, "productId"),
+    ...(identity.purchaseKey !== undefined
+      ? { purchaseKey: requiredIdentityPart(identity.purchaseKey, "purchaseKey") }
+      : {}),
   };
 }
 
@@ -258,6 +266,7 @@ export function entitlementIdentityKey(
     normalized.tenantId,
     normalized.customerId,
     normalized.productId,
+    ...(normalized.purchaseKey ? [normalized.purchaseKey] : []),
   ]);
 }
 
@@ -296,6 +305,7 @@ export function processingIntentMatches(
     record.resolution.action === action &&
     record.resolution.tenantId === normalized.tenantId &&
     record.resolution.customerId === normalized.customerId &&
-    record.resolution.productId === normalized.productId
+    record.resolution.productId === normalized.productId &&
+    record.resolution.purchaseKey === normalized.purchaseKey
   );
 }
