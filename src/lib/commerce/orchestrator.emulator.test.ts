@@ -590,6 +590,7 @@ describe.runIf(emulatorEnabled)(
       const suffix = randomUUID();
       const subId = `sub_invoice_${suffix}`;
       const piId = `pi_invoice_${suffix}`;
+      const secondPiId = `pi_second_${suffix}`;
       const chargeId = `ch_invoice_${suffix}`;
       await mappings!.upsert({ provider: "stripe",
         externalProductId: `external-program-${suffix}`,
@@ -606,18 +607,21 @@ describe.runIf(emulatorEnabled)(
         externalEventId: `invoice-${suffix}`, type: "commerce.subscription.renewed",
         occurredAt: "2026-10-08T12:10:00Z", transactionExternalId: subId,
         productExternalId: undefined, customerExternalId: undefined,
-        metadata: { paymentIntentExternalId: piId, chargeExternalId: chargeId },
+        metadata: { paymentIntentExternalId: piId, chargeExternalId: chargeId,
+          paymentIntentExternalIds: JSON.stringify([piId, secondPiId]) },
       });
       const renewed = await orchestrator!.handle(invoice, `invoice-${suffix}`);
       expect(renewed.status).toBe("processed");
       const piBinding = await bindings!.get("stripe", piId);
+      const secondPiBinding = await bindings!.get("stripe", secondPiId);
       const chargeBinding = await bindings!.get("stripe", chargeId);
+      expect(secondPiBinding?.entitlementId).toBe(granted.enrollment?.entitlementId);
       expect(piBinding?.purchaseKey).toBe(`stripe:${subId}`);
       expect(chargeBinding?.purchaseKey).toBe(piBinding?.purchaseKey);
       expect(chargeBinding?.entitlementId).toBe(granted.enrollment?.entitlementId);
       const refund = event(suffix, { provider: "stripe",
         externalEventId: `refunded-${suffix}`, type: "commerce.payment.refunded",
-        occurredAt: "2026-10-08T12:20:00Z", transactionExternalId: piId,
+        occurredAt: "2026-10-08T12:20:00Z", transactionExternalId: secondPiId,
         productExternalId: undefined, customerExternalId: undefined, metadata: {},
       });
       const revoked = await orchestrator!.handle(refund, `refund-${suffix}`);

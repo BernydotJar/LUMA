@@ -238,6 +238,25 @@ describe("StripeProvider", () => {
     expect(event.metadata?.paymentIntentExternalId).toBe("pi_alias");
   });
 
+  it("preserves every PaymentIntent in a partially-paid Stripe subscription invoice", async () => {
+    const rawBody = JSON.stringify({
+      id: "evt_invoice_multi", type: "invoice.paid", created: now,
+      data: { object: { id: "in_multi", customer: "cus_multi",
+        parent: { subscription_details: { subscription: "sub_multi" } },
+        payments: { data: [
+          { payment: { type: "payment_intent", payment_intent: "pi_first" } },
+          { payment: { type: "payment_intent", payment_intent: "pi_second" } },
+        ] },
+      } },
+    });
+    const event = await new StripeProvider(secret, { nowSeconds: () => now }).handleWebhook({
+      headers: { "stripe-signature": sign(rawBody) }, rawBody,
+    });
+    expect(event.transactionExternalId).toBe("sub_multi");
+    expect(JSON.parse(event.metadata?.paymentIntentExternalIds ?? "[]"))
+      .toEqual(["pi_first", "pi_second"]);
+  });
+
   it("extracts charge aliases from legacy subscription invoice payment", async () => {
     const rawBody = JSON.stringify({
       id: "evt_invoice_charge", type: "invoice.paid", created: now,

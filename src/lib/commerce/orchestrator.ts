@@ -176,9 +176,21 @@ export class CommerceEnrollmentOrchestrator {
       // original purchase key, including refunds/disputes without metadata.
       // Never create a separate entitlement for the same subscription charge.
       if (event.provider === "stripe") {
+        let invoicePaymentIds: string[] = [];
+        try {
+          const parsed: unknown = JSON.parse(event.metadata?.paymentIntentExternalIds ?? "[]");
+          if (Array.isArray(parsed)) {
+            invoicePaymentIds = parsed.filter((id): id is string =>
+              typeof id === "string" && /^pi_[A-Za-z0-9_-]{1,160}$/.test(id),
+            ).slice(0, 100);
+          }
+        } catch {
+          // Older normalized events only provide the scalar alias.
+        }
         const aliases = new Set([
           event.metadata?.paymentIntentExternalId,
           event.metadata?.chargeExternalId,
+          ...invoicePaymentIds,
         ].filter((value): value is string => Boolean(value)));
         aliases.delete(transactionExternalId);
         for (const alias of aliases) {

@@ -65,7 +65,7 @@ function decodeSessionCursor(cursor: string): [string, string] {
     if (!Array.isArray(value) || value.length !== 2 ||
         typeof value[0] !== "string" || typeof value[1] !== "string" ||
         value[0] !== validIso(value[0], "cursor.startsAt") ||
-        !/^[A-Za-z0-9_-]{1,128}$/.test(value[1])) {
+        !value[1].trim() || value[1].length > 128 || value[1].includes("/")) {
       throw new Error("PROGRAM_SESSION_CURSOR_INVALID");
     }
     return [value[0], value[1]];

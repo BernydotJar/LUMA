@@ -86,7 +86,7 @@ The coach intervention dashboard samples up to 100 learner records and returns t
 
 ## Stripe subscription invoice refund aliases
 
-Subscription Checkout is keyed by the Stripe `sub_` identifier. On `invoice.paid`, when the invoice includes an actual PaymentIntent (`payment_intent` or its embedded `payments.data[].payment.payment_intent`) and/or Charge identifier (`charge`), LUMA records those identifiers as aliases of the **same subscription entitlement**. Refund and dispute webhooks using a `pi_` or `ch_` identifier then resolve that original binding rather than granting/revoking a second enrollment. If a provider event contains no usable reference and no existing binding, the durable event stays pending with an HTTP 503 retry; do not infer a subscription from an invoice ID.
+Subscription Checkout is keyed by the Stripe `sub_` identifier. On `invoice.paid`, when the invoice includes an actual PaymentIntent (`payment_intent` or its embedded `payments.data[].payment.payment_intent`) and/or Charge identifier (`charge`), LUMA records every PaymentIntent listed in the signed invoice as an alias of the **same subscription entitlement**. Refund and dispute webhooks using a `pi_` or `ch_` identifier then resolve that original binding rather than granting/revoking a second enrollment. If a provider event contains no usable reference and no existing binding, the durable event stays pending with an HTTP 503 retry; do not infer a subscription from an invoice ID.
 
 `GET /api/programs/admin/offerings/{offeringId}/sessions` returns one stable, ascending page by `startsAt` and document ID (`limit` 1–250, default 100). Follow `nextCursor` until null. Cursors encode both ordering keys; invalid ones receive HTTP 400.
 

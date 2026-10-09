@@ -233,20 +233,23 @@ function transactionExternalId(
   );
 }
 
-function invoicePaymentIntent(object: JsonRecord): string | undefined {
-  const direct = stringValue(object.payment_intent);
-  if (direct) return direct;
-  // Basil invoice payments link the invoice to its payment object. The
-  // collection may be absent/unexpanded; never infer a PI from an invoice ID.
+function invoicePaymentIntents(object: JsonRecord): string[] {
+  const ids = new Set<string>();
+  const direct = stringValue(object.payment_intent) ??
+    stringValue(record(object.payment_intent).id);
+  if (direct) ids.add(direct);
+  // Stripe permits multiple Invoice Payments (including partial payments).
+  // Bind all IDs present in the signed invoice payload, never only the first.
   const payments = record(object.payments).data;
-  if (!Array.isArray(payments)) return undefined;
-  for (const entry of payments) {
-    const payment = record(record(entry).payment);
-    const id = stringValue(payment.payment_intent) ??
-      stringValue(record(payment.payment_intent).id);
-    if (id) return id;
+  if (Array.isArray(payments)) {
+    for (const item of payments) {
+      const payment = record(record(item).payment);
+      const id = stringValue(payment.payment_intent) ??
+        stringValue(record(payment.payment_intent).id);
+      if (id) ids.add(id);
+    }
   }
-  return undefined;
+  return [...ids];
 }
 
 function normalizedMetadata(
@@ -260,10 +263,12 @@ function normalizedMetadata(
     ["paymentStatus", stringValue(object.payment_status)],
     ["subscriptionStatus", stringValue(object.status)],
     ["paymentIntentExternalId", eventType.startsWith("invoice.")
-      ? invoicePaymentIntent(object)
+      ? invoicePaymentIntents(object)[0]
       : (eventType.startsWith("checkout.session.") &&
         stringValue(object.mode) === "subscription")
         ? stringValue(object.payment_intent) : undefined],
+    ["paymentIntentExternalIds", eventType.startsWith("invoice.")
+      ? JSON.stringify(invoicePaymentIntents(object)) : undefined],
     ["chargeExternalId", eventType === "payment_intent.succeeded"
       ? stringValue(object.latest_charge)
       : eventType.startsWith("invoice.")

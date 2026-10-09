@@ -342,6 +342,27 @@ describe.runIf(emulatorEnabled)("FirestoreProgramDeliveryStore emulator", () => 
       .rejects.toThrow("PROGRAM_SESSION_PAGE_LIMIT_INVALID");
   });
 
+  it("accepts cursors emitted for valid dotted session document IDs", async () => {
+    const suffix = randomUUID();
+    const offering = await store!.upsertOffering({
+      tenantId: `cursor-${suffix}`, programId: `cursor-${suffix}`,
+      cohortKey: "cursor", title: "Dotted IDs",
+      deliveryMode: "live", timezone: "America/Bogota",
+    });
+    for (const sessionId of ["session.1", "session.2"]) {
+      await store!.scheduleSession(offering.offeringId, {
+        sessionId, title: sessionId, startsAt: "2026-10-12T10:00:00Z",
+        durationMinutes: 60,
+      });
+    }
+    const first = await store!.listSessionsPage(offering.offeringId, 1);
+    expect(first.sessions[0].sessionId).toBe("session.1");
+    expect(first.nextCursor).toBeTruthy();
+    const second = await store!.listSessionsPage(offering.offeringId, 1, first.nextCursor!);
+    expect(second.sessions[0].sessionId).toBe("session.2");
+    expect(second.nextCursor).toBeNull();
+  });
+
   it("keeps asynchronous workshops free of live-session assumptions", async () => {
     const suffix = randomUUID();
     const offering = await store!.upsertOffering({
