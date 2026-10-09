@@ -72,7 +72,7 @@ export function PersistentTwinDetail({ learnerId }: { learnerId: string }) {
 
   if (viewState === "loading") {
     return (
-      <section className={`${styles.stateCard} glass`} role="status">
+      <section className={`${styles.stateCard} content-surface`} role="status">
         <Sparkles size={22} />
         <div>
           <strong>Cargando Learning Twin persistente</strong>
@@ -84,7 +84,7 @@ export function PersistentTwinDetail({ learnerId }: { learnerId: string }) {
 
   if (viewState === "forbidden") {
     return (
-      <section className={`${styles.stateCard} glass`}>
+      <section className={`${styles.stateCard} content-surface`}>
         <ShieldCheck size={24} />
         <div>
           <strong>Vista protegida del entrenador</strong>
@@ -96,7 +96,7 @@ export function PersistentTwinDetail({ learnerId }: { learnerId: string }) {
 
   if (viewState === "error" || !detail) {
     return (
-      <section className={`${styles.stateCard} glass`} role="alert">
+      <section className={`${styles.stateCard} content-surface`} role="alert">
         <AlertTriangle size={24} />
         <div>
           <strong>No se pudo cargar la evidencia persistente.</strong>
@@ -111,7 +111,7 @@ export function PersistentTwinDetail({ learnerId }: { learnerId: string }) {
 
   return (
     <div className={styles.layout}>
-      <section className={`${styles.hero} glass`}>
+      <section className={`${styles.hero} content-surface`}>
         <div>
           <span className="eyebrow"><Database size={14} /> Fuente autoritativa · Firestore</span>
           <h2>{record.state.goal}</h2>
@@ -142,7 +142,7 @@ export function PersistentTwinDetail({ learnerId }: { learnerId: string }) {
       )}
 
       <div className={styles.grid}>
-        <section className={`${styles.panel} glass`}>
+        <section className={`${styles.panel} content-surface`}>
           <span className="eyebrow"><Target size={14} /> Siguiente mejor acción</span>
           <h3>{plan.nextAction.title}</h3>
           <p>{plan.nextAction.reason}</p>
@@ -154,7 +154,7 @@ export function PersistentTwinDetail({ learnerId }: { learnerId: string }) {
           </dl>
         </section>
 
-        <section className={`${styles.panel} glass`}>
+        <section className={`${styles.panel} content-surface`}>
           <span className="eyebrow"><Sparkles size={14} /> Estado P.A.S.</span>
           <h3>{pas ? Math.round(pas.mastery * 100) : 0}% dominio</h3>
           <p>
@@ -170,7 +170,7 @@ export function PersistentTwinDetail({ learnerId }: { learnerId: string }) {
         </section>
       </div>
 
-      <section className={`${styles.events} glass`}>
+      <section className={`${styles.events} content-surface`}>
         <div className={styles.heading}>
           <div>
             <span className="eyebrow"><Database size={14} /> Ledger append-only</span>
