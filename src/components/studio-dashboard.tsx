@@ -7,6 +7,7 @@ import {
   MessageSquareText, ShieldCheck, TrendingUp, Users,
 } from "lucide-react";
 import { fetchCoachInterventions, fetchCoachLearners, type CoachInterventionSignal, type CoachLearnerSummary } from "@/lib/coach-api-client";
+import { deriveCoachDataStatus } from "@/lib/coach-data-status";
 import { useLumaAuth } from "@/components/auth-provider";
 import { SemanticObject } from "@/components/semantic-object";
 import styles from "./studio-dashboard.module.css";
@@ -55,8 +56,9 @@ export function StudioDashboard() {
   const authenticated = Boolean(user);
   const hasLearners = current?.learners !== undefined;
   const hasInterventions = current?.interventions !== undefined;
-  const available = hasLearners || hasInterventions;
-  const incomplete = Boolean(current && (current.error || !hasLearners || !hasInterventions));
+  const coachDataStatus = deriveCoachDataStatus(current);
+  const available = coachDataStatus === "ready" || coachDataStatus === "partial";
+  const incomplete = coachDataStatus === "partial";
   const interventions = useMemo(() => current?.interventions ?? [], [current]);
   const priorityHigh = interventions.filter((item) => item.priority === "high").length;
   const priorityMedium = interventions.filter((item) => item.priority === "medium").length;
