@@ -90,6 +90,88 @@ describe("StripeProvider", () => {
     expect(event.transactionExternalId).toBe("sub_1");
   });
 
+  it("activates delayed Checkout payments on async success", async () => {
+    const rawBody = JSON.stringify({
+      id: "evt_async_success",
+      type: "checkout.session.async_payment_succeeded",
+      created: now,
+      data: {
+        object: {
+          id: "cs_async",
+          customer: "cus_async",
+          mode: "payment",
+          payment_status: "paid",
+          payment_intent: "pi_async",
+          metadata: { luma_product_id: "pnl-practitioner" },
+        },
+      },
+    });
+
+    const event = await new StripeProvider(secret, {
+      nowSeconds: () => now,
+    }).handleWebhook({
+      headers: { "stripe-signature": sign(rawBody) },
+      rawBody,
+    });
+
+    expect(event).toMatchObject({
+      type: "commerce.payment.confirmed",
+      transactionExternalId: "pi_async",
+    });
+  });
+
+  it("does not revoke entitlement for partial charge refunds", async () => {
+    const rawBody = JSON.stringify({
+      id: "evt_partial_refund",
+      type: "charge.refunded",
+      created: now,
+      data: {
+        object: {
+          id: "ch_partial",
+          customer: "cus_1",
+          amount: 10000,
+          amount_refunded: 2500,
+          refunded: false,
+        },
+      },
+    });
+
+    const event = await new StripeProvider(secret, {
+      nowSeconds: () => now,
+    }).handleWebhook({
+      headers: { "stripe-signature": sign(rawBody) },
+      rawBody,
+    });
+
+    expect(event.type).toBe("commerce.payment.partially_refunded");
+  });
+
+  it("revokes entitlement for a fully refunded charge", async () => {
+    const rawBody = JSON.stringify({
+      id: "evt_full_refund",
+      type: "charge.refunded",
+      created: now,
+      data: {
+        object: {
+          id: "ch_full",
+          customer: "cus_1",
+          amount: 10000,
+          amount_refunded: 10000,
+          refunded: true,
+        },
+      },
+    });
+
+    const event = await new StripeProvider(secret, {
+      nowSeconds: () => now,
+    }).handleWebhook({
+      headers: { "stripe-signature": sign(rawBody) },
+      rawBody,
+    });
+
+    expect(event.type).toBe("commerce.payment.refunded");
+  });
+
   it("rejects tampered body", async () => {
     const rawBody = payload();
     await expect(

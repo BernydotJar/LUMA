@@ -11,6 +11,7 @@ describe("commerce entitlement policy", () => {
     ["commerce.subscription.cancelled", "revoke"],
     ["commerce.subscription.expired", "revoke"],
     ["commerce.payment.failed", "none"],
+    ["commerce.payment.partially_refunded", "none"],
   ];
 
   it.each(expected)("%s -> %s", (type, action) => {

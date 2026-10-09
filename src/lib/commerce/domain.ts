@@ -4,6 +4,7 @@ export type CommerceEventType =
   | "commerce.payment.confirmed"
   | "commerce.payment.failed"
   | "commerce.payment.refunded"
+  | "commerce.payment.partially_refunded"
   | "commerce.subscription.created"
   | "commerce.subscription.renewed"
   | "commerce.subscription.cancelled"

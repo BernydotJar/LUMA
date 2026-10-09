@@ -16,6 +16,7 @@ export function entitlementActionForCommerceEvent(
     case "commerce.subscription.expired":
       return "revoke";
     case "commerce.payment.failed":
+    case "commerce.payment.partially_refunded":
       return "none";
   }
 }

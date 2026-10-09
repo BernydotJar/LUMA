@@ -117,15 +117,35 @@ function productExternalId(data: JsonRecord): string | undefined {
 function customerExternalId(data: JsonRecord): string | undefined {
   const buyer = record(data.buyer);
   const subscription = record(data.subscription);
-  const subscriber = record(subscription.subscriber);
+  const subscriptionSubscriber = record(subscription.subscriber);
+  const topLevelSubscriber = record(data.subscriber);
   return (
     stringValue(buyer.ucode) ??
-    stringValue(subscriber.code) ??
-    stringValue(buyer.email)
+    stringValue(subscriptionSubscriber.code) ??
+    stringValue(topLevelSubscriber.code) ??
+    stringValue(buyer.email) ??
+    stringValue(topLevelSubscriber.email)
   );
 }
 
-function transactionExternalId(data: JsonRecord): string | undefined {
+function transactionExternalId(
+  eventName: string,
+  data: JsonRecord,
+): string | undefined {
+  const subscription = record(data.subscription);
+  const subscriptionSubscriber = record(subscription.subscriber);
+  const topLevelSubscriber = record(data.subscriber);
+  const subscriberCode =
+    stringValue(subscriptionSubscriber.code) ??
+    stringValue(topLevelSubscriber.code);
+  const subscriptionLifecycle =
+    eventName === "SUBSCRIPTION_CANCELLATION" ||
+    Object.keys(subscription).length > 0;
+
+  if (subscriptionLifecycle && subscriberCode) {
+    return subscriberCode;
+  }
+
   return stringValue(record(data.purchase).transaction);
 }
 
@@ -137,18 +157,30 @@ function normalizedMetadata(
   const buyer = record(data.buyer);
   const purchase = record(data.purchase);
   const subscription = record(data.subscription);
-  const subscriber = record(subscription.subscriber);
+  const subscriptionSubscriber = record(subscription.subscriber);
+  const topLevelSubscriber = record(data.subscriber);
   const offer = record(purchase.offer);
 
   const entries: Array<[string, string | undefined]> = [
     ["providerEvent", stringValue(payload.event)],
     ["providerVersion", stringValue(payload.version)],
-    ["buyerEmail", stringValue(buyer.email)?.toLowerCase()],
-    ["buyerName", stringValue(buyer.name)],
+    [
+      "buyerEmail",
+      (stringValue(buyer.email) ??
+        stringValue(topLevelSubscriber.email))?.toLowerCase(),
+    ],
+    [
+      "buyerName",
+      stringValue(buyer.name) ?? stringValue(topLevelSubscriber.name),
+    ],
     ["productName", stringValue(product.name)],
     ["productUcode", stringValue(product.ucode)],
     ["offerCode", stringValue(offer.code)],
-    ["subscriptionCode", stringValue(subscriber.code)],
+    [
+      "subscriptionCode",
+      stringValue(subscriptionSubscriber.code) ??
+        stringValue(topLevelSubscriber.code),
+    ],
     ["purchaseStatus", stringValue(purchase.status)],
   ];
 
@@ -204,8 +236,8 @@ export class HotmartProvider implements CommerceProvider {
       ...(productExternalId(data)
         ? { productExternalId: productExternalId(data) }
         : {}),
-      ...(transactionExternalId(data)
-        ? { transactionExternalId: transactionExternalId(data) }
+      ...(transactionExternalId(eventName, data)
+        ? { transactionExternalId: transactionExternalId(eventName, data) }
         : {}),
       metadata: normalizedMetadata(payload, data),
     };

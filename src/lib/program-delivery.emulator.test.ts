@@ -111,6 +111,107 @@ describe.runIf(emulatorEnabled)("FirestoreProgramDeliveryStore emulator", () => 
     ).rejects.toThrow("durationMinutes must be finite");
   });
 
+  it("finds an authorized offering after more than 250 unrelated offerings", async () => {
+    const suffix = randomUUID();
+    const firestore = getFirestore(app!);
+    const batch = firestore.batch();
+    const now = "2026-10-08T00:00:00.000Z";
+
+    for (let index = 0; index < 260; index += 1) {
+      const id = `unrelated-${suffix}-${String(index).padStart(3, "0")}`;
+      batch.set(firestore.collection("programOfferings").doc(id), {
+        offeringId: id,
+        tenantId: `other-tenant-${suffix}`,
+        programId: `other-program-${index}`,
+        cohortKey: "other",
+        title: `Other ${index}`,
+        deliveryMode: "live",
+        timezone: "America/Bogota",
+        status: "active",
+        coachIds: [],
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+    await batch.commit();
+
+    const target = await store!.upsertOffering({
+      tenantId: `target-tenant-${suffix}`,
+      programId: `target-program-${suffix}`,
+      cohortKey: "target",
+      title: "Target cohort",
+      deliveryMode: "live",
+      timezone: "America/Bogota",
+    });
+    await store!.scheduleSession(target.offeringId, {
+      title: "Target future session",
+      startsAt: "2026-10-20T20:00:00Z",
+      durationMinutes: 60,
+    });
+
+    const upcoming = await store!.upcomingForPrograms(
+      [{ tenantId: target.tenantId, programId: target.programId }],
+      "2026-10-08T00:00:00Z",
+    );
+
+    expect(upcoming).toHaveLength(1);
+    expect(upcoming[0].offering.offeringId).toBe(target.offeringId);
+  });
+
+  it("finds future sessions after more than 100 historical sessions", async () => {
+    const suffix = randomUUID();
+    const firestore = getFirestore(app!);
+    const offering = await store!.upsertOffering({
+      tenantId: `history-tenant-${suffix}`,
+      programId: `history-program-${suffix}`,
+      cohortKey: "history",
+      title: "Long-running cohort",
+      deliveryMode: "live",
+      timezone: "America/Bogota",
+    });
+    const batch = firestore.batch();
+    for (let index = 0; index < 105; index += 1) {
+      const startsAt = new Date(
+        Date.UTC(2025, 0, 1 + index, 12, 0, 0),
+      ).toISOString();
+      const id = `past-${String(index).padStart(3, "0")}`;
+      batch.set(
+        firestore
+          .collection("programOfferings")
+          .doc(offering.offeringId)
+          .collection("sessions")
+          .doc(id),
+        {
+          sessionId: id,
+          offeringId: offering.offeringId,
+          title: `Historical ${index}`,
+          startsAt,
+          durationMinutes: 60,
+          recordingPolicy: "none",
+          status: "completed",
+          createdAt: startsAt,
+          updatedAt: startsAt,
+        },
+      );
+    }
+    await batch.commit();
+
+    await store!.scheduleSession(offering.offeringId, {
+      sessionId: "future-session",
+      title: "Future session",
+      startsAt: "2026-10-20T20:00:00Z",
+      durationMinutes: 60,
+    });
+
+    const upcoming = await store!.upcomingForPrograms(
+      [{ tenantId: offering.tenantId, programId: offering.programId }],
+      "2026-10-08T00:00:00Z",
+    );
+
+    expect(upcoming).toHaveLength(1);
+    expect(upcoming[0].session.sessionId).toBe("future-session");
+  });
+
   it("keeps asynchronous workshops free of live-session assumptions", async () => {
     const suffix = randomUUID();
     const offering = await store!.upsertOffering({

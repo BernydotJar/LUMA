@@ -26,6 +26,28 @@ function stringValue(value: unknown): string | undefined {
   return undefined;
 }
 
+function booleanValue(value: unknown): boolean | undefined {
+  return typeof value === "boolean" ? value : undefined;
+}
+
+function numberValue(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isFinite(value)
+    ? value
+    : undefined;
+}
+
+function isFullyRefundedCharge(object: JsonRecord): boolean {
+  if (booleanValue(object.refunded) === true) return true;
+  const amount = numberValue(object.amount);
+  const amountRefunded = numberValue(object.amount_refunded);
+  return (
+    amount !== undefined &&
+    amountRefunded !== undefined &&
+    amount > 0 &&
+    amountRefunded >= amount
+  );
+}
+
 function header(
   headers: Readonly<Record<string, string | undefined>>,
   name: string,
@@ -85,6 +107,9 @@ function stripeType(type: string, object: JsonRecord): CommerceEventType {
     case "invoice.payment_failed":
       return "commerce.payment.failed";
     case "charge.refunded":
+      return isFullyRefundedCharge(object)
+        ? "commerce.payment.refunded"
+        : "commerce.payment.partially_refunded";
     case "charge.dispute.created":
       return "commerce.payment.refunded";
     case "customer.subscription.created":
@@ -96,12 +121,15 @@ function stripeType(type: string, object: JsonRecord): CommerceEventType {
         ? "commerce.subscription.renewed"
         : "commerce.payment.confirmed";
     case "checkout.session.completed":
+    case "checkout.session.async_payment_succeeded":
       if (stringValue(object.payment_status) !== "paid") {
         throw new Error("STRIPE_CHECKOUT_NOT_PAID");
       }
       return stringValue(object.mode) === "subscription"
         ? "commerce.subscription.created"
         : "commerce.payment.confirmed";
+    case "checkout.session.async_payment_failed":
+      return "commerce.payment.failed";
     default:
       throw new Error("STRIPE_EVENT_UNSUPPORTED");
   }
@@ -157,7 +185,8 @@ function transactionExternalId(
   const subscriptionLifecycle =
     eventType.startsWith("invoice.") ||
     eventType.startsWith("customer.subscription.") ||
-    (eventType === "checkout.session.completed" &&
+    ((eventType === "checkout.session.completed" ||
+      eventType === "checkout.session.async_payment_succeeded") &&
       stringValue(object.mode) === "subscription");
 
   if (subscriptionLifecycle) {

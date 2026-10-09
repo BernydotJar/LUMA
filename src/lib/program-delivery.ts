@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { Firestore } from "firebase-admin/firestore";
+import { FieldPath, type Firestore } from "firebase-admin/firestore";
 
 export type ProgramDeliveryMode = "asynchronous" | "live" | "hybrid";
 export type ProgramOfferingStatus = "draft" | "active" | "completed" | "archived";
@@ -69,10 +69,11 @@ function required(value: string, label: string, max = 180): string {
 }
 
 function validIso(value: string, label: string): string {
-  if (!Number.isFinite(Date.parse(value))) {
+  const parsed = Date.parse(value);
+  if (!Number.isFinite(parsed)) {
     throw new Error(`${label} must be a valid ISO timestamp`);
   }
-  return value;
+  return new Date(parsed).toISOString();
 }
 
 function offeringId(input: Pick<ProgramOfferingInput, "tenantId" | "programId" | "cohortKey">) {
@@ -212,27 +213,42 @@ export class FirestoreProgramDeliveryStore {
   async listOfferingsForPrograms(
     access: ProgramAccess[],
   ): Promise<ProgramOffering[]> {
-    const wanted = new Set(
-      access.map((item) =>
-        JSON.stringify([
-          required(item.tenantId, "tenantId"),
-          required(item.programId, "programId"),
-        ]),
+    const uniqueAccess = new Map<string, ProgramAccess>();
+    for (const item of access) {
+      const normalized = {
+        tenantId: required(item.tenantId, "tenantId"),
+        programId: required(item.programId, "programId"),
+      };
+      uniqueAccess.set(
+        JSON.stringify([normalized.tenantId, normalized.programId]),
+        normalized,
+      );
+    }
+    if (uniqueAccess.size === 0) return [];
+
+    const snapshots = await Promise.all(
+      [...uniqueAccess.values()].map((item) =>
+        this.firestore
+          .collection("programOfferings")
+          .where("tenantId", "==", item.tenantId)
+          .where("programId", "==", item.programId)
+          .get(),
       ),
     );
-    if (wanted.size === 0) return [];
-    const snapshot = await this.firestore
-      .collection("programOfferings")
-      .limit(250)
-      .get();
-    return snapshot.docs
-      .map((doc) => doc.data() as ProgramOffering)
-      .filter(
-        (item) =>
-          item.status === "active" &&
-          wanted.has(JSON.stringify([item.tenantId, item.programId])),
-      )
-      .sort((a, b) => a.title.localeCompare(b.title));
+
+    const offerings = new Map<string, ProgramOffering>();
+    for (const snapshot of snapshots) {
+      for (const doc of snapshot.docs) {
+        const offering = doc.data() as ProgramOffering;
+        if (offering.status === "active") {
+          offerings.set(offering.offeringId, offering);
+        }
+      }
+    }
+
+    return [...offerings.values()].sort((a, b) =>
+      a.title.localeCompare(b.title),
+    );
   }
 
   async listSessions(
@@ -248,6 +264,54 @@ export class FirestoreProgramDeliveryStore {
     return snapshot.docs.map((doc) => doc.data() as LiveProgramSession);
   }
 
+  async listUpcomingSessions(
+    offeringIdValue: string,
+    now = new Date().toISOString(),
+    limit = 100,
+  ): Promise<LiveProgramSession[]> {
+    const normalizedNow = validIso(now, "now");
+    const boundedLimit = Number.isFinite(limit)
+      ? Math.min(Math.max(Math.round(limit), 1), 100)
+      : 100;
+    const pageSize = Math.min(100, boundedLimit);
+    const sessions: LiveProgramSession[] = [];
+    const collection = this.offeringRef(
+      required(offeringIdValue, "offeringId", 128),
+    ).collection("sessions");
+    let cursorStartsAt: string | undefined;
+    let cursorId: string | undefined;
+
+    while (sessions.length < boundedLimit) {
+      let query = collection
+        .where("startsAt", ">=", normalizedNow)
+        .orderBy("startsAt", "asc")
+        .orderBy(FieldPath.documentId(), "asc")
+        .limit(pageSize);
+
+      if (cursorStartsAt && cursorId) {
+        query = query.startAfter(cursorStartsAt, cursorId);
+      }
+
+      const snapshot = await query.get();
+      for (const doc of snapshot.docs) {
+        const session = doc.data() as LiveProgramSession;
+        if (session.status === "scheduled") {
+          sessions.push(session);
+          if (sessions.length >= boundedLimit) break;
+        }
+      }
+
+      if (snapshot.size < pageSize) break;
+      const last = snapshot.docs.at(-1);
+      if (!last) break;
+      const lastSession = last.data() as LiveProgramSession;
+      cursorStartsAt = lastSession.startsAt;
+      cursorId = last.id;
+    }
+
+    return sessions;
+  }
+
   async upcomingForPrograms(
     access: ProgramAccess[],
     now = new Date().toISOString(),
@@ -256,14 +320,12 @@ export class FirestoreProgramDeliveryStore {
     const offerings = await this.listOfferingsForPrograms(access);
     const rows: Array<{ offering: ProgramOffering; session: LiveProgramSession }> = [];
     for (const offering of offerings) {
-      const sessions = await this.listSessions(offering.offeringId);
+      const sessions = await this.listUpcomingSessions(
+        offering.offeringId,
+        now,
+      );
       for (const session of sessions) {
-        if (
-          session.status === "scheduled" &&
-          Date.parse(session.startsAt) >= Date.parse(now)
-        ) {
-          rows.push({ offering, session });
-        }
+        rows.push({ offering, session });
       }
     }
     return rows.sort((a, b) => a.session.startsAt.localeCompare(b.session.startsAt));

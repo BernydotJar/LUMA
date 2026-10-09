@@ -71,6 +71,40 @@ describe("HotmartProvider", () => {
     expect(event.type).toBe("commerce.subscription.created");
   });
 
+  it("normalizes documented subscription cancellation subscriber identity", async () => {
+    const rawBody = JSON.stringify({
+      id: "evt-cancel-1",
+      creation_date: 1791396000000,
+      event: "SUBSCRIPTION_CANCELLATION",
+      version: "2.0.0",
+      data: {
+        product: { id: 3526906, name: "Subscription Product" },
+        subscriber: {
+          code: "QO4THU04",
+          name: "Subscriber Name",
+          email: "subscriber@example.com",
+        },
+        subscription: { id: 471681 },
+      },
+    });
+
+    const event = await new HotmartProvider(secret).handleWebhook({
+      headers: { "x-hotmart-hottok": secret },
+      rawBody,
+    });
+
+    expect(event).toMatchObject({
+      type: "commerce.subscription.cancelled",
+      customerExternalId: "QO4THU04",
+      productExternalId: "3526906",
+      transactionExternalId: "QO4THU04",
+      metadata: {
+        buyerEmail: "subscriber@example.com",
+        subscriptionCode: "QO4THU04",
+      },
+    });
+  });
+
   it("rejects invalid Hottok before parsing business payload", async () => {
     await expect(
       new HotmartProvider(secret).handleWebhook({

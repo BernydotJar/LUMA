@@ -30,6 +30,8 @@ LUMA learner identity
 - Durable ProviderEvent receipt before downstream processing.
 - Configurable provider product → tenant/product/program mappings.
 - Provider transaction bindings so refunds/cancellations can resolve an earlier purchase even if the later payload omits product/customer context.
+- Delayed Stripe Checkout success is fulfilled from the asynchronous success webhook rather than the earlier unpaid Checkout event.
+- Partial Stripe refunds are auditable but do not revoke the full learning entitlement.
 - Entitlement lifecycle with stale-event protection.
 - Enrollment activation/revocation.
 - Verified-email claim to bind commerce enrollment to Firebase learner identity.

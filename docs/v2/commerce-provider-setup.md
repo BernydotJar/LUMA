@@ -45,3 +45,12 @@ Stripe uses the same shape with `provider: "stripe"`.
 10. Test a temporarily missing mapping, add the mapping, replay, and verify recovery.
 
 No real-money product should be enabled until this sequence passes.
+
+
+## Provider lifecycle edge cases
+
+- **Stripe delayed payment methods:** LUMA does not grant access from an unpaid `checkout.session.completed`. Access is granted when Stripe later delivers `checkout.session.async_payment_succeeded`.
+- **Stripe partial refunds:** a partial charge refund is recorded but does not revoke the full enrollment; a full refund revokes according to the entitlement policy.
+- **Hotmart subscription cancellation:** the adapter supports the V2 cancellation payload where subscriber identity is provided at `data.subscriber`; the stable subscriber code is used to correlate the subscription lifecycle.
+
+The provider sandbox checklist should include all three cases before real-money activation.
