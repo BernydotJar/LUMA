@@ -1444,6 +1444,49 @@
         "src/lib/commerce/**",
         "src/app/api/commerce/**"
       ]
+    },
+    {
+      "id": "LUMA-056-liquid-glass-functional-layer-v3",
+      "kind": "product-surface",
+      "title": "Liquid Glass functional-layer hierarchy and bounded refraction v3",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-050-v2-post-client-baseline"
+      ],
+      "capability": "liquid-glass-functional-layer",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "specs/022-liquid-glass-functional-layer-v3.md",
+        "docs/design/liquid-glass-contract.md",
+        "src/app/globals.css",
+        "src/app/library/**",
+        "src/components/app-shell*",
+        "src/components/liquid-glass-preview*",
+        "src/components/learner-components.module.css",
+        "src/components/next-action-card.tsx",
+        "src/components/learning-journey.tsx",
+        "src/components/twin-snapshot.tsx",
+        "src/components/tutor-panel.tsx",
+        "src/components/studio-dashboard*",
+        "e2e/liquid-glass-v2.spec.ts",
+        "playwright.config.ts",
+        "scripts/glass-adversarial-audit.mjs",
+        "scripts/finalize_liquid_glass_v3_graph.py",
+        "evidence/liquid-glass-v3/**",
+        "evidence/glass-adversarial/**",
+        "evidence/graph-harness-status.json",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl"
+      ],
+      "metadata": {
+        "extends": "LUMA-036-liquid-glass-refraction-v2",
+        "design_rule": "glass-as-functional-layer",
+        "scope": "incremental-material-system-upgrade"
+      }
     }
   ]
 }
