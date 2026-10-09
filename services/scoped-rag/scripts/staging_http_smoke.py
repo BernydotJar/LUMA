@@ -61,7 +61,13 @@ def _require_disposable_local_database(conn: psycopg.Connection) -> str:
         database, addr = record
     if not database.endswith(("_stage", "_test")):
         raise RuntimeError("Refusing synthetic staging outside disposable _stage/_test DB")
-    if addr and not ipaddress.ip_address(addr).is_loopback:
+    # PostgreSQL's inet textual representation may include a mask (/32 or /128).
+    # Parse an interface rather than assuming a naked IPv4/IPv6 address.
+    try:
+        server_is_loopback = not addr or ipaddress.ip_interface(addr).ip.is_loopback
+    except ValueError:
+        raise RuntimeError("Refusing unparseable staging database address") from None
+    if not server_is_loopback:
         # GitHub-hosted CI connects to its disposable database container via
         # localhost port mapping, while the database itself reports a Docker
         # bridge IP. Only allow that exact CI + _test + loopback client case.

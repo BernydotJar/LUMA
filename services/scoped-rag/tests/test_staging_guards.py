@@ -40,8 +40,10 @@ def test_synthetic_staging_rejects_production_and_remote_database(monkeypatch):
         guard(FakeDatabase("luma065_stage", "10.33.1.8", "10.33.1.8"))
 
     monkeypatch.setenv("CI", "true")
-    assert guard(FakeDatabase("luma064_test", "172.21.0.2", "localhost")) == "luma064_test"
+    assert guard(FakeDatabase("luma064_test", "172.21.0.2/32", "localhost")) == "luma064_test"
     with pytest.raises(RuntimeError, match="non-local"):
-        guard(FakeDatabase("luma065_stage", "172.21.0.2", "localhost"))
+        guard(FakeDatabase("luma065_stage", "172.21.0.2/32", "localhost"))
     with pytest.raises(RuntimeError, match="non-local"):
-        guard(FakeDatabase("luma064_test", "172.21.0.2", "example.remote.host"))
+        guard(FakeDatabase("luma064_test", "172.21.0.2/32", "example.remote.host"))
+    with pytest.raises(RuntimeError, match="unparseable"):
+        guard(FakeDatabase("luma064_test", "not-a-valid-address", "localhost"))
