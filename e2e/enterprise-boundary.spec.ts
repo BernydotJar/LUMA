@@ -38,3 +38,17 @@ test("unauthenticated coach dashboard does not invent business outcomes", async 
   expect(body).not.toContain("n=46");
   expect(body).not.toContain("Corpus sincronizado");
 });
+
+test("institutional admissions reject anonymous requests and hide admin controls", async ({ page, request }) => {
+  await page.goto("/studio/enrollments");
+  await expect(page.getByText(/Inicia sesión como administrador autorizado/i)).toBeVisible();
+  await expect(page.getByRole("button", { name: /Registrar matrícula/i })).toHaveCount(0);
+  const response = await request.post("/api/enrollments/institutional", {
+    data: {
+      tenantId: "seres", programId: "leader", offeringId: "cohort",
+      email: "learner@example.org", reason: "Corporate seat approved by institution.",
+      expiresAt: "2027-01-01T00:00:00Z",
+    },
+  });
+  expect(response.status()).toBe(401);
+});

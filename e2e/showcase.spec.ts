@@ -47,6 +47,16 @@ test.describe("LUMA product showcase", () => {
 
 
 
+  test("secondary destinations remain available to mobile learners", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "mobile", "The compact navigation applies on mobile.");
+    await page.goto("/learn");
+    await expect(page.getByRole("link", { name: "LUMA", exact: true }).last()).toBeVisible();
+    await page.locator('nav[aria-label="Navegación móvil"] summary').click();
+    await expect(page.getByRole("link", { name: "Certificados", exact: true }).last()).toBeVisible();
+    await page.getByRole("link", { name: "Certificados", exact: true }).last().click();
+    await expect(page).toHaveURL(/\/learn\/certificates$/);
+  });
+
   test("legacy Twin route opens the coach intelligence view", async ({ page }) => {
     await page.goto("/twin");
     await expect(page).toHaveURL(/\/studio\/learners\/mariana$/);
