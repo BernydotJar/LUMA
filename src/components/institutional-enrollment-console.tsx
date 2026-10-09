@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight, BadgeCheck, BookUser, ShieldCheck, UserMinus, UserPlus } from "lucide-react";
 import { useLumaAuth } from "@/components/auth-provider";
 import { institutionalApi } from "@/lib/commerce/institutional-client";
+import { InstitutionalBulkImport } from "@/components/institutional-bulk-import";
 import styles from "./institutional-enrollment-console.module.css";
 
 type Offering = { offeringId: string; programId: string; title: string; cohortKey: string };
@@ -264,6 +265,11 @@ export function InstitutionalEnrollmentConsole() {
           </button>}
         </section>
       </div>}
+      {tenantId && <InstitutionalBulkImport key={tenantId} tenantId={tenantId}
+        offerings={offerings} onCompleted={() => {
+          setDataLoading(true);
+          setRevision(current => current + 1);
+        }}/>}
     </>}
     {notice && <p className={styles.notice} role="status">{notice}</p>}
   </div>;

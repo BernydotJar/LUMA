@@ -3,6 +3,7 @@ import { deleteApp, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { afterAll, describe, expect, it } from "vitest";
 import { FirestoreInstitutionalGrantStore } from "./institutional-grant-store";
+import { parseInstitutionalBulkInput, runInstitutionalBulk } from "./institutional-bulk";
 import { FirestoreCommerceEnrollmentStore, isActiveCommerceEnrollment } from "./enrollment";
 
 const enabled = Boolean(process.env.FIRESTORE_EMULATOR_HOST);
@@ -109,4 +110,58 @@ describe.runIf(enabled)("institutional enrollment Firestore integration", () => 
     expect(forAlpha.records).toHaveLength(1);
     expect(forBeta.records).toHaveLength(0);
   });
+  it("grants a batch, handles invalid/duplicate rows, replays safely, and maintains audits", async () => {
+    const suffix = randomUUID();
+    const tenantId = "tenant-bulk-" + suffix;
+    const offeringId = "offering-bulk-" + suffix;
+    const programId = "leadership-" + suffix;
+    await firestore!.collection("programOfferings").doc(offeringId).set({
+      offeringId, tenantId, programId, status: "active",
+      cohortKey: "corporate-2026", title: "Leadership cohort",
+      deliveryMode: "hybrid", timezone: "America/Guatemala",
+      coachIds: [],
+    });
+    const base = {
+      tenantId, offeringId, programId,
+      reason: "Contracted seats granted under an authorized corporate education agreement.",
+      expiresAt: future(180),
+      emails: [
+        "ONE-" + suffix + "@example.org",
+        "one-" + suffix + "@example.org",
+        "invalid-email",
+        "two-" + suffix + "@example.org",
+      ],
+    };
+
+    const first = await runInstitutionalBulk(parseInstitutionalBulkInput(base), "tenant-admin", store!);
+    expect(first.rows.map(row => row.status))
+      .toEqual(["granted", "duplicate_input", "invalid", "granted"]);
+    expect(first.summary).toMatchObject({ requested: 4, granted: 2, invalid: 1, duplicate_input: 1 });
+    const initialId = first.rows[0].enrollmentId!;
+    const audit = await firestore!.collection("commerceEnrollments")
+      .doc(initialId).collection("audit").get();
+    expect(audit.size).toBe(1);
+    const claimant = "learner-" + suffix;
+    const claimed = await enrollments!.claimByEmail(claimant, "ONE-" + suffix + "@EXAMPLE.ORG", tenantId);
+    expect(claimed).toHaveLength(1);
+    expect(claimed[0].learnerId).toBe(claimant);
+
+    const replay = await runInstitutionalBulk(parseInstitutionalBulkInput(base), "tenant-admin", store!);
+    expect(replay.summary.unchanged).toBe(2);
+    expect((await firestore!.collection("commerceEnrollments")
+      .doc(initialId).collection("audit").get()).size).toBe(1);
+    await store!.revoke(tenantId, initialId, "tenant-admin",
+      "This corporate training seat was withdrawn at the institution's request.");
+    const blocked = await runInstitutionalBulk(parseInstitutionalBulkInput(base), "tenant-admin", store!);
+    expect(blocked.summary.rejected).toBe(1);
+    expect(blocked.rows[0].error).toBe("institutional_reactivation_confirmation_required");
+    const reactivated = await runInstitutionalBulk(
+      parseInstitutionalBulkInput({ ...base, allowReactivation: true }), "tenant-admin", store!,
+    );
+    expect(reactivated.rows[0].status).toBe("reactivated");
+    expect(reactivated.rows[0].enrollmentId).toBe(initialId);
+    expect((await firestore!.collection("commerceEnrollments")
+      .doc(initialId).collection("audit").get()).size).toBe(3);
+  });
+
 });

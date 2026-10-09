@@ -68,3 +68,17 @@ test("academic operations are available only to authenticated administrators", a
     "a".repeat(64) + "/sessions");
   expect(sessions.status()).toBe(401);
 });
+
+test("anonymous clients cannot import an institutional enrollment batch", async ({ request, page }) => {
+  await page.goto("/studio/enrollments");
+  await expect(page.getByRole("button", { name: /Registrar grupo autorizado/i })).toHaveCount(0);
+  const response = await request.post("/api/enrollments/institutional/bulk", {
+    data: {
+      tenantId: "seres", programId: "practitioner", offeringId: "cohort",
+      emails: ["one@example.org", "two@example.org"],
+      reason: "Corporate training seats under institutional authorization.",
+      expiresAt: "2027-01-01T00:00:00Z",
+    },
+  });
+  expect(response.status()).toBe(401);
+});

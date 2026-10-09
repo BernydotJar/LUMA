@@ -68,7 +68,8 @@ export class FirestoreInstitutionalGrantStore {
         throw new Error("INSTITUTIONAL_REACTIVATION_CONFIRMATION_REQUIRED");
       }
       const eventId = randomUUID();
-      const action = existing?.status === "revoked" ? "reactivated" :
+      const action: "reactivated" | "extended" | "granted" =
+        existing?.status === "revoked" ? "reactivated" :
         existing ? "extended" : "granted";
       const record: InstitutionalEnrollmentRecord = {
         enrollmentId: id,

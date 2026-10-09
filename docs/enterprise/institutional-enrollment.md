@@ -39,3 +39,21 @@ Unit: `src/lib/commerce/institutional-grants.test.ts`. Firestore integration: `s
 ### Shared tenant administration policy
 
 The same tenant-bound admin authorization is enforced for **certificate issuer configuration, certificate revocation, issuing/approving certificates and the certificate coach-console list**. A plain `admin=true` claim without a tenant grant is not sufficient to control another institution's credentials; only explicit `superuser=true` has platform-wide authority. This cross-module hardening is verified by `src/lib/tenant-admin-access.test.ts`.
+
+## Bulk institutional admissions (enterprise operations)
+
+The admin console now also supports CSV/TSV and pasted email-column enrollment through the existing `/studio/enrollments` UI. The file stays in the admin's browser; the client extracts only the email column and sends JSON with the common institution, active cohort, reason, expiry and the optional explicit reactivation confirmation.
+
+### Endpoint
+
+`POST /api/enrollments/institutional/bulk` requires a verified admin Firebase ID token, matching tenant-scoped claims, `application/json`, a body of at most 32,768 bytes and **1–100 rows**. Each row uses the existing transactional `FirestoreInstitutionalGrantStore.grant` path; the endpoint bounds concurrent Firestore mutations to four. It does not write to provider entitlements or payment ledgers.
+
+A response reports `requested`, `granted`, `extended`, `reactivated`, `unchanged`, `duplicate_input`, `invalid` and `rejected`. Row numbers refer to imported email records, not raw physical CSV line numbers. Invalid email/duplicate rows do not create records; other failures do not roll back successfully processed independent rows. Repeated requests with the same expiry are idempotent by enrollment ID and unchanged existing expiry.
+
+### CSV support
+
+UTF-8 files and pasted columns; optional header `email`, `correo`, `correo_electronico`, `email_address`; comma, semicolon or tab separators; quoted cells. If the file contains multiple columns, an email header is required. Maximum 100 records per request; larger cohorts must be uploaded in batches. The server never trusts client-side parsing or validation.
+
+### Governance and verification
+
+Each successful grant has its own actor UID, reason, expiry, tenant/program/cohort scope and immutable audit subcollection. Regranting a revoked enrollment needs `allowReactivation=true`. Test normal grants, stale/future dates, duplicate emails, partial failures, forged cross-tenant scope, revocation then deliberate reactivation, and signed-in email claim. Error messages must not include raw Firestore failures or provider secrets. No invitation emails are sent by this endpoint; identity claim happens on normal Firebase login.
