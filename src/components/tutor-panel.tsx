@@ -126,7 +126,7 @@ export function TutorPanel() {
 
   return (
     <section
-      className={`${styles.tutorPanel} glass`}
+      className={`${styles.tutorPanel} content-surface`}
       id="luma"
       aria-labelledby="tutor-title"
     >
