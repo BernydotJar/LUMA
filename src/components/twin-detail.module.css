@@ -16,7 +16,7 @@
     radial-gradient(circle at 88% 20%, rgba(239,200,106,.17), transparent 28%),
     radial-gradient(circle at 68% 92%, rgba(157,172,120,.11), transparent 30%),
     linear-gradient(145deg, rgba(255,255,255,.1), rgba(255,255,255,.025)),
-    var(--glass);
+    var(--surface);
 }
 
 .heroCopy h2 {

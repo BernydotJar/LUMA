@@ -74,7 +74,7 @@ export function TwinDetail() {
 
   return (
     <div className={styles.layout}>
-      <section className={`${styles.heroCard} glass`}>
+      <section className={`${styles.heroCard} content-surface`}>
         <div className={styles.heroCopy}>
           <span className="eyebrow"><span className="eyebrow-dot" /> LUMA Gemelo de aprendizaje · Inteligencia del entrenador</span>
           <h2>Mariana: estado de aprendizaje con evidencia y confianza.</h2>
@@ -131,7 +131,7 @@ export function TwinDetail() {
       </section>
 
       <div className={styles.detailGrid}>
-        <section className={`${styles.evidencePanel} glass`}>
+        <section className={`${styles.evidencePanel} content-surface`}>
           <div className={styles.panelHeading}>
             <div>
               <span className="eyebrow"><Eye size={14} /> Evidencia del participante</span>
@@ -195,7 +195,7 @@ export function TwinDetail() {
         </section>
 
         <aside className={styles.sideColumn}>
-          <section className={`${styles.projectionCard} glass`}>
+          <section className={`${styles.projectionCard} content-surface`}>
             <span className="eyebrow"><Gauge size={14} /> Escenario de aprendizaje</span>
             <h2>Trayectoria estimada con 20 min/día</h2>
             <div className={styles.projectionChart} aria-label="Proyección de dominio para cuatro semanas">
@@ -215,7 +215,7 @@ export function TwinDetail() {
             </button>
           </section>
 
-          <section className={`${styles.privacyCard} glass`}>
+          <section className={`${styles.privacyCard} content-surface`}>
             <span className={styles.privacyIcon}><ShieldCheck size={22} /></span>
             <div>
               <h2>Gobernanza del modelo</h2>
