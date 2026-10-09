@@ -1667,6 +1667,35 @@
         "graph-harness.events.jsonl",
         "specs/**"
       ]
+    },
+    {
+      "id": "LUMA-064-scoped-rag-retrieval-backend",
+      "kind": "security-hardening",
+      "title": "Server-enforced tenant/program RAG retrieval and citable corpus lifecycle",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-063-tenant-program-twin-rag-isolation",
+        "LUMA-060-content-intelligence-search"
+      ],
+      "capability": "isolated-knowledge-intelligence",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "services/scoped-rag/**",
+        ".github/workflows/scoped-rag.yml",
+        "src/lib/scoped-rag.backend-contract.test.ts",
+        "docs/enterprise/**",
+        "specs/065-scoped-rag-retrieval-backend.md",
+        "evidence/luma-064-scoped-rag/**",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl"
+      ]
     }
   ]
 }

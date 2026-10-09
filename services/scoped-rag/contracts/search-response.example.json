@@ -1,0 +1,23 @@
+{
+  "scope": {"tenant_id": "tenant-synthetic", "program_id": "program-synthetic"},
+  "retrieval": "scoped_pgvector_exact",
+  "results": [
+    {
+      "tenant_id": "tenant-synthetic",
+      "program_id": "program-synthetic",
+      "source_id": "video-synthetic-001",
+      "chunk_id": "segment-001",
+      "drive_file_id": "drive-example-001",
+      "module": "Practice",
+      "title": "Synthetic classroom recording",
+      "text": "A simulated passage demonstrates feedback practice and observable learning.",
+      "start_seconds": 15,
+      "end_seconds": 30,
+      "start_clock": "00:00:15",
+      "end_clock": "00:00:30",
+      "drive_url": "https://example.org/synthetic-classroom-001",
+      "srt_path": "",
+      "transcript_path": ""
+    }
+  ]
+}

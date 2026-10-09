@@ -1,0 +1,53 @@
+name: LUMA-064 Scoped RAG security
+
+on:
+  pull_request:
+    paths:
+      - 'services/scoped-rag/**'
+      - '.github/workflows/scoped-rag.yml'
+  push:
+    branches: [main, 'feat/**']
+    paths:
+      - 'services/scoped-rag/**'
+      - '.github/workflows/scoped-rag.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  scoped-rag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: ci-only-database-password
+          POSTGRES_DB: luma064_test
+        options: >-
+          --health-cmd "pg_isready -U postgres -d luma064_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 12
+    env:
+      LUMA_RAG_TEST_ADMIN_DSN: postgresql://postgres:ci-only-database-password@localhost:5432/luma064_test
+      LUMA_RAG_TEST_API_DSN: postgresql://luma064_api_test:local-test-only-api-password@localhost:5432/luma064_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: services/scoped-rag/pyproject.toml
+      - name: Install isolated backend dependencies
+        run: python -m pip install --disable-pip-version-check -e './services/scoped-rag[test]'
+      - name: Static Python security and import checks
+        working-directory: services/scoped-rag
+        run: python -m ruff check src tests scripts
+      - name: Setup disposable PostgreSQL + forced RLS
+        run: python services/scoped-rag/scripts/bootstrap_ci_database.py
+      - name: Run adversarial and real pgvector tenant/program integration tests
+        working-directory: services/scoped-rag
+        run: python -m pytest -v tests

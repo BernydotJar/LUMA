@@ -1,0 +1,7 @@
+# Never commit live values. Use IAM/Secret Manager.
+# LUMA_RAG_DATABASE_URL=postgresql://readonly_app_user:<secret>@host:5432/rag?sslmode=verify-full
+# LUMA_RAG_ADMIN_DATABASE_URL=postgresql://migration_role:<secret>@host:5432/rag?sslmode=verify-full
+# LUMA_RAG_AUTH_PEPPER=<32+ byte secret from Secret Manager>
+GOOGLE_CLOUD_PROJECT=luma-learning-intelligence
+VERTEX_LOCATION=us-central1
+LUMA_RAG_EMBEDDING_MODEL=text-multilingual-embedding-002
