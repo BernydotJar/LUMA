@@ -30,11 +30,11 @@ const learnerNavigation = [
 ];
 
 const studioNavigation = [
-  { href: "/experience", label: "Consola de experiencia", icon: Crown },
+  { href: "/experience", label: "Mi experiencia", icon: Crown },
   { href: "/studio", label: "Estudio del entrenador", icon: ChartNoAxesCombined },
-  { href: "/studio/learners/mariana", label: "Gemelo de aprendizaje", icon: BrainCircuit },
+  { href: "/studio/class-intelligence", label: "Objetivos de aprendizaje", icon: BrainCircuit },
   { href: "/library", label: "Inteligencia de contenido", icon: BookOpen },
-  { href: "/studio/reflections", label: "Reflexión curricular", icon: GitBranch },
+  { href: "/studio/reflections", label: "Actualizaciones de contenido", icon: GitBranch },
   { href: "/learn", label: "Vista participante", icon: Sparkles },
 ];
 

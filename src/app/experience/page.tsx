@@ -3,15 +3,15 @@ import { AppShell } from "@/components/app-shell";
 import { ExperienceConsole } from "@/components/experience-console";
 
 export const metadata: Metadata = {
-  title: "Consola de experiencia",
+  title: "Configuración de experiencia",
 };
 
 export default function ExperiencePage() {
   return (
     <AppShell
       mode="studio"
-      title="Consola de experiencia"
-      subtitle="Roles, temas, iconografía y modalidades desde una vista de superusuario."
+      title="Configuración de experiencia"
+      subtitle="Personaliza la apariencia y accede a las herramientas de aprendizaje y acompañamiento."
     >
       <ExperienceConsole />
     </AppShell>

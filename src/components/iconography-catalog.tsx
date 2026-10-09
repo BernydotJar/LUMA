@@ -1,18 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { Check, FileImage, Play, ShieldCheck, Sparkles } from "lucide-react";
+import { Sparkles, Check } from "lucide-react";
 import { useLumaTheme } from "@/components/theme-provider";
 import { lumaThemes } from "@/lib/themes";
 import styles from "./iconography-catalog.module.css";
 
 const icons = [
-  { id: "practice", label: "Práctica", metaphor: "Prisma refractivo", concept: "P.A.S. · reenfoque" },
-  { id: "progress", label: "Progreso", metaphor: "Campo orbital", concept: "Capacidad demostrada" },
-  { id: "coach-insight", label: "Perspectiva del entrenador", metaphor: "Estratos arquitectónicos", concept: "Nivel de intervención" },
-  { id: "human-intervention", label: "Intervención humana", metaphor: "Puente / umbral", concept: "Evidencia + contexto" },
-  { id: "voice", label: "Voz", metaphor: "Campo de resonancia", concept: "Expresión como práctica" },
-  { id: "video", label: "Video", metaphor: "Frame editorial", concept: "Segmento + evidencia" },
+  { id: "practice", label: "Práctica", concept: "Aplica lo aprendido en una situación real." },
+  { id: "progress", label: "Progreso", concept: "Reconoce lo que ya puedes demostrar." },
+  { id: "coach-insight", label: "Acompañamiento", concept: "Revisa dónde una orientación puede ayudar." },
+  { id: "human-intervention", label: "Intervención humana", concept: "Acerca el apoyo adecuado en el momento oportuno." },
+  { id: "voice", label: "Expresión", concept: "Fortalece la comunicación y la escucha." },
+  { id: "video", label: "Contenido", concept: "Explora recursos que apoyan tu aprendizaje." },
 ] as const;
 
 export function IconographyCatalog() {
@@ -23,20 +23,20 @@ export function IconographyCatalog() {
     <div className={styles.catalog}>
       <section className={styles.hero}>
         <div>
-          <span className="eyebrow"><Sparkles size={14} /> Iconografía LUMA</span>
-          <h2>El significado permanece. El material cambia con el tema.</h2>
+          <span className="eyebrow"><Sparkles size={14} /> Apariencia del programa</span>
+          <h2>Un lenguaje visual claro para cada experiencia.</h2>
           <p>
-            Seis objetos semánticos para práctica, progreso, perspectiva del entrenador, intervención humana,
-            voz y video. El SVG es la base; el WebP animado entra después de aprobación.
+            Elige un tema que se ajuste al contexto de tu organización.
+            Los símbolos conservan su significado en las diferentes apariencias.
           </p>
         </div>
         <div className={styles.receipt}>
-          <ShieldCheck size={20} />
-          <div><small>Política de activos</small><strong>Adulto · abstracto · accesible</strong></div>
+          <Check size={20} />
+          <div><small>Apariencia seleccionada</small><strong>{activeTheme.label}</strong></div>
         </div>
       </section>
 
-      <section className={styles.themeBar} aria-label="Tema de iconografía">
+      <section className={styles.themeBar} aria-label="Tema de apariencia">
         {lumaThemes.map((item) => (
           <button
             aria-pressed={theme === item.id}
@@ -51,7 +51,7 @@ export function IconographyCatalog() {
         ))}
       </section>
 
-      <section className={styles.grid} aria-label={`Iconografía ${activeTheme.label}`}>
+      <section className={styles.grid} aria-label={`Símbolos en tema ${activeTheme.label}`}>
         {icons.map((icon) => (
           <article key={icon.id}>
             <div className={styles.imageFrame}>
@@ -64,31 +64,10 @@ export function IconographyCatalog() {
               />
             </div>
             <span>{icon.label}</span>
-            <h3>{icon.metaphor}</h3>
+            <h3>{icon.label}</h3>
             <p>{icon.concept}</p>
-            <div className={styles.assetState}>
-              <small><FileImage size={13} /> SVG baseline</small>
-              <small><Play size={13} /> Movimiento controlado</small>
-            </div>
           </article>
         ))}
-      </section>
-
-      <section className={styles.pipeline}>
-        <div>
-          <span className="eyebrow"><Check size={14} /> Generación controlada</span>
-          <h2>Una imagen estática aprobada antes de cada animación.</h2>
-          <p>
-            Prompt semántico → una imagen → revisión de producto → propuesta de movimiento →
-            aprobación → bucle transparente → verificación → recibo de publicación.
-          </p>
-        </div>
-        <ol>
-          <li><span>01</span><strong>Imagen</strong><small>Una sola propuesta</small></li>
-          <li><span>02</span><strong>Revisión</strong><small>Objeto, material, peso</small></li>
-          <li><span>03</span><strong>Movimiento</strong><small>Una acción física</small></li>
-          <li><span>04</span><strong>Verificación</strong><small>Bucle, alfa, peso</small></li>
-        </ol>
       </section>
     </div>
   );
