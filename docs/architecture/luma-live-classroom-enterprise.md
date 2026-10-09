@@ -129,3 +129,7 @@ The read model deliberately excludes direct email addresses and raw Firebase UID
 ### Public webhook intake guard
 
 The signed LiveKit webhook endpoint consumes request-body bytes with a hard 256 KB cap, including chunked requests without `Content-Length`; malformed UTF-8 is rejected instead of silently re-encoded. This protects the small App Hosting service from unbounded request buffering before signature validation. The policy is tested with valid Unicode, declared oversize, streamed oversize and malformed-byte inputs. Larger provider payload requirements must be capacity-reviewed before raising the cap.
+
+### Instructor close handling for overrunning sessions
+
+An explicitly assigned instructor may close an already started class **even when it runs beyond the scheduled duration**, and may retry provider room deletion if the session has already been marked completed. The control is unavailable before the existing 30-minute pre-start window and unavailable for cancelled or external-provider sessions. Unit coverage asserts pre-start denial, overtime close, completed cleanup retry, cancelled denial and external-provider denial. Because LiveKit can auto-create a room from a previously issued token, production room settings must disable automatic room creation before the platform advertises guaranteed finish-for-everyone. See [LiveKit room management](https://docs.livekit.io/intro/basics/rooms-participants-tracks/rooms/).

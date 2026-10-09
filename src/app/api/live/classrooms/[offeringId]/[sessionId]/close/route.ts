@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
 import { requireLearningUser } from "@/lib/learning-server";
-import { classroomAdmission, classroomRoomName, resolveClassroomRole, type ClassroomClaims } from "@/lib/live-classroom";
+import { classroomCloseAvailable, classroomRoomName, resolveClassroomRole, type ClassroomClaims } from "@/lib/live-classroom";
 import { ClassroomError, liveKitConfiguration, roomService } from "@/lib/live-classroom-server";
 import { programDeliveryStore } from "@/lib/program-delivery-server";
 
@@ -24,13 +24,8 @@ export async function POST(
         data.session.status === "cancelled") {
       return NextResponse.json({ error: "classroom_closed" }, { status: 409 });
     }
-    if (data.session.status === "scheduled") {
-      const admission = classroomAdmission(data.offering, data.session);
-      if (admission !== "allowed") {
-        return NextResponse.json({
-          error: admission === "not_open" ? "classroom_not_open" : "classroom_closed",
-        }, { status: 409 });
-      }
+    if (!classroomCloseAvailable(data.session)) {
+      return NextResponse.json({ error: "classroom_not_open" }, { status: 409 });
     }
     // Fail before persisting completion when the media service is not configured.
     const configuration = liveKitConfiguration();

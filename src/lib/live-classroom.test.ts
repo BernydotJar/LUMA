@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  classroomAdmission, classroomCapacity, classroomParticipantId, classroomRoomName,
+  classroomAdmission, classroomCapacity, classroomCloseAvailable, classroomParticipantId, classroomRoomName,
   resolveClassroomRole, reserveClassroomTokenQuota, summarizeClassroomPresence,
 } from "./live-classroom";
 import type { CommerceEnrollmentRecord } from "./commerce/enrollment";
@@ -109,5 +109,17 @@ describe("distributed LiveKit admission budget", () => {
     expect(state.issuedInWindow).toBe(24);
     expect(reserveClassroomTokenQuota(state, new Date(initial.getTime() + 77_000))).toBeNull();
     expect(reserveClassroomTokenQuota(state, new Date(initial.getTime() + 15 * 60_000))?.issuedInWindow).toBe(1);
+  });
+});
+
+describe("instructor overtime-classroom closure", () => {
+  it("allows a safe early finish, overtime finish and completed-room cleanup retry", () => {
+    const start = Date.parse(session.startsAt);
+    expect(classroomCloseAvailable(session, start - 31 * 60_000)).toBe(false);
+    expect(classroomCloseAvailable(session, start - 30 * 60_000)).toBe(true);
+    expect(classroomCloseAvailable(session, start + 4 * 3_600_000)).toBe(true);
+    expect(classroomCloseAvailable({ ...session, status: "completed" }, start + 4 * 3_600_000)).toBe(true);
+    expect(classroomCloseAvailable({ ...session, status: "cancelled" }, start)).toBe(false);
+    expect(classroomCloseAvailable({ ...session, classroomProvider: "external" }, start)).toBe(false);
   });
 });

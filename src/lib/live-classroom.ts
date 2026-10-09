@@ -117,6 +117,22 @@ export function classroomAdmission(
   return "allowed";
 }
 
+/**
+ * An instructor can finish a running class even if it runs past the planned end time.
+ * Prevent closing a future class more than 30 minutes before its start.
+ * Completed sessions remain eligible for provider cleanup retries.
+ */
+export function classroomCloseAvailable(
+  session: LiveProgramSession,
+  nowMs = Date.now(),
+): boolean {
+  if (!isLiveKitClassroom(session)) return false;
+  if (session.status === "completed") return true;
+  const starts = Date.parse(session.startsAt);
+  return session.status === "scheduled" &&
+    Number.isFinite(starts) && nowMs >= starts - 30 * 60_000;
+}
+
 /** Deny by default. Cohort and tenant must BOTH match the paid enrollment. */
 export function resolveClassroomRole(
   claims: ClassroomClaims,
