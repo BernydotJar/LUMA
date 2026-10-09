@@ -20,6 +20,16 @@ function requiredText(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+function validIanaTimezone(value: unknown): boolean {
+  if (!requiredText(value)) return false;
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: value });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function secureJoinUrl(value: unknown): boolean {
   if (value === undefined) return true;
   if (!requiredText(value)) return false;
@@ -39,7 +49,7 @@ export function parseLearnerScheduleResponse(body: unknown): LearnerScheduledSes
   for (const row of body.schedule as unknown[]) {
     if (!isRecord(row) || !isRecord(row.session) ||
         !requiredText(row.offeringId) || !requiredText(row.programId) ||
-        !requiredText(row.offeringTitle) || !requiredText(row.timezone) ||
+        !requiredText(row.offeringTitle) || !validIanaTimezone(row.timezone) ||
         !["live", "hybrid"].includes(String(row.deliveryMode)) ||
         !requiredText(row.session.sessionId) ||
         !requiredText(row.session.title) ||

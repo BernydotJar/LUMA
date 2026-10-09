@@ -58,6 +58,15 @@ describe("learner schedule API response contract", () => {
     })).toThrow("PROGRAM_SCHEDULE_INVALID_RESPONSE");
   });
 
+  it("rejects non-IANA time zones before rendering scheduled sessions", () => {
+    expect(() => parseLearnerScheduleResponse({
+      schedule: [{ ...validSession, timezone: "bogus" }],
+    })).toThrow("PROGRAM_SCHEDULE_INVALID_RESPONSE");
+    expect(() => parseLearnerScheduleResponse({
+      schedule: [{ ...validSession, timezone: "America/Bogota" }],
+    })).not.toThrow();
+  });
+
   it("does not render insecure join links from malformed API data", () => {
     expect(() => parseLearnerScheduleResponse({
       schedule: [{ ...validSession, session: { ...validSession.session, joinUrl: "javascript:alert(1)" } }],
