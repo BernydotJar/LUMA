@@ -158,10 +158,20 @@ class PgScopedRepository:
             ):
                 raise RuntimeError("tenant/program RLS is not forced")
             rights = conn.execute(
-                """SELECT has_table_privilege(current_user, 'luma_rag.chunks', 'INSERT')
-                     OR has_table_privilege(current_user, 'luma_rag.chunks', 'UPDATE')
-                     OR has_table_privilege(current_user, 'luma_rag.chunks', 'DELETE')
-                     AS can_mutate"""
+                """SELECT bool_or(
+                     has_table_privilege(current_user, table_name, privilege)
+                   ) AS can_mutate
+                   FROM (VALUES
+                     ('luma_rag.chunks'),
+                     ('luma_rag.sources'),
+                     ('luma_rag.access_grants'),
+                     ('luma_rag.source_deletions')
+                   ) AS protected(table_name)
+                   CROSS JOIN (VALUES
+                     ('INSERT'), ('UPDATE'), ('DELETE'), ('TRUNCATE')
+                   ) AS mutations(privilege)"""
             ).fetchone()
-            if rights["can_mutate"]:
-                raise RuntimeError("search API role must be read-only")
+            if rights["can_mutate"] or conn.execute(
+                "SELECT has_schema_privilege(current_user, 'luma_rag', 'CREATE') AS allowed"
+            ).fetchone()["allowed"]:
+                raise RuntimeError("search API role must be read-only across all RAG tables")

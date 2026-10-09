@@ -7,6 +7,7 @@ from datetime import UTC, datetime, timedelta
 import psycopg
 import pytest
 from fastapi.testclient import TestClient
+from psycopg.rows import dict_row
 
 from luma_scoped_rag.admin import (
     SourceIngest,
@@ -209,3 +210,34 @@ def test_real_http_to_database_contract_returns_only_authorized_sources(database
     no_key = client.post("/v1/search", json=payload)
     assert no_key.status_code == 401
     assert embedder.calls == 1
+
+
+@pytest.mark.parametrize("privilege,resource", [
+    ("UPDATE", "luma_rag.access_grants"),
+    ("DELETE", "luma_rag.source_deletions"),
+    ("CREATE", "SCHEMA luma_rag"),
+])
+def test_reader_readiness_denies_any_privilege_escalation(
+    database, privilege: str, resource: str
+):
+    conn, _, (_, _, _) = database
+    # A misconfigured API DB role that can update authorization grants, erase
+    # deletion tombstones or create schema objects can subvert tenant isolation.
+    role = "luma065_untrusted_" + uuid.uuid4().hex[:12]
+    conn.execute(f"CREATE ROLE {role} NOLOGIN NOSUPERUSER NOBYPASSRLS")
+    try:
+        conn.execute(f"GRANT luma_rag_reader TO {role}")
+        conn.execute(f"GRANT {privilege} ON {resource} TO {role}")
+
+        def privileged_login():
+            session = psycopg.connect(ADMIN_DSN, autocommit=True, row_factory=dict_row)
+            session.execute(f"SET ROLE {role}")
+            return session
+
+        dangerous = PgScopedRepository(API_DSN, PEPPER, MODEL, connect=privileged_login)
+        with pytest.raises(RuntimeError, match="read-only across all RAG tables"):
+            dangerous.verify_reader_role()
+    finally:
+        conn.execute(f"REVOKE {privilege} ON {resource} FROM {role}")
+        conn.execute(f"REVOKE luma_rag_reader FROM {role}")
+        conn.execute(f"DROP ROLE {role}")

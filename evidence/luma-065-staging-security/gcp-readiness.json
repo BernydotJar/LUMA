@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-09",
+  "project": "luma-learning-intelligence",
+  "region": "us-central1",
+  "classification": "VERIFIED_READ_ONLY_INSPECTION",
+  "cloud_run_service_names": ["luma", "se-voice-runtime"],
+  "cloud_sql_instances": 0,
+  "vertex_api_state": "DISABLED",
+  "live_embedding_probe": {"result": "HTTP_403_SERVICE_DISABLED", "successful_inference": false},
+  "gcp_resources_created": 0,
+  "gcp_service_apis_enabled": 0,
+  "firebase_deploy": false,
+  "production_scoped_rag_attestation_changed": false,
+  "remediation": "Enable API in separately approved staging project, create private PostgreSQL and staging Cloud Run within approved budget and role model"
+}

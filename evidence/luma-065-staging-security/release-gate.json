@@ -1,0 +1,23 @@
+{
+  "node": "LUMA-065-scoped-rag-staging-security",
+  "date": "2026-10-09",
+  "source_branch": "feat/luma-065-staging-security",
+  "base_commit": "278e2ffbbcafc1d400ad5af4a45c1dd988843dce",
+  "security_critic_finding": "API reader role must reject all table and schema write privileges, not only chunk writes",
+  "security_fix": "IMPLEMENTED_IN_SOURCE",
+  "local_python_integration": "VERIFIED_23_TESTS_PASS",
+  "local_http_staging": "VERIFIED_11_CHECKS_PASS_LOCALHOST_ONLY",
+  "staging_database_cleanup": "VERIFIED_ZERO_RECORDS_AFTER_RUN",
+  "python_lint": "VERIFIED_PASS",
+  "staging_guard_unit_tests": "VERIFIED_PASS",
+  "gcp_inventory": "VERIFIED_READ_ONLY_INSPECTION",
+  "cloud_sql_instances": 0,
+  "vertex_ai_api": "DISABLED",
+  "live_vertex_test": "FAILED_HTTP_403_SERVICE_DISABLED",
+  "gcp_hosted_staging": "NOT_DEPLOYED",
+  "luma_main_or_firebase_modified": false,
+  "github_ci_for_this_branch": "PENDING",
+  "independent_security_review": "NOT_YET_VERIFIED",
+  "production_readiness": "BLOCKED",
+  "next_gate": "Independent GitHub CI plus approved staging Cloud SQL, Vertex API and service-identity plan"
+}

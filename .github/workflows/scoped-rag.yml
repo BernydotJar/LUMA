@@ -51,3 +51,11 @@ jobs:
       - name: Run adversarial and real pgvector tenant/program integration tests
         working-directory: services/scoped-rag
         run: python -m pytest -v tests
+      - name: Verify localhost-only synthetic staging over real HTTP
+        working-directory: services/scoped-rag
+        env:
+          CI: "true"
+        run: >-
+          LUMA_RAG_STAGING_ADMIN_DSN="$LUMA_RAG_TEST_ADMIN_DSN"
+          LUMA_RAG_STAGING_API_DSN="$LUMA_RAG_TEST_API_DSN"
+          python scripts/staging_http_smoke.py

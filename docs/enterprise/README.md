@@ -25,3 +25,5 @@ Graph policy: Producer → Critic → Fixer → Independent Verifier → Release
 Security follow-up: [Scoped RAG backend requirements](scoped-rag-backend-requirements.md) and [adversarial follow-up](../../evidence/enterprise-commerce-audit-20261009/adversarial-followup-20261009.md). The external index and Granite review remain unverified.
 
 New backend delivery: [LUMA-064 Scoped RAG](luma-064-scoped-rag.md) and [service README](../../services/scoped-rag/README.md). This is a tested source implementation, not a deployed production gateway.
+
+Staging/security verification: [LUMA-065 Synthetic Staging & Security Gate](luma-065-staging-security.md), with [evidence](../../evidence/luma-065-staging-security/). No cloud production change was made.
