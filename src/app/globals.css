@@ -10,6 +10,10 @@
   --line-strong: rgba(255, 255, 255, 0.2);
   --glass: rgba(255, 255, 255, 0.075);
   --glass-strong: rgba(255, 255, 255, 0.12);
+  --glass-blur: 18px;
+  --glass-saturation: 1.12;
+  --surface: rgba(11, 27, 22, .94);
+  --surface-strong: rgba(11, 27, 22, .98);
   --accent: #c9f15a;
   --accent-soft: rgba(201, 241, 90, 0.14);
   --mint: #75dfc2;
@@ -119,8 +123,8 @@ h3 {
     linear-gradient(135deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.025) 55%),
     var(--glass);
   box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  -webkit-backdrop-filter: blur(24px) saturate(1.25);
-  backdrop-filter: blur(24px) saturate(1.25);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
 }
 
 .glass::after {
@@ -137,6 +141,15 @@ h3 {
   border: 1px solid rgba(255, 255, 255, 0.09);
   background: rgba(255, 255, 255, 0.045);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.content-surface {
+  position: relative;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow:
+    0 18px 54px color-mix(in srgb, var(--ink) 7%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--ink-strong) 5%, transparent);
 }
 
 .eyebrow {
@@ -336,8 +349,12 @@ html[data-theme="se"] {
   --muted-strong: #4f5963;
   --line: rgba(62, 93, 116, .14);
   --line-strong: rgba(62, 93, 116, .24);
-  --glass: rgba(255, 255, 255, .62);
-  --glass-strong: rgba(255, 255, 255, .78);
+  --glass: rgba(255, 255, 255, .52);
+  --glass-strong: rgba(255, 255, 255, .72);
+  --glass-blur: 18px;
+  --glass-saturation: 1.08;
+  --surface: rgba(255, 255, 255, .92);
+  --surface-strong: rgba(255, 255, 255, .97);
   --accent: #00a2f1;
   --accent-soft: rgba(0, 162, 241, .12);
   --mint: #2bb3b1;
@@ -361,8 +378,12 @@ html[data-theme="light"] {
   --muted-strong: #3a3a3c;
   --line: rgba(29, 29, 31, .12);
   --line-strong: rgba(29, 29, 31, .2);
-  --glass: rgba(255, 255, 255, .36);
-  --glass-strong: rgba(255, 255, 255, .58);
+  --glass: rgba(255, 255, 255, .3);
+  --glass-strong: rgba(255, 255, 255, .52);
+  --glass-blur: 16px;
+  --glass-saturation: 1.08;
+  --surface: rgba(255, 255, 255, .88);
+  --surface-strong: rgba(255, 255, 255, .96);
   --accent: #0a84ff;
   --accent-soft: rgba(10, 132, 255, .12);
   --mint: #2bb3b1;
@@ -386,8 +407,12 @@ html[data-theme="dark"] {
   --muted-strong: #dbcbb6;
   --line: rgba(255, 238, 210, .12);
   --line-strong: rgba(255, 238, 210, .2);
-  --glass: rgba(255, 244, 222, .065);
-  --glass-strong: rgba(255, 244, 222, .1);
+  --glass: rgba(255, 244, 222, .055);
+  --glass-strong: rgba(255, 244, 222, .09);
+  --glass-blur: 17px;
+  --glass-saturation: 1.04;
+  --surface: rgba(36, 24, 26, .92);
+  --surface-strong: rgba(36, 24, 26, .97);
   --accent: #efc86a;
   --accent-soft: rgba(239, 200, 106, .12);
   --mint: #9dac78;
@@ -428,8 +453,8 @@ html[data-theme="se"] .glass {
     linear-gradient(135deg, rgba(255,255,255,.68), rgba(255,255,255,.18) 58%),
     var(--glass);
   box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.9);
-  -webkit-backdrop-filter: blur(24px) saturate(1.14);
-  backdrop-filter: blur(24px) saturate(1.14);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
 }
 
 html[data-theme="light"] .glass {
@@ -442,8 +467,8 @@ html[data-theme="light"] .glass {
     var(--shadow),
     inset 1.5px 1.5px 2px rgba(255,255,255,.78),
     inset -1.5px -1.5px 3px rgba(56,62,79,.08);
-  -webkit-backdrop-filter: blur(18px) saturate(1.12);
-  backdrop-filter: blur(18px) saturate(1.12);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
 }
 
 html[data-theme="se"] .glass-subtle {
@@ -460,6 +485,38 @@ html[data-theme="light"] .glass-subtle {
   box-shadow:
     inset 1px 1px 2px rgba(255,255,255,.72),
     inset -1px -1px 2px rgba(56,62,79,.06);
+}
+
+html[data-theme="se"] .content-surface {
+  border-color: rgba(62,93,116,.12);
+  box-shadow: 0 18px 52px rgba(32,84,118,.08), inset 0 1px 0 rgba(255,255,255,.96);
+}
+
+html[data-theme="light"] .content-surface {
+  border-color: rgba(29,29,31,.09);
+  box-shadow: 0 18px 52px rgba(40,47,64,.08), inset 0 1px 0 rgba(255,255,255,.96);
+}
+
+html[data-theme="dark"] .content-surface {
+  border-color: rgba(255,238,210,.1);
+  box-shadow: 0 22px 58px rgba(9,4,5,.22), inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .glass {
+    background: var(--surface-strong);
+  }
+}
+
+@media (prefers-contrast: more) {
+  .glass,
+  .content-surface {
+    border-color: var(--line-strong);
+  }
+
+  .glass {
+    background: var(--glass-strong);
+  }
 }
 
 html[data-theme="se"] .brand-mark__icon {
