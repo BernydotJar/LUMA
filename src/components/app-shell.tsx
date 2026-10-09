@@ -14,9 +14,12 @@ import {
   HelpCircle,
   Home,
   MessageCircle,
+  CalendarDays,
+  Menu,
   PlayCircle,
   Search,
   Sparkles,
+  UserPlus,
 } from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
 import { AccountMenu } from "@/components/account-menu";
@@ -36,6 +39,8 @@ const studioNavigation = [
   { href: "/studio", label: "Estudio del entrenador", icon: ChartNoAxesCombined },
   { href: "/studio/class-intelligence", label: "Objetivos de aprendizaje", icon: BrainCircuit },
   { href: "/studio/certificates", label: "Certificaciones", icon: Award },
+  { href: "/studio/programs", label: "Programas y clases", icon: CalendarDays },
+  { href: "/studio/enrollments", label: "Matrículas", icon: UserPlus },
   { href: "/library", label: "Inteligencia de contenido", icon: BookOpen },
   { href: "/studio/reflections", label: "Actualizaciones de contenido", icon: GitBranch },
   { href: "/learn", label: "Vista participante", icon: Sparkles },
@@ -57,6 +62,14 @@ export function AppShell({
   const pathname = usePathname();
   const navigation = mode === "studio" ? studioNavigation : learnerNavigation;
   const studio = mode === "studio";
+  // The learner's LUMA assistant must stay visible on mobile.
+  // Secondary destinations are accessible via "Más", never silently removed.
+  const mobilePrimary = studio
+    ? [studioNavigation[1], studioNavigation[2], studioNavigation[3]]
+    : [learnerNavigation[0], learnerNavigation[1], learnerNavigation[2], learnerNavigation[4]];
+  const mobileSecondary = navigation.filter(
+    (item) => !mobilePrimary.some((primary) => primary.href === item.href),
+  );
 
   return (
     <div className={styles.shell} data-mode={mode}>
@@ -122,8 +135,8 @@ export function AppShell({
         <main className={styles.content}>{children}</main>
       </section>
 
-      <nav className={`${styles.mobileNav} glass`} aria-label="Navegación móvil">
-        {navigation.slice(0, studio ? 4 : 5).map(({ href, label, icon: Icon }) => {
+      <nav className={`${styles.mobileNav} glass`} data-mode={mode} aria-label="Navegación móvil">
+        {mobilePrimary.map(({ href, label, icon: Icon }) => {
           const pathOnly = href.split("#")[0];
           const hasHash = href.includes("#");
           const active =
@@ -137,6 +150,20 @@ export function AppShell({
             </Link>
           );
         })}
+        <details className={styles.mobileMore}>
+          <summary aria-label="Más secciones">
+            <Menu size={20} aria-hidden="true" />
+            <span>Más</span>
+          </summary>
+          <div className={styles.mobileMoreMenu} aria-label="Otras secciones">
+            {mobileSecondary.map(({ href, label, icon: Icon }) => (
+              <Link href={href} key={href} aria-label={label}>
+                <Icon size={19} aria-hidden="true" />
+                <span>{label}</span>
+              </Link>
+            ))}
+          </div>
+        </details>
       </nav>
     </div>
   );

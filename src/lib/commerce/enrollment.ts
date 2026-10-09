@@ -20,6 +20,8 @@ export interface CommerceEnrollmentRecord {
   email?: string;
   learnerId?: string;
   entitlementId: string;
+  /** An institutional grant is not a merchant sale and creates no payment ledger entry. */
+  enrollmentSource?: "institutional" | "commerce";
   status: CommerceEnrollmentStatus;
   accessEndsAt?: string;
   createdAt: string;

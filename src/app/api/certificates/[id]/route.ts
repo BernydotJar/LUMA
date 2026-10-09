@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireLearningUser, requireLearningCoachAccess } from "@/lib/learning-server";
 import { certificates } from "@/lib/certificates/server";
+import { assertCertificateTenantAccess } from "@/lib/certificates/authorization";
 import { certificateError } from "@/lib/certificates/http";
 import { documentId } from "@/lib/certificates/domain";
 
@@ -14,6 +15,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     const user = await requireLearningUser(request);
     if (certificate.learnerId !== user.uid) {
       const { decoded, access } = await requireLearningCoachAccess(request);
+      assertCertificateTenantAccess(decoded as Record<string, unknown>, certificate.tenantId);
       const offering = await certificates.authorizedOffering(
         { uid: decoded.uid, access }, certificate.offeringId, certificate.learnerId);
       if (offering.tenantId !== certificate.tenantId ||
