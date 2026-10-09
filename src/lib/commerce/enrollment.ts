@@ -1,4 +1,4 @@
-import type { Firestore } from "firebase-admin/firestore";
+import { FieldPath, type Firestore } from "firebase-admin/firestore";
 import {
   compareCommerceEventTimes,
   type CommerceProviderId,
@@ -268,28 +268,54 @@ export class FirestoreCommerceEnrollmentStore {
     return [...learnerIds].sort();
   }
 
-  /** A deterministic bounded sample for dashboards; never use it for authorization. */
+  /** Bounded, best-effort dashboard sample. Not an authorization primitive. */
   async sampleActiveLearnerIdsByTenants(
     tenantIds: string[],
     limit = 100,
   ): Promise<string[]> {
-    const max = Math.min(Math.max(Math.round(limit), 1), 100);
+    const max = Number.isFinite(limit)
+      ? Math.min(Math.max(Math.trunc(limit), 1), 100)
+      : 100;
     const tenants = [...new Set(tenantIds.map((id) => id.trim()).filter(Boolean))]
       .sort().slice(0, 10);
     if (tenants.length === 0) return [];
+
     const perTenant = Math.ceil(max / tenants.length);
-    const snapshots = await Promise.all(tenants.map((tenantId) =>
-      this.firestore.collection("commerceEnrollments")
-        .where("tenantId", "==", tenantId).limit(perTenant).get(),
-    ));
     const learners = new Set<string>();
-    for (const snapshot of snapshots) {
-      for (const doc of snapshot.docs) {
-        const enrollment = doc.data() as CommerceEnrollmentRecord;
-        if (isActiveCommerceEnrollment(enrollment) && enrollment.learnerId) {
-          learners.add(enrollment.learnerId);
+    // Filter revoked enrollments before LIMIT, then page through expired and
+    // unclaimed documents under a strict Firestore-read budget.
+    const scanBudget = Math.max(perTenant, Math.min(400, perTenant * 6));
+    const pageSize = Math.min(perTenant, 50);
+    for (const tenantId of tenants) {
+      let scanned = 0;
+      let found = 0;
+      let cursor: string | undefined;
+      while (found < perTenant && scanned < scanBudget) {
+        const take = Math.min(pageSize, scanBudget - scanned);
+        let query = this.firestore.collection("commerceEnrollments")
+          .where("tenantId", "==", tenantId)
+          .where("status", "==", "active")
+          .orderBy(FieldPath.documentId(), "asc")
+          .limit(take);
+        if (cursor) query = query.startAfter(cursor);
+        const snapshot = await query.get();
+        scanned += snapshot.size;
+        for (const doc of snapshot.docs) {
+          const enrollment = doc.data() as CommerceEnrollmentRecord;
+          if (!isActiveCommerceEnrollment(enrollment) || !enrollment.learnerId) {
+            continue;
+          }
+          if (!learners.has(enrollment.learnerId)) {
+            learners.add(enrollment.learnerId);
+            found++;
+          }
+          if (found >= perTenant || learners.size >= max) break;
         }
+        if (learners.size >= max || snapshot.size < take) break;
+        cursor = snapshot.docs.at(-1)?.id;
+        if (!cursor) break;
       }
+      if (learners.size >= max) break;
     }
     return [...learners].sort().slice(0, max);
   }

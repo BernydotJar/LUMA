@@ -528,16 +528,20 @@ describe.runIf(emulatorEnabled)(
       expect(restored.outcome).toBe("reactivated");
     });
 
-    it("bounds the intervention cohort sample without admitting revoked enrollments", async () => {
+    it("filters revoked records before LIMIT and pages past expired/unclaimed enrollments", async () => {
       const suffix = randomUUID();
       const tenantId = `sample-tenant-${suffix}`;
       const write = firestore!.batch();
-      for (let index = 0; index < 125; index++) {
-        const id = `sample-${suffix}-${String(index).padStart(3, "0")}`;
+      for (let index = 0; index < 170; index++) {
+        const prefix = index < 65 ? "a-revoked" : index < 80 ? "b-expired"
+          : index < 95 ? "c-unclaimed" : "z-valid";
+        const id = `${prefix}-${suffix}-${String(index).padStart(3, "0")}`;
         write.set(firestore!.collection("commerceEnrollments").doc(id), {
           tenantId, enrollmentId: id, programId: "demo", productId: "p",
-          customerId: `buyer-${index}`, learnerId: `learner-${index}`,
-          entitlementId: id, status: index % 2 === 0 ? "active" : "revoked",
+          customerId: `buyer-${index}`,
+          ...(index < 80 || index >= 95 ? { learnerId: `learner-${index}` } : {}),
+          entitlementId: id, status: index < 65 ? "revoked" : "active",
+          ...(index >= 65 && index < 80 ? { accessEndsAt: "2020-01-01T00:00:00Z" } : {}),
           createdAt: "2026-10-08T12:00:00Z", updatedAt: "2026-10-08T12:00:00Z",
           lastProvider: "stripe", lastProviderEventId: id,
           lastEventAt: "2026-10-08T12:00:00Z",
@@ -545,9 +549,9 @@ describe.runIf(emulatorEnabled)(
       }
       await write.commit();
       const sampled = await enrollments!.sampleActiveLearnerIdsByTenants([tenantId], 50);
-      expect(sampled.length).toBeLessThanOrEqual(50);
-      expect(sampled.length).toBeGreaterThan(0);
-      expect(sampled.every((id) => Number(id.split("-").at(-1)) % 2 === 0)).toBe(true);
+      expect(sampled).toHaveLength(50);
+      expect(sampled.every((id) => Number(id.split("-").at(-1)) >= 95)).toBe(true);
+      expect(new Set(sampled).size).toBe(50);
     });
 
     it("durably retains an event when product mapping is not ready", async () => {

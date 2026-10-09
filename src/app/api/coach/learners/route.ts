@@ -11,12 +11,16 @@ export async function GET(request: Request) {
     if (access.unrestricted) {
       results = await learningStore.list(50);
     } else {
-      const allowed = new Set(access.learnerIds);
-      for (const learnerId of await commerceEnrollments.listActiveLearnerIdsByTenants(access.tenantIds)) {
-        allowed.add(learnerId);
+      const allowed = new Set(access.learnerIds.slice(0, 50));
+      if (allowed.size < 50) {
+        for (const learnerId of await commerceEnrollments.sampleActiveLearnerIdsByTenants(
+          access.tenantIds, 50 - allowed.size,
+        )) {
+          allowed.add(learnerId);
+        }
       }
       results = (
-        await Promise.all([...allowed].map((learnerId) => learningStore.get(learnerId)))
+        await Promise.all([...allowed].slice(0, 50).map((learnerId) => learningStore.get(learnerId)))
       )
         .filter((item): item is NonNullable<typeof item> => Boolean(item))
         .sort((a, b) => b.record.updatedAt.localeCompare(a.record.updatedAt))
@@ -24,6 +28,9 @@ export async function GET(request: Request) {
     }
 
     return NextResponse.json({
+      // A bounded snapshot of authorized learners, not a complete tenant census.
+      sampled: !access.unrestricted,
+      limit: 50,
       learners: results.map(({ record, plan }) => ({
         learnerId: record.learnerId,
         goal: record.state.goal,
