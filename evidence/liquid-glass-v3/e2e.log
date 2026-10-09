@@ -1,0 +1,13 @@
+
+> luma-learning-intelligence@0.1.0 test:e2e
+> playwright test e2e/liquid-glass-v2.spec.ts
+
+
+Running 4 tests using 4 workers
+
+  ✓  4 [chromium] › e2e/liquid-glass-v2.spec.ts:9:1 › Liquid Light renders bounded refraction without nested glass (8.6s)
+  ✓  3 [chromium] › e2e/liquid-glass-v2.spec.ts:46:1 › Dense content surfaces stay out of the backdrop-filter layer (10.7s)
+  ✓  1 [mobile] › e2e/liquid-glass-v2.spec.ts:9:1 › Liquid Light renders bounded refraction without nested glass (11.2s)
+  ✓  2 [mobile] › e2e/liquid-glass-v2.spec.ts:46:1 › Dense content surfaces stay out of the backdrop-filter layer (12.8s)
+
+  4 passed (18.7s)
