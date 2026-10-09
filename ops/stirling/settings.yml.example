@@ -1,0 +1,10 @@
+# Stirling-PDF settings: merge into a version-compatible /configs/settings.yml.
+# The default validation revocation mode in Stirling is "none"; LUMA production
+# explicitly rejects documents unless OCSP/CRL checking was successful.
+security:
+  validation:
+    revocation:
+      mode: ocsp+crl
+      hardFail: true
+# Configure a trusted CA store and CRL/OCSP egress per issuer.
+# Do not put private keys, .p12 bytes or passwords here.

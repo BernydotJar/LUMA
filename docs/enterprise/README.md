@@ -14,6 +14,7 @@
 | [Acceptance matrix](audit-acceptance-matrix.md) | Exact implementation status / blockers |
 | [Learning access policy](learning-access-policy.md) | Optional fail-closed entitlement enforcement for pilot deployments |
 | [Tenant/program isolation contract](tenant-isolation-contract.md) | Scoped Twin, coach permissions, provider RAG contract |
+| [Institutional certificate signing](certificates-e-sign.md) | Private Stirling-PDF, trusted X.509 signature, ownership and license/release gates |
 
 **Evidence classifications:** VERIFIED = source/tests/config directly observed; ESTIMATED = mathematical scenario based on inputs; ASSUMED = unconfirmed pilot hypothesis; NOT YET VERIFIED = external or operational evidence missing.
 

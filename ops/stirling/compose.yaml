@@ -1,0 +1,29 @@
+# Private, unexposed Stirling engine for LUMA.
+# Supply an image with reviewed licensing and a pinned SHA-256 digest.
+name: luma-signing
+services:
+  stirling-pdf:
+    image: ${STIRLING_IMAGE:?Set STIRLING_IMAGE to a reviewed image pinned by digest}
+    restart: unless-stopped
+    expose:
+      - "8080"
+    networks:
+      - signing
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:size=256m
+    volumes:
+      - stirling_config:/configs
+      - stirling_logs:/logs
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+networks:
+  signing:
+    external: true
+    name: luma_signing
+volumes:
+  stirling_config:
+  stirling_logs:
