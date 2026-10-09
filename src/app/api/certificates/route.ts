@@ -11,6 +11,6 @@ export async function POST(request: Request) {
     const result = await certificates.issue({ uid: decoded.uid, access }, body);
     return NextResponse.json({
       certificateId: result.certificateId, status: result.status,
-    }, { status: 202, headers: { "cache-control": "no-store" } });
+    }, { status: result.status === "signed" ? 201 : 202, headers: { "cache-control": "no-store" } });
   } catch (error) { return certificateError(error); }
 }

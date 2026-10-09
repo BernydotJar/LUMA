@@ -93,16 +93,20 @@ export async function renderCertificatePdf(
 
   page.drawLine({ start: { x: 570, y: 140 }, end: { x: 755, y: 140 },
     thickness: 0.7, color: accent });
-  page.drawText(record.signerName, { x: 570, y: 118, font: bold, size: 10, color: ink });
-  page.drawText("Firma electrónica del emisor", {
-    x: 570, y: 101, font: regular, size: 9, color: muted,
+  const isInstitutional = record.provider === "stirling";
+  const signerLabel = isInstitutional ? record.issuerLegalName : record.signerName;
+  const signerLines = wrap(signerLabel, bold, 10, 215).slice(0, 2);
+  signerLines.forEach((line, index) =>
+    page.drawText(line, { x: 570, y: 118 - index * 13, font: bold, size: 10, color: ink }));
+  page.drawText(isInstitutional ? "Firma digital institucional (X.509)" : "Firma electrónica del emisor", {
+    x: 570, y: signerLines.length > 1 ? 88 : 101, font: regular, size: 9, color: muted,
   });
   page.drawText("La validez depende de la firma completada y de su estado de verificación en LUMA.", {
     x: 66, y: 42, font: regular, size: 8, color: muted,
   });
   pdf.setTitle(`Certificado - ${record.programTitle}`);
   pdf.setAuthor(record.issuerLegalName);
-  pdf.setSubject("Credencial académica pendiente de firma electrónica");
-  pdf.setKeywords(["LUMA", "certificado", "verificación"]);
+  pdf.setSubject("LUMA_CERTIFICATE:" + record.certificateId);
+  pdf.setKeywords(["LUMA", "certificado", "verificación", record.certificateId]);
   return pdf.save({ useObjectStreams: false });
 }

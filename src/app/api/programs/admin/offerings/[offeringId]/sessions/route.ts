@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireLearningAdmin } from "@/lib/learning-server";
 import { programDeliveryStore } from "@/lib/program-delivery-server";
-import type { LiveSessionStatus, RecordingPolicy } from "@/lib/program-delivery";
+import type { ClassroomProvider, LiveSessionStatus, RecordingPolicy } from "@/lib/program-delivery";
 
 export const runtime = "nodejs";
 
@@ -82,12 +82,26 @@ export async function POST(
       return NextResponse.json({ error: "invalid_session_status" }, { status: 400 });
     }
 
+    const classroomProvider = typeof body.classroomProvider === "string"
+      ? body.classroomProvider as ClassroomProvider : undefined;
+    if (classroomProvider && !["external", "livekit"].includes(classroomProvider)) {
+      return NextResponse.json({ error: "invalid_classroom_provider" }, { status: 400 });
+    }
+    const classroomCapacity = body.classroomCapacity === undefined
+      ? undefined : Number(body.classroomCapacity);
+    if (classroomCapacity !== undefined &&
+        (!Number.isInteger(classroomCapacity) || classroomCapacity < 2 || classroomCapacity > 1000)) {
+      return NextResponse.json({ error: "invalid_classroom_capacity" }, { status: 400 });
+    }
+
     const session = await programDeliveryStore.scheduleSession(offeringId, {
       ...(typeof body.sessionId === "string" ? { sessionId: body.sessionId } : {}),
       title: body.title,
       startsAt: body.startsAt,
       durationMinutes: Number(body.durationMinutes),
       ...(typeof body.joinUrl === "string" ? { joinUrl: body.joinUrl } : {}),
+      ...(classroomProvider ? { classroomProvider } : {}),
+      ...(classroomCapacity !== undefined ? { classroomCapacity } : {}),
       ...(recordingPolicy ? { recordingPolicy } : {}),
       ...(status ? { status } : {}),
     });

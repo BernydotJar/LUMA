@@ -584,3 +584,10 @@ html[data-theme="dark"] .brand-mark__icon {
 .brand-mark {
   min-height: 44px;
 }
+
+/* Global document scroll offset cannot be scoped within a CSS module. */
+@media (max-width: 760px) {
+  html {
+    scroll-padding-bottom: 104px;
+  }
+}

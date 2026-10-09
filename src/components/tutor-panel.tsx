@@ -12,6 +12,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { tutorQuickPrompts } from "@/lib/luma-data";
+import { firebaseAuth } from "@/lib/firebase-client";
 import styles from "./learner-components.module.css";
 
 type TutorMessage = {
@@ -77,9 +78,14 @@ export function TutorPanel() {
     setLoading(true);
 
     try {
+      const signedInUser = firebaseAuth.currentUser;
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (signedInUser) {
+        headers.authorization = `Bearer ${await signedInUser.getIdToken()}`;
+      }
       const response = await fetch("/api/tutor", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({
           message: clean,
           messages: recentContext,
@@ -97,9 +103,13 @@ export function TutorPanel() {
         {
           role: "tutor",
           content:
-            data.answer ??
-            data.error ??
-            "Puedo sostener mejor esta respuesta con una fuente clara. Prueba reformulando la pregunta o abre el material relacionado.",
+            response.status === 401
+              ? "Inicia sesión para continuar con el tutor."
+              : response.status === 403
+                ? "Tu acceso al programa aún no está activo. Revisa tu inscripción con el equipo de apoyo."
+                : data.answer ??
+                  data.error ??
+                  "Puedo sostener mejor esta respuesta con una fuente clara. Prueba reformulando la pregunta o abre el material relacionado.",
           evidence: data.evidence,
           reflection: data.reflection,
           trust: data.trust,

@@ -1,152 +1,176 @@
-# LUMA Enterprise — Credenciales académicas con firma electrónica
+# LUMA Enterprise — Certificados académicos con firma digital institucional
 
-**Estado:** módulo integrado en rama de desarrollo. Tipo de entrega: capacidad empresarial, no un certificado decorativo, MVP ni prueba de concepto. **Producción condicionada a aceptación técnica, jurídica y operativa**, con proveedor y firmante reales; las pruebas locales no sustituyen la firma de un documento real.
+**Estado de ingeniería:** adaptador Stirling-PDF integrado en la rama de certificados, sin fusionar ni desplegar. **El alcance es de producción empresarial, no un MVP**, pero la liberación sigue sujeta a pruebas reales, seguridad, autorización y revisión de licencia. LUMA no afirma que un certificado exista hasta que el proveedor devuelva un PDF firmado cuya validez haya sido verificada y archivada.
 
-## 1. Contrato de producto
-
-LUMA genera un certificado académico cuando una persona autorizada acredita la finalización de un programa y un representante autorizado del emisor firma el documento a través de un proveedor externo. La emisión está vinculada a un **tenant**, un **programa**, una **cohorte** y una **persona identificada**.
-
-- El entrenador aprueba explícitamente el aprendizaje, confirma personalmente el nombre legal contra registros institucionales y registra el criterio. Ese nombre se congela en la aprobación. LUMA no infiere automáticamente el éxito de visualizaciones, asistencia, respuestas de IA o compras.
-- LUMA verifica que la matrícula está activa en la cohorte exacta y que la identidad del aprendiz es verificable.
-- Un administrador registra la razón social, nombre y correo del firmante autorizado.
-- LUMA construye el PDF institucional con ID único, QR, nombre, programa, institución y fecha.
-- El documento se remite a **DocuSign eSignature** para su firma real; *pendiente* y *firmado* son estados distintos.
-- DocuSign confirma la finalización. El listener verifica HMAC y consulta independientemente el sobre completado; después archiva el PDF firmado y el Certificate of Completion del proveedor en almacenamiento privado.
-- LUMA verifica SHA-256 al entregar el PDF al titular, publica el estado válido solo después de archivar la firma y permite revocación con motivo/auditoría.
-- La verificación pública no permite descargar el PDF ni revela UID, correo, nombre del firmante, storage keys o respuestas internas del proveedor.
-
-**Aclaración jurídica:** los distintos niveles de firma (simple, avanzada, cualificada, certificada) tienen requisitos específicos. Este módulo usa la firma provista por DocuSign y su rastro de auditoría; no afirma automáticamente que toda firma alcanzará el estándar de *firma digital certificada* o su equivalente en todas las jurisdicciones. El alcance legal y la identidad/apoderamiento del firmante requieren validación contractual y jurídica por país.
-
-## 2. Arquitectura
+## 1. Arquitectura y responsabilidades
 
 ```text
-Coach autorizado / Admin (Firebase Auth)
-   | aprobar finalización (rationale, learner evidence ownership)
-   v
-LUMA API / AcademicCompletion  -- Firestore transaction, deterministic id
-   | emisión autorizada: cohort + tenant + active enrollment + verified identity
-   v
-AcademicCertificates record (PREPARING) -- UUID, unique and idempotent
-   | PDF institucional, QR /verify/{uuid}
-   v
-Private Cloud Storage (unsigned.pdf)
-   | JWT OAuth + request signature
-   v
-DocuSign eSignature -> firma humana en email institucional
-   | Connect JSON event (HMAC verified)
-   v
-LUMA webhook -> GET envelope status COMPLETED from provider
-   | retrieve signed PDF + provider Certificate of Completion
-   v
-Private Cloud Storage (signed.pdf, signature-evidence.pdf)
-   | SHA256, Firestore transaction
-   v
-SIGNED -> /verify/{id} valida / titular descarga PDF autenticado
-   |
-Admin REVOKE -> REVOKED (evidencia histórica preservada)
+Entrenador -> POST /api/certificates/completions
+  [matrícula cohorte + scope + nombre legal atestado + evaluación]
+       |
+       v
+LUMA AcademicCompletion -- transacción Firestore, ID determinístico
+       |
+       v
+LUMA CertificateService -- reserva UUID / PREPARING
+  [requiere configuración del emisor + autorización automática del admin]
+       |
+       v
+LUMA PDF generator -- PDF original privado + QR /verify/{uuid}
+       |
+       v
+SignatureProvider = STIRLING (default)
+  POST private /api/v1/security/cert-sign
+  [fileInput PDF, certType PKCS12, p12File, password]
+       |
+       v
+POST private /api/v1/security/validate-signature
+  [signature valid, chain trusted, exact signer serial, full PDF covered,
+   certificate not expired, OCSP/CRL checked, not self-signed]
+       |
+       v
+Firebase Cloud Storage (privado): unsigned.pdf, signed.pdf, signature-validation.json
+       |
+       v
+Firestore transaction: SIGNED + signed SHA-256 + immutable audit event
+       |
+       +--> aprendiz: /learn/certificates, PDF firmado autenticado
+       +--> público: /verify/{uuid} (estado institucional sin acceso al PDF)
+       +--> admin: revocación con motivo, historial conservado
 ```
 
-### Entidades Firestore
+**DocuSign sigue como adaptador opcional** mediante `CERTIFICATE_SIGNING_PROVIDER=docusign`. La ruta predeterminada de LUMA es `stirling` y no usa servicios pagos por documento. El modo institucional NO equivale a obtener una firma humana individual por cada diploma: el representante autoriza previamente a LUMA a firmar de forma automática por la institución.
 
-| Colección | Qué conserva | Acceso |
-|---|---|---|
-| `academicCertificateIssuers/{tenantId}` | razón social y firmante oficial (configuración vigente) | solo Admin SDK |
-| `academicCompletions/{sha256(tenant, offering, learner)}` | finalización firmada por entrenador, fundamento y referencias a evidencia | solo servidor, transaccional |
-| `academicCertificates/{uuid}` | contrato de certificación, estado, proveedor, rutas privadas, hashes y revocación | solo servidor |
-| `academicCertificates/{uuid}/events/{eventId}` | eventos de firma, archivado y revocación | solo servidor |
-| Cloud Storage `academic-certificates/{tenant}/{uuid}/` | borrador, PDF firmado y evidencia del proveedor | bucket privado, sin URLs públicas |
+## 2. Contrato real de Stirling-PDF
 
-Las reglas Firestore del proyecto bloquean accesos directos de cliente; todas las acciones pasan por API con Firebase ID token y autorización contextual.
+Revisado contra las fuentes del proyecto:
+- [CertSignController.java](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/app/core/src/main/java/stirling/software/SPDF/controller/api/security/CertSignController.java)
+- [SignPDFWithCertRequest.java](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/app/core/src/main/java/stirling/software/SPDF/model/api/security/SignPDFWithCertRequest.java)
+- [ValidateSignatureController.java](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/app/core/src/main/java/stirling/software/SPDF/controller/api/security/ValidateSignatureController.java)
+- [SignatureValidationResult.java](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/app/core/src/main/java/stirling/software/SPDF/model/api/security/SignatureValidationResult.java)
 
-### Máquina de estados
+### Firma
 
+`POST /api/v1/security/cert-sign` (multipart form-data):
+- `fileInput`: certificado PDF original
+- `certType`: `PKCS12`
+- `p12File`: certificado + clave institucional en PKCS#12
+- `password`: secreto de apertura del keystore
+- `name`: institución emisora
+- `showSignature=false`: firma criptográfica invisible. El PDF institucional de LUMA ya contiene una línea de firma visual.
+- `reason`, `showLogo`: metadatos/imagen según contrato de Stirling
+
+**No usamos `certType=SERVER`**, porque su servicio de certificado del servidor puede no estar disponible en la edición libre.
+
+### Verificación obligatoria
+
+`POST /api/v1/security/validate-signature` (multipart):
+- `fileInput`: PDF recibido de la firma
+- `certFile`: certificado raíz/intermedio confiable opcional definido por la organización
+
+LUMA exige **exactamente una firma** y comprueba que:
+- `valid` y `coversEntireDocument` sean verdaderos.
+- `chainValid` y `trustValid` sean verdaderos.
+- `notExpired` sea verdadero y `selfSigned` falso.
+- `serialNumber` coincida con el certificado público institucional configurado. Una cadena válida de **otro** emisor no sirve.
+- En modo estricto, `revocationChecked=true` y `revocationStatus=good`.
+- Título, asunto `LUMA_CERTIFICATE:{uuid}` y cantidad de páginas coincidan con el documento que LUMA reservó.
+
+Si la verificación falla, el estado no pasa a `signed`. Los errores del motor no se devuelven sin filtrar al cliente.
+
+### Evidencia persistente
+
+`signature-validation.json` registra exclusivamente datos no secretos: nombre del proveedor, UUID, tenant, SHA-256 del documento original y firmado, número de serie de certificado público, emisor, cadena, integridad, estado de revocación y fecha de validación. Un evento Firestore conserva el actor de la emisión y quien autorizó la firma institucional. **No es un Certificate of Completion de DocuSign** ni debe presentarse como tal.
+
+## 3. Autorización y aislamiento
+
+1. Un entrenador con asignación a cohorte y alcance de tenant debe atestar nombre legal, identidad revisada y resultados de aprendizaje.
+2. Se verifica matrícula activa para el programa y la cohorte exactos y correo controlado/verificado en Firebase.
+3. Un administrador institucional configura emisor y firma el consentimiento operacional marcando `institutionalSigningAuthorized`.
+4. El certificado se vincula también al nombre legal `STIRLING_SIGNING_LEGAL_NAME` del emisor. El secreto PKCS#12 queda asociado exclusivamente al tenant `STIRLING_SIGNING_TENANT_ID`. No existe fallback a firmar usando el certificado de otra organización.
+5. Cada aprobación solo puede reservar **un UUID** y repetir la solicitud no crea ni firma otro certificado.
+6. En fallos ambiguos el registro pasa a `failed`: ninguna reemisión automática. La conciliación administrativa y la revalidación de los objetos almacenados son obligatorias antes de reintentar.
+7. La descarga del PDF requiere ser el alumno titular; el verificador público solo publica nombre, programa, institución, estado y SHA-256 mediante un UUID difícil de enumerar.
+8. Las revocaciones cambian el estado **institucional de la credencial**; no cancelan mágicamente una firma X.509 que ya fue aplicada. Se conserva el documento original firmado como evidencia histórica.
+
+## 4. Configuración de producción
+
+Usar Cloud Secret Manager o montajes privados con permisos mínimos. Jamás guardar keystore, contraseñas o token API en Git, archivos visibles al cliente ni trazas de HTTP.
+
+```text
+CERTIFICATE_SIGNING_PROVIDER=stirling
+CERTIFICATE_STORAGE_BUCKET=<bucket privado de LUMA>
+LUMA_PUBLIC_BASE_URL=https://luma.example.org
+
+STIRLING_PDF_BASE_URL=http://stirling-pdf:8080
+STIRLING_SIGNING_TENANT_ID=<tenant ID autorizado>
+STIRLING_SIGNING_LEGAL_NAME=<nombre legal del emisor autorizado>
+
+STIRLING_P12_PATH=/run/secrets/academic-signing.p12
+# Alternativa exclusiva a PATH:
+# STIRLING_P12_BASE64=<base64 del keystore PKCS12>
+STIRLING_P12_PASSWORD=<secret manager>
+STIRLING_SIGNER_CERT_PEM_BASE64=<certificado PUBLICO PEM en base64>
+STIRLING_TRUST_ANCHOR_PEM_BASE64=<certificado CA raíz PUBLICO PEM en base64 opcional>
+
+STIRLING_REVOCATION_POLICY=strict
+STIRLING_API_KEY=<clave de API si Stirling habilita autenticación>
 ```
-                preparing
-                   |
-           enviado a firma
-                   v
-            pending_signature
-              /          \
-        falla/         Connect validado + PDF y evidencia archivados
-           v                    v
-         failed                signed
-      conciliación               |
-                               revocar
-                                  v
-                                revoked
-```
 
-Se impide que una solicitud repetida genere un segundo certificado para la misma aprobación. Un error ambiguo de red o persistencia no inicia automáticamente otro sobre DocuSign: requiere conciliación. La vigencia de una credencial **nunca** deriva de un webhook sin validación de firma y de la consulta independiente del estado del sobre.
+Por defecto solo se permiten URLs HTTP internas `localhost`, `127.0.0.1`, `stirling-pdf`. Cualquier otro hostname debe ser HTTPS, con acceso autenticado y restringido. `STIRLING_REVOCATION_POLICY=allow-unchecked` queda **prohibido en producción**.
 
-## 3. APIs
+El proveedor Stirling, por defecto, tiene `security.validation.revocation.mode: none`; por eso incluimos una plantilla `ops/stirling/settings.yml.example` que propone `ocsp+crl` y `hardFail: true`. Debe habilitarse en la configuración real y verificarse contra el formato de la versión instalada. Sin revocación verificable el motor **no puede emitir certificados válidos** en producción.
+
+## 5. Infraestructura autoalojada
+
+Plantilla: `ops/stirling/compose.yaml`, con imagen fijada mediante digest verificado, red Docker privada `luma_signing`, sin puertos publicados, límites de memoria y volúmenes de configuración.
+
+**Dos topologías posibles:**
+- Docker: LUMA y Stirling en el mismo bridge privado. URL interna `http://stirling-pdf:8080`.
+- Firebase App Hosting + servicio de firma privado: Stirling desplegado en la infraestructura interna GCP con HTTPS, autenticación y políticas de ingreso y salida restringidas. El DNS `stirling-pdf` del Docker local no resuelve automáticamente desde Firebase App Hosting.
+
+LUMA genera y archiva PDFs en Firebase/Google Cloud Storage. Stirling no necesita exponer su interfaz de usuario. El servicio solo tiene que recibir PDF + PKCS#12 por la ruta interna. Para evitar que un servidor compartido registre claves privadas, desactivar captura de body/logs/APM y mantener la red privada; en producción multi-host usar TLS con autenticación robusta. No instalar un certificado privado en un directorio público de Stirling.
+
+### Nota legal de licencia
+
+[LICENSE raíz](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/LICENSE) declara MIT para código fuera de directorios excluidos; `app/core` contiene `CertSignController.java`. Sin embargo, `app/proprietary/`, `engine/` y otros directorios tienen licencias separadas. Por ello no asumimos que **cualquier imagen Docker** pueda utilizarse comercialmente sin licencia. Antes del deploy de LUMA, revisar el contenido de la imagen elegida, su plan de uso comercial y la implementación del endpoint firmado. Si se requiere, construir una distribución limitada al código bajo licencia permisiva, sin módulos restringidos.
+
+No hay tarifa obligatoria por documento impuesta por la implementación del adaptador, pero hay costes de hosting, emisión y renovación de certificado CA, almacenamiento, sellado temporal, seguridad, operación y licencias que apliquen.
+
+## 6. APIs LUMA
 
 | Método | Ruta | Actor | Función |
 |---|---|---|---|
-| `GET` | `/api/certificates/console` | Coach + scope | Cohortes asignadas, listado paginado de alumnos |
-| `POST` | `/api/certificates/completions` | Coach autorizado | Registrar finalización verificando matrícula y evidencia |
-| `PUT` | `/api/certificates/issuers` | Admin | Establecer institución y firmante (no crea consentimiento DocuSign) |
-| `POST` | `/api/certificates` | Coach autorizado | Reservar certificado, crear PDF, solicitar firma, devolver estado |
-| `GET` | `/api/certificates/{id}` | Alumno titular / Coach asignado | Estado de firma y verificación |
-| `GET` | `/api/certificates/mine` | Alumno titular | Mis certificados archivados |
-| `GET` | `/api/certificates/{id}/download` | Alumno titular | Descargar únicamente PDF firmado íntegro |
-| `GET` | `/api/certificates/verify/{id}` | Público con UUID | Validez o revocación, sin datos internos |
-| `GET` | `/verify/{id}` | Público con UUID | Página de verificación `noindex` |
-| `POST` | `/api/certificates/{id}/revoke` | Admin | Revocar con motivo auditado |
-| `POST` | `/api/certificates/webhooks/docusign` | Connect autenticado HMAC | Conciliar sobre completado, archivado |
+| GET | `/api/certificates/console` | Entrenador con scope | Cohortes y matrículas |
+| POST | `/api/certificates/completions` | Entrenador con scope | Atestación académica |
+| PUT | `/api/certificates/issuers` | Admin | Emisor y consentimiento automático |
+| POST | `/api/certificates` | Entrenador con scope | PDF + firma institucional + verificación + archivo |
+| GET | `/api/certificates/{id}` | Titular/entrenador asignado | Estado |
+| GET | `/api/certificates/mine` | Titular | Credenciales |
+| GET | `/api/certificates/{id}/download` | Titular | PDF firmado con SHA-256 validado |
+| GET | `/api/certificates/verify/{id}` | Público con UUID | Validez/revocación institucional |
+| GET | `/verify/{id}` | Público con UUID | Página noindex |
+| POST | `/api/certificates/{id}/revoke` | Admin | Revocación con motivo |
+| POST | `/api/certificates/webhooks/docusign` | DocuSign HMAC | Solo si se habilita adaptador legado |
 
-Las APIs privadas exigen el Firebase ID token (Authorization Bearer). Los IDs no son un mecanismo de autorización. IDs de Firebase, matrículas y eventos se contrastan en el servidor.
+## 7. Gates de liberación
 
-## 4. Entornos y secretos
+**No confundir pruebas con aceptación productiva.** Deben satisfacerse:
 
-Configurar exclusivamente en el administrador de secretos del servidor, **jamás en cliente, Git o `NEXT_PUBLIC_*`**:
+1. Revisar licencia de la distribución autoalojada y cualquier coste de comercialización de la imagen utilizada.
+2. Crear certificado de prueba institucional con CA de prueba confiable y ejecutar `node scripts/certificates/stirling-smoke.mjs path/to/unsigned-test.pdf`. Probar contra el contenedor exacto fijado por digest.
+3. Test E2E real: PDF generado, firma X.509 real, CA confiable, OCSP/CRL, hash, validación en Adobe Acrobat y/o validador PAdES independiente. Verificar que no se acepta certificado incorrecto, firma ausente, inválida o autocertificada.
+4. Firestore + Storage emulator: atomicidad de las transacciones, aislamiento por tenant, concurrencia, fallos de almacenamiento, recuperación administrativa, audit trail.
+5. Construcción de producción en CI aislado, Playwright UX/Firefox/Safari, PDF nombres largos/internacionales, WCAG.
+6. Modelo de conservación y expiración documental, consentimiento y privacidad, autorización formal del uso automático de certificado de la institución y evaluación jurídica por país.
+7. Observabilidad, alertas, cuotas de emisión, límites de tráfico y procedimiento de conciliación para fallos entre la firma y la confirmación en Firestore.
+8. Plan multi-tenant: una credencial de firma por organización; la configuración de este adaptador usa **una sola institución por despliegue** y rechaza automáticamente todos los otros tenants.
 
-```text
-LUMA_PUBLIC_BASE_URL=https://luma.yourdomain.tld
-CERTIFICATE_STORAGE_BUCKET=<private-bucket>
+### Lo que esta implementación todavía no pretende
 
-DOCUSIGN_ACCOUNT_ID=<Docusign API account UUID>
-DOCUSIGN_INTEGRATION_KEY=<Docusign app integration key>
-DOCUSIGN_IMPERSONATED_USER_ID=<Docusign authorized sender GUID>
-DOCUSIGN_PRIVATE_KEY_PEM=<PKCS8 RSA private key PEM, newline-escaped if env>
-DOCUSIGN_OAUTH_HOST=account.docusign.com
-DOCUSIGN_API_BASE_URL=https://<account-specific-host>.docusign.net/restapi
-DOCUSIGN_CONNECT_HMAC_SECRET=<Connect HMAC key>
-```
+- No presta un servicio de firma remota cualificada de personas físicas ni valida identidad jurídica por sí misma.
+- No incluye HSM/PKCS#11 remoto, sello de tiempo RFC 3161 acreditado ni conservación avanzada PAdES-LTA. Son opciones posteriores que podrían exigir otro motor, licencia o servicio regulado.
+- No garantiza capacidad operacional de miles de certificados hasta superar las pruebas de capacidad y encolado. La versión actual firma de forma síncrona y bloquea reintentos automáticos cuando el resultado es ambiguo.
+- No afirma que el certificado institucional tenga validez jurídica en cualquier país, ni que esté desplegado en Firebase.
 
-Para entorno de desarrollador usar `account-d.docusign.com` y `https://demo.docusign.net/restapi`. El emisor debe autorizar la integración y otorgar consentimiento para JWT impersonation. Producción requiere cuenta habilitada, consentimiento otorgado, API base exacta de la cuenta y webhooks Connect JSON `envelope-completed` con HMAC. Habilitar reintentos de Connect, alertas sobre entregas fallidas y secreto rotado.
-
-**No se generan, almacenan ni manejan claves privadas del firmante en LUMA.** La clave JWT corresponde a autenticación servidor→proveedor, y se gestiona en secret manager. La firma la ejecuta el proveedor con el consentimiento y los controles elegidos en su producto.
-
-## 5. Operación empresarial y controles de release
-
-**Controles presentes en código**
-- Tenant y cohorte explícitos con claims de entrenador + asignación real en la cohorte; admin separado.
-- El correo verificado se comprueba con Firebase Admin; el nombre legal se obtiene de la atestación explícita del entrenador contra registros institucionales y queda congelado, sin depender del nombre de perfil editable. Un correo verificado no constituye por sí solo prueba de identidad legal.
-- Matrícula activa exacta + aprobación de finalización antes de solicitar firma.
-- Emisión idempotente por hash de finalización y UUID de credencial.
-- Firma solo por proveedor; callback HMAC, consulta de estado completado, PDF y evidencia del proveedor descargados y almacenados.
-- Huella SHA-256 del PDF firmado, verificada antes de servir al titular.
-- Verificador público no indexable; revocación, trazabilidad y documentos archivados no públicos.
-- Errores operativos sin mensajes sensibles expuestos; descarga con `no-store`.
-
-**Gates de despliegue para producción (aún requieren evidencias independientes)**
-1. Firma real con cuenta DocuSign de la organización y firmante legalmente autorizado; proveedor exacto y categoría legal de e-sign confirmada por país.
-2. E2E automatizado: instructor asignado/no asignado, matrícula y cambios de estado, integración del proveedor, callbacks duplicados/fuera de orden/ilegítimos, errores de almacenamiento, revocación y descargas no autorizadas.
-3. Emuladores/ambiente aislado para transacciones Firestore y políticas de Google Cloud Storage; cargas, concurrencia y recuperación del estado `failed`.
-4. Reconciliación administrada y alertas operativas de transacciones atascadas; retención de PDF/auditoría, backups y acceso administrativo.
-5. Seguridad: validación y rotación de secretos, firma y evidencia originales, escaneo de dependencias, rate limits globales, retención y minimización de PII.
-6. QA de experiencia de certificados en Safari/iOS/Android, WCAG y PDF multipaís/nombres largos; aprobación jurídica del texto y del alcance de la certificación.
-7. Pruebas de go-live y configuración reales sin logs de secreto ni enmascaramiento del estado de firma.
-
-### Advertencias de alcance
-
-- El validador LUMA verifica **estado institucional y hash del archivo**, no sustituye un validador criptográfico PAdES ni a una autoridad de certificación. Un requisito de firma avanzada/cualificada necesita proveedor y comprobador legal apropiados.
-- La publicación de nombre + logro mediante URL compartible necesita políticas de privacidad y consentimiento/autorización de la institución según ley aplicable.
-- Paginar más allá de 100 credenciales por alumno y más de 100 cohortes en consola es un requisito de escalado para organizaciones grandes.
-- Los eventos de aprendizaje disponibles hoy no codifican todos los criterios de finalización por programa: la evidencia y su pertinencia académica siguen bajo la responsabilidad explícita del entrenador.
-
-## 6. Pruebas hasta el momento
-
-Se agregaron pruebas unitarias independientes para separación tenant/cohorte, validación de aprobación, estados no publicables, autenticidad de HMAC, detección del evento esperado y creación real de PDF A4 con QR. Las pruebas de conectividad externa y cumplimiento jurídico requieren aprobación y credenciales reales.
-
-Referencias técnicas: [Docusign Connect](https://developers.docusign.com/platform/webhooks/connect/), [Firma remota por API](https://developers.docusign.com/docs/esign-rest-api/how-to/request-signature-template-remote/), [Docusign Auth](https://developers.docusign.com/platform/auth/).
+Para mayor detalle del gate y evidencia verificable, ver `evidence/certificates-esign-20261009/release-evidence.md`.

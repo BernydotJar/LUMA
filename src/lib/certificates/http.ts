@@ -13,6 +13,9 @@ export function certificateError(error: unknown): NextResponse {
      "CERTIFICATE_NOT_SIGNED", "CERTIFICATE_INVALID_STATE"].includes(message) ? 409 :
     message.startsWith("CERTIFICATE_INVALID_") ||
     message.endsWith("_TOO_SHORT") ? 400 :
+    message === "CERTIFICATE_INSTITUTIONAL_SIGNING_NOT_AUTHORIZED" ? 409 :
+    message === "STIRLING_TENANT_NOT_AUTHORIZED" ? 403 :
+    message.startsWith("STIRLING_") ? 503 :
     message.endsWith("_NOT_CONFIGURED") ? 503 : 500;
   // Never leak provider credentials, learner data, tokens, or upstream error bodies.
   const safe = status === 500 ? "certificate_service_unavailable" :

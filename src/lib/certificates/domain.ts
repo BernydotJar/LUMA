@@ -11,6 +11,8 @@ export interface CertificateIssuer {
   signerEmail: string;
   updatedBy: string;
   updatedAt: string;
+  institutionalSigningAuthorizedAt?: string;
+  institutionalSigningAuthorizedBy?: string;
 }
 
 export interface CompletionAttestation {
@@ -40,7 +42,7 @@ export interface AcademicCertificate {
   issuerLegalName: string;
   signerName: string;
   signerEmail: string;
-  provider: "docusign";
+  provider: "docusign" | "stirling";
   status: CertificateStatus;
   issuedAt: string;
   updatedAt: string;
@@ -50,6 +52,8 @@ export interface AcademicCertificate {
   signedStoragePath?: string;
   evidenceStoragePath?: string;
   signedSha256?: string;
+  signatureEvidenceSha256?: string;
+  signerCertificateSerial?: string;
   signedAt?: string;
   revokedAt?: string;
   revokedBy?: string;
@@ -122,6 +126,7 @@ export function publicCertificateState(record: AcademicCertificate) {
     programTitle: record.programTitle,
     issuerLegalName: record.issuerLegalName,
     issuedAt: record.issuedAt,
+    signingType: record.provider === "stirling" ? "institutional_digital" : "individual_electronic",
     signedAt: record.signedAt ?? null,
     signedSha256: record.signedSha256 ?? null,
     revokedAt: record.revokedAt ?? null,

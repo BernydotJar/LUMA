@@ -7,7 +7,8 @@ import { isActiveCommerceEnrollment } from "@/lib/commerce/enrollment";
 import type { LearningCoachAccess } from "@/lib/coach-access";
 import type { ProgramOffering } from "@/lib/program-delivery";
 import { sendForSignature, downloadSignedEnvelope } from "./docusign";
-import { renderCertificatePdf } from "./pdf";
+import { signCertificateWithStirling, loadStirlingConfig } from "./stirling";
+import { renderCertificatePdf, certificateBaseUrl } from "./pdf";
 import {
   canManageCertificates, cleanText, completionId, documentId, normalizedEmail,
   validateAttestation, type AcademicCertificate, type CertificateIssuer,
@@ -35,6 +36,14 @@ export class CertificateService {
       throw new Error("CERTIFICATE_STORAGE_NOT_CONFIGURED");
     }
     return getStorage().bucket(name);
+  }
+  private async putEvidence(path: string, evidence: unknown) {
+    const payload = Buffer.from(JSON.stringify(evidence), "utf8");
+    if (payload.length > 64_000) throw new Error("CERTIFICATE_EVIDENCE_TOO_LARGE");
+    await this.storage().file(path).save(payload, {
+      resumable: false, contentType: "application/json",
+      metadata: { cacheControl: "private, no-store" },
+    });
   }
   private async putPdf(path: string, pdf: Uint8Array) {
     if (pdf.length > 15_000_000 || Buffer.from(pdf).subarray(0, 5).toString() !== "%PDF-") {
@@ -89,6 +98,7 @@ export class CertificateService {
   }
   async configureIssuer(input: {
     tenantId: unknown; legalName: unknown; signerName: unknown; signerEmail: unknown;
+    institutionalSigningAuthorized?: unknown;
   }, adminUid: string) {
     const tenantId = documentId(input.tenantId, "tenant_id");
     const record: CertificateIssuer = {
@@ -96,8 +106,16 @@ export class CertificateService {
       signerName: cleanText(input.signerName, "signer_name"),
       signerEmail: normalizedEmail(input.signerEmail),
       updatedBy: adminUid, updatedAt: clock(),
+      ...(input.institutionalSigningAuthorized === true ? {
+        institutionalSigningAuthorizedAt: clock(),
+        institutionalSigningAuthorizedBy: adminUid,
+      } : {}),
     };
     await this.issuer(tenantId).set(record);
+    await this.issuer(tenantId).collection("events").add({
+      type: "issuer_updated", actor: adminUid, at: clock(),
+      institutionalSigningAuthorized: Boolean(record.institutionalSigningAuthorizedAt),
+    });
     return record;
   }
   async getIssuer(tenantId: string) {
@@ -160,6 +178,23 @@ export class CertificateService {
     const offeringId = documentId(input.offeringId, "offering_id");
     const offering = await this.authorizedOffering(coach, offeringId, learnerId);
     const issuer = await this.getIssuer(offering.tenantId);
+    const provider = process.env.CERTIFICATE_SIGNING_PROVIDER ?? "stirling";
+    if (provider !== "stirling" && provider !== "docusign") {
+      throw new Error("CERTIFICATE_SIGNING_PROVIDER_INVALID");
+    }
+    if (provider === "stirling" && (!issuer.institutionalSigningAuthorizedAt ||
+        !issuer.institutionalSigningAuthorizedBy)) {
+      throw new Error("CERTIFICATE_INSTITUTIONAL_SIGNING_NOT_AUTHORIZED");
+    }
+    // Validate tenant-specific keystore, certificate validity, network endpoint and
+    // trust policy before reserving an immutable certificate ID.
+    const stirlingConfig = provider === "stirling"
+      ? await loadStirlingConfig(offering.tenantId) : null;
+    if (stirlingConfig &&
+        stirlingConfig.issuerLegalName.toLocaleLowerCase().trim() !==
+          issuer.legalName.toLocaleLowerCase().trim()) {
+      throw new Error("STIRLING_ISSUER_NOT_AUTHORIZED");
+    }
     const enrollments = await commerceEnrollments.listByLearner(learnerId);
     if (!enrollments.some(enrollment =>
       enrollment.tenantId === offering.tenantId &&
@@ -174,10 +209,21 @@ export class CertificateService {
     if (!learner.emailVerified) {
       throw new Error("CERTIFICATE_VERIFIED_LEARNER_IDENTITY_REQUIRED");
     }
+    // Fail early on missing public verification origin or private artifact store.
+    certificateBaseUrl();
+    this.storage();
     const completionKey = completionId(offering.tenantId, offeringId, learnerId);
     const ref = this.completion(completionKey);
     const now = clock();
     const reserved = await this.firestore.runTransaction(async tx => {
+      if (provider === "stirling") {
+        const latestIssuer = await tx.get(this.issuer(offering.tenantId));
+        const value = latestIssuer.data() as CertificateIssuer | undefined;
+        if (!latestIssuer.exists || !value?.institutionalSigningAuthorizedAt ||
+            value.updatedAt !== issuer.updatedAt) {
+          throw new Error("CERTIFICATE_INSTITUTIONAL_SIGNING_NOT_AUTHORIZED");
+        }
+      }
       const approved = await tx.get(ref);
       if (!approved.exists) throw new Error("CERTIFICATE_COMPLETION_REQUIRED");
       const current = approved.data() as CompletionAttestation;
@@ -198,7 +244,7 @@ export class CertificateService {
         learnerName: cleanText(current.learnerLegalName, "learner_legal_name", 120),
         programTitle: offering.title, issuerLegalName: issuer.legalName,
         signerName: issuer.signerName, signerEmail: issuer.signerEmail,
-        provider: "docusign", status: "preparing",
+        provider, status: "preparing",
         issuedAt: now, updatedAt: now, issuedBy: coach.uid,
       };
       tx.create(this.certificate(certificateId), record);
@@ -213,6 +259,57 @@ export class CertificateService {
       const unsignedStoragePath =
         `academic-certificates/${record.tenantId}/${record.certificateId}/unsigned.pdf`;
       await this.putPdf(unsignedStoragePath, unsignedPdf);
+      if (provider === "stirling" && stirlingConfig) {
+        // Stop before releasing the institutional key if an admin changed the issuer.
+        const currentIssuer = await this.getIssuer(offering.tenantId);
+        if (!currentIssuer.institutionalSigningAuthorizedAt ||
+            currentIssuer.updatedAt !== issuer.updatedAt) {
+          throw new Error("CERTIFICATE_INSTITUTIONAL_SIGNING_NOT_AUTHORIZED");
+        }
+        const signed = await signCertificateWithStirling(record, unsignedPdf, stirlingConfig);
+        const root = "academic-certificates/" + record.tenantId + "/" + record.certificateId;
+        const signedStoragePath = root + "/signed.pdf";
+        const evidenceStoragePath = root + "/signature-validation.json";
+        const evidenceBytes = Buffer.from(JSON.stringify(signed.evidence), "utf8");
+        await Promise.all([
+          this.putPdf(signedStoragePath, signed.signedPdf),
+          this.putEvidence(evidenceStoragePath, signed.evidence),
+        ]);
+        const signatureEvidenceSha256 = createHash("sha256").update(evidenceBytes).digest("hex");
+        return this.firestore.runTransaction(async tx => {
+          const certificateRef = this.certificate(record.certificateId);
+          const current = await tx.get(certificateRef);
+          if (!current.exists) throw new Error("CERTIFICATE_NOT_FOUND");
+          const latest = current.data() as AcademicCertificate;
+          if (latest.status !== "preparing" || latest.provider !== "stirling") {
+            throw new Error("CERTIFICATE_INVALID_STATE");
+          }
+          const updatedAt = clock();
+          const result: AcademicCertificate = {
+            ...latest, status: "signed", signedAt: signed.signedAt,
+            updatedAt, unsignedStoragePath, signedStoragePath, evidenceStoragePath,
+            signedSha256: signed.signedSha256,
+            signatureEvidenceSha256,
+            signerCertificateSerial: signed.evidence.signerCertificateSerial,
+          };
+          tx.update(certificateRef, {
+            status: result.status, signedAt: result.signedAt,
+            updatedAt: result.updatedAt, unsignedStoragePath,
+            signedStoragePath, evidenceStoragePath,
+            signedSha256: result.signedSha256, signatureEvidenceSha256,
+            signerCertificateSerial: result.signerCertificateSerial,
+          });
+          tx.create(certificateRef.collection("events").doc("institutional-signature"), {
+            type: "institutional_signature_validated",
+            at: updatedAt, actor: coach.uid, provider: "stirling",
+            signedSha256: result.signedSha256,
+            certificateSerial: result.signerCertificateSerial,
+            validationEvidenceSha256: signatureEvidenceSha256,
+            signingAuthorizedBy: issuer.institutionalSigningAuthorizedBy,
+          });
+          return result;
+        });
+      }
       const envelopeId = await sendForSignature(record, issuer, unsignedPdf);
       await this.certificate(record.certificateId).update({
         status: "pending_signature", envelopeId, unsignedStoragePath, updatedAt: clock(),
@@ -247,7 +344,9 @@ export class CertificateService {
     const ref = snapshot.docs[0].ref;
     const record = snapshot.docs[0].data() as AcademicCertificate;
     if (record.status === "signed" || record.status === "revoked") return record;
-    if (record.status !== "pending_signature") throw new Error("CERTIFICATE_INVALID_STATE");
+    if (record.status !== "pending_signature" || record.provider !== "docusign") {
+      throw new Error("CERTIFICATE_INVALID_STATE");
+    }
     const files = await downloadSignedEnvelope(envelopeId);
     const root = `academic-certificates/${record.tenantId}/${record.certificateId}`;
     const signedStoragePath = `${root}/signed.pdf`;

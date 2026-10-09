@@ -1,0 +1,86 @@
+{
+  "project": "LUMA",
+  "graph_node": "LUMA-063-tenant-program-twin-rag-isolation",
+  "date": "2026-10-09",
+  "scope": "new tenant/program-indexed Learning Twin storage; coach and learner API authorization; scoped-RAG gateway",
+  "tests": {
+    "unit": {
+      "status": "PASS",
+      "passed": 212,
+      "skipped_due_to_separate_firestore_run": 45,
+      "source": "unit-tests-tenant-isolation.log"
+    },
+    "firestore_emulator": {
+      "status": "PASS",
+      "passed": 45,
+      "failed": 0,
+      "java": "Temurin 21",
+      "source": "firestore-emulator-tenant-isolation.log",
+      "command": "JAVA_HOME=/home/agent/.cache/ido-jre21 ... firebase emulators:exec --project demo-luma-commerce --only firestore '<four emulator test files>'"
+    },
+    "eslint": {
+      "status": "PASS",
+      "source": "lint-tenant-isolation.log"
+    },
+    "typescript": {
+      "status": "PASS",
+      "source": "typecheck-tenant-isolation.log"
+    },
+    "scoped_rag_security": {
+      "status": "PASS_UNIT_ONLY",
+      "scenarios": [
+        "missing attestation",
+        "foreign envelope",
+        "foreign tenant hit",
+        "foreign program hit",
+        "HTTP failure",
+        "non-TLS endpoint",
+        "scoped tutor no shared fallback"
+      ]
+    },
+    "build": {
+      "status": "PENDING_GITHUB_CI"
+    },
+    "browser": {
+      "status": "PENDING_GITHUB_CI"
+    },
+    "adversarial_granite": {
+      "status": "UNAVAILABLE",
+      "reason": "ollama server returns HTTP 500 process killed due memory pressure"
+    },
+    "external_rag_gateway": {
+      "status": "UNVERIFIED",
+      "reason": "Legacy endpoint healthy and enforces 401 unauthenticated; per-tenant pre-retrieval isolation absent/unproven"
+    },
+    "deployment": {
+      "status": "NOT_PERFORMED"
+    },
+    "atomic_revocation": {
+      "status": "PASS_EMULATOR",
+      "cases": [
+        "active scope required inside transaction",
+        "revocation blocks event append and replay",
+        "denied write keeps learner version unchanged"
+      ],
+      "source": "atomic-entitlement-emulator.log"
+    },
+    "rag_payload_hardening": {
+      "status": "PASS_UNIT",
+      "cases": [
+        "max response 256 KiB",
+        "limit results to requested hits",
+        "reject unsafe URL and timestamps",
+        "bound source metadata"
+      ]
+    }
+  },
+  "enterprise_pilot_gate": "BLOCKED",
+  "release_intent": "SAFE_SOURCE_CHANGE_REVIEW_ONLY",
+  "known_limitations": [
+    "Current deployment is single configured tenant; per-tenant dynamic resolution needs future identity architecture",
+    "Multi-program coach/learner picker UI pending; strict API accepts verified program header or single configured program",
+    "External RAG index isolation, access logs and source ownership not verified",
+    "No automatic migration of legacy root learners; strict mode starts a separate state tree",
+    "Backup/restore, data deletion, capacity/load, merchant receipts and contractual SLA remain blocked"
+  ]
+}

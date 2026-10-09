@@ -54,7 +54,6 @@ export function StudioDashboard() {
 
   const current = user && snapshot?.uid === user.uid ? snapshot : null;
   const authenticated = Boolean(user);
-  const hasLearners = current?.learners !== undefined;
   const hasInterventions = current?.interventions !== undefined;
   const coachDataStatus = deriveCoachDataStatus(current);
   const available = coachDataStatus === "ready" || coachDataStatus === "partial";

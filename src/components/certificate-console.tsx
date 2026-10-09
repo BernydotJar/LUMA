@@ -21,6 +21,12 @@ function errorText(error: unknown) {
     certificate_enrollment_required: "Esta persona no tiene una matrícula activa en la cohorte.",
     certificate_verified_learner_identity_required: "Se requiere el nombre y el correo verificado del participante.",
     certificate_issuer_not_configured: "Configura el emisor y su firmante autorizado antes de solicitar la firma.",
+    certificate_institutional_signing_not_authorized: "Un administrador debe autorizar expresamente la firma institucional automática.",
+    stirling_tenant_not_authorized: "Este certificado institucional no está habilitado para esta organización.",
+    stirling_not_configured: "La firma institucional todavía no está configurada en el servidor.",
+    stirling_signature_validation_failed: "La verificación criptográfica del PDF ha fallado. El certificado no se publicará.",
+    stirling_revocation_not_verified: "No se pudo comprobar la revocación del certificado institucional.",
+    stirling_unreachable: "El motor privado de firma no está disponible.",
     certificate_configuration_required: "Faltan configuraciones de firma o almacenamiento en el entorno.",
     certificate_completion_required: "Primero registra y aprueba la finalización académica.",
     certificate_completion_already_approved: "Esta evaluación ya fue aprobada y conserva su evidencia original.",
@@ -50,6 +56,7 @@ export function CertificateConsole() {
     signedAt: string | null; verificationUrl: string | null;
   }>(null);
   const [issuer, setIssuer] = useState({ legalName: "", signerName: "", signerEmail: "" });
+  const [institutionalSigningAuthorized, setInstitutionalSigningAuthorized] = useState(false);
 
   useEffect(() => onAuthStateChanged(firebaseAuth, user => {
     setAuthenticated(Boolean(user));
@@ -66,6 +73,7 @@ export function CertificateConsole() {
     setLegalName("");
     setIdentityConfirmed(false);
     setIssuer({ legalName: "", signerName: "", signerEmail: "" });
+    setInstitutionalSigningAuthorized(false);
     if (user) void user.getIdTokenResult().then(result => {
       if (firebaseAuth.currentUser?.uid !== user.uid) return;
       setAdmin(result.claims.admin === true || result.claims.superuser === true ||
@@ -122,11 +130,15 @@ export function CertificateConsole() {
         });
         setMessage("Finalización aprobada y registrada con evidencia de la decisión.");
       } else {
-        await certificateApi("/api/certificates", {
+        const result = await certificateApi<{ status: string }>("/api/certificates", {
           method: "POST",
           body: { offeringId, learnerId: selected.learnerId },
         });
-        setMessage("Solicitud enviada al firmante autorizado. El certificado será válido cuando la firma se complete y se archive.");
+        setMessage(result.status === "signed"
+          ? "Certificado firmado institucionalmente, validado y archivado. Ya está disponible para el participante."
+          : result.status === "pending_signature"
+            ? "Solicitud enviada al firmante. La credencial quedará disponible cuando se confirme la firma."
+            : "Certificado reservado. Consulta su estado para confirmar la emisión.");
         setConfirmIssue(false);
       }
       setRevision(value => value + 1);
@@ -140,9 +152,12 @@ export function CertificateConsole() {
     setBusy(true);
     try {
       await certificateApi("/api/certificates/issuers", {
-        method: "PUT", body: { tenantId: selectedOffering.tenantId, ...issuer },
+        method: "PUT", body: { tenantId: selectedOffering.tenantId, ...issuer,
+          institutionalSigningAuthorized },
       });
-      setMessage("Emisor institucional y firmante autorizado configurados.");
+      setMessage(institutionalSigningAuthorized
+        ? "Emisor configurado y autorización de firma institucional automática registrada."
+        : "Emisor configurado sin autorización de firma automática.");
     } catch (error) { setMessage(errorText(error)); }
     finally { setBusy(false); }
   }
@@ -243,7 +258,7 @@ export function CertificateConsole() {
                     <FileSignature size={16} /> Preparar y enviar a firma</button>
                   : <div className={styles.confirm}>
                     <strong>Confirmar solicitud de firma</strong>
-                    <p>El firmante autorizado recibirá un documento real para firmar electrónicamente. Esta acción no es una vista previa.</p>
+                    <p>La plataforma utilizará el proveedor configurado por la institución. Cuando esté habilitada la firma institucional automática, LUMA firmará y validará el PDF sin requerir una acción por certificado del representante.</p>
                     <button type="button" className="button-primary" disabled={busy}
                       onClick={() => void advance("issue")}>Confirmar envío</button>
                     <button type="button" className="button-secondary"
@@ -273,9 +288,16 @@ export function CertificateConsole() {
             onChange={event => setIssuer(current => ({ ...current, legalName: event.target.value }))} /></label>
           <label>Nombre del firmante <input value={issuer.signerName}
             onChange={event => setIssuer(current => ({ ...current, signerName: event.target.value }))} /></label>
-          <label>Correo del firmante <input type="email" value={issuer.signerEmail}
+          <label>Correo de contacto del firmante institucional <input type="email" value={issuer.signerEmail}
             onChange={event => setIssuer(current => ({ ...current, signerEmail: event.target.value }))} /></label>
         </div>
+        <label className={styles.attestation}>
+          <input type="checkbox" checked={institutionalSigningAuthorized}
+            onChange={event => setInstitutionalSigningAuthorized(event.target.checked)} />
+          <span>Como administrador, confirmo que tengo autorización de la institución para
+            aplicar automáticamente su certificado digital a las credenciales académicas
+            aprobadas. La emisión quedará registrada con mi identidad y fecha.</span>
+        </label>
         <button type="button" className="button-secondary" disabled={busy ||
           !issuer.legalName || !issuer.signerName || !issuer.signerEmail}
           onClick={() => void configureIssuer()}>Guardar configuración del emisor</button>

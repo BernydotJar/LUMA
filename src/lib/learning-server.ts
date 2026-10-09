@@ -1,8 +1,14 @@
 import { firebaseAdminAuth, firebaseAdminFirestore } from "./firebase-admin";
 import { FirestoreLearningStore } from "./learning-store";
+import type { LearningScope } from "./learning-entitlement";
 import { coachAccessHasScope, learningCoachAccessFromClaims } from "./coach-access";
 
 export const learningStore = new FirestoreLearningStore(firebaseAdminFirestore);
+
+/** Never read a global Twin from a commerce-gated request. */
+export function learningStoreForScope(scope?: LearningScope): FirestoreLearningStore {
+  return scope ? new FirestoreLearningStore(firebaseAdminFirestore, scope) : learningStore;
+}
 
 export async function requireLearningUser(request: Request) {
   const authorization = request.headers.get("authorization");

@@ -1,4 +1,6 @@
-# LUMA Certificate Signing — Engineering Gate
+# LUMA Certificate Signing — Original Engineering Gate (DocuSign baseline)
+
+**Update:** this describes the initial PR #20 implementation. The self-hosted Stirling architecture and subsequent checks are recorded at [Stirling integration evidence](../stirling-certificates-20261009/release-evidence.md). Do not treat the older DocuSign flow as the default.
 
 Date: 2026-10-09
 Branch: `feat/enterprise-certificates-esign-20261009`

@@ -12,6 +12,7 @@ export async function PUT(request: Request) {
       issuer: {
         tenantId: settings.tenantId, legalName: settings.legalName,
         signerName: settings.signerName, signerEmail: settings.signerEmail,
+        institutionalSigningAuthorized: Boolean(settings.institutionalSigningAuthorizedAt),
         updatedAt: settings.updatedAt,
       },
     }, { headers: { "cache-control": "no-store" } });
