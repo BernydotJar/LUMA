@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { learningStore, requireLearningUser } from "@/lib/learning-server";
+import { requireLearningEntitlement } from "@/lib/learning-entitlement-server";
+import { learningAccessFailure } from "@/lib/learning-entitlement";
+import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
 import { verifyLearningEvent } from "@/lib/persistent-learning";
 
 export const runtime = "nodejs";
@@ -7,6 +10,7 @@ export const runtime = "nodejs";
 export async function POST(request: Request) {
   try {
     const user = await requireLearningUser(request);
+    await requireLearningEntitlement(user);
     const body = (await request.json()) as { eventId?: unknown; event?: unknown };
     const eventId = typeof body.eventId === "string" ? body.eventId.trim() : "";
 
@@ -28,9 +32,11 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "UNKNOWN";
-    if (message === "AUTH_REQUIRED") {
+    if (message === "AUTH_REQUIRED" || isRejectedFirebaseToken(error)) {
       return NextResponse.json({ error: "authentication_required" }, { status: 401 });
     }
+    const failure = learningAccessFailure(error);
+    if (failure) return NextResponse.json({ error: failure.error }, { status: failure.status });
     if (message === "LEARNER_NOT_FOUND") {
       return NextResponse.json({ error: "learner_state_not_found" }, { status: 409 });
     }

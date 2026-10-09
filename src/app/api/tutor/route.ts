@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { resolveLearningAccessPolicy, learningAccessFailure } from "../../../lib/learning-entitlement";
+import { isRejectedFirebaseToken } from "../../../lib/auth-token-error";
 import { moduleThreeSource } from "@/lib/luma-data";
 import { extractivePnlAnswer, searchPnlRag } from "@/lib/pnl-rag";
 import {
@@ -53,6 +55,23 @@ const responses = [
 ];
 
 export async function POST(request: Request) {
+  try {
+    if (resolveLearningAccessPolicy(process.env).mode === "entitled") {
+      const { requireLearningUser } = await import("../../../lib/learning-server");
+      const { requireLearningEntitlement } = await import("../../../lib/learning-entitlement-server");
+      const identity = await requireLearningUser(request);
+      await requireLearningEntitlement(identity);
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    if (message === "AUTH_REQUIRED" || isRejectedFirebaseToken(error)) {
+      return NextResponse.json({ error: "authentication_required" }, { status: 401 });
+    }
+    const failure = learningAccessFailure(error);
+    if (failure) return NextResponse.json({ error: failure.error }, { status: failure.status });
+    return NextResponse.json({ error: "learning_access_unavailable" }, { status: 503 });
+  }
+
   const payload = (await request.json()) as {
     message?: unknown;
     messages?: unknown;

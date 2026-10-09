@@ -193,6 +193,7 @@ export class FirestoreCommerceEnrollmentStore {
   async claimByEmail(
     learnerId: string,
     email: string,
+    tenantId?: string,
   ): Promise<CommerceEnrollmentRecord[]> {
     const normalizedLearnerId = learnerId.trim();
     if (!normalizedLearnerId) throw new Error("learnerId is required");
@@ -207,6 +208,7 @@ export class FirestoreCommerceEnrollmentStore {
     const claimed: CommerceEnrollmentRecord[] = [];
     for (const doc of snapshot.docs) {
       const record = doc.data() as CommerceEnrollmentRecord;
+      if (tenantId && record.tenantId !== tenantId) continue;
       if (!isActiveCommerceEnrollment(record)) continue;
 
       const updated = await this.firestore.runTransaction(
@@ -216,6 +218,7 @@ export class FirestoreCommerceEnrollmentStore {
           const fresh =
             freshSnapshot.data() as CommerceEnrollmentRecord;
           if (!isActiveCommerceEnrollment(fresh)) return undefined;
+          if (tenantId && fresh.tenantId !== tenantId) return undefined;
           if (
             fresh.learnerId &&
             fresh.learnerId !== normalizedLearnerId

@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { learningStore, requireLearningUser } from "@/lib/learning-server";
+import { requireLearningEntitlement } from "@/lib/learning-entitlement-server";
+import { learningAccessFailure } from "@/lib/learning-entitlement";
+import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
 import type { StoredOnboardingState } from "@/lib/learner-projection";
 
 export const runtime = "nodejs";
@@ -22,15 +25,18 @@ function isOnboarding(value: unknown): value is StoredOnboardingState {
 
 function errorResponse(error: unknown) {
   const message = error instanceof Error ? error.message : "UNKNOWN";
-  if (message === "AUTH_REQUIRED") {
+  if (message === "AUTH_REQUIRED" || isRejectedFirebaseToken(error)) {
     return NextResponse.json({ error: "authentication_required" }, { status: 401 });
   }
+  const failure = learningAccessFailure(error);
+  if (failure) return NextResponse.json({ error: failure.error }, { status: failure.status });
   return NextResponse.json({ error: "learning_state_unavailable" }, { status: 500 });
 }
 
 export async function GET(request: Request) {
   try {
     const user = await requireLearningUser(request);
+    await requireLearningEntitlement(user);
     const result = await learningStore.get(user.uid);
     if (!result) {
       return NextResponse.json({ error: "learner_state_not_found" }, { status: 404 });
@@ -53,6 +59,7 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
   try {
     const user = await requireLearningUser(request);
+    await requireLearningEntitlement(user);
     const body = (await request.json()) as { onboarding?: unknown };
     if (!isOnboarding(body.onboarding)) {
       return NextResponse.json({ error: "invalid_onboarding" }, { status: 400 });

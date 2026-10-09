@@ -6,6 +6,11 @@
 - Stripe: `POST /api/commerce/webhooks/stripe`
 - Admin mappings: `GET|POST /api/commerce/admin/mappings`
 - Learner access claim: `GET /api/commerce/access`
+- Global admin-only access trace: `GET /api/commerce/admin/access-trace?tenantId=<tenant>&entitlementId=<64-hex>` (Firebase Bearer token; no raw PII)
+
+## Learner access for a commerce-backed pilot
+
+Set `LUMA_LEARNING_ACCESS_MODE=entitled` and `LUMA_LEARNING_TENANT_ID=<canonical-tenant-id>` in the trusted runtime environment **only after** merchant sandbox provisioning and the actual authorized corpus are verified. This fails closed for the learning plan/event APIs, tutor, and Content Intelligence. Leaving the mode unset preserves the existing showcase; this does **not** prove commercial access control. See `docs/enterprise/learning-access-policy.md`. The tenant is configuration, not supplied by the learner.
 
 ## Required server secrets
 

@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { requireLearningUser } from "@/lib/learning-server";
+import { requireLearningEntitlement } from "@/lib/learning-entitlement-server";
+import { learningAccessFailure } from "@/lib/learning-entitlement";
+import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
 import { searchPnlRag } from "@/lib/pnl-rag";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
-    await requireLearningUser(request);
+    const user = await requireLearningUser(request);
+    await requireLearningEntitlement(user);
     const body = (await request.json()) as Record<string, unknown>;
     const query =
       typeof body.query === "string" ? body.query.trim() : "";
@@ -58,12 +62,14 @@ export async function POST(request: Request) {
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "UNKNOWN";
-    if (message === "AUTH_REQUIRED") {
+    if (message === "AUTH_REQUIRED" || isRejectedFirebaseToken(error)) {
       return NextResponse.json(
         { error: "authentication_required" },
         { status: 401 },
       );
     }
+    const failure = learningAccessFailure(error);
+    if (failure) return NextResponse.json({ error: failure.error }, { status: failure.status });
     return NextResponse.json(
       { error: "content_intelligence_unavailable" },
       { status: 500 },

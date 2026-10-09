@@ -1,0 +1,29 @@
+{
+  "project": "LUMA",
+  "date": "2026-10-09",
+  "baseline": "origin/main@e819b16",
+  "scope": "commerce economics, tenant-qualified access trace, evidence-backed engagement risk, enterprise pack, build repair; opt-in tenant entitlement enforcement",
+  "source_verification": {
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "unit_tests": "197_PASS_44_EMULATOR_SKIPPED",
+    "production_build": "SOURCE_COMPILE_TYPES_STATIC_PASS_FINAL_TRACE_ENOMEM",
+    "e2e": "FLAKY_ONE_RETRY_TWO_PASS",
+    "previous_release_build": "PASS_NEXT_WEBPACK_BEFORE_ENTITLEMENT_SLICE"
+  },
+  "provider_sandbox": "NOT_YET_VERIFIED",
+  "firestore_emulator": "BLOCKED_LOCAL_JDK17_JDK21_REQUIRED",
+  "live_tenant_entrance": "NOT_YET_VERIFIED",
+  "data_retention_backup_and_load": "NOT_YET_VERIFIED",
+  "independent_reviewer": "PENDING",
+  "source_review_decision": "AWAITING_PR_AND_CI",
+  "enterprise_pilot_decision": "BLOCKED",
+  "production_deploy": "NOT_PERFORMED",
+  "learning_entitlement": "SOURCE_IMPLEMENTED_RUNTIME_DISABLED_UNTIL_PILOT_CONFIGURATION",
+  "graph_harness": {
+    "validation": "PASS",
+    "event_count": 631,
+    "checkpoint": "855aa600-8745-4af9-8800-ed8a265a8b71",
+    "independent_gate": "PENDING"
+  }
+}
