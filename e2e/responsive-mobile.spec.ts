@@ -28,6 +28,32 @@ test.describe("responsive mobile product", () => {
     await expect(page.getByRole("navigation", { name: "Navegación móvil" })).toBeVisible();
   });
 
+  test("learner navigation retains both certificates and LUMA on mobile", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "mobile", "Mobile-specific navigation guard.");
+    await page.goto("/learn");
+    const nav = page.getByRole("navigation", { name: "Navegación móvil" });
+    await expect(nav).toBeVisible();
+    await expect(nav.getByRole("link", { name: "Hoy", exact: true })).toBeVisible();
+    await expect(nav.getByRole("link", { name: "Ruta", exact: true })).toBeVisible();
+    await expect(nav.getByRole("link", { name: "Programa", exact: true })).toBeVisible();
+    await expect(nav.getByRole("link", { name: "Certificados", exact: true })).toBeVisible();
+    await expect(nav.getByRole("link", { name: "LUMA", exact: true })).toBeVisible();
+    await expect(nav.getByRole("link")).toHaveCount(5);
+
+    const layout = await nav.evaluate((element) => ({
+      scrollWidth: element.scrollWidth,
+      clientWidth: element.clientWidth,
+      itemWidths: [...element.querySelectorAll("a")].map((link) => link.getBoundingClientRect().width),
+    }));
+    expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth);
+    expect(layout.itemWidths.every((width) => width >= 44)).toBe(true);
+
+    await nav.getByRole("link", { name: "Certificados", exact: true }).click();
+    await expect(page).toHaveURL(/\/learn\/certificates$/);
+    await expect(page.getByRole("navigation", { name: "Navegación móvil" })
+      .getByRole("link", { name: "LUMA", exact: true })).toBeVisible();
+  });
+
   test("all seven program modules are selectable on mobile", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "mobile", "Mobile-specific program flow check.");
     await page.goto("/learn/experiences");

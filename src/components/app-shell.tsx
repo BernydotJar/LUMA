@@ -123,7 +123,7 @@ export function AppShell({
       </section>
 
       <nav className={`${styles.mobileNav} glass`} aria-label="Navegación móvil">
-        {navigation.slice(0, 4).map(({ href, label, icon: Icon }) => {
+        {navigation.slice(0, studio ? 4 : 5).map(({ href, label, icon: Icon }) => {
           const pathOnly = href.split("#")[0];
           const hasHash = href.includes("#");
           const active =

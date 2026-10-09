@@ -78,3 +78,7 @@ python scripts/staging_http_smoke.py
 ```
 
 The service itself remains staged **in source and local test infrastructure**, not deployed to GCP. A green CI is a prerequisite to, not a substitute for, the remaining operational release gates.
+
+## E2E release-gate finding
+
+The combined product CI caught a real mobile learner navigation regression: the newly added Certificates entry displaced the LUMA tutor link from the four-item mobile bottom bar. The fix renders five first-class learner destinations with five grid columns and verifies link visibility, minimum tap width, absence of horizontal overflow and access to the certificates route in Playwright. No coach/studio navigation behavior was changed. Independent CI rerun is required; the initial failure remains recorded in `evidence/luma-065-staging-security/ci-repair.md`.

@@ -21,3 +21,7 @@ Threats: tenant/program IDOR, forged bearer tokens, direct SQL bypass of tenant 
 ## Independent Verifier / Release Gate
 
 Require independent GitHub Actions Python + real PostgreSQL/pgvector and staging HTTP smoke; complete LUMA Next.js, Firestore and Playwright jobs; Graph Harness validate + checkpoint. Maintain pilot BLOCKED pending independent security review, Cloud SQL, Vertex, secrets, approved real content, retention, cost, capacity and on-call/incident controls.
+
+## Product CI regression discovered by verifier
+
+Full LUMA Playwright surfaced a deterministic mobile navigation issue introduced when the Certificates destination was added before LUMA but the bottom navigation remained limited to four items. Producer/critic fixes retain all five learner destinations in the mobile navigation and add a mobile route/geometry regression test. Independent browser CI must pass before considering this source PR review-ready.

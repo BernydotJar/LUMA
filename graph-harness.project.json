@@ -1721,7 +1721,10 @@
         "specs/066-scoped-rag-staging-security.md",
         "evidence/luma-065-staging-security/**",
         "graph-harness.project.json",
-        "graph-harness.events.jsonl"
+        "graph-harness.events.jsonl",
+        "src/components/app-shell.tsx",
+        "src/components/app-shell.module.css",
+        "e2e/responsive-mobile.spec.ts"
       ]
     }
   ]
