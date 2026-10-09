@@ -1,8 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PORT=3111
+PORT="${LUMA_COACH_SMOKE_PORT:-3111}"
+export LUMA_COACH_SMOKE_PORT="$PORT"
 LOG=/tmp/luma-coach-api-next.log
+
+# Fail on a port collision instead of accidentally testing another Next.js service.
+if curl -sS -o /dev/null --connect-timeout 1 "http://127.0.0.1:$PORT/api/learning/plan" 2>/dev/null; then
+  echo "Coach smoke port $PORT is already occupied" >&2
+  exit 1
+fi
 
 cleanup() {
   if [[ -n "${NEXT_PID:-}" ]]; then
@@ -31,7 +38,7 @@ import assert from "node:assert/strict";
 import { initializeApp, getApps } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 
-const base = "http://127.0.0.1:3111";
+const base = `http://127.0.0.1:${process.env.LUMA_COACH_SMOKE_PORT || "3111"}`;
 const authBase = "http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1";
 const projectId = process.env.GCLOUD_PROJECT || "demo-luma-persistent-twin";
 

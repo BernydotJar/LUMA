@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { webhookDeliveryHttp } from "@/lib/commerce/webhook-delivery";
 import {
   enforceCommerceWebhookClientRateLimit,
   enforceCommerceWebhookProviderRateLimit,
@@ -117,9 +118,10 @@ export async function POST(
       commerceCorrelationId(),
     );
 
+    const delivery = webhookDeliveryHttp(result.status);
     return NextResponse.json(
       {
-        accepted: true,
+        accepted: result.status === "processed",
         provider,
         eventId: event.externalEventId,
         status: result.status,
@@ -133,8 +135,8 @@ export async function POST(
           : null,
       },
       {
-        status:
-          result.status === "processed" ? 200 : 202,
+        status: delivery.status,
+        ...(delivery.retryAfter ? { headers: { "Retry-After": delivery.retryAfter } } : {}),
       },
     );
   } catch (error) {

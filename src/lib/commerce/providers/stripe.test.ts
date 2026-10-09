@@ -94,6 +94,36 @@ describe("StripeProvider", () => {
     });
   });
 
+  it.each(["unpaid", "incomplete_expired", "paused"])(
+    "revokes a subscription when Stripe status becomes %s", async (status) => {
+      const rawBody = JSON.stringify({
+        id: `evt_status_${status}`, type: "customer.subscription.updated", created: now,
+        data: { object: { id: "sub_state", customer: "cus_1", status } },
+      });
+      const event = await new StripeProvider(secret, { nowSeconds: () => now }).handleWebhook({
+        headers: { "stripe-signature": sign(rawBody) }, rawBody,
+      });
+      expect(event.type).toBe("commerce.subscription.expired");
+      expect(event.transactionExternalId).toBe("sub_state");
+    },
+  );
+
+  it("grants on paid subscription recovery but preserves access during past_due", async () => {
+    for (const [status, expected] of [
+      ["active", "commerce.subscription.renewed"],
+      ["past_due", "commerce.payment.failed"],
+    ] as const) {
+      const rawBody = JSON.stringify({
+        id: `evt_${status}`, type: "customer.subscription.updated", created: now,
+        data: { object: { id: "sub_status", customer: "cus_1", status } },
+      });
+      const event = await new StripeProvider(secret, { nowSeconds: () => now }).handleWebhook({
+        headers: { "stripe-signature": sign(rawBody) }, rawBody,
+      });
+      expect(event.type).toBe(expected);
+    }
+  });
+
   it("maps subscription deletion to cancellation", async () => {
     const rawBody = payload("customer.subscription.deleted");
     const event = await new StripeProvider(secret, {

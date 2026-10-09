@@ -403,6 +403,68 @@ describe.runIf(emulatorEnabled)(
       await expect(mappings!.listPage(10, "invalid_cursor")).rejects.toThrow("COMMERCE_MAPPING_CURSOR_INVALID");
     });
 
+    it("retries out-of-order Stripe invoices after a subscription binding arrives", async () => {
+      const suffix = randomUUID();
+      const subscriptionId = `sub-out-of-order-${suffix}`;
+      const invoice = event(suffix, {
+        provider: "stripe", externalEventId: `invoice-first-${suffix}`,
+        type: "commerce.subscription.renewed", occurredAt: "2026-10-08T12:10:00Z",
+        transactionExternalId: subscriptionId, customerExternalId: undefined,
+        productExternalId: undefined, metadata: {},
+      });
+      const first = await orchestrator!.handle(invoice, `corr-first-${suffix}`);
+      expect(first.status).toBe("pending_mapping");
+      expect((await ledger!.getEvent(invoice))?.processingStatus).toBe("failed");
+
+      await mappings!.upsert({ provider: "stripe",
+        externalProductId: `external-program-${suffix}`,
+        tenantId: `tenant-${suffix}`, productId: `product-${suffix}`,
+        programId: `program-${suffix}`, offeringId: `cohort-${suffix}`,
+      });
+      const incomplete = event(suffix, {
+        provider: "stripe", externalEventId: `subscription-late-${suffix}`,
+        type: "commerce.subscription.pending", occurredAt: "2026-10-08T12:00:00Z",
+        transactionExternalId: subscriptionId,
+      });
+      expect((await orchestrator!.handle(incomplete, `corr-late-${suffix}`)).status)
+        .toBe("processed");
+
+      const replay = await orchestrator!.handle(invoice, `corr-retry-${suffix}`);
+      expect(replay.status).toBe("processed");
+      expect(replay.duplicate).toBe(true);
+      expect(replay.enrollment?.offeringId).toBe(`cohort-${suffix}`);
+      expect(replay.enrollment?.status).toBe("active");
+      expect((await ledger!.getEvent(invoice))?.processingStatus).toBe("processed");
+    });
+
+    it("revokes an unpaid Stripe subscription while preserving a paid renewal path", async () => {
+      const suffix = randomUUID();
+      const subId = `sub-unpaid-${suffix}`;
+      await mappings!.upsert({ provider: "stripe",
+        externalProductId: `external-program-${suffix}`,
+        tenantId: `tenant-${suffix}`, productId: `product-${suffix}`,
+        programId: `program-${suffix}`,
+      });
+      const paid = event(suffix, { provider: "stripe",
+        type: "commerce.subscription.created", transactionExternalId: subId });
+      const granted = await orchestrator!.handle(paid, `corr-granted-${suffix}`);
+      expect(granted.enrollment?.status).toBe("active");
+      const unpaid = event(suffix, { provider: "stripe",
+        externalEventId: `unpaid-${suffix}`,
+        type: "commerce.subscription.expired", transactionExternalId: subId,
+        occurredAt: "2026-10-08T12:20:00Z", productExternalId: undefined,
+      });
+      const revoked = await orchestrator!.handle(unpaid, `corr-revoked-${suffix}`);
+      expect(revoked.enrollment?.status).toBe("revoked");
+      const recovered = event(suffix, { provider: "stripe",
+        externalEventId: `repaid-${suffix}`, type: "commerce.subscription.renewed",
+        transactionExternalId: subId, occurredAt: "2026-10-08T12:40:00Z",
+        productExternalId: undefined,
+      });
+      const restored = await orchestrator!.handle(recovered, `corr-repaid-${suffix}`);
+      expect(restored.enrollment?.status).toBe("active");
+    });
+
     it("durably retains an event when product mapping is not ready", async () => {
       const suffix = randomUUID();
       const commerceEvent = event(suffix);

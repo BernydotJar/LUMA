@@ -71,3 +71,9 @@ For live/hybrid products, `offeringId` must reference the exact cohort in `progr
 A mapped `offeringId` assigns a learner to a specific live cohort. Explicitly send `offeringId: null` on an administrator mapping update to clear the cohort for future enrollments. On a new grant/renewal with a resolved cohortless mapping, the enrollment no longer retains a stale cohort; existing durable provider bindings retain their original purchase identity and may require an explicit migration for previously sold live cohort access.
 
 Webhook ingress applies a per-client throttle before reading the bounded body. The provider-wide shared throttle is debited **only after** Stripe signature/Hotmart Hottok validation. Those limits are per-instance defense-in-depth; edge/global protection and provider retry behavior remain operational requirements.
+
+## Stripe retry and dunning semantics
+
+A verified webhook that is durably received but cannot yet resolve its product mapping or customer is **not** acknowledged as complete: the API returns `503` and `Retry-After: 60`, retaining the failed event for a provider retry. This supports out-of-order deliveries such as `invoice.paid` before an `incomplete` subscription's mapping/binding event. `200` is reserved for processed/idempotent events. Configure Stripe's endpoint with retry support and reconcile persistent failures operationally.
+
+`customer.subscription.updated` to `unpaid`, `canceled`, `incomplete_expired`, or `paused` revokes access; `active` re-grants it after recovery. `past_due` preserves access while Stripe's configurable dunning grace period is in progress.

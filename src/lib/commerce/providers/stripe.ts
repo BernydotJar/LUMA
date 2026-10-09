@@ -121,6 +121,15 @@ function stripeType(type: string, object: JsonRecord): CommerceEventType {
       return stringValue(object.status) === "active"
         ? "commerce.subscription.created"
         : "commerce.subscription.pending";
+    case "customer.subscription.updated": {
+      const status = stringValue(object.status);
+      if (["unpaid", "canceled", "incomplete_expired", "paused"].includes(status ?? "")) {
+        return "commerce.subscription.expired";
+      }
+      if (status === "active") return "commerce.subscription.renewed";
+      // Keep existing access during a payment-retry grace period (past_due).
+      return "commerce.payment.failed";
+    }
     case "customer.subscription.deleted":
       return "commerce.subscription.cancelled";
     case "invoice.paid":
