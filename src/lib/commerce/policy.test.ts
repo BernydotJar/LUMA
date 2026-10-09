@@ -6,6 +6,7 @@ describe("commerce entitlement policy", () => {
   const expected: Array<[CommerceEventType, string]> = [
     ["commerce.payment.confirmed", "grant"],
     ["commerce.subscription.created", "grant"],
+    ["commerce.subscription.pending", "none"],
     ["commerce.subscription.renewed", "grant"],
     ["commerce.payment.refunded", "revoke"],
     ["commerce.subscription.cancellation_scheduled", "none"],

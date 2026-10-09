@@ -52,6 +52,31 @@ describe("StripeProvider", () => {
     });
   });
 
+  it("does not grant access to incomplete subscriptions before payment", async () => {
+    const rawBody = JSON.stringify({
+      id: "evt_sub_incomplete", type: "customer.subscription.created", created: now,
+      data: { object: { id: "sub_incomplete", customer: "cus_1",
+        status: "incomplete", metadata: { luma_product_id: "pnl-practitioner" } } },
+    });
+    const event = await new StripeProvider(secret, { nowSeconds: () => now }).handleWebhook({
+      headers: { "stripe-signature": sign(rawBody) }, rawBody,
+    });
+    expect(event.type).toBe("commerce.subscription.pending");
+    expect(event.transactionExternalId).toBe("sub_incomplete");
+  });
+
+  it("allows a paid active subscription to activate", async () => {
+    const rawBody = JSON.stringify({
+      id: "evt_sub_active", type: "customer.subscription.created", created: now,
+      data: { object: { id: "sub_active", customer: "cus_1",
+        status: "active", metadata: { luma_product_id: "pnl-practitioner" } } },
+    });
+    const event = await new StripeProvider(secret, { nowSeconds: () => now }).handleWebhook({
+      headers: { "stripe-signature": sign(rawBody) }, rawBody,
+    });
+    expect(event.type).toBe("commerce.subscription.created");
+  });
+
   it("maps subscription deletion to cancellation", async () => {
     const rawBody = payload("customer.subscription.deleted");
     const event = await new StripeProvider(secret, {

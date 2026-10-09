@@ -71,11 +71,13 @@ function enrollmentIdentity(
   tenantId: string,
   customerId: string,
   programId: string,
+  productId: string,
 ): string {
   return JSON.stringify([
     tenantId.trim(),
     customerId.trim(),
     programId.trim(),
+    productId.trim(),
   ]);
 }
 
@@ -83,9 +85,10 @@ function documentId(
   tenantId: string,
   customerId: string,
   programId: string,
+  productId: string,
 ) {
   return createHash("sha256")
-    .update(enrollmentIdentity(tenantId, customerId, programId))
+    .update(enrollmentIdentity(tenantId, customerId, programId, productId))
     .digest("hex");
 }
 
@@ -96,10 +99,11 @@ export class FirestoreCommerceEnrollmentStore {
     tenantId: string,
     customerId: string,
     programId: string,
+    productId: string,
   ) {
     return this.firestore
       .collection("commerceEnrollments")
-      .doc(documentId(tenantId, customerId, programId));
+      .doc(documentId(tenantId, customerId, programId, productId));
   }
 
   async apply(
@@ -115,6 +119,7 @@ export class FirestoreCommerceEnrollmentStore {
       input.mapping.tenantId,
       input.entitlement.customerId,
       input.mapping.programId,
+      input.mapping.productId,
     );
 
     return this.firestore.runTransaction(async (transaction) => {
@@ -152,6 +157,7 @@ export class FirestoreCommerceEnrollmentStore {
         input.mapping.tenantId,
         input.entitlement.customerId,
         input.mapping.programId,
+        input.mapping.productId,
       );
       const record: CommerceEnrollmentRecord = {
         enrollmentId,
@@ -200,7 +206,7 @@ export class FirestoreCommerceEnrollmentStore {
     if (!Number.isFinite(Date.parse(input.accessEndsAt))) {
       throw new Error("COMMERCE_ACCESS_END_INVALID");
     }
-    const ref = this.ref(input.mapping.tenantId, input.customerId, input.mapping.programId);
+    const ref = this.ref(input.mapping.tenantId, input.customerId, input.mapping.programId, input.mapping.productId);
     return this.firestore.runTransaction(async (transaction) => {
       const snapshot = await transaction.get(ref);
       if (!snapshot.exists) throw new Error("COMMERCE_ENROLLMENT_NOT_FOUND");

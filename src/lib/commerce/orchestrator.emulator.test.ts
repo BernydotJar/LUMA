@@ -279,6 +279,38 @@ describe.runIf(emulatorEnabled)(
       expect(isActiveCommerceEnrollment(renewed.enrollment!, "2026-10-12T00:00:00Z")).toBe(true);
     });
 
+    it("keeps a second product entitlement active when the first product is refunded", async () => {
+      const suffix = randomUUID();
+      const tenantId = `tenant-two-products-${suffix}`;
+      const programId = `program-two-products-${suffix}`;
+      for (const product of ["a", "b"]) {
+        await mappings!.upsert({ provider: "hotmart", externalProductId: `external-${product}-${suffix}`,
+          tenantId, productId: `product-${product}`, programId,
+          offeringId: `offering-${product}` });
+      }
+      const a = event(suffix, { externalEventId: `purchase-a-${suffix}`,
+        productExternalId: `external-a-${suffix}`, transactionExternalId: `tx-a-${suffix}` });
+      const b = event(suffix, { externalEventId: `purchase-b-${suffix}`,
+        productExternalId: `external-b-${suffix}`, transactionExternalId: `tx-b-${suffix}` });
+      const purchaseA = await orchestrator!.handle(a, `corr-a-${suffix}`);
+      const purchaseB = await orchestrator!.handle(b, `corr-b-${suffix}`);
+      expect(purchaseA.enrollment?.enrollmentId).not.toBe(purchaseB.enrollment?.enrollmentId);
+      expect(purchaseA.enrollment?.offeringId).toBe("offering-a");
+      expect(purchaseB.enrollment?.offeringId).toBe("offering-b");
+      const claimed = await enrollments!.claimByEmail(`firebase-${suffix}`,
+        `learner-${suffix}@example.com`);
+      expect(claimed).toHaveLength(2);
+      const refundA = event(suffix, { externalEventId: `refund-a-${suffix}`,
+        productExternalId: `external-a-${suffix}`, transactionExternalId: `tx-a-${suffix}`,
+        type: "commerce.payment.refunded", occurredAt: "2026-10-08T12:15:00Z" });
+      await orchestrator!.handle(refundA, `corr-refund-a-${suffix}`);
+      const persisted = await enrollments!.listByLearner(`firebase-${suffix}`);
+      expect(persisted).toHaveLength(2);
+      expect(persisted.find((item) => item.productId === "product-a")?.status).toBe("revoked");
+      expect(persisted.find((item) => item.productId === "product-b")?.status).toBe("active");
+      expect(persisted.find((item) => item.productId === "product-b")?.offeringId).toBe("offering-b");
+    });
+
     it("durably retains an event when product mapping is not ready", async () => {
       const suffix = randomUUID();
       const commerceEvent = event(suffix);

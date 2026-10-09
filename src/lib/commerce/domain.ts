@@ -5,6 +5,7 @@ export type CommerceEventType =
   | "commerce.payment.failed"
   | "commerce.payment.refunded"
   | "commerce.payment.partially_refunded"
+  | "commerce.subscription.pending"
   | "commerce.subscription.created"
   | "commerce.subscription.renewed"
   | "commerce.subscription.cancellation_scheduled"

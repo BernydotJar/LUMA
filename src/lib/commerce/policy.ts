@@ -15,6 +15,7 @@ export function entitlementActionForCommerceEvent(
     case "commerce.subscription.cancelled":
     case "commerce.subscription.expired":
       return "revoke";
+    case "commerce.subscription.pending":
     case "commerce.subscription.cancellation_scheduled":
     case "commerce.payment.failed":
     case "commerce.payment.partially_refunded":

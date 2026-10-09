@@ -113,7 +113,9 @@ function stripeType(type: string, object: JsonRecord): CommerceEventType {
     case "charge.dispute.created":
       return "commerce.payment.refunded";
     case "customer.subscription.created":
-      return "commerce.subscription.created";
+      return stringValue(object.status) === "active"
+        ? "commerce.subscription.created"
+        : "commerce.subscription.pending";
     case "customer.subscription.deleted":
       return "commerce.subscription.cancelled";
     case "invoice.paid":
