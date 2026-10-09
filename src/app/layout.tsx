@@ -3,6 +3,7 @@ import { ThemeBootstrap } from "@/components/theme-bootstrap";
 import { AuthProvider } from "@/components/auth-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
+import "@livekit/components-styles";
 
 export const metadata: Metadata = {
   title: {

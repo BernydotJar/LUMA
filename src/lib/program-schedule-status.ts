@@ -58,7 +58,14 @@ export function parseLearnerScheduleResponse(body: unknown): LearnerScheduledSes
         typeof row.session.durationMinutes !== "number" ||
         !Number.isFinite(row.session.durationMinutes) ||
         row.session.durationMinutes <= 0 ||
-        !secureJoinUrl(row.session.joinUrl)) {
+        !secureJoinUrl(row.session.joinUrl) ||
+        (row.session.classroomProvider !== undefined &&
+          !["external", "livekit"].includes(String(row.session.classroomProvider))) ||
+        (row.session.classroomProvider === "livekit" &&
+          (row.session.classroomCapacity !== undefined &&
+            (!Number.isInteger(row.session.classroomCapacity) ||
+             Number(row.session.classroomCapacity) < 2 ||
+             Number(row.session.classroomCapacity) > 1000)))) {
       throw new Error("PROGRAM_SCHEDULE_INVALID_RESPONSE");
     }
   }
