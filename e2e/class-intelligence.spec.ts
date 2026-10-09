@@ -109,11 +109,11 @@ test.describe("AI-native class entry", () => {
     expect(receipt.criteria.every((criterion: { passed?: boolean }) => criterion.passed)).toBe(true);
   });
 
-  test("coach can inspect the class intelligence operating model", async ({ page }) => {
+  test("coach can inspect learning objectives and their evidence", async ({ page }) => {
     await page.goto("/studio/class-intelligence");
-    await expect(page.getByRole("heading", { name: /La clase también aprende/i })).toBeVisible();
-    await expect(page.getByText(/Una fuente nueva crea una propuesta, no una mutación/i)).toBeVisible();
-    await expect(page.getByText(/Actualización silenciosa/i)).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Cada experiencia tiene un objetivo concreto/i })).toBeVisible();
+    await expect(page.getByText(/Los cambios se revisan antes de actualizar la experiencia/i)).toBeVisible();
+    await expect(page.getByText(/Cambios de contenido/i)).toBeVisible();
 
     const geometry = await page.evaluate(() => ({
       width: document.documentElement.clientWidth,

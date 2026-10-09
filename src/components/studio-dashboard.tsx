@@ -7,6 +7,7 @@ import {
   MessageSquareText, ShieldCheck, TrendingUp, Users,
 } from "lucide-react";
 import { fetchCoachInterventions, fetchCoachLearners, type CoachInterventionSignal, type CoachLearnerSummary } from "@/lib/coach-api-client";
+import { deriveCoachDataStatus } from "@/lib/coach-data-status";
 import { useLumaAuth } from "@/components/auth-provider";
 import { SemanticObject } from "@/components/semantic-object";
 import styles from "./studio-dashboard.module.css";
@@ -53,7 +54,11 @@ export function StudioDashboard() {
 
   const current = user && snapshot?.uid === user.uid ? snapshot : null;
   const authenticated = Boolean(user);
-  const available = current && (current.learners !== undefined || current.interventions !== undefined);
+  const hasLearners = current?.learners !== undefined;
+  const hasInterventions = current?.interventions !== undefined;
+  const coachDataStatus = deriveCoachDataStatus(current);
+  const available = coachDataStatus === "ready" || coachDataStatus === "partial";
+  const incomplete = coachDataStatus === "partial";
   const interventions = useMemo(() => current?.interventions ?? [], [current]);
   const priorityHigh = interventions.filter((item) => item.priority === "high").length;
   const priorityMedium = interventions.filter((item) => item.priority === "medium").length;
@@ -64,8 +69,8 @@ export function StudioDashboard() {
     <div className={styles.dashboard}>
       <section className={styles.controlBar}>
         <div>
-          <span className="status-pill" data-tone={available ? "positive" : "warning"}>
-            {available ? "Información de seguimiento disponible" : "Acceso al seguimiento"}
+          <span className="status-pill" data-tone={available && !incomplete ? "positive" : "warning"}>
+            {available && !incomplete ? "Información de seguimiento disponible" : incomplete ? "Información parcial" : "Acceso al seguimiento"}
           </span>
           <span>Las señales se muestran únicamente con acceso autorizado</span>
         </div>
@@ -99,6 +104,16 @@ export function StudioDashboard() {
         })}
       </section>
 
+      {available && incomplete && (
+        <section className={`${styles.interventionQueue} content-surface`} role="alert">
+          <h2>Algunos datos de seguimiento no están disponibles.</h2>
+          <p>
+            Una consulta incompleta no significa que no haya participantes ni intervenciones pendientes.
+            Las cifras no disponibles se muestran como «—». Vuelve a consultar o contacta al administrador.
+          </p>
+        </section>
+      )}
+
       {!authenticated ? (
         <section className={`${styles.interventionQueue} content-surface`} role="status">
           <h2>Accede para consultar a tus participantes.</h2>
@@ -112,9 +127,10 @@ export function StudioDashboard() {
         </section>
       ) : !available ? (
         <section className={`${styles.interventionQueue} content-surface`} role="status">
-          <h2>Tu cuenta aún no tiene acceso a este seguimiento.</h2>
-          <p>Solicita a un administrador que habilite el perfil de entrenador y el alcance de participantes correspondiente.</p>
-          {current.error && <p>No fue posible completar la consulta. Intenta nuevamente más tarde.</p>}
+          <h2>{current.error ? "No fue posible consultar el seguimiento." : "Tu cuenta aún no tiene acceso a este seguimiento."}</h2>
+          <p>{current.error
+            ? "El servicio no respondió correctamente. No podemos confirmar el estado de las intervenciones; inténtalo de nuevo."
+            : "Solicita a un administrador que habilite el perfil de entrenador y el alcance de participantes correspondiente."}</p>
         </section>
       ) : (
         <>
@@ -126,10 +142,12 @@ export function StudioDashboard() {
                   <h2>Decide dónde intervenir a partir de señales disponibles.</h2>
                 </div>
                 <span className="status-pill" data-tone={priorityHigh ? "warning" : "positive"}>
-                  {priorityHigh} alta · {priorityMedium} media
+                  {hasInterventions ? `${priorityHigh} alta · ${priorityMedium} media` : "Datos no disponibles"}
                 </span>
               </div>
-              {interventions.length ? (
+              {!hasInterventions ? (
+                <p role="status">Las prioridades no están disponibles. No es posible confirmar intervenciones pendientes.</p>
+              ) : interventions.length ? (
                 <div className={styles.bottleneckLayout}>
                   <div className={styles.bottleneckChart}>
                     {interventions.map((item) => (
@@ -183,9 +201,11 @@ export function StudioDashboard() {
             <SemanticObject variant="bridge" size="sm" className={styles.interventionObject} />
             <div className={styles.cardHeading}>
               <div><span className="eyebrow"><CircleUserRound size={14} /> Seguimiento individual</span><h2>Participantes que necesitan acompañamiento</h2></div>
-              <span>{interventions.length} señales disponibles</span>
+              <span>{hasInterventions ? `${interventions.length} señales disponibles` : "Sin datos de intervención"}</span>
             </div>
-            {interventions.length ? (
+            {!hasInterventions ? (
+              <p role="status">No se pudo consultar la cola. Su estado es desconocido, no cero.</p>
+            ) : interventions.length ? (
               <div className={styles.table} role="table" aria-label="Señales de acompañamiento">
                 <div className={styles.tableHead} role="row"><span role="columnheader">Persona</span><span role="columnheader">Señal</span><span role="columnheader">Prioridad</span><span role="columnheader">Recomendación</span><span role="columnheader">Acción</span></div>
                 {interventions.map((item) => (
