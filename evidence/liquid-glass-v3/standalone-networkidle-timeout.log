@@ -1,0 +1,6 @@
+
+> luma-learning-intelligence@0.1.0 audit:glass
+> node scripts/glass-adversarial-audit.mjs
+
+
+[verification] Outer runner stopped this standalone networkidle sweep after 131 seconds; this file is diagnostic only and is not PASS evidence.
