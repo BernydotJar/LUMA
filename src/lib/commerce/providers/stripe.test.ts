@@ -202,6 +202,26 @@ describe("StripeProvider", () => {
     expect(event.transactionExternalId).toBe("sub_basil");
   });
 
+  it.each([
+    "checkout.session.completed",
+    "checkout.session.async_payment_succeeded",
+  ])("keys paid Checkout subscriptions by sub_ id for %s", async (type) => {
+    const rawBody = JSON.stringify({
+      id: `evt_${type}`, type, created: now,
+      data: { object: {
+        id: "cs_checkout", customer: "cus_checkout",
+        subscription: "sub_checkout", payment_intent: "pi_checkout",
+        mode: "subscription", payment_status: "paid",
+        metadata: { luma_product_id: "pnl-practitioner" },
+      } },
+    });
+    const event = await new StripeProvider(secret, { nowSeconds: () => now }).handleWebhook({
+      headers: { "stripe-signature": sign(rawBody) }, rawBody,
+    });
+    expect(event.type).toBe("commerce.subscription.created");
+    expect(event.transactionExternalId).toBe("sub_checkout");
+  });
+
   it("activates delayed Checkout payments on async success", async () => {
     const rawBody = JSON.stringify({
       id: "evt_async_success",

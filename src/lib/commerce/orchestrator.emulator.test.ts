@@ -554,6 +554,38 @@ describe.runIf(emulatorEnabled)(
       expect(new Set(sampled).size).toBe(50);
     });
 
+    it("binds a Checkout subscription across metadata-free renewals and cancellation", async () => {
+      const suffix = randomUUID();
+      const subscriptionId = `sub_checkout_${suffix}`;
+      await mappings!.upsert({ provider: "stripe",
+        externalProductId: `external-program-${suffix}`,
+        tenantId: `tenant-${suffix}`, productId: `product-${suffix}`,
+        programId: `program-${suffix}`,
+      });
+      const checkout = event(suffix, { provider: "stripe",
+        externalEventId: `cs_paid_${suffix}`, type: "commerce.subscription.created",
+        transactionExternalId: subscriptionId,
+      });
+      const initial = await orchestrator!.handle(checkout, `checkout-${suffix}`);
+      expect(initial.enrollment?.status).toBe("active");
+      const renewal = event(suffix, { provider: "stripe",
+        externalEventId: `invoice_renewed_${suffix}`, type: "commerce.subscription.renewed",
+        occurredAt: "2026-10-08T12:20:00Z", transactionExternalId: subscriptionId,
+        productExternalId: undefined, customerExternalId: undefined, metadata: {},
+      });
+      expect((await orchestrator!.handle(renewal, `renewed-${suffix}`)).enrollment?.status)
+        .toBe("active");
+      const cancelled = event(suffix, { provider: "stripe",
+        externalEventId: `subscription_deleted_${suffix}`, type: "commerce.subscription.cancelled",
+        occurredAt: "2026-10-08T13:20:00Z", transactionExternalId: subscriptionId,
+        productExternalId: undefined, customerExternalId: undefined, metadata: {},
+      });
+      const revoked = await orchestrator!.handle(cancelled, `deleted-${suffix}`);
+      expect(revoked.status).toBe("processed");
+      expect(revoked.enrollment?.status).toBe("revoked");
+      expect(revoked.enrollment?.enrollmentId).toBe(initial.enrollment?.enrollmentId);
+    });
+
     it("durably retains an event when product mapping is not ready", async () => {
       const suffix = randomUUID();
       const commerceEvent = event(suffix);

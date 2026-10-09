@@ -217,6 +217,7 @@ function transactionExternalId(
   if (subscriptionLifecycle) {
     return (
       invoiceSubscriptionId(object) ??
+      stringValue(object.subscription) ??
       stringValue(object.id) ??
       stringValue(object.payment_intent)
     );
