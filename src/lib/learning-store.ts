@@ -1,4 +1,6 @@
+import { createHash } from "node:crypto";
 import { FieldPath, type Firestore } from "firebase-admin/firestore";
+import { validLearningScopeId, type LearningScope } from "./learning-entitlement";
 import {
   applyEventToPersistentLearner,
   createPersistentLearnerRecord,
@@ -17,10 +19,30 @@ export interface LearningStoreResult {
 }
 
 export class FirestoreLearningStore {
-  constructor(private readonly firestore: Firestore) {}
+  constructor(
+    private readonly firestore: Firestore,
+    private readonly scope?: LearningScope,
+  ) {
+    if (scope && (!validLearningScopeId(scope.tenantId) || !validLearningScopeId(scope.programId))) {
+      throw new Error("LEARNING_SCOPE_INVALID");
+    }
+  }
+
+  private learnerCollection() {
+    if (!this.scope) return this.firestore.collection("learners");
+    const hash = (value: string) => createHash("sha256").update(value).digest("hex");
+    return this.firestore.collection("learningTenants")
+      .doc(hash(this.scope.tenantId))
+      .collection("learningPrograms")
+      .doc(hash(this.scope.programId))
+      .collection("learners");
+  }
 
   private learnerRef(learnerId: string) {
-    return this.firestore.collection("learners").doc(learnerId);
+    if (!learnerId.trim() || learnerId.includes("/") || learnerId.includes("\\")) {
+      throw new Error("LEARNING_LEARNER_ID_INVALID");
+    }
+    return this.learnerCollection().doc(learnerId);
   }
 
   private resultForRecord(
@@ -45,8 +67,8 @@ export class FirestoreLearningStore {
   }
 
   async list(limit = 50): Promise<LearningStoreResult[]> {
-    const snapshot = await this.firestore
-      .collection("learners")
+    const snapshot = await this
+      .learnerCollection()
       .orderBy("updatedAt", "desc")
       .limit(Math.min(Math.max(limit, 1), 100))
       .get();
@@ -65,8 +87,8 @@ export class FirestoreLearningStore {
     let cursorId: string | undefined;
 
     for (;;) {
-      let query = this.firestore
-        .collection("learners")
+      let query = this
+        .learnerCollection()
         .orderBy("updatedAt", "asc")
         .orderBy(FieldPath.documentId(), "asc")
         .limit(boundedPageSize);

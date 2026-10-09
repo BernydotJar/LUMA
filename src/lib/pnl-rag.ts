@@ -57,7 +57,7 @@ function isNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
 }
 
-function normalizeHit(value: unknown): PnlRagHit | null {
+export function normalizePnlRagHit(value: unknown): PnlRagHit | null {
   if (!value || typeof value !== "object") return null;
   const row = value as RawHit;
 
@@ -145,7 +145,7 @@ export async function searchPnlRag(
     }
 
     const results = payload.results
-      .map(normalizeHit)
+      .map(normalizePnlRagHit)
       .filter((hit): hit is PnlRagHit => hit !== null);
 
     return {

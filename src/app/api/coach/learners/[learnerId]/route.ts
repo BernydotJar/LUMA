@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
+import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
 import { commerceEnrollments } from "@/lib/commerce/server";
-import { learningStore, requireLearningCoachAccess } from "@/lib/learning-server";
+import {
+  assertScopedCoachLearner,
+  resolveCoachLearningScope,
+} from "@/lib/coach-scoped-learning";
+import {
+  learningStoreForScope, requireLearningCoachAccess,
+} from "@/lib/learning-server";
 
 export const runtime = "nodejs";
 
@@ -11,34 +18,43 @@ export async function GET(
   try {
     const { access } = await requireLearningCoachAccess(request);
     const { learnerId } = await params;
+    if (!learnerId || learnerId.includes("/") || learnerId.length > 256) {
+      return NextResponse.json({ error: "invalid_learner_id" }, { status: 400 });
+    }
 
-    if (!access.unrestricted) {
+    const scope = resolveCoachLearningScope(access, request.headers);
+    if (scope) {
+      await assertScopedCoachLearner(access, scope, learnerId, commerceEnrollments);
+    } else if (!access.unrestricted) {
       const explicit = access.learnerIds.includes(learnerId);
-      const tenantAccess = explicit
-        ? true
-        : await commerceEnrollments.learnerHasActiveTenantAccess(learnerId, access.tenantIds);
+      const tenantAccess = explicit ||
+        await commerceEnrollments.learnerHasActiveTenantAccess(learnerId, access.tenantIds);
       if (!tenantAccess) {
         return NextResponse.json({ error: "learner_scope_forbidden" }, { status: 403 });
       }
     }
 
-    const result = await learningStore.get(learnerId);
+    const store = learningStoreForScope(scope);
+    const result = await store.get(learnerId);
     if (!result) {
       return NextResponse.json({ error: "learner_not_found" }, { status: 404 });
     }
-
-    const events = await learningStore.listEvents(learnerId, 20);
-    return NextResponse.json({ record: result.record, plan: result.plan, events });
+    const events = await store.listEvents(learnerId, 20);
+    return NextResponse.json({
+      ...(scope ? { tenantId: scope.tenantId, programId: scope.programId } : {}),
+      record: result.record, plan: result.plan, events,
+    });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "UNKNOWN";
-    if (message === "AUTH_REQUIRED") {
+    const code = error instanceof Error ? error.message : "UNKNOWN";
+    if (code === "AUTH_REQUIRED" || isRejectedFirebaseToken(error)) {
       return NextResponse.json({ error: "authentication_required" }, { status: 401 });
     }
-    if (message === "COACH_REQUIRED") {
-      return NextResponse.json({ error: "coach_role_required" }, { status: 403 });
+    if (code === "COACH_REQUIRED" || code === "COACH_SCOPE_REQUIRED" ||
+        code === "COACH_LEARNER_SCOPE_FORBIDDEN") {
+      return NextResponse.json({ error: "learner_scope_forbidden" }, { status: 403 });
     }
-    if (message === "COACH_SCOPE_REQUIRED") {
-      return NextResponse.json({ error: "coach_scope_required" }, { status: 403 });
+    if (code === "LEARNING_PROGRAM_SELECTION_REQUIRED") {
+      return NextResponse.json({ error: "program_selection_required" }, { status: 409 });
     }
     return NextResponse.json({ error: "coach_learner_unavailable" }, { status: 500 });
   }

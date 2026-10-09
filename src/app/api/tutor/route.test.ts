@@ -2,6 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   searchPnlRag: vi.fn(),
+  searchScopedPnlRag: vi.fn(),
+  requireLearningUser: vi.fn(),
+  requireLearningEntitlement: vi.fn(),
 }));
 
 vi.mock("@/lib/luma-data", () => ({
@@ -13,6 +16,19 @@ vi.mock("@/lib/luma-data", () => ({
 vi.mock("@/lib/pnl-rag", () => ({
   searchPnlRag: mocks.searchPnlRag,
   extractivePnlAnswer: vi.fn(() => "extractive answer"),
+}));
+
+
+vi.mock("../../../lib/scoped-rag", () => ({
+  searchScopedPnlRag: mocks.searchScopedPnlRag,
+}));
+
+vi.mock("../../../lib/learning-server", () => ({
+  requireLearningUser: mocks.requireLearningUser,
+}));
+
+vi.mock("../../../lib/learning-entitlement-server", () => ({
+  requireLearningEntitlement: mocks.requireLearningEntitlement,
 }));
 
 import { POST } from "./route";
@@ -49,6 +65,13 @@ async function ask(
 }
 
 beforeEach(() => {
+  delete process.env.LUMA_LEARNING_ACCESS_MODE;
+  delete process.env.LUMA_LEARNING_TENANT_ID;
+  mocks.searchScopedPnlRag.mockReset();
+  mocks.requireLearningUser.mockReset();
+  mocks.requireLearningEntitlement.mockReset();
+  mocks.requireLearningUser.mockResolvedValue({ uid: "uid-a", email: "buyer@example.test", email_verified: true });
+  mocks.requireLearningEntitlement.mockResolvedValue({ tenantId: "tenant-a", programId: "program-a" });
   mocks.searchPnlRag.mockReset();
   mocks.searchPnlRag.mockResolvedValue({
     configured: false,
@@ -166,6 +189,54 @@ describe("/api/tutor CX hardening", () => {
     expect(result.body.intent).toBe("HIGH_STAKES");
     expect(result.body.outcome).toBe("HIGH_STAKES_ESCALATION");
     expect(result.body.trust?.status).toBe("BLOCKED_CLAIM");
+    expect(mocks.searchPnlRag).not.toHaveBeenCalled();
+  });
+});
+
+describe("strict enterprise tutor isolation", () => {
+  beforeEach(() => {
+    process.env.LUMA_LEARNING_ACCESS_MODE = "entitled";
+    process.env.LUMA_LEARNING_TENANT_ID = "tenant-a";
+  });
+
+  it("requires an authenticated learner with a current scoped entitlement", async () => {
+    mocks.requireLearningUser.mockRejectedValueOnce(new Error("AUTH_REQUIRED"));
+    const result = await ask("¿Qué es P.A.S.?");
+    expect(result.status).toBe(401);
+    expect(mocks.searchScopedPnlRag).not.toHaveBeenCalled();
+    expect(mocks.searchPnlRag).not.toHaveBeenCalled();
+  });
+
+  it("does not query unpartitioned corpus when scoped index is not configured", async () => {
+    mocks.searchScopedPnlRag.mockResolvedValueOnce({ configured: false, strict: false, results: [] });
+    const result = await ask("¿Qué es P.A.S.?");
+    expect(result.status).toBe(503);
+    expect(result.body.trust?.status).toBe("RETRIEVAL_UNAVAILABLE");
+    expect(mocks.searchPnlRag).not.toHaveBeenCalled();
+    expect(mocks.searchScopedPnlRag).toHaveBeenCalledWith(
+      expect.any(String),
+      { tenantId: "tenant-a", programId: "program-a" },
+      5,
+    );
+  });
+
+  it("returns only the scoped source with timestamps and never demo fallback", async () => {
+    mocks.searchScopedPnlRag.mockResolvedValueOnce({
+      configured: true, strict: true, backend: "scoped/pgvector",
+      results: [{
+        chunkId: "scoped-1", sourceId: "source-a", driveFileId: "drive-a",
+        module: "Program A", title: "P.A.S. clase",
+        startSeconds: 25, endSeconds: 40,
+        startClock: "00:00:25", endClock: "00:00:40",
+        text: "P.A.S. pensamiento automático saboteador, práctica guiada.",
+        driveUrl: "https://files.example.test/a", srtPath: "/a.srt",
+        transcriptPath: "/a.txt",
+      }],
+    });
+    const result = await ask("Explícame qué es P.A.S.");
+    expect(result.status).toBe(200);
+    expect(result.body.trust?.status).toBe("GROUNDED");
+    expect(JSON.stringify(result.body)).toContain("00:00:25");
     expect(mocks.searchPnlRag).not.toHaveBeenCalled();
   });
 });

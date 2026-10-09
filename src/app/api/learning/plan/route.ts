@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { learningStore, requireLearningUser } from "@/lib/learning-server";
+import { learningStoreForScope, requireLearningUser } from "@/lib/learning-server";
 import { requireLearningEntitlement } from "@/lib/learning-entitlement-server";
 import { learningAccessFailure } from "@/lib/learning-entitlement";
 import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
@@ -36,8 +36,8 @@ function errorResponse(error: unknown) {
 export async function GET(request: Request) {
   try {
     const user = await requireLearningUser(request);
-    await requireLearningEntitlement(user);
-    const result = await learningStore.get(user.uid);
+    const scope = await requireLearningEntitlement(user, request.headers.get("x-luma-program-id"));
+    const result = await learningStoreForScope(scope).get(user.uid);
     if (!result) {
       return NextResponse.json({ error: "learner_state_not_found" }, { status: 404 });
     }
@@ -59,13 +59,13 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
   try {
     const user = await requireLearningUser(request);
-    await requireLearningEntitlement(user);
+    const scope = await requireLearningEntitlement(user, request.headers.get("x-luma-program-id"));
     const body = (await request.json()) as { onboarding?: unknown };
     if (!isOnboarding(body.onboarding)) {
       return NextResponse.json({ error: "invalid_onboarding" }, { status: 400 });
     }
 
-    const result = await learningStore.bootstrap(user.uid, body.onboarding);
+    const result = await learningStoreForScope(scope).bootstrap(user.uid, body.onboarding);
     return NextResponse.json({
       plan: result.plan,
       duplicate: result.duplicate,

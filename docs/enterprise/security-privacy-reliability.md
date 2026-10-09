@@ -22,3 +22,7 @@
 Verify provider test-mode activation, idempotent replay/refund/chargeback and out-of-order recovery. Audit every real-data UI/export for role/tenant constraints. Validate deployed Firebase rules, IAM, Secrets, HTTPS and storage. Define retention/deletion, deletion evidence, data controller and vendor DPA, AI data processing policy, source copyrights and voice consent. Exercise actual tenant restore and document observed objectives. Define service escalation and incident communication.
 
 AI/RAG/voice downtime must degrade optional functions without losing a confirmed commerce event. Firestore/ingress downtime requires provider retries, monitoring and reconciliation; code-only tests are not an SLA.
+
+## Scope hardening verified in emulator (2026-10-09)
+
+The 45 stateful emulator cases passed using Temurin Java 21, including a new test that stores one Firebase UID in three independent tenant/program Twin trees and replays the same event ID without crossover. This is source/emulator evidence, not proof of live IAM, deployed Firestore rules, RAG backend filtering, deletion behavior or contractual recovery. Separate real-data export/penetration and source-permission review is still required.

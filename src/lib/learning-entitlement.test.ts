@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   assertLearningEntitlement,
   learningAccessFailure,
+  resolveLearningEntitlement,
   resolveLearningAccessPolicy,
   type LearningEntitlementStore,
 } from "./learning-entitlement";
@@ -109,6 +110,25 @@ describe("entitlement access boundary", () => {
     await expect(assertLearningEntitlement(identity, adapter, strict, now))
       .rejects.toThrow("FIRESTORE_DOWN");
     expect(learningAccessFailure(new Error("FIRESTORE_DOWN"))).toBeUndefined();
+  });
+
+  it("selects only an authorized program and requires selection for multi-program accounts", async () => {
+    const s = store([
+      enrollment({ programId: "program-a" }),
+      enrollment({ enrollmentId: "b".repeat(64), programId: "program-b" }),
+    ]);
+    await expect(resolveLearningEntitlement(identity, s.adapter, strict, undefined, now))
+      .rejects.toThrow("LEARNING_PROGRAM_SELECTION_REQUIRED");
+    await expect(resolveLearningEntitlement(identity, s.adapter, strict, "program-b", now))
+      .resolves.toEqual({ tenantId: "tenant-a", programId: "program-b" });
+    await expect(resolveLearningEntitlement(identity, s.adapter, strict, "program-foreign", now))
+      .rejects.toThrow("LEARNING_ACTIVE_ENTITLEMENT_REQUIRED");
+  });
+
+  it("never selects a tenant-B program even when the same verified UID bought it", async () => {
+    const s = store([enrollment({ tenantId: "tenant-b", programId: "program-b" })]);
+    await expect(resolveLearningEntitlement(identity, s.adapter, strict, "program-b", now))
+      .rejects.toThrow("LEARNING_ACTIVE_ENTITLEMENT_REQUIRED");
   });
 
   it("maps denial and bad configuration to safe HTTP statuses", () => {

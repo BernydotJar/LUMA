@@ -37,8 +37,8 @@ The tutor UI supplies a Firebase Bearer token when available, but does not expos
 
 ## Security caveats / launch blockers
 
-- Existing `learners/{firebaseUid}` records are not separated by tenant. A coach who can view a multi-tenant learner's global state may see information from another program; current pilot must use isolated identity/data scope and independently audit those permissions. A real multi-tenant environment needs a tenant/program-keyed Twin data model and authorization on exports.
-- A tenant-wide entitlement gate does not, by itself, implement **per-program content permissions** or a tenant-partitioned RAG semantic index. The current optional RAG integration must be tested against the intended authorized corpus; do not attach multiple tenants' proprietary data to a shared unfiltered index.
+- Enterprise mode stores the Twin in a separate tenant/program-keyed Firestore tree; the legacy root learner collection is showcase-only. Firestore emulator tests and production RBAC/export reviews remain required.
+- Enterprise RAG is routed only through a separate scope-aware gateway; the adapter validates per-result tenant/program scope and refuses shared index fallback. Backend pre-retrieval isolation remains unverified until a dedicated provider test.
 - Anonymous sample pages and deterministic public reflection demos remain showcase-only; never show real identifiable learner evidence on a public static route.
-- Enable strict mode only when signed provider sandbox tests and real tenant mapping have passed and rollback/incident support is arranged.
+- Enable strict mode only after signed payment tests, program mapping, scope-aware RAG, Firestore emulator gates, verified voice/privacy controls and incident/runbook approval. Use LUMA_LEARNING_PROGRAM_ID for single-program pilot selection.
 - The first pilot remains BLOCKED pending all merchant, Firestore emulator, operational, privacy, capacity and independent review gates.

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { resolveLearningAccessPolicy, learningAccessFailure } from "../../../lib/learning-entitlement";
+import { resolveLearningAccessPolicy, learningAccessFailure, type LearningScope } from "../../../lib/learning-entitlement";
+import { searchScopedPnlRag } from "../../../lib/scoped-rag";
 import { isRejectedFirebaseToken } from "../../../lib/auth-token-error";
 import { moduleThreeSource } from "@/lib/luma-data";
 import { extractivePnlAnswer, searchPnlRag } from "@/lib/pnl-rag";
@@ -55,12 +56,13 @@ const responses = [
 ];
 
 export async function POST(request: Request) {
+  let scopedLearning: LearningScope | undefined;
   try {
     if (resolveLearningAccessPolicy(process.env).mode === "entitled") {
       const { requireLearningUser } = await import("../../../lib/learning-server");
       const { requireLearningEntitlement } = await import("../../../lib/learning-entitlement-server");
       const identity = await requireLearningUser(request);
-      await requireLearningEntitlement(identity);
+      scopedLearning = await requireLearningEntitlement(identity, request.headers.get("x-luma-program-id"));
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : "";
@@ -99,6 +101,60 @@ export async function POST(request: Request) {
         recentTurns: control.context.length,
         resolvedFromContext: control.resolvedFromContext,
       },
+    });
+  }
+
+  // Paid program retrieval never falls through to the global RAG index or
+  // hard-coded sample-module answers, regardless of backend availability.
+  if (scopedLearning) {
+    if (control.outcome === "HIGH_STAKES_ESCALATION") {
+      return NextResponse.json({
+        answer: "Ante una afirmación de salud o bienestar de alto impacto, conviene consultar a un profesional cualificado. No presentaré afirmaciones clínicas sin evidencia verificada.",
+        learningMove: "ESCALATE",
+        intent: control.intent,
+        outcome: control.outcome,
+        trust: { status: "BLOCKED_CLAIM", reason: "Requiere validación cualificada." },
+      });
+    }
+    const rag = await searchScopedPnlRag(control.query, scopedLearning, 5);
+    if (!rag.configured || rag.error) {
+      return NextResponse.json({
+        answer: "El contenido de este programa no está disponible para consulta en este momento.",
+        learningMove: "ESCALATE",
+        intent: control.intent,
+        outcome: "NEEDS_CLARIFICATION",
+        trust: { status: "RETRIEVAL_UNAVAILABLE", reason: "Índice de contenido autorizado no disponible." },
+      }, { status: 503 });
+    }
+    const relevant = rag.results.filter((hit) =>
+      isRagEvidenceRelevant(control.query, { text: hit.text, title: hit.title, module: hit.module }),
+    );
+    if (relevant.length === 0) {
+      return NextResponse.json({
+        answer: "No encontré evidencia suficiente en el contenido autorizado para esta pregunta. ¿Puedes precisar el tema?",
+        learningMove: "ASK",
+        intent: control.intent,
+        outcome: "NEEDS_CLARIFICATION",
+        trust: { status: "INSUFFICIENT_EVIDENCE", reason: "Sin pasajes relevantes en este programa." },
+      });
+    }
+    const top = relevant[0];
+    return NextResponse.json({
+      answer: extractivePnlAnswer(top),
+      evidence: {
+        concept: top.module,
+        source: `${top.title} · ${top.startClock} → ${top.endClock}`,
+        url: top.driveUrl,
+        sourceId: top.sourceId,
+        chunkId: top.chunkId,
+        startClock: top.startClock,
+        endClock: top.endClock,
+      },
+      learningMove: "EXPLAIN",
+      intent: control.intent,
+      outcome: control.outcome,
+      trust: { status: "GROUNDED", artifactId: top.chunkId },
+      retrieval: { backend: rag.backend ?? "scoped", resultCount: relevant.length },
     });
   }
 

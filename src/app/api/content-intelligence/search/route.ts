@@ -4,13 +4,14 @@ import { requireLearningEntitlement } from "@/lib/learning-entitlement-server";
 import { learningAccessFailure } from "@/lib/learning-entitlement";
 import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
 import { searchPnlRag } from "@/lib/pnl-rag";
+import { searchScopedPnlRag } from "@/lib/scoped-rag";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
     const user = await requireLearningUser(request);
-    await requireLearningEntitlement(user);
+    const scope = await requireLearningEntitlement(user, request.headers.get("x-luma-program-id"));
     const body = (await request.json()) as Record<string, unknown>;
     const query =
       typeof body.query === "string" ? body.query.trim() : "";
@@ -24,10 +25,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = await searchPnlRag(
-      query,
-      Math.max(1, Math.min(limit, 8)),
-    );
+    const boundedLimit = Math.max(1, Math.min(limit, 8));
+    const result = scope
+      ? await searchScopedPnlRag(query, scope, boundedLimit)
+      : await searchPnlRag(query, boundedLimit);
 
     if (!result.configured) {
       return NextResponse.json(

@@ -13,6 +13,7 @@
 | [Pilot charter](pilot-charter.md) | 60-day baseline, ownership and acceptance |
 | [Acceptance matrix](audit-acceptance-matrix.md) | Exact implementation status / blockers |
 | [Learning access policy](learning-access-policy.md) | Optional fail-closed entitlement enforcement for pilot deployments |
+| [Tenant/program isolation contract](tenant-isolation-contract.md) | Scoped Twin, coach permissions, provider RAG contract |
 
 **Evidence classifications:** VERIFIED = source/tests/config directly observed; ESTIMATED = mathematical scenario based on inputs; ASSUMED = unconfirmed pilot hypothesis; NOT YET VERIFIED = external or operational evidence missing.
 

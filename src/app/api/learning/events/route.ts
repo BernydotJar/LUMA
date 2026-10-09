@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { learningStore, requireLearningUser } from "@/lib/learning-server";
+import { learningStoreForScope, requireLearningUser } from "@/lib/learning-server";
 import { requireLearningEntitlement } from "@/lib/learning-entitlement-server";
 import { learningAccessFailure } from "@/lib/learning-entitlement";
 import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
@@ -10,7 +10,7 @@ export const runtime = "nodejs";
 export async function POST(request: Request) {
   try {
     const user = await requireLearningUser(request);
-    await requireLearningEntitlement(user);
+    const scope = await requireLearningEntitlement(user, request.headers.get("x-luma-program-id"));
     const body = (await request.json()) as { eventId?: unknown; event?: unknown };
     const eventId = typeof body.eventId === "string" ? body.eventId.trim() : "";
 
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "invalid_learning_event" }, { status: 400 });
     }
 
-    const result = await learningStore.appendEvent(user.uid, eventId, event);
+    const result = await learningStoreForScope(scope).appendEvent(user.uid, eventId, event);
     return NextResponse.json({
       plan: result.plan,
       duplicate: result.duplicate,

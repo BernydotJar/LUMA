@@ -39,3 +39,7 @@ flowchart TD
 **Target production:** measured concurrency, provider sandbox receipts, settlement/reconciliation operational plan, tenant-specific privacy controls on all real-data surfaces, alerting, backup/restore rehearsal, RTO/RPO based on proof, retention and AI handling agreement.
 
 **Blocking privacy caveat:** `/studio/learners/mariana` publicly displays example Twin evidence. It must remain fictional; real participant data requires server-side tenant-and-coach authorization on every UI/export path before launch.
+
+## Enterprise tenant/program isolation (2026-10-09)
+
+When opt-in `entitled` mode is enabled, authenticated learner and coach APIs resolve a current program-scoped entitlement and use `learningTenants/{tenantHash}/learningPrograms/{programHash}/learners/{uid}` (SHA256 of identifiers) rather than reading demo/legacy `learners/{uid}`. The scope also controls the dedicated RAG gateway; mixed-scope responses are rejected without querying the shared index. The RAG backend must still demonstrate pre-retrieval index isolation independently. See `tenant-isolation-contract.md` and `specs/064-tenant-program-learning-isolation.md`. The enterprise pilot remains gated.

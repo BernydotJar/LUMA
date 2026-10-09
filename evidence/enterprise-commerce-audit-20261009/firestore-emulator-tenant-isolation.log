@@ -1,0 +1,36 @@
+i  emulators: Starting emulators: firestore
+i  emulators: Detected demo project ID "demo-luma-commerce", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+i  firestore: Firestore Emulator logging to firestore-debug.log
+✔  firestore: Firestore Emulator was started in standard edition.
+✔  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: npm run test:run -- src/lib/commerce/ledger.emulator.test.ts src/lib/commerce/orchestrator.emulator.test.ts src/lib/program-delivery.emulator.test.ts src/lib/learning-store.emulator.test.ts
+
+> luma-learning-intelligence@0.1.0 test:run
+> vitest run src/lib/commerce/ledger.emulator.test.ts src/lib/commerce/orchestrator.emulator.test.ts src/lib/program-delivery.emulator.test.ts src/lib/learning-store.emulator.test.ts
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace/projects/LUMA-commerce-compliance-20261009[39m
+
+ [32m✓[39m src/lib/commerce/ledger.emulator.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 1570[2mms[22m[39m
+   [32m✓[39m FirestoreCommerceLedger emulator [2m(8)[22m
+     [33m[2m✓[22m[39m records, processes and replays a payment exactly once[33m 1275[2mms[22m[39m
+ [32m✓[39m src/lib/learning-store.emulator.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1474[2mms[22m[39m
+   [32m✓[39m FirestoreLearningStore emulator [2m(4)[22m
+     [33m[2m✓[22m[39m keeps bootstrap and event replay idempotent and preserves route change after reload[33m 1111[2mms[22m[39m
+ [32m✓[39m src/lib/program-delivery.emulator.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 1876[2mms[22m[39m
+   [32m✓[39m FirestoreProgramDeliveryStore emulator [2m(12)[22m
+     [33m[2m✓[22m[39m supports live cohort sessions without requiring recordings[33m 1298[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/orchestrator.emulator.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 3316[2mms[22m[39m
+   [32m✓[39m CommerceEnrollmentOrchestrator emulator [2m(21)[22m
+     [33m[2m✓[22m[39m activates access after payment and lets the matching verified identity claim it[33m 1275[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m45 passed[39m[22m[90m (45)[39m
+[2m   Start at [22m 19:32:27
+[2m   Duration [22m 6.95s[2m (import 51%, tests 39%, transform 11%)[22m
+
+✔  Script exited successfully (code 0)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator
