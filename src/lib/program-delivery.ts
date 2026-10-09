@@ -31,6 +31,12 @@ export interface ProgramOfferingInput {
   coachIds?: string[];
 }
 
+
+export interface ProgramAccess {
+  tenantId: string;
+  programId: string;
+}
+
 export interface LiveProgramSession {
   sessionId: string;
   offeringId: string;
@@ -162,6 +168,9 @@ export class FirestoreProgramDeliveryStore {
       const current = sessionSnapshot.exists
         ? (sessionSnapshot.data() as LiveProgramSession)
         : undefined;
+      if (!Number.isFinite(input.durationMinutes)) {
+        throw new Error("durationMinutes must be finite");
+      }
       const durationMinutes = Math.round(input.durationMinutes);
       if (durationMinutes < 10 || durationMinutes > 720) {
         throw new Error("durationMinutes must be between 10 and 720");
@@ -201,9 +210,16 @@ export class FirestoreProgramDeliveryStore {
   }
 
   async listOfferingsForPrograms(
-    programIds: string[],
+    access: ProgramAccess[],
   ): Promise<ProgramOffering[]> {
-    const wanted = new Set(programIds.map((id) => id.trim()).filter(Boolean));
+    const wanted = new Set(
+      access.map((item) =>
+        JSON.stringify([
+          required(item.tenantId, "tenantId"),
+          required(item.programId, "programId"),
+        ]),
+      ),
+    );
     if (wanted.size === 0) return [];
     const snapshot = await this.firestore
       .collection("programOfferings")
@@ -211,7 +227,11 @@ export class FirestoreProgramDeliveryStore {
       .get();
     return snapshot.docs
       .map((doc) => doc.data() as ProgramOffering)
-      .filter((item) => item.status === "active" && wanted.has(item.programId))
+      .filter(
+        (item) =>
+          item.status === "active" &&
+          wanted.has(JSON.stringify([item.tenantId, item.programId])),
+      )
       .sort((a, b) => a.title.localeCompare(b.title));
   }
 
@@ -229,11 +249,11 @@ export class FirestoreProgramDeliveryStore {
   }
 
   async upcomingForPrograms(
-    programIds: string[],
+    access: ProgramAccess[],
     now = new Date().toISOString(),
   ): Promise<Array<{ offering: ProgramOffering; session: LiveProgramSession }>> {
     validIso(now, "now");
-    const offerings = await this.listOfferingsForPrograms(programIds);
+    const offerings = await this.listOfferingsForPrograms(access);
     const rows: Array<{ offering: ProgramOffering; session: LiveProgramSession }> = [];
     for (const offering of offerings) {
       const sessions = await this.listSessions(offering.offeringId);

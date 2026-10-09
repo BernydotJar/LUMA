@@ -15,11 +15,14 @@ export async function GET(request: Request) {
     }
 
     const enrollments = await commerceEnrollments.listByLearner(user.uid);
-    const activeProgramIds = enrollments
+    const activePrograms = enrollments
       .filter((record) => record.status === "active")
-      .map((record) => record.programId);
+      .map((record) => ({
+        tenantId: record.tenantId,
+        programId: record.programId,
+      }));
 
-    const schedule = await programDeliveryStore.upcomingForPrograms(activeProgramIds);
+    const schedule = await programDeliveryStore.upcomingForPrograms(activePrograms);
 
     return NextResponse.json({
       schedule: schedule.map(({ offering, session }) => ({

@@ -63,6 +63,33 @@ describe("StripeProvider", () => {
     expect(event.type).toBe("commerce.subscription.cancelled");
   });
 
+  it("keys subscription invoice renewals by subscription id", async () => {
+    const rawBody = JSON.stringify({
+      id: "evt_invoice_paid",
+      type: "invoice.paid",
+      created: now,
+      data: {
+        object: {
+          id: "in_renewal",
+          customer: "cus_1",
+          payment_intent: "pi_renewal",
+          subscription: "sub_1",
+          currency: "usd",
+        },
+      },
+    });
+
+    const event = await new StripeProvider(secret, {
+      nowSeconds: () => now,
+    }).handleWebhook({
+      headers: { "stripe-signature": sign(rawBody) },
+      rawBody,
+    });
+
+    expect(event.type).toBe("commerce.subscription.renewed");
+    expect(event.transactionExternalId).toBe("sub_1");
+  });
+
   it("rejects tampered body", async () => {
     const rawBody = payload();
     await expect(

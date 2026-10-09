@@ -154,6 +154,20 @@ function transactionExternalId(
   eventType: string,
   object: JsonRecord,
 ): string | undefined {
+  const subscriptionLifecycle =
+    eventType.startsWith("invoice.") ||
+    eventType.startsWith("customer.subscription.") ||
+    (eventType === "checkout.session.completed" &&
+      stringValue(object.mode) === "subscription");
+
+  if (subscriptionLifecycle) {
+    return (
+      stringValue(object.subscription) ??
+      stringValue(object.id) ??
+      stringValue(object.payment_intent)
+    );
+  }
+
   return (
     stringValue(object.payment_intent) ??
     stringValue(object.charge) ??

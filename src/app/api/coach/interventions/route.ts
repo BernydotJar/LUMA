@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 export async function GET(request: Request) {
   try {
     await requireLearningCoach(request);
-    const learners = await learningStore.list(100);
+    const learners = await learningStore.listAll();
     const signals = rankLearnerInterventions(
       learners.map((item) => item.record),
     );

@@ -3,6 +3,7 @@ import { deleteApp, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { afterAll, describe, expect, it } from "vitest";
 import { FirestoreLearningStore } from "./learning-store";
+import { createPersistentLearnerRecord } from "./persistent-learning";
 
 const emulatorEnabled = Boolean(process.env.FIRESTORE_EMULATOR_HOST);
 const app = emulatorEnabled
@@ -69,6 +70,41 @@ describe.runIf(emulatorEnabled)("FirestoreLearningStore emulator", () => {
       .get();
     expect(persistedEvent.exists).toBe(true);
     expect(persistedEvent.data()?.journeyId).toBe(bootstrapped.record.journeyId);
+  });
+
+  it("paginates the full cohort so oldest learners are not dropped", async () => {
+    const firestore = getFirestore(app!);
+    const before = await store!.listAll(25);
+    const suffix = randomUUID();
+    const batch = firestore.batch();
+
+    for (let index = 0; index < 105; index += 1) {
+      const learnerId = `bulk-${suffix}-${String(index).padStart(3, "0")}`;
+      const createdAt = new Date(
+        Date.UTC(2026, 0, 1, 0, index, 0),
+      ).toISOString();
+      const generated = createPersistentLearnerRecord(learnerId, {
+        goal: "emotions",
+        diagnostic: "b",
+        confidence: 2,
+        minutes: 12,
+        createdAt,
+      });
+      batch.set(firestore.collection("learners").doc(learnerId), {
+        ...generated.record,
+        updatedAt: createdAt,
+      });
+    }
+    await batch.commit();
+
+    const all = await store!.listAll(25);
+    expect(all.length).toBe(before.length + 105);
+    expect(
+      all.some((item) => item.record.learnerId === `bulk-${suffix}-000`),
+    ).toBe(true);
+    expect(
+      all.some((item) => item.record.learnerId === `bulk-${suffix}-104`),
+    ).toBe(true);
   });
 
   it("isolates learners in distinct document trees", async () => {

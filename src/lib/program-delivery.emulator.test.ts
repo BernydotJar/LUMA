@@ -39,13 +39,76 @@ describe.runIf(emulatorEnabled)("FirestoreProgramDeliveryStore emulator", () => 
     });
 
     const upcoming = await store!.upcomingForPrograms(
-      [offering.programId],
+      [{ tenantId: offering.tenantId, programId: offering.programId }],
       "2026-10-08T00:00:00Z",
     );
 
     expect(session.recordingPolicy).toBe("none");
     expect(upcoming).toHaveLength(1);
     expect(upcoming[0].offering.deliveryMode).toBe("live");
+  });
+
+  it("never leaks a same-program cohort across tenants", async () => {
+    const suffix = randomUUID();
+    const programId = `shared-program-${suffix}`;
+    const tenantA = await store!.upsertOffering({
+      tenantId: `tenant-a-${suffix}`,
+      programId,
+      cohortKey: "cohort-a",
+      title: "Tenant A cohort",
+      deliveryMode: "live",
+      timezone: "America/Bogota",
+    });
+    const tenantB = await store!.upsertOffering({
+      tenantId: `tenant-b-${suffix}`,
+      programId,
+      cohortKey: "cohort-b",
+      title: "Tenant B private cohort",
+      deliveryMode: "live",
+      timezone: "America/Bogota",
+    });
+
+    await store!.scheduleSession(tenantA.offeringId, {
+      title: "Tenant A session",
+      startsAt: "2026-10-20T20:00:00Z",
+      durationMinutes: 60,
+      joinUrl: "https://meet.example.com/tenant-a",
+    });
+    await store!.scheduleSession(tenantB.offeringId, {
+      title: "Tenant B private session",
+      startsAt: "2026-10-20T21:00:00Z",
+      durationMinutes: 60,
+      joinUrl: "https://meet.example.com/tenant-b",
+    });
+
+    const upcoming = await store!.upcomingForPrograms(
+      [{ tenantId: tenantA.tenantId, programId }],
+      "2026-10-08T00:00:00Z",
+    );
+
+    expect(upcoming).toHaveLength(1);
+    expect(upcoming[0].offering.tenantId).toBe(tenantA.tenantId);
+    expect(upcoming[0].session.joinUrl).toContain("tenant-a");
+  });
+
+  it("rejects non-finite session durations", async () => {
+    const suffix = randomUUID();
+    const offering = await store!.upsertOffering({
+      tenantId: "seres-de-excelencia",
+      programId: `duration-${suffix}`,
+      cohortKey: "finite",
+      title: "Finite duration",
+      deliveryMode: "live",
+      timezone: "America/Bogota",
+    });
+
+    await expect(
+      store!.scheduleSession(offering.offeringId, {
+        title: "Invalid duration",
+        startsAt: "2026-10-20T23:00:00Z",
+        durationMinutes: Number.NaN,
+      }),
+    ).rejects.toThrow("durationMinutes must be finite");
   });
 
   it("keeps asynchronous workshops free of live-session assumptions", async () => {
