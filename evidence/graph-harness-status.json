@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "b2033ebc-37de-468e-af3b-d4fed09c6097",
-  "event_count": 539,
+  "last_event_id": "c4967d92-404a-4157-8804-ec066bbbb028",
+  "event_count": 601,
   "ready_nodes": [
     "LUMA-036-liquid-glass-refraction-v2"
   ],
@@ -1186,28 +1186,42 @@
       "id": "LUMA-053-hotmart-provider",
       "kind": "integration",
       "title": "Hotmart provider adapter with signed webhook normalization and lifecycle mapping",
-      "status": "ready",
+      "status": "done",
       "revision": 0,
       "depends_on": [
         "LUMA-052-commerce-idempotency-ledger"
       ],
       "capability": "commerce-provider-hotmart",
-      "active_gates": {},
-      "active_evidence_ids": [],
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "156ac061-e0b2-404b-9c59-1a7a6e27e2ee",
+        "44e81b46-3461-401f-b69d-cf62d0c5558a",
+        "5716fd9d-e2bf-47dc-95ae-b16421ed3d65",
+        "775c3ba0-62d5-4044-9f9d-f74064de5745"
+      ],
       "approval_count": 0
     },
     {
       "id": "LUMA-054-stripe-provider",
       "kind": "integration",
       "title": "Stripe provider adapter using the same normalized commerce contract",
-      "status": "ready",
+      "status": "done",
       "revision": 0,
       "depends_on": [
         "LUMA-052-commerce-idempotency-ledger"
       ],
       "capability": "commerce-provider-stripe",
-      "active_gates": {},
-      "active_evidence_ids": [],
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "047a0d8b-4991-4a79-8fd7-bd67b315f7e6",
+        "5d8f43b6-e1a4-4670-8219-8f227d3e0e0c",
+        "d562ffa1-3029-4792-8fd2-af9fd1f79183",
+        "f3c5b003-1f27-49da-9bd1-7302c852afd6"
+      ],
       "approval_count": 0
     },
     {
@@ -1217,8 +1231,7 @@
       "status": "ready",
       "revision": 0,
       "depends_on": [
-        "LUMA-053-hotmart-provider",
-        "LUMA-054-stripe-provider"
+        "LUMA-062-capacity-resilience-validation"
       ],
       "capability": "release-engineering",
       "active_gates": {},
@@ -1248,8 +1261,135 @@
         "a2befcae-3663-4f69-988a-c4569467208c"
       ],
       "approval_count": 0
+    },
+    {
+      "id": "LUMA-057-commerce-enrollment-activation",
+      "kind": "domain-foundation",
+      "title": "Provider events to entitlement, enrollment, and verified-email access activation",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-053-hotmart-provider",
+        "LUMA-054-stripe-provider"
+      ],
+      "capability": "commerce-enrollment",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "6decc97a-0c57-4912-bdbf-b6de16274e9e",
+        "910f9867-1ed9-4029-9936-5a139979aa64",
+        "96b0e5af-3e1d-41d3-a0a6-21ba6ac0af43",
+        "db738280-cdd2-4ee0-8d6c-eebbf87a5d73",
+        "e3004532-6645-4b5c-a194-abe5ae4377eb"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-058-live-program-delivery",
+      "kind": "product-capability",
+      "title": "Live, asynchronous, and hybrid program offerings with session schedules",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-057-commerce-enrollment-activation"
+      ],
+      "capability": "program-delivery",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "36c378e1-a6ab-4b9e-ad4c-dcf6b5645421",
+        "797dd48c-5f8c-4811-8d77-c18d6cd21911",
+        "ad98500c-6d2e-4d87-8567-235c193dd499",
+        "ecd48fef-1541-4b07-93d3-a1670645a49a"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-059-engagement-intervention-runtime",
+      "kind": "learning-intelligence",
+      "title": "Andragogy-aligned engagement signals and human intervention queue",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-058-live-program-delivery"
+      ],
+      "capability": "engagement-intelligence",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "0fa7173c-05d8-4fa1-bb18-bfbb8abce0e2",
+        "5bc6f1a3-c857-4238-9e1f-b52d4456e271",
+        "a5dbc3c0-0db1-4042-adeb-dbb0ff1b7dc7",
+        "bb0c31ee-82cb-402b-9c6b-040fafbc91aa",
+        "c6c47873-7658-46e8-98b6-df466098faf8",
+        "fb31c16a-f068-4a93-aace-f67779c99f50"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-060-content-intelligence-search",
+      "kind": "learning-intelligence",
+      "title": "Grounded audiovisual corpus search with exact source timestamps and voice query input",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-052-commerce-idempotency-ledger"
+      ],
+      "capability": "content-intelligence",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "02004041-7831-45d5-a23f-ae5ffc0c5a96",
+        "867ca05e-0b2d-45a7-a759-886b26756060",
+        "d6c03187-fc85-493a-8216-b55b1754c6ee",
+        "e3c1838e-380b-4843-b88f-29be446e5497",
+        "f733e400-6423-42ee-80bc-5d4517d99da7"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-061-platform-operability-contract",
+      "kind": "architecture",
+      "title": "Core health, data boundary, provider setup, and evidence-based SLA contract",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-057-commerce-enrollment-activation",
+        "LUMA-059-engagement-intervention-runtime",
+        "LUMA-060-content-intelligence-search"
+      ],
+      "capability": "platform-operability",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "043cb68f-c5b1-4d81-8ffb-1aab3e212fe9",
+        "2a6777fd-b335-4b5f-8517-e98c3608bd6a",
+        "34c903c7-246b-470f-93e5-74baf6a3be90",
+        "a8d51242-a3eb-490c-aef2-49acfe0702b2",
+        "fd596437-1cd9-40bf-a018-99ce9ab6fc0e"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-062-capacity-resilience-validation",
+      "kind": "release",
+      "title": "Production-like load, soak, recovery, and resilience validation for target pilot tier",
+      "status": "ready",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-061-platform-operability-contract"
+      ],
+      "capability": "capacity-resilience",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
     }
   ],
-  "checkpoint_count": 15,
+  "checkpoint_count": 16,
   "repair_plan_count": 0
 }
