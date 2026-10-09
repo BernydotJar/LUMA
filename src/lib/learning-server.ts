@@ -30,3 +30,18 @@ export async function requireLearningCoach(request: Request) {
 
   return decoded;
 }
+
+export async function requireLearningAdmin(request: Request) {
+  const decoded = await requireLearningUser(request);
+  const role = typeof decoded.role === "string" ? decoded.role : "";
+  const allowed =
+    decoded.admin === true ||
+    decoded.superuser === true ||
+    ["admin", "superuser"].includes(role);
+
+  if (!allowed) {
+    throw new Error("ADMIN_REQUIRED");
+  }
+
+  return decoded;
+}

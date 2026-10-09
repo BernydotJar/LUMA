@@ -59,6 +59,8 @@ jobs:
           --only firestore
           "npm run test:run --
           src/lib/commerce/ledger.emulator.test.ts
+          src/lib/commerce/orchestrator.emulator.test.ts
+          src/lib/program-delivery.emulator.test.ts
           src/lib/learning-store.emulator.test.ts"
 
   browser:

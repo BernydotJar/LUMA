@@ -1,0 +1,135 @@
+.searchCard {
+  margin-top: 14px;
+  padding: clamp(22px, 3vw, 32px);
+  border-radius: var(--radius-lg);
+}
+
+.heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.heading h2 {
+  margin-top: 10px;
+  font-size: clamp(1.6rem, 3vw, 2.8rem);
+  line-height: 1;
+  font-weight: 620;
+}
+
+.heading p {
+  max-width: 760px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: .72rem;
+  line-height: 1.55;
+}
+
+.form {
+  margin-top: 22px;
+}
+
+.form label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--muted);
+  font-size: .62rem;
+}
+
+.form > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+}
+
+.form input {
+  min-height: 48px;
+  padding: 0 15px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  color: var(--text);
+  background: rgba(0,0,0,.16);
+  outline: none;
+}
+
+.form input:focus {
+  border-color: rgba(239,200,106,.42);
+}
+
+.voiceButton {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: rgba(255,255,255,.04);
+}
+
+.voiceButton:disabled {
+  opacity: .35;
+}
+
+.message {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: .65rem;
+}
+
+.results {
+  margin-top: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.results article {
+  padding: 17px;
+  border-radius: 18px;
+}
+
+.resultMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: .58rem;
+}
+
+.resultMeta strong {
+  color: var(--accent);
+}
+
+.results h3 {
+  margin-top: 8px;
+  font-size: .86rem;
+}
+
+.results p {
+  margin-top: 8px;
+  color: var(--muted-strong);
+  font-size: .68rem;
+  line-height: 1.55;
+}
+
+.results small {
+  display: block;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: .56rem;
+}
+
+@media (max-width: 760px) {
+  .heading {
+    display: grid;
+  }
+
+  .form > div {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .form > div > :global(.button-primary) {
+    grid-column: 1 / -1;
+  }
+}

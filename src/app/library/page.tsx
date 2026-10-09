@@ -13,6 +13,7 @@ import {
   Video,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
+import { ContentIntelligenceSearch } from "@/components/content-intelligence-search";
 import { moduleThreeSource } from "@/lib/luma-data";
 import styles from "./library.module.css";
 
@@ -76,6 +77,9 @@ export default function LibraryPage() {
           );
         })}
       </section>
+
+
+      <ContentIntelligenceSearch />
 
       <div className={styles.mainGrid}>
         <section className={`${styles.graphCard} content-surface`}>

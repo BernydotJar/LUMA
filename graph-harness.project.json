@@ -1423,8 +1423,7 @@
       "title": "V2 enterprise pilot readiness gate for commerce-independent learning intelligence",
       "status": "ready",
       "depends_on": [
-        "LUMA-053-hotmart-provider",
-        "LUMA-054-stripe-provider"
+        "LUMA-062-capacity-resilience-validation"
       ],
       "capability": "release-engineering",
       "gates": {
@@ -1436,13 +1435,157 @@
         ]
       },
       "allowed_paths": [
-        "graph-harness.project.json",
-        "graph-harness.events.jsonl",
-        "evidence/**",
         "docs/v2/**",
+        "evidence/**",
+        "evidence/capacity/**",
+        "graph-harness.events.jsonl",
+        "graph-harness.project.json",
         "specs/**",
+        "src/app/api/commerce/**",
+        "src/app/api/content-intelligence/**",
+        "src/app/api/health/**",
+        "src/app/api/programs/**",
+        "src/components/content-intelligence-search*",
         "src/lib/commerce/**",
-        "src/app/api/commerce/**"
+        "src/lib/engagement.ts",
+        "src/lib/program-delivery*"
+      ]
+    },
+    {
+      "id": "LUMA-057-commerce-enrollment-activation",
+      "kind": "domain-foundation",
+      "title": "Provider events to entitlement, enrollment, and verified-email access activation",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-053-hotmart-provider",
+        "LUMA-054-stripe-provider"
+      ],
+      "capability": "commerce-enrollment",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/commerce/**",
+        "src/app/api/commerce/**",
+        "src/lib/learning-server.ts",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-058-live-program-delivery",
+      "kind": "product-capability",
+      "title": "Live, asynchronous, and hybrid program offerings with session schedules",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-057-commerce-enrollment-activation"
+      ],
+      "capability": "program-delivery",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/program-delivery.ts",
+        "src/lib/program-delivery-server.ts",
+        "src/app/api/programs/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-059-engagement-intervention-runtime",
+      "kind": "learning-intelligence",
+      "title": "Andragogy-aligned engagement signals and human intervention queue",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-058-live-program-delivery"
+      ],
+      "capability": "engagement-intelligence",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/engagement.ts",
+        "src/lib/coach-api-client.ts",
+        "src/app/api/coach/**",
+        "src/components/studio-dashboard.tsx",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-060-content-intelligence-search",
+      "kind": "learning-intelligence",
+      "title": "Grounded audiovisual corpus search with exact source timestamps and voice query input",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-052-commerce-idempotency-ledger"
+      ],
+      "capability": "content-intelligence",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/pnl-rag.ts",
+        "src/app/api/content-intelligence/**",
+        "src/components/content-intelligence-search*",
+        "src/app/library/**",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-061-platform-operability-contract",
+      "kind": "architecture",
+      "title": "Core health, data boundary, provider setup, and evidence-based SLA contract",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-057-commerce-enrollment-activation",
+        "LUMA-059-engagement-intervention-runtime",
+        "LUMA-060-content-intelligence-search"
+      ],
+      "capability": "platform-operability",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/api/health/**",
+        "docs/v2/**",
+        "firestore.rules",
+        "apphosting.yaml",
+        "evidence/**"
+      ]
+    },
+    {
+      "id": "LUMA-062-capacity-resilience-validation",
+      "kind": "release",
+      "title": "Production-like load, soak, recovery, and resilience validation for target pilot tier",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-061-platform-operability-contract"
+      ],
+      "capability": "capacity-resilience",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "evidence/capacity/**",
+        "docs/v2/**",
+        "apphosting.yaml",
+        "src/app/api/health/**",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl"
       ]
     },
     {
