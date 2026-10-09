@@ -109,3 +109,10 @@ Liquid Glass is a functional interface layer, not the default content-card mater
 - When reduced transparency is requested, do not merely hide the refracted pixels: skip displacement-map generation entirely.
 
 This placement rule intentionally keeps the content visually dominant while navigation and controls retain the optical character of Liquid Light.
+
+## v4 material consistency review
+
+- Persistent Twin, Twin detail, reflection, practice and content search information panels use theme-aware `content-surface` instead of applying `.glass` to entire text panels.
+- Keep the UI navigation and bounded optical demonstration as functional glass surfaces.
+- Treat Glass-HQ WebGPU v0.0.1 as a reference and opt-in experiment, not a global runtime dependency; full cross-browser validation is required.
+- A change to material class must not modify component semantics, permission checks, or event handling.
