@@ -162,6 +162,14 @@ describe("LUMA V2 commerce domain", () => {
     ).toBe('["tenant-a","c-1","p-1"]');
   });
 
+  it("isolates distinct purchases of the same customer and product", () => {
+    const common = { tenantId: "tenant-a", customerId: "cus-1", productId: "p-1" };
+    expect(entitlementIdentityKey({ ...common, purchaseKey: "stripe:pi_one" }))
+      .not.toBe(entitlementIdentityKey({ ...common, purchaseKey: "stripe:pi_two" }));
+    expect(entitlementIdentityKey({ ...common, purchaseKey: "stripe:pi_one" }))
+      .not.toBe(entitlementIdentityKey(common));
+  });
+
   it("rejects incomplete identities", () => {
     expect(() =>
       commerceIdempotencyKey({

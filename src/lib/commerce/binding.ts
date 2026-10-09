@@ -6,6 +6,7 @@ import type { CommerceProductMapping } from "./mapping";
 export interface CommerceProviderBinding {
   provider: CommerceProviderId;
   transactionExternalId: string;
+  purchaseKey?: string;
   tenantId: string;
   productId: string;
   programId: string;
@@ -20,6 +21,7 @@ export interface CommerceProviderBinding {
 export interface ProviderBindingInput {
   provider: CommerceProviderId;
   transactionExternalId: string;
+  purchaseKey?: string;
   mapping: Pick<
     CommerceProductMapping,
     "tenantId" | "productId" | "programId" | "offeringId"
@@ -115,6 +117,8 @@ export class FirestoreCommerceProviderBindingStore {
       };
       const offeringId = input.mapping.offeringId
         ? required(input.mapping.offeringId, "offeringId") : current?.offeringId;
+      const purchaseKey = required(input.purchaseKey ?? current?.purchaseKey ??
+        `${provider}:${transactionExternalId}`, "purchaseKey");
 
       if (
         current &&
@@ -122,7 +126,8 @@ export class FirestoreCommerceProviderBindingStore {
           current.productId !== immutableIdentity.productId ||
           current.programId !== immutableIdentity.programId ||
           current.customerId !== immutableIdentity.customerId ||
-          (current.offeringId && offeringId && current.offeringId !== offeringId))
+          (current.offeringId && offeringId && current.offeringId !== offeringId) ||
+          (current.purchaseKey && current.purchaseKey !== purchaseKey))
       ) {
         throw new Error("PROVIDER_BINDING_CONFLICT");
       }
@@ -132,6 +137,7 @@ export class FirestoreCommerceProviderBindingStore {
       const record: CommerceProviderBinding = {
         provider,
         transactionExternalId,
+        purchaseKey,
         ...immutableIdentity,
         ...(offeringId ? { offeringId } : {}),
         ...(email ? { email } : {}),

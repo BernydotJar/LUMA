@@ -77,3 +77,9 @@ Webhook ingress applies a per-client throttle before reading the bounded body. T
 A verified webhook that is durably received but cannot yet resolve its product mapping or customer is **not** acknowledged as complete: the API returns `503` and `Retry-After: 60`, retaining the failed event for a provider retry. This supports out-of-order deliveries such as `invoice.paid` before an `incomplete` subscription's mapping/binding event. `200` is reserved for processed/idempotent events. Configure Stripe's endpoint with retry support and reconcile persistent failures operationally.
 
 `customer.subscription.updated` to `unpaid`, `canceled`, `incomplete_expired`, or `paused` revokes access; `active` re-grants it after recovery. `past_due` preserves access while Stripe's configurable dunning grace period is in progress.
+
+## Purchase-level entitlements and disputes
+
+Ledger entitlements are keyed by tenant, customer, canonical product and **stable purchase/subscription identity** (`purchaseKey = provider:transactionExternalId`). Two purchases of the same product create two enrollments; cancellation/refund of one leaves the other purchase active. Stripe PaymentIntent `latest_charge` is retained as an alias to route dispute webhooks (`charge.dispute.created`, `closed: won/lost`, and `funds_reinstated`) back to the original entitlement. Dispute restoration re-grants only the corresponding purchase.
+
+The coach intervention dashboard samples up to 100 learner records and returns the top eight signals **from the sample**; the summary is sample-based, not a full-tenant population or SLA count. Large-scale ranking needs a persistent projection/queue under the capacity-resilience workstream.

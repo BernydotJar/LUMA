@@ -124,6 +124,33 @@ describe("StripeProvider", () => {
     }
   });
 
+  it.each([
+    ["charge.dispute.closed", "won", "commerce.payment.confirmed"],
+    ["charge.dispute.closed", "lost", "commerce.payment.refunded"],
+    ["charge.dispute.funds_reinstated", "won", "commerce.payment.confirmed"],
+  ] as const)("maps %s / %s to %s using the disputed Charge", async (type, status, expected) => {
+    const rawBody = JSON.stringify({
+      id: `evt_${type}_${status}`, type, created: now,
+      data: { object: { id: "dp_123", charge: "ch_123", status } },
+    });
+    const event = await new StripeProvider(secret, { nowSeconds: () => now }).handleWebhook({
+      headers: { "stripe-signature": sign(rawBody) }, rawBody,
+    });
+    expect(event.type).toBe(expected);
+    expect(event.transactionExternalId).toBe("ch_123");
+  });
+
+  it("captures latest_charge as a payment binding alias for disputes", async () => {
+    const rawBody = JSON.stringify({ id: "evt_payment", type: "payment_intent.succeeded",
+      created: now, data: { object: { id: "pi_payment", latest_charge: "ch_payment",
+        customer: "cus_payment", metadata: { luma_product_id: "product" } } } });
+    const event = await new StripeProvider(secret, { nowSeconds: () => now }).handleWebhook({
+      headers: { "stripe-signature": sign(rawBody) }, rawBody,
+    });
+    expect(event.transactionExternalId).toBe("pi_payment");
+    expect(event.metadata?.chargeExternalId).toBe("ch_payment");
+  });
+
   it("maps subscription deletion to cancellation", async () => {
     const rawBody = payload("customer.subscription.deleted");
     const event = await new StripeProvider(secret, {

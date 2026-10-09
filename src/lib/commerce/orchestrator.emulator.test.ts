@@ -465,6 +465,91 @@ describe.runIf(emulatorEnabled)(
       expect(restored.enrollment?.status).toBe("active");
     });
 
+    it("does not revoke a second independent purchase of the identical product", async () => {
+      const suffix = randomUUID();
+      const tenantId = `same-product-tenant-${suffix}`;
+      const productId = `same-product-${suffix}`;
+      const programId = `same-program-${suffix}`;
+      const customerExternalId = `same-customer-${suffix}`;
+      const provider = "stripe" as const;
+      const externalProductId = `external-program-${suffix}`;
+      await mappings!.upsert({ provider, externalProductId, tenantId, productId, programId });
+      const first = event(suffix, { provider, customerExternalId,
+        externalEventId: `first-${suffix}`, transactionExternalId: `pi_first-${suffix}` });
+      const second = event(suffix, { provider, customerExternalId,
+        externalEventId: `second-${suffix}`, transactionExternalId: `pi_second-${suffix}`,
+        occurredAt: "2026-10-08T12:01:00Z" });
+      const paidA = await orchestrator!.handle(first, `corr-first-${suffix}`);
+      const paidB = await orchestrator!.handle(second, `corr-second-${suffix}`);
+      expect(paidA.enrollment?.enrollmentId).not.toBe(paidB.enrollment?.enrollmentId);
+      expect(paidA.enrollment?.purchaseKey).not.toBe(paidB.enrollment?.purchaseKey);
+      await enrollments!.claimByEmail(`learner-${suffix}`, `learner-${suffix}@example.com`);
+      const refund = event(suffix, { provider, customerExternalId,
+        externalEventId: `refund-first-${suffix}`,
+        type: "commerce.payment.refunded", transactionExternalId: `pi_first-${suffix}`,
+        productExternalId: undefined, occurredAt: "2026-10-08T12:05:00Z" });
+      const refunded = await orchestrator!.handle(refund, `corr-refund-first-${suffix}`);
+      expect(refunded.enrollment?.status).toBe("revoked");
+      const persisted = await enrollments!.listByLearner(`learner-${suffix}`);
+      expect(persisted).toHaveLength(2);
+      expect(persisted.filter((record) => isActiveCommerceEnrollment(record))).toHaveLength(1);
+      expect(persisted.find((record) => record.purchaseKey?.endsWith(`pi_second-${suffix}`))?.status)
+        .toBe("active");
+    });
+
+    it("restores only the contested Stripe charge after a won dispute", async () => {
+      const suffix = randomUUID();
+      const tenantId = `dispute-tenant-${suffix}`;
+      const productId = `dispute-product-${suffix}`;
+      await mappings!.upsert({ provider: "stripe", externalProductId: `external-program-${suffix}`,
+        tenantId, productId, programId: `program-${suffix}` });
+      const paid = event(suffix, { provider: "stripe",
+        externalEventId: `pi-paid-${suffix}`,
+        transactionExternalId: `pi_disputed-${suffix}`,
+        metadata: { buyerEmail: `learner-${suffix}@example.com`, chargeExternalId: `ch_disputed-${suffix}` },
+      });
+      const granted = await orchestrator!.handle(paid, `corr-payment-${suffix}`);
+      expect(granted.enrollment?.status).toBe("active");
+      expect((await bindings!.get("stripe", `ch_disputed-${suffix}`))?.purchaseKey)
+        .toBe(`stripe:pi_disputed-${suffix}`);
+      const created = event(suffix, { provider: "stripe",
+        externalEventId: `dispute-created-${suffix}`, type: "commerce.payment.refunded",
+        transactionExternalId: `ch_disputed-${suffix}`, customerExternalId: undefined,
+        productExternalId: undefined, occurredAt: "2026-10-08T12:11:00Z", metadata: {} });
+      const revoked = await orchestrator!.handle(created, `corr-dispute-${suffix}`);
+      expect(revoked.enrollment?.status).toBe("revoked");
+      const won = event(suffix, { provider: "stripe",
+        externalEventId: `dispute-won-${suffix}`, type: "commerce.payment.confirmed",
+        transactionExternalId: `ch_disputed-${suffix}`, customerExternalId: undefined,
+        productExternalId: undefined, occurredAt: "2026-10-08T12:40:00Z", metadata: {} });
+      const restored = await orchestrator!.handle(won, `corr-won-${suffix}`);
+      expect(restored.enrollment?.status).toBe("active");
+      expect(restored.enrollment?.enrollmentId).toBe(granted.enrollment?.enrollmentId);
+      expect(restored.outcome).toBe("reactivated");
+    });
+
+    it("bounds the intervention cohort sample without admitting revoked enrollments", async () => {
+      const suffix = randomUUID();
+      const tenantId = `sample-tenant-${suffix}`;
+      const write = firestore!.batch();
+      for (let index = 0; index < 125; index++) {
+        const id = `sample-${suffix}-${String(index).padStart(3, "0")}`;
+        write.set(firestore!.collection("commerceEnrollments").doc(id), {
+          tenantId, enrollmentId: id, programId: "demo", productId: "p",
+          customerId: `buyer-${index}`, learnerId: `learner-${index}`,
+          entitlementId: id, status: index % 2 === 0 ? "active" : "revoked",
+          createdAt: "2026-10-08T12:00:00Z", updatedAt: "2026-10-08T12:00:00Z",
+          lastProvider: "stripe", lastProviderEventId: id,
+          lastEventAt: "2026-10-08T12:00:00Z",
+        });
+      }
+      await write.commit();
+      const sampled = await enrollments!.sampleActiveLearnerIdsByTenants([tenantId], 50);
+      expect(sampled.length).toBeLessThanOrEqual(50);
+      expect(sampled.length).toBeGreaterThan(0);
+      expect(sampled.every((id) => Number(id.split("-").at(-1)) % 2 === 0)).toBe(true);
+    });
+
     it("durably retains an event when product mapping is not ready", async () => {
       const suffix = randomUUID();
       const commerceEvent = event(suffix);

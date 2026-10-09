@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import type { Firestore } from "firebase-admin/firestore";
 import {
   compareCommerceEventTimes,
@@ -15,6 +14,7 @@ export interface CommerceEnrollmentRecord {
   tenantId: string;
   programId: string;
   productId: string;
+  purchaseKey?: string;
   offeringId?: string;
   customerId: string;
   email?: string;
@@ -67,43 +67,14 @@ function normalizedEmail(value: string | undefined): string | undefined {
   return normalized;
 }
 
-function enrollmentIdentity(
-  tenantId: string,
-  customerId: string,
-  programId: string,
-  productId: string,
-): string {
-  return JSON.stringify([
-    tenantId.trim(),
-    customerId.trim(),
-    programId.trim(),
-    productId.trim(),
-  ]);
-}
-
-function documentId(
-  tenantId: string,
-  customerId: string,
-  programId: string,
-  productId: string,
-) {
-  return createHash("sha256")
-    .update(enrollmentIdentity(tenantId, customerId, programId, productId))
-    .digest("hex");
-}
-
 export class FirestoreCommerceEnrollmentStore {
   constructor(private readonly firestore: Firestore) {}
 
-  private ref(
-    tenantId: string,
-    customerId: string,
-    programId: string,
-    productId: string,
-  ) {
-    return this.firestore
-      .collection("commerceEnrollments")
-      .doc(documentId(tenantId, customerId, programId, productId));
+  private ref(entitlementId: string) {
+    if (!/^[a-f0-9]{64}$/.test(entitlementId)) {
+      throw new Error("COMMERCE_ENTITLEMENT_ID_INVALID");
+    }
+    return this.firestore.collection("commerceEnrollments").doc(entitlementId);
   }
 
   async apply(
@@ -115,12 +86,7 @@ export class FirestoreCommerceEnrollmentStore {
     }
 
     const email = normalizedEmail(input.email);
-    const ref = this.ref(
-      input.mapping.tenantId,
-      input.entitlement.customerId,
-      input.mapping.programId,
-      input.mapping.productId,
-    );
+    const ref = this.ref(input.entitlement.entitlementId);
 
     return this.firestore.runTransaction(async (transaction) => {
       const snapshot = await transaction.get(ref);
@@ -153,17 +119,13 @@ export class FirestoreCommerceEnrollmentStore {
         };
       }
 
-      const enrollmentId = documentId(
-        input.mapping.tenantId,
-        input.entitlement.customerId,
-        input.mapping.programId,
-        input.mapping.productId,
-      );
+      const enrollmentId = input.entitlement.entitlementId;
       const record: CommerceEnrollmentRecord = {
         enrollmentId,
         tenantId: input.mapping.tenantId,
         programId: input.mapping.programId,
         productId: input.mapping.productId,
+        ...(input.entitlement.purchaseKey ? { purchaseKey: input.entitlement.purchaseKey } : {}),
         // The resolved mapping is authoritative: omitted offeringId means async.
         // Do not revive an obsolete live cohort from the previous enrollment.
         ...(input.mapping.offeringId ? { offeringId: input.mapping.offeringId } : {}),
@@ -198,15 +160,14 @@ export class FirestoreCommerceEnrollmentStore {
   }
 
   async scheduleExpiry(input: {
-    mapping: Pick<CommerceProductMapping, "tenantId" | "productId" | "programId">;
-    customerId: string;
+    entitlementId: string;
     event: NormalizedCommerceEvent;
     accessEndsAt: string;
   }): Promise<CommerceEnrollmentRecord> {
     if (!Number.isFinite(Date.parse(input.accessEndsAt))) {
       throw new Error("COMMERCE_ACCESS_END_INVALID");
     }
-    const ref = this.ref(input.mapping.tenantId, input.customerId, input.mapping.programId, input.mapping.productId);
+    const ref = this.ref(input.entitlementId);
     return this.firestore.runTransaction(async (transaction) => {
       const snapshot = await transaction.get(ref);
       if (!snapshot.exists) throw new Error("COMMERCE_ENROLLMENT_NOT_FOUND");
@@ -305,6 +266,32 @@ export class FirestoreCommerceEnrollmentStore {
       }
     }
     return [...learnerIds].sort();
+  }
+
+  /** A deterministic bounded sample for dashboards; never use it for authorization. */
+  async sampleActiveLearnerIdsByTenants(
+    tenantIds: string[],
+    limit = 100,
+  ): Promise<string[]> {
+    const max = Math.min(Math.max(Math.round(limit), 1), 100);
+    const tenants = [...new Set(tenantIds.map((id) => id.trim()).filter(Boolean))]
+      .sort().slice(0, 10);
+    if (tenants.length === 0) return [];
+    const perTenant = Math.ceil(max / tenants.length);
+    const snapshots = await Promise.all(tenants.map((tenantId) =>
+      this.firestore.collection("commerceEnrollments")
+        .where("tenantId", "==", tenantId).limit(perTenant).get(),
+    ));
+    const learners = new Set<string>();
+    for (const snapshot of snapshots) {
+      for (const doc of snapshot.docs) {
+        const enrollment = doc.data() as CommerceEnrollmentRecord;
+        if (isActiveCommerceEnrollment(enrollment) && enrollment.learnerId) {
+          learners.add(enrollment.learnerId);
+        }
+      }
+    }
+    return [...learners].sort().slice(0, max);
   }
 
   async learnerHasActiveTenantAccess(

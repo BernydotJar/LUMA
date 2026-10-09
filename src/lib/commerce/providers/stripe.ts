@@ -117,6 +117,14 @@ function stripeType(type: string, object: JsonRecord): CommerceEventType {
         : "commerce.payment.partially_refunded";
     case "charge.dispute.created":
       return "commerce.payment.refunded";
+    case "charge.dispute.closed":
+      return stringValue(object.status) === "won"
+        ? "commerce.payment.confirmed"
+        : stringValue(object.status) === "lost"
+          ? "commerce.payment.refunded"
+          : "commerce.payment.failed";
+    case "charge.dispute.funds_reinstated":
+      return "commerce.payment.confirmed";
     case "customer.subscription.created":
       return stringValue(object.status) === "active"
         ? "commerce.subscription.created"
@@ -234,6 +242,8 @@ function normalizedMetadata(
     ["currency", stringValue(object.currency)],
     ["paymentStatus", stringValue(object.payment_status)],
     ["subscriptionStatus", stringValue(object.status)],
+    ["chargeExternalId", eventType === "payment_intent.succeeded"
+      ? stringValue(object.latest_charge) : undefined],
   ];
   return Object.fromEntries(
     entries.filter((item): item is [string, string] => Boolean(item[1])),

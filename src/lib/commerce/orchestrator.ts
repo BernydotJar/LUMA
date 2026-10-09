@@ -17,7 +17,8 @@ import { entitlementActionForCommerceEvent } from "./policy";
 export type CommerceOrchestrationStatus =
   | "processed"
   | "pending_mapping"
-  | "pending_customer";
+  | "pending_customer"
+  | "pending_transaction";
 
 export interface CommerceOrchestrationResult {
   status: CommerceOrchestrationStatus;
@@ -56,10 +57,11 @@ export class CommerceEnrollmentOrchestrator {
         await this.ledger.markFailed(event, "CUSTOMER_ID_UNAVAILABLE");
         return { status: "pending_customer", duplicate: received.duplicate };
       }
+      const purchaseKey = `${event.provider}:${transactionId}`;
       const identity: EntitlementIdentity = { tenantId: mapping.tenantId, customerId,
-        productId: mapping.productId };
+        productId: mapping.productId, purchaseKey };
       await this.bindings.upsert({
-        provider: event.provider, transactionExternalId: transactionId,
+        provider: event.provider, transactionExternalId: transactionId, purchaseKey,
         mapping, customerId, email: event.metadata?.buyerEmail,
         entitlementId: createHash("sha256").update(entitlementIdentityKey(identity)).digest("hex"),
       });
@@ -81,6 +83,11 @@ export class CommerceEnrollmentOrchestrator {
     const binding = transactionExternalId
       ? await this.bindings.get(event.provider, transactionExternalId)
       : undefined;
+
+    if (!transactionExternalId) {
+      await this.ledger.markFailed(event, "TRANSACTION_ID_UNAVAILABLE");
+      return { status: "pending_transaction", duplicate: received.duplicate };
+    }
 
     const externalProductId = event.productExternalId?.trim();
     const directMapping = externalProductId
@@ -104,6 +111,13 @@ export class CommerceEnrollmentOrchestrator {
       };
     }
 
+    const purchaseKey = binding?.purchaseKey ?? `${event.provider}:${transactionExternalId}`;
+    const identity: EntitlementIdentity = {
+      tenantId: mapping.tenantId,
+      customerId: binding?.customerId ?? event.customerExternalId?.trim() ?? "",
+      productId: mapping.productId,
+      purchaseKey,
+    };
     const customerId =
       binding?.customerId ?? event.customerExternalId?.trim();
     if (!customerId) {
@@ -117,8 +131,9 @@ export class CommerceEnrollmentOrchestrator {
     if (event.type === "commerce.subscription.cancellation_scheduled") {
       const accessEndsAt = event.metadata?.accessEndsAt;
       if (!accessEndsAt) throw new Error("COMMERCE_ACCESS_END_REQUIRED");
+      const entitlementId = createHash("sha256").update(entitlementIdentityKey(identity)).digest("hex");
       const enrollment = await this.enrollments.scheduleExpiry({
-        mapping, customerId, event, accessEndsAt,
+        entitlementId, event, accessEndsAt,
       });
       const processed = await this.ledger.process({ event, action: "none" });
       return {
@@ -132,11 +147,7 @@ export class CommerceEnrollmentOrchestrator {
     const processed = await this.ledger.process({
       event,
       action,
-      entitlement: {
-        tenantId: mapping.tenantId,
-        customerId,
-        productId: mapping.productId,
-      },
+      entitlement: { ...identity, customerId },
     });
 
     if (!processed.entitlement) {
@@ -155,11 +166,25 @@ export class CommerceEnrollmentOrchestrator {
       await this.bindings.upsert({
         provider: event.provider,
         transactionExternalId,
+        purchaseKey,
         mapping,
         customerId,
         email: buyerEmail,
         entitlementId: processed.entitlement.entitlementId,
       });
+      // PaymentIntent and its latest Charge identify the same purchase.
+      // Persist a Charge alias so later dispute objects can resolve their
+      // original entitlement without granting or revoking an unrelated order.
+      const chargeExternalId = event.metadata?.chargeExternalId;
+      if (event.provider === "stripe" && chargeExternalId &&
+          chargeExternalId !== transactionExternalId) {
+        await this.bindings.upsert({
+          provider: event.provider,
+          transactionExternalId: chargeExternalId,
+          purchaseKey, mapping, customerId, email: buyerEmail,
+          entitlementId: processed.entitlement.entitlementId,
+        });
+      }
     }
 
     return {
