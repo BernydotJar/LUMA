@@ -27,6 +27,7 @@ const accessErrors: Record<string, string> = {
   classroom_closed: "Esta sesión ya concluyó o no admite nuevos ingresos.",
   classroom_access_denied: "Tu cuenta no tiene una matrícula activa para esta cohorte.",
   classroom_access_revoked: "El equipo del programa ha restringido tu acceso a esta sesión.",
+  classroom_rate_limited: "Has realizado muchos intentos de ingreso. Intenta de nuevo en unos segundos.",
   classroom_not_found: "No encontramos esta sesión. Revisa tu agenda.",
   classroom_not_enabled: "El aula todavía no está habilitada por la organización.",
   classroom_provider_unconfigured: "El proveedor de video aún no está configurado.",

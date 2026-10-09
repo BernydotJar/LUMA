@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { firebaseAdminFirestore } from "@/lib/firebase-admin";
+import { firebaseAdminFirestore } from "../firebase-admin";
 import { FirestoreCommerceEnrollmentStore } from "./enrollment";
 import { FirestoreCommerceProviderBindingStore } from "./binding";
 import { FirestoreCommerceLedger } from "./ledger";
