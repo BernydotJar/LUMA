@@ -1630,6 +1630,43 @@
         "design_rule": "glass-as-functional-layer",
         "scope": "incremental-material-system-upgrade"
       }
+    },
+    {
+      "id": "LUMA-063-tenant-program-twin-rag-isolation",
+      "kind": "security-hardening",
+      "title": "Tenant/program-scoped Learning Twin, coach authorization, and private RAG evidence boundary",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-057-commerce-enrollment-activation",
+        "LUMA-059-engagement-intervention-runtime",
+        "LUMA-060-content-intelligence-search"
+      ],
+      "capability": "enterprise-tenant-isolation",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/learning-*/**",
+        "src/lib/learning-*",
+        "src/lib/scoped-rag*",
+        "src/lib/pnl-rag.ts",
+        "src/lib/coach-scoped-learning*",
+        "src/lib/commerce/enrollment.ts",
+        "src/app/api/learning/**",
+        "src/app/api/coach/**",
+        "src/app/api/tutor/**",
+        "src/app/api/content-intelligence/**",
+        "docs/enterprise/**",
+        "evidence/enterprise-commerce-audit-20261009/**",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "specs/**"
+      ]
     }
   ]
 }

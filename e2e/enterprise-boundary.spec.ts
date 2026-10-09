@@ -3,6 +3,8 @@ import { expect, test } from "@playwright/test";
 const routes = ["/experience", "/iconography", "/library", "/studio", "/studio/class-intelligence", "/studio/reflections"];
 
 test("enterprise surfaces do not expose internal delivery artifacts", async ({ page }) => {
+  // Cold Next.js compilation of six routes can exceed the default teardown timeout.
+  test.slow();
   for (const route of routes) {
     await page.goto(route);
     const body = await page.locator("body").innerText();

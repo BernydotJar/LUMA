@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
 import { requireLearningUser } from "@/lib/learning-server";
+import { requireLearningEntitlement } from "@/lib/learning-entitlement-server";
+import { learningAccessFailure } from "@/lib/learning-entitlement";
+import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
 import { searchPnlRag } from "@/lib/pnl-rag";
+import { searchScopedPnlRag } from "@/lib/scoped-rag";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
-    await requireLearningUser(request);
+    const user = await requireLearningUser(request);
+    const scope = await requireLearningEntitlement(user, request.headers.get("x-luma-program-id"));
     const body = (await request.json()) as Record<string, unknown>;
     const query =
       typeof body.query === "string" ? body.query.trim() : "";
@@ -20,10 +25,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = await searchPnlRag(
-      query,
-      Math.max(1, Math.min(limit, 8)),
-    );
+    const boundedLimit = Math.max(1, Math.min(limit, 8));
+    const result = scope
+      ? await searchScopedPnlRag(query, scope, boundedLimit)
+      : await searchPnlRag(query, boundedLimit);
 
     if (!result.configured) {
       return NextResponse.json(
@@ -58,12 +63,14 @@ export async function POST(request: Request) {
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "UNKNOWN";
-    if (message === "AUTH_REQUIRED") {
+    if (message === "AUTH_REQUIRED" || isRejectedFirebaseToken(error)) {
       return NextResponse.json(
         { error: "authentication_required" },
         { status: 401 },
       );
     }
+    const failure = learningAccessFailure(error);
+    if (failure) return NextResponse.json({ error: failure.error }, { status: failure.status });
     return NextResponse.json(
       { error: "content_intelligence_unavailable" },
       { status: 500 },

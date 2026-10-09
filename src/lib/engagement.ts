@@ -1,12 +1,21 @@
 import type { PersistedLearnerRecord } from "./persistent-learning";
 
 export type InterventionPriority = "low" | "medium" | "high";
+export type LearnerRiskState =
+  | "insufficient_evidence"
+  | "healthy"
+  | "watch"
+  | "at_risk"
+  | "human_intervention";
 
 export interface LearnerEngagementSignal {
   learnerId: string;
   priority: InterventionPriority;
+  riskState: LearnerRiskState;
+  evidenceBasis: "activity_only" | "verified_practice";
   score: number;
   inactivityDays: number;
+  /** Learning model projection, NOT an independently tested ability metric. */
   averageMastery: number;
   completionRate: number;
   maxConsecutiveFailures: number;
@@ -15,10 +24,11 @@ export interface LearnerEngagementSignal {
   updatedAt: string;
 }
 
-function clamp(value: number, min = 0, max = 100) {
-  return Math.min(max, Math.max(min, value));
-}
-
+/**
+ * Rule-based triage. A baseline projection is not evidence of failure/mastery.
+ * Only post-onboarding verified practice events may count as concept friction.
+ * Activity is measured from the timestamp of the persisted learner record.
+ */
 export function evaluateLearnerEngagement(
   record: PersistedLearnerRecord,
   now = new Date().toISOString(),
@@ -40,64 +50,80 @@ export function evaluateLearnerEngagement(
       ? concepts.filter((concept) => concept.completedContent).length /
         concepts.length
       : 0;
-  const maxConsecutiveFailures = concepts.reduce(
-    (max, concept) => Math.max(max, concept.consecutiveFailures),
-    0,
-  );
+  // Baseline onboarding values can be projections. A last persisted practice
+  // event is required before any simulated mastery/friction signal is used.
+  const verifiedPractice = record.version > 1 &&
+    typeof record.lastEventId === "string" && record.lastEventId.trim().length > 0;
+  const maxConsecutiveFailures = verifiedPractice
+    ? concepts.reduce((max, concept) => Math.max(max, concept.consecutiveFailures), 0)
+    : 0;
   const inactivityDays = Math.max(
     0,
     Math.floor((nowMs - updatedMs) / 86_400_000),
   );
 
-  let score = 0;
   const reasons: string[] = [];
-
+  let score = 0;
   if (inactivityDays >= 14) {
     score += 45;
-    reasons.push(`Sin actividad durante ${inactivityDays} días`);
+    reasons.push(`Sin actividad registrada durante ${inactivityDays} días`);
   } else if (inactivityDays >= 7) {
     score += 28;
-    reasons.push(`Sin actividad durante ${inactivityDays} días`);
+    reasons.push(`Sin actividad registrada durante ${inactivityDays} días`);
   } else if (inactivityDays >= 3) {
     score += 10;
   }
 
-  if (averageMastery < 0.45) {
-    score += 28;
-    reasons.push("Dominio medio por debajo de 45%");
-  } else if (averageMastery < 0.65) {
-    score += 14;
-    reasons.push("Dominio medio todavía en desarrollo");
-  }
-
-  if (maxConsecutiveFailures >= 3) {
+  if (verifiedPractice && maxConsecutiveFailures >= 3) {
     score += 22;
-    reasons.push(`${maxConsecutiveFailures} intentos fallidos consecutivos en una capacidad`);
-  } else if (maxConsecutiveFailures >= 2) {
+    reasons.push(`${maxConsecutiveFailures} intentos fallidos consecutivos en una práctica evaluada`);
+  } else if (verifiedPractice && maxConsecutiveFailures >= 2) {
     score += 12;
-    reasons.push("Repetición de intentos fallidos");
+    reasons.push("Dos o más intentos fallidos en una práctica evaluada");
   }
 
-  if (completionRate < 0.25 && record.version > 1) {
+  if (verifiedPractice && completionRate < 0.25) {
     score += 10;
-    reasons.push("Poca evidencia de capacidades completadas");
+    reasons.push("Poca evidencia de prácticas completadas");
   }
 
-  score = clamp(score);
+  const riskState: LearnerRiskState =
+    inactivityDays >= 14 && verifiedPractice && maxConsecutiveFailures >= 3
+      ? "human_intervention"
+      : inactivityDays >= 14 || (verifiedPractice && maxConsecutiveFailures >= 3)
+        ? "at_risk"
+        : inactivityDays >= 7 || (verifiedPractice && maxConsecutiveFailures >= 2)
+          ? "watch"
+          : verifiedPractice
+            ? "healthy"
+            : "insufficient_evidence";
+
+  if (riskState === "insufficient_evidence") {
+    reasons.push("Aún no hay práctica evaluada suficiente para clasificar progreso");
+  }
+
   const priority: InterventionPriority =
-    score >= 60 ? "high" : score >= 30 ? "medium" : "low";
+    riskState === "human_intervention" || riskState === "at_risk"
+      ? "high"
+      : riskState === "watch" ? "medium" : "low";
 
   const recommendation =
-    priority === "high"
+    riskState === "human_intervention"
       ? "Check-in humano breve antes de asignar más contenido."
-      : priority === "medium"
-        ? "Recordatorio contextual y una siguiente acción pequeña."
-        : "Mantener seguimiento; no intervenir salvo nueva señal.";
+      : riskState === "at_risk"
+        ? "Contactar al aprendiz y contrastar las señales con su contexto."
+        : riskState === "watch"
+          ? "Recordatorio contextual y una siguiente acción pequeña."
+          : riskState === "insufficient_evidence"
+            ? "Invitar a la primera práctica, sin inferir capacidad ni riesgo."
+            : "Mantener seguimiento; no intervenir salvo nueva señal.";
 
   return {
     learnerId: record.learnerId,
     priority,
-    score,
+    riskState,
+    evidenceBasis: verifiedPractice ? "verified_practice" : "activity_only",
+    score: Math.min(100, score),
     inactivityDays,
     averageMastery,
     completionRate,

@@ -1,4 +1,7 @@
-import { FieldPath, type Firestore } from "firebase-admin/firestore";
+import { createHash } from "node:crypto";
+import { FieldPath, type Firestore, type Transaction } from "firebase-admin/firestore";
+import { isActiveCommerceEnrollment, type CommerceEnrollmentRecord } from "./commerce/enrollment";
+import { validLearningScopeId, type LearningScope } from "./learning-entitlement";
 import {
   applyEventToPersistentLearner,
   createPersistentLearnerRecord,
@@ -17,10 +20,58 @@ export interface LearningStoreResult {
 }
 
 export class FirestoreLearningStore {
-  constructor(private readonly firestore: Firestore) {}
+  constructor(
+    private readonly firestore: Firestore,
+    private readonly scope?: LearningScope,
+  ) {
+    if (scope && (!validLearningScopeId(scope.tenantId) || !validLearningScopeId(scope.programId))) {
+      throw new Error("LEARNING_SCOPE_INVALID");
+    }
+  }
+
+  private learnerCollection() {
+    if (!this.scope) return this.firestore.collection("learners");
+    const hash = (value: string) => createHash("sha256").update(value).digest("hex");
+    return this.firestore.collection("learningTenants")
+      .doc(hash(this.scope.tenantId))
+      .collection("learningPrograms")
+      .doc(hash(this.scope.programId))
+      .collection("learners");
+  }
 
   private learnerRef(learnerId: string) {
-    return this.firestore.collection("learners").doc(learnerId);
+    if (!learnerId.trim() || learnerId.includes("/") || learnerId.includes("\\")) {
+      throw new Error("LEARNING_LEARNER_ID_INVALID");
+    }
+    return this.learnerCollection().doc(learnerId);
+  }
+
+  /**
+   * The initial API entitlement check is not atomic with a Firestore write.
+   * Re-read the effective purchase record INSIDE the same transaction so a
+   * concurrent refund/revocation cannot commit a new practice event.
+   * A user with more than 500 enrollments fails closed instead of granting
+   * access from a potentially incomplete read.
+   */
+  private async assertScopedEntitlementForWrite(
+    transaction: Transaction,
+    learnerId: string,
+  ): Promise<void> {
+    if (!this.scope) return;
+    const snapshot = await transaction.get(
+      this.firestore.collection("commerceEnrollments")
+        .where("learnerId", "==", learnerId)
+        .limit(501),
+    );
+    if (snapshot.size > 500) throw new Error("LEARNING_ENTITLEMENT_SCAN_LIMIT");
+    const eligible = snapshot.docs.some((document) => {
+      const enrollment = document.data() as CommerceEnrollmentRecord;
+      return enrollment.learnerId === learnerId &&
+        enrollment.tenantId === this.scope?.tenantId &&
+        enrollment.programId === this.scope?.programId &&
+        isActiveCommerceEnrollment(enrollment);
+    });
+    if (!eligible) throw new Error("LEARNING_ACTIVE_ENTITLEMENT_REQUIRED");
   }
 
   private resultForRecord(
@@ -45,8 +96,8 @@ export class FirestoreLearningStore {
   }
 
   async list(limit = 50): Promise<LearningStoreResult[]> {
-    const snapshot = await this.firestore
-      .collection("learners")
+    const snapshot = await this
+      .learnerCollection()
       .orderBy("updatedAt", "desc")
       .limit(Math.min(Math.max(limit, 1), 100))
       .get();
@@ -65,8 +116,8 @@ export class FirestoreLearningStore {
     let cursorId: string | undefined;
 
     for (;;) {
-      let query = this.firestore
-        .collection("learners")
+      let query = this
+        .learnerCollection()
         .orderBy("updatedAt", "asc")
         .orderBy(FieldPath.documentId(), "asc")
         .limit(boundedPageSize);
@@ -110,6 +161,7 @@ export class FirestoreLearningStore {
     const learnerRef = this.learnerRef(learnerId);
 
     return this.firestore.runTransaction(async (transaction) => {
+      await this.assertScopedEntitlementForWrite(transaction, learnerId);
       const snapshot = await transaction.get(learnerRef);
       if (snapshot.exists) {
         const current = snapshot.data() as PersistedLearnerRecord;
@@ -137,6 +189,7 @@ export class FirestoreLearningStore {
     const eventRef = learnerRef.collection("events").doc(eventId);
 
     return this.firestore.runTransaction(async (transaction) => {
+      await this.assertScopedEntitlementForWrite(transaction, learnerId);
       const [eventSnapshot, learnerSnapshot] = await Promise.all([
         transaction.get(eventRef),
         transaction.get(learnerRef),

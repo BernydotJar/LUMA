@@ -107,6 +107,85 @@ describe.runIf(emulatorEnabled)("FirestoreLearningStore emulator", () => {
     ).toBe(true);
   });
 
+  it("keeps same Firebase UID fully separate across tenants and programs", async () => {
+    const uid = `shared-uid-${randomUUID()}`;
+    const storeA = new FirestoreLearningStore(getFirestore(app!), {
+      tenantId: "tenant-a", programId: "course-1",
+    });
+    const storeB = new FirestoreLearningStore(getFirestore(app!), {
+      tenantId: "tenant-a", programId: "course-2",
+    });
+    const storeC = new FirestoreLearningStore(getFirestore(app!), {
+      tenantId: "tenant-b", programId: "course-1",
+    });
+    // The strict-mode store requires effective enrollment inside each write
+    // transaction. Store three independent purchases for the same UID.
+    const firestore = getFirestore(app!);
+    const enrolled = [
+      { tenantId: "tenant-a", programId: "course-1" },
+      { tenantId: "tenant-a", programId: "course-2" },
+      { tenantId: "tenant-b", programId: "course-1" },
+    ];
+    for (const [index, scope] of enrolled.entries()) {
+      await firestore.collection("commerceEnrollments")
+        .doc(`scoped-${uid}-${index}`).set({
+          enrollmentId: `scoped-${uid}-${index}`,
+          entitlementId: `entitlement-${uid}-${index}`,
+          ...scope,
+          learnerId: uid,
+          productId: `product-${index}`,
+          customerId: `customer-${uid}`,
+          status: "active",
+          createdAt: "2026-10-06T15:00:00Z",
+          updatedAt: "2026-10-06T15:00:00Z",
+          lastProvider: "hotmart",
+          lastProviderEventId: `event-${index}`,
+          lastEventAt: "2026-10-06T15:00:00Z",
+        });
+    }
+    const onboarding = {
+      diagnostic: "b" as const, confidence: 2 as const,
+      minutes: 12 as const, createdAt: "2026-10-06T15:00:00Z",
+    };
+    await storeA.bootstrap(uid, { ...onboarding, goal: "emotions" });
+    await storeB.bootstrap(uid, { ...onboarding, goal: "communication" });
+    await storeC.bootstrap(uid, { ...onboarding, goal: "beliefs" });
+
+    expect((await storeA.get(uid))?.record.onboarding.goal).toBe("emotions");
+    expect((await storeB.get(uid))?.record.onboarding.goal).toBe("communication");
+    expect((await storeC.get(uid))?.record.onboarding.goal).toBe("beliefs");
+    expect(await store!.get(uid)).toBeUndefined();
+
+    const event = {
+      type: "SIMULATION_COMPLETED" as const, conceptId: "pas",
+      correctCount: 3,
+      answers: { thought: "pas", emotion: "shame", reframe: "balanced" },
+      attempts: { thought: 1, emotion: 1, reframe: 1 },
+      completedAt: "2026-10-06T15:10:00Z",
+    };
+    await storeA.appendEvent(uid, "shared-event-id", event);
+    await storeB.appendEvent(uid, "shared-event-id", event);
+    expect((await storeA.get(uid))?.record.version).toBe(2);
+    expect((await storeB.get(uid))?.record.version).toBe(2);
+    expect((await storeC.get(uid))?.record.version).toBe(1);
+    expect((await storeC.listEvents(uid)).length).toBe(0);
+    // An effective revocation after earlier learner authorization is checked
+    // again inside the Firestore write transaction, including event replays.
+    await firestore.collection("commerceEnrollments")
+      .doc(`scoped-${uid}-0`).update({ status: "revoked" });
+    await expect(storeA.appendEvent(uid, "after-revocation", event))
+      .rejects.toThrow("LEARNING_ACTIVE_ENTITLEMENT_REQUIRED");
+    await expect(storeA.appendEvent(uid, "shared-event-id", event))
+      .rejects.toThrow("LEARNING_ACTIVE_ENTITLEMENT_REQUIRED");
+    await expect(storeA.bootstrap(uid, { ...onboarding, goal: "emotions" }))
+      .rejects.toThrow("LEARNING_ACTIVE_ENTITLEMENT_REQUIRED");
+    expect((await storeA.get(uid))?.record.version).toBe(2);
+    expect((await storeA.listEvents(uid)).length).toBe(1);
+    expect((await storeB.get(uid))?.record.version).toBe(2);
+    expect((await storeA.list(10)).some(({ record }) => record.learnerId === uid)).toBe(true);
+    expect((await storeC.list(10)).some(({ record }) => record.learnerId === uid)).toBe(true);
+  });
+
   it("isolates learners in distinct document trees", async () => {
     const learnerA = `learner-a-${randomUUID()}`;
     const learnerB = `learner-b-${randomUUID()}`;

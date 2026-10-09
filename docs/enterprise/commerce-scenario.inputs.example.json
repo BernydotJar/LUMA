@@ -1,0 +1,13 @@
+{
+  "currency": "USD",
+  "program_price": null,
+  "number_of_sales": null,
+  "hotmart_effective_fee_pct": null,
+  "stripe_effective_fee_pct": null,
+  "luma_platform_fee": null,
+  "luma_commerce_platform_fee": null,
+  "luma_transaction_fee_pct": null,
+  "stripe_fixed_fee_per_sale": null,
+  "refund_rate_pct": null,
+  "chargeback_rate_pct": null
+}
