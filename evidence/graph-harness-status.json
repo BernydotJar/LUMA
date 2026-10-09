@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "920c78ca-ed65-4a68-aac0-33e3d2791a0d",
-  "event_count": 526,
+  "last_event_id": "b2033ebc-37de-468e-af3b-d4fed09c6097",
+  "event_count": 539,
   "ready_nodes": [
     "LUMA-036-liquid-glass-refraction-v2"
   ],
@@ -1224,8 +1224,32 @@
       "active_gates": {},
       "active_evidence_ids": [],
       "approval_count": 0
+    },
+    {
+      "id": "LUMA-056-liquid-glass-functional-layer-v3",
+      "kind": "product-surface",
+      "title": "Liquid Glass functional-layer hierarchy and bounded refraction v3",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-050-v2-post-client-baseline"
+      ],
+      "capability": "liquid-glass-functional-layer",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "263195ce-666c-4d7c-90d4-278568e59e6c",
+        "2a477d7b-7541-4bd1-a91e-b5670937c830",
+        "3685396b-7200-49e2-a5dd-80dfe209c541",
+        "77e1c843-b895-4feb-9588-d67a4c136174",
+        "87727c50-ed90-42ea-b3f7-d7f461393dab",
+        "962a0e13-5656-4a94-8e32-673181bb30ff",
+        "a2befcae-3663-4f69-988a-c4569467208c"
+      ],
+      "approval_count": 0
     }
   ],
-  "checkpoint_count": 14,
+  "checkpoint_count": 15,
   "repair_plan_count": 0
 }

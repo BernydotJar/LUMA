@@ -151,8 +151,8 @@
   border: 1px solid var(--line);
   color: var(--ink);
   background: rgba(255, 255, 255, 0.055);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
   cursor: pointer;
 }
 
@@ -368,8 +368,8 @@
     linear-gradient(155deg, rgba(255,255,255,.68), rgba(255,248,232,.28)),
     rgba(232,217,190,.5);
   box-shadow: 0 26px 62px rgba(72,43,29,.11), inset 0 1px 0 rgba(255,255,255,.9);
-  -webkit-backdrop-filter: blur(28px) saturate(1.05);
-  backdrop-filter: blur(28px) saturate(1.05);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) + 4px)) saturate(var(--glass-saturation));
+  backdrop-filter: blur(calc(var(--glass-blur) + 4px)) saturate(var(--glass-saturation));
 }
 
 .shell[data-mode="learner"] .workspaceLabel {
@@ -668,8 +668,8 @@
   --muted-strong: #4f5963;
   --line: rgba(62,93,116,.14);
   --line-strong: rgba(62,93,116,.24);
-  --glass: rgba(255,255,255,.62);
-  --glass-strong: rgba(255,255,255,.78);
+  --glass: rgba(255,255,255,.52);
+  --glass-strong: rgba(255,255,255,.72);
   --accent: #00a2f1;
   --accent-soft: rgba(0,162,241,.12);
   --mint: #2bb3b1;
@@ -692,8 +692,8 @@
   --muted-strong: #3a3a3c;
   --line: rgba(29,29,31,.12);
   --line-strong: rgba(29,29,31,.2);
-  --glass: rgba(255,255,255,.58);
-  --glass-strong: rgba(255,255,255,.76);
+  --glass: rgba(255,255,255,.30);
+  --glass-strong: rgba(255,255,255,.52);
   --accent: #0a84ff;
   --accent-soft: rgba(10,132,255,.12);
   --mint: #2bb3b1;
@@ -717,8 +717,8 @@
   --muted-strong: #dbcbb6;
   --line: rgba(255,238,210,.12);
   --line-strong: rgba(255,238,210,.2);
-  --glass: rgba(255,244,222,.065);
-  --glass-strong: rgba(255,244,222,.1);
+  --glass: rgba(255,244,222,.055);
+  --glass-strong: rgba(255,244,222,.09);
   --accent: #efc86a;
   --accent-soft: rgba(239,200,106,.12);
   --mint: #9dac78;
@@ -877,5 +877,19 @@
 @media (max-width: 760px) {
   .profileButton {
     display: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .topbar,
+  .iconButton,
+  .profileButton {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .iconButton,
+  .profileButton {
+    background: var(--surface-strong) !important;
   }
 }

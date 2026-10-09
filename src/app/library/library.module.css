@@ -9,7 +9,7 @@
   background:
     radial-gradient(circle at 92% 8%, rgba(239,200,106,.15), transparent 30%),
     linear-gradient(145deg, rgba(255,255,255,.1), rgba(255,255,255,.025)),
-    var(--glass);
+    var(--surface);
 }
 
 .hero h2 {
@@ -340,7 +340,7 @@
   background:
     radial-gradient(circle at 90% 0%, rgba(239,200,106,.12), transparent 32%),
     linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.025)),
-    var(--glass);
+    var(--surface);
 }
 
 .authoringCard > p {

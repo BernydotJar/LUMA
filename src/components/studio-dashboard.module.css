@@ -104,7 +104,7 @@
   background:
     radial-gradient(circle at 90% 0%, rgba(239,200,106,.14), transparent 34%),
     linear-gradient(145deg, rgba(255,255,255,.09), rgba(255,255,255,.025)),
-    var(--glass);
+    var(--surface);
 }
 
 .metricIcon {

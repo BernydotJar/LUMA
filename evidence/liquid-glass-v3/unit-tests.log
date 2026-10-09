@@ -1,0 +1,32 @@
+
+> luma-learning-intelligence@0.1.0 test:run
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace/projects/LUMA-liquid-glass-v2[39m
+
+ [32m✓[39m src/lib/commerce/entitlement.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/domain.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/lib/learning-engine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/app/api/tutor/cx-control.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/lib/pnl-rag.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/lib/reflection-engine.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/lib/class-factory.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/persistent-learning.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/app/api/tutor/route.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/lib/learner-projection.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/se-voice-contract.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/class-contract.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/google-oidc.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/lib/simulation-evidence.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/themes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/experience-themes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/profile-name.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [2m[90m↓[39m[22m src/lib/learning-store.emulator.test.ts [2m([22m[2m2 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/commerce/ledger.emulator.test.ts [2m([22m[2m8 tests[22m[2m | [22m[33m8 skipped[39m[2m)[22m
+
+[2m Test Files [22m [1m[32m17 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (19)[39m
+[2m      Tests [22m [1m[32m95 passed[39m[22m[2m | [22m[33m10 skipped[39m[90m (105)[39m
+[2m   Start at [22m 00:37:35
+[2m   Duration [22m 1.35s[2m (import 67%, transform 26%, worker 5%, tests 3%)[22m
+

@@ -16,6 +16,7 @@ type RefractionLayout = {
 
 const MAP_PADDING = 18;
 const REFRACTION_DEPTH = 30;
+const REDUCED_TRANSPARENCY_QUERY = "(prefers-reduced-transparency: reduce)";
 
 function clampByte(value: number) {
   return Math.max(0, Math.min(255, Math.round(value)));
@@ -121,6 +122,7 @@ export function LiquidGlassPreview() {
   const rootRef = useRef<HTMLDivElement>(null);
   const lensRef = useRef<HTMLDivElement>(null);
   const revisionRef = useRef(0);
+  const lastSignatureRef = useRef<string | null>(null);
   const reactId = useId();
   const filterIdBase = `luma-liquid-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const [layout, setLayout] = useState<RefractionLayout | null>(null);
@@ -131,15 +133,36 @@ export function LiquidGlassPreview() {
     const lens = lensRef.current;
     if (!root || !lens) return;
 
+    const transparencyQuery = window.matchMedia(REDUCED_TRANSPARENCY_QUERY);
     let frame = 0;
 
     const measure = () => {
       cancelAnimationFrame(frame);
+
+      if (transparencyQuery.matches) {
+        lastSignatureRef.current = null;
+        setLayout(null);
+        return;
+      }
+
       frame = requestAnimationFrame(() => {
         const rootRect = root.getBoundingClientRect();
         const lensRect = lens.getBoundingClientRect();
         const lensWidth = Math.max(1, Math.round(lensRect.width));
         const lensHeight = Math.max(1, Math.round(lensRect.height));
+        const lensLeft = Math.round(lensRect.left - rootRect.left);
+        const lensTop = Math.round(lensRect.top - rootRect.top);
+        const signature = [
+          Math.round(rootRect.width),
+          Math.round(rootRect.height),
+          lensWidth,
+          lensHeight,
+          lensLeft,
+          lensTop,
+        ].join(":");
+
+        if (signature === lastSignatureRef.current) return;
+
         const mapWidth = lensWidth + MAP_PADDING * 2;
         const mapHeight = lensHeight + MAP_PADDING * 2;
         const radius = Math.min(22, Math.round(lensHeight / 2.3));
@@ -152,18 +175,17 @@ export function LiquidGlassPreview() {
         );
 
         if (!mapUrl) {
+          lastSignatureRef.current = null;
           setLayout(null);
           return;
         }
 
-        const lensLeft = lensRect.left - rootRect.left;
-        const lensTop = lensRect.top - rootRect.top;
-
         revisionRef.current += 1;
+        lastSignatureRef.current = signature;
         setLayout({
           cloneHeight: Math.round(rootRect.height),
-          cloneLeft: Math.round(-(lensLeft - MAP_PADDING)),
-          cloneTop: Math.round(-(lensTop - MAP_PADDING)),
+          cloneLeft: -(lensLeft - MAP_PADDING),
+          cloneTop: -(lensTop - MAP_PADDING),
           cloneWidth: Math.round(rootRect.width),
           mapHeight,
           mapUrl,
@@ -177,10 +199,12 @@ export function LiquidGlassPreview() {
     const observer = new ResizeObserver(measure);
     observer.observe(root);
     observer.observe(lens);
+    transparencyQuery.addEventListener("change", measure);
 
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      transparencyQuery.removeEventListener("change", measure);
     };
   }, []);
 

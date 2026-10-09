@@ -95,3 +95,17 @@ For bounded refraction:
 ## Implementation boundary
 
 The web product uses CSS material approximations for most application surfaces and bounded SVG displacement only for deliberately small showcase lenses. The user-supplied 1440×1440 motion prompt describes a WebGL2 rendering approach for motion artwork; LUMA does not need to reproduce that renderer in every application surface to preserve the design principles.
+
+## Functional-layer placement v3
+
+Liquid Glass is a functional interface layer, not the default content-card material.
+
+- Reserve real backdrop material for navigation, floating controls, parallel overlays, and deliberately bounded optical showcases.
+- Dense learning, analytics, and corpus panels default to `content-surface`: high-legibility surfaces with depth but no backdrop filtering.
+- Apply glass to the outer interactive control rather than stacking it on inner labels or icons.
+- Preserve concentric geometry between a glass container and the controls it owns.
+- The adversarial audit blocks viewport-summed backdrop coverage above `0.95` or more than `14` active backdrop-filtered elements on a route/viewport.
+- Static refraction must not pin a compositor layer with `will-change`; regenerate displacement only when lens geometry changes.
+- When reduced transparency is requested, do not merely hide the refracted pixels: skip displacement-map generation entirely.
+
+This placement rule intentionally keeps the content visually dominant while navigation and controls retain the optical character of Liquid Light.

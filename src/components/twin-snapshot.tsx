@@ -14,7 +14,7 @@ export function TwinSnapshot({ dimensions }: { dimensions: TwinDimension[] }) {
   const average = Math.round(dimensions.reduce((sum, dimension) => sum + dimension.score, 0) / dimensions.length);
 
   return (
-    <section className={`${styles.twinSnapshot} glass`} aria-labelledby="twin-snapshot-title">
+    <section className={`${styles.twinSnapshot} content-surface`} aria-labelledby="twin-snapshot-title">
       <div className={styles.cardHeading}>
         <div>
           <span className="eyebrow"><span className="eyebrow-dot" /> Mi gemelo de aprendizaje</span>

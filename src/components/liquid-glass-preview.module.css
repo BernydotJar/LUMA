@@ -4,6 +4,7 @@
   overflow: hidden;
   border-radius: inherit;
   isolation: isolate;
+  contain: paint;
 }
 
 .scene,
@@ -126,6 +127,7 @@
     inset 1.5px 1.5px 3px rgba(255,255,255,.72),
     inset -1.5px -1.5px 3px rgba(67,72,89,.12);
   isolation: isolate;
+  contain: paint;
 }
 
 .lensClip {
@@ -138,7 +140,6 @@
 
 .refraction {
   position: absolute;
-  will-change: filter;
 }
 
 .lensTint,
@@ -195,6 +196,18 @@
   width: 0;
   height: 0;
   pointer-events: none;
+}
+
+
+@media (prefers-contrast: more) {
+  .lens {
+    border-color: rgba(29,29,31,.28);
+    background: rgba(255,255,255,.18);
+  }
+
+  .lensGlint {
+    opacity: .72;
+  }
 }
 
 @media (prefers-reduced-transparency: reduce) {
