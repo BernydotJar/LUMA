@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Bell,
+  Award,
   BookOpen,
   BrainCircuit,
   ChartNoAxesCombined,
@@ -26,6 +27,7 @@ const learnerNavigation = [
   { href: "/learn", label: "Hoy", icon: Home },
   { href: "/learn#journey", label: "Ruta", icon: Compass },
   { href: "/learn/experiences", label: "Programa", icon: PlayCircle },
+  { href: "/learn/certificates", label: "Certificados", icon: Award },
   { href: "/learn#luma", label: "LUMA", icon: MessageCircle },
 ];
 
@@ -33,6 +35,7 @@ const studioNavigation = [
   { href: "/experience", label: "Mi experiencia", icon: Crown },
   { href: "/studio", label: "Estudio del entrenador", icon: ChartNoAxesCombined },
   { href: "/studio/class-intelligence", label: "Objetivos de aprendizaje", icon: BrainCircuit },
+  { href: "/studio/certificates", label: "Certificaciones", icon: Award },
   { href: "/library", label: "Inteligencia de contenido", icon: BookOpen },
   { href: "/studio/reflections", label: "Actualizaciones de contenido", icon: GitBranch },
   { href: "/learn", label: "Vista participante", icon: Sparkles },

@@ -251,3 +251,16 @@ See:
 ## License
 
 Application code is MIT-licensed. See [`LICENSE`](LICENSE). Third-party and institutional brand/media assets retain their original rights and are governed separately.
+
+
+## Enterprise certification (feature branch)
+
+LUMA's academic credential service adds coach-attested completion, frozen learner legal names, DocuSign eSignature, private signed PDFs and evidence, QR-based public verification, learner wallet, and administrative revocation.
+
+- Coach console: `/studio/certificates`.
+- Learner wallet: `/learn/certificates`.
+- Verification: `/verify/{certificateId}`.
+- Implementation, provider configuration and legal/release requirements: [Enterprise certification architecture](docs/enterprise/certificates-e-sign.md).
+- Verification and release decision: [Engineering gate evidence](evidence/certificates-esign-20261009/release-evidence.md).
+
+**Branch-only capability; not a claim of production deployment.** A real signatory, configured signature provider, private storage, full CI build, integration tests and legal acceptance are required before promotion.
