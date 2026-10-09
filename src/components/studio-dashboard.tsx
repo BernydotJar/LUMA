@@ -93,7 +93,7 @@ export function StudioDashboard() {
       </section>
 
       <section className={styles.metricGrid}>
-        <article className={`${styles.heroMetric} glass`}>
+        <article className={`${styles.heroMetric} content-surface`}>
           <span className={styles.metricIcon}><TrendingUp size={22} /></span>
           <div><small>Progreso verificado</small><strong>+18.4%</strong><p>Competencia demostrada por hora efectiva</p></div>
           <span className={styles.metricDelta}>+3.2 vs. periodo anterior</span>
@@ -126,7 +126,7 @@ export function StudioDashboard() {
       </section>
 
       <div className={styles.mainGrid}>
-        <section className={`${styles.bottleneckCard} glass`}>
+        <section className={`${styles.bottleneckCard} content-surface`}>
           <div className={styles.cardHeading}>
             <div><span className="eyebrow"><AlertTriangle size={14} /> Oportunidades de refuerzo</span><h2>Dónde una intervención mejora el aprendizaje</h2></div>
             <span className="status-pill" data-tone="warning">4 señales activas</span>
@@ -162,7 +162,7 @@ export function StudioDashboard() {
         </section>
 
         <aside className={styles.sideColumn}>
-          <section className={`${styles.qualityCard} glass`}>
+          <section className={`${styles.qualityCard} content-surface`}>
             <div className={styles.cardHeading}><div><span className="eyebrow"><FileWarning size={14} /> Calidad curricular</span><h2>86 / 100</h2></div><span className={styles.qualityRing}>86</span></div>
             <div className={styles.qualityList}>
               {[["Cobertura de objetivos", 92], ["Alineación evaluación", 78], ["Prerrequisitos", 84], ["Frescura de contenido", 88]].map(([label, value]) => (
@@ -172,7 +172,7 @@ export function StudioDashboard() {
             <p><ShieldCheck size={14} /> Cada componente explica el puntaje y conserva trazabilidad.</p>
           </section>
 
-          <section className={`${styles.questionCard} glass`}>
+          <section className={`${styles.questionCard} content-surface`}>
             <span className="eyebrow"><MessageSquareText size={14} /> Pregunta repetida</span>
             <blockquote>“¿Cómo sé si una creencia es mía o aprendida?”</blockquote>
             <p>26 participantes · 41 preguntas similares · Módulo 3</p>
@@ -181,7 +181,7 @@ export function StudioDashboard() {
         </aside>
       </div>
 
-      <section className={`${styles.interventionQueue} glass`}>
+      <section className={`${styles.interventionQueue} content-surface`}>
         <SemanticObject variant="bridge" size="sm" className={styles.interventionObject} />
         <div className={styles.cardHeading}>
           <div><span className="eyebrow"><CircleUserRound size={14} /> Entrenador en el circuito</span><h2>Participantes con oportunidad de acompañamiento</h2></div>
