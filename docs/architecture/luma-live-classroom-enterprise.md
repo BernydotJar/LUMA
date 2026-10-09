@@ -119,3 +119,9 @@ Built on a separate branch from current origin/main to avoid overwriting ongoing
 ### Hardened join contracts (October 9, 2026)
 
 Tests verify the exact room-only LiveKit JWT video grants and 10-minute `nbf` to `exp` lifetime; token signature fails with a mismatched API key, and signed webhook parsing rejects missing/modified signature payloads. Firestore emulator coverage now includes out-of-order presence, deduplication, unauthorized pseudonymous identities, and tenant/cohort/expiry lookup. Scopes, quotas and staff-initiated session closure have been added; all require their updated CI/Firestore gates before merge.
+
+## 8. Coach attendance read model (additive)
+
+The `GET /api/live/classrooms/{offeringId}/{sessionId}/attendance?limit=50&cursor=...` endpoint requires the Firebase bearer token and an instructor-level grant on the exact offering tenant. Regular learners, unrelated coaches and unscoped admins receive 403; unauthenticated clients receive 401. It returns a capped, document-ID-paginated list containing participant pseudonym, enrolled display name, join count, completed connected seconds and last event timestamps. Responses have `Cache-Control: no-store, private` and `dataStatus:"provisional"`.
+
+The read model deliberately excludes direct email addresses and raw Firebase UIDs. It is **not a finalized attendance certificate** while provider events may be delayed, missing or open; implement a session-end reconciliation job and explicit finalization watermark before reporting irreversible attendance results or deciding certificate eligibility. No attendance metric directly increments skill mastery. A separate tenant-configurable retention/erasure policy is mandatory before production.

@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { DecodedIdToken } from "firebase-admin/auth";
 import { describe, expect, it } from "vitest";
 import { firebaseAdminFirestore } from "./firebase-admin";
-import { recordClassroomPresence } from "./live-classroom-attendance";
+import { listClassroomAttendance, recordClassroomPresence } from "./live-classroom-attendance";
 import { classroomParticipantId, classroomRoomName } from "./live-classroom";
 import { authorizeClassroom, ClassroomError, roomReference } from "./live-classroom-server";
 import { programDeliveryStore } from "./program-delivery-server";
@@ -46,6 +46,25 @@ describe.runIf(emulatorEnabled)("LUMA classroom Firestore security and attendanc
       type: "participant_joined", atSeconds: 1792500300,
     });
     expect((await room.collection("attendance").doc(unknown).get()).exists).toBe(false);
+
+    const second = classroomParticipantId(roomName, "learner-2");
+    await room.collection("authorized").doc(second).set({
+      uid: "learner-2", role: "learner", displayName: "Segundo participante",
+    });
+    await recordClassroomPresence({
+      roomName, identity: second, id: "EV_second_join",
+      type: "participant_joined", atSeconds: 1792500310,
+    });
+
+    const page1 = await listClassroomAttendance(roomName, 1);
+    expect(page1.attendees).toHaveLength(1);
+    expect(page1.nextCursor).toMatch(/^p_[a-f0-9]{64}$/);
+    const page2 = await listClassroomAttendance(roomName, 1, page1.nextCursor!);
+    expect(page2.attendees).toHaveLength(1);
+    expect(page2.nextCursor).toBeNull();
+    expect(new Set([page1.attendees[0].participantId, page2.attendees[0].participantId]))
+      .toEqual(new Set([identity, second]));
+    expect([...page1.attendees, ...page2.attendees].every((row) => row.finalized === false)).toBe(true);
   });
 
   it("reads the exact tenant/cohort/session and denies revoked or mismatched enrollment", async () => {

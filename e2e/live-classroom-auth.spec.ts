@@ -29,4 +29,10 @@ test("the branded classroom never issues media credentials to a guest", async ({
   );
   expect(moderation.status()).toBe(401);
   expect(await moderation.json()).toMatchObject({ error: "authentication_required" });
+
+  const attendance = await page.request.get(
+    `/api/live/classrooms/${offeringId}/${sessionId}/attendance`,
+  );
+  expect(attendance.status()).toBe(401);
+  expect(await attendance.json()).toMatchObject({ error: "authentication_required" });
 });

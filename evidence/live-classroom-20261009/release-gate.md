@@ -47,3 +47,9 @@ No secrets or media JWTs should be checked into Git.
 - **LiveKit Cloud configuration must disable automatic room creation** before production enablement, and cached room tokens must be tested after session closure.
 
 This evidence is intentionally dated to the tested commit: green checks for `ce38a1b` do not automatically apply to the pending follow-up commit until its separate workflow passes.
+
+## CI validation — hardened admission commit `d2f13ea`
+
+GitHub Actions **Product quality #141** (`run 37987468371`) completed with all four jobs **PASS**: `verify` (ESLint, TypeScript, unit, Next production build), `security` (production dependency audit), `firestore` (**46/46** emulator tests) and `browser` (Playwright Chromium and mobile profile). The room closure timestamp normalization and same-second token revocation cutoff were included.
+
+Post-gate additive work introduces the instructor-only paginated attendance projection (`dataStatus=provisional`) and adds pagination/guest-denial tests; these changes require **their own subsequent CI run** to preserve commit-level traceability. The LiveKit Cloud credentialed E2E, provider auto-create setting, revoked-connected-member enforcement, metrics, data retention and large-scale performance gates remain **open**. The feature remains disabled by default and the PR stays draft.

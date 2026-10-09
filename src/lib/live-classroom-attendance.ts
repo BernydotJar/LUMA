@@ -1,3 +1,4 @@
+import { FieldPath } from "firebase-admin/firestore";
 import { firebaseAdminFirestore } from "./firebase-admin";
 import { summarizeClassroomPresence, type ClassroomPresenceEvent, type LiveClassroomEventType } from "./live-classroom";
 import { roomReference } from "./live-classroom-server";
@@ -43,4 +44,63 @@ export async function recordClassroomPresence(event: SignedClassroomEvent): Prom
       uid, role: authorized.get("role"), ...summary, updatedAt: new Date().toISOString(),
     }, { merge: true });
   });
+}
+
+
+export interface ClassroomAttendanceRow {
+  participantId: string;
+  displayName: string;
+  role: "learner" | "instructor";
+  attendedSeconds: number;
+  connectionCount: number;
+  firstJoinedAt: string | null;
+  lastLeftAt: string | null;
+  connected: boolean;
+  /** Provider webhooks are at-least-once; unclosed intervals are provisional. */
+  finalized: false;
+}
+
+export async function listClassroomAttendance(
+  roomName: string,
+  limit = 50,
+  cursor?: string,
+): Promise<{ attendees: ClassroomAttendanceRow[]; nextCursor: string | null }> {
+  if (!/^luma_[a-f0-9]{64}$/.test(roomName) ||
+      !Number.isInteger(limit) || limit < 1 || limit > 100 ||
+      (cursor !== undefined && !/^p_[a-f0-9]{64}$/.test(cursor))) {
+    throw new Error("CLASSROOM_ATTENDANCE_QUERY_INVALID");
+  }
+  const room = roomReference(roomName);
+  let query = room.collection("attendance")
+    .orderBy(FieldPath.documentId())
+    .limit(limit + 1);
+  if (cursor) query = query.startAfter(cursor);
+  const snapshot = await query.get();
+  const page = snapshot.docs.slice(0, limit);
+  const roster = await Promise.all(page.map((row) =>
+    room.collection("authorized").doc(row.id).get(),
+  ));
+  const attendees: ClassroomAttendanceRow[] = page.map((row, index) => {
+    const data = row.data();
+    const authorized = roster[index].data();
+    return {
+      participantId: row.id,
+      displayName: typeof authorized?.displayName === "string"
+        ? authorized.displayName.slice(0, 80) : "Participante",
+      role: authorized?.role === "instructor" ? "instructor" : "learner",
+      attendedSeconds: Number.isFinite(data.attendedSeconds)
+        ? Math.max(0, data.attendedSeconds) : 0,
+      connectionCount: Number.isFinite(data.connectionCount)
+        ? Math.max(0, data.connectionCount) : 0,
+      firstJoinedAt: typeof data.firstJoinedAt === "string" ? data.firstJoinedAt : null,
+      lastLeftAt: typeof data.lastLeftAt === "string" ? data.lastLeftAt : null,
+      connected: data.connected === true,
+      finalized: false,
+    };
+  });
+  return {
+    attendees,
+    nextCursor: snapshot.docs.length > limit && page.length
+      ? page[page.length - 1].id : null,
+  };
 }
