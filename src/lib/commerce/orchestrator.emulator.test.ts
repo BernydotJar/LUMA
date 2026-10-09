@@ -287,7 +287,7 @@ describe.runIf(emulatorEnabled)(
       const tenantId = `tenant-${suffix}`;
       const externalProductId = `external-stripe-${suffix}`;
       await mappings!.upsert({ provider: "stripe", externalProductId, tenantId,
-        productId, programId: `program-${suffix}` });
+        productId, programId: `program-${suffix}`, offeringId: `offering-${suffix}` });
       const pending = event(suffix, { provider: "stripe", externalEventId: `pending-${suffix}`,
         type: "commerce.subscription.pending", customerExternalId: customerId,
         transactionExternalId: subscriptionId, productExternalId: externalProductId });
@@ -302,6 +302,18 @@ describe.runIf(emulatorEnabled)(
       expect(activated.outcome).toBe("granted");
       expect(activated.enrollment?.status).toBe("active");
       expect(activated.enrollment?.email).toBe(`learner-${suffix}@example.com`);
+      expect(activated.enrollment?.offeringId).toBe(`offering-${suffix}`);
+    });
+
+    it("lets an administrator clear an obsolete live offering assignment", async () => {
+      const suffix = randomUUID();
+      const input = { provider: "hotmart" as const, externalProductId: `clear-product-${suffix}`,
+        tenantId: "tenant", productId: `product-${suffix}`, programId: "async-program" };
+      await mappings!.upsert({ ...input, offeringId: "prior-cohort" });
+      expect((await mappings!.resolve(input.provider, input.externalProductId))?.offeringId)
+        .toBe("prior-cohort");
+      const updated = await mappings!.upsert({ ...input, offeringId: null });
+      expect(updated.offeringId).toBeUndefined();
     });
 
     it("keeps a second product entitlement active when the first product is refunded", async () => {

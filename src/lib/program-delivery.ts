@@ -285,6 +285,8 @@ export class FirestoreProgramDeliveryStore {
     limit = 100,
   ): Promise<LiveProgramSession[]> {
     const normalizedNow = validIso(now, "now");
+    const nowMs = Date.parse(normalizedNow);
+    const earliestOngoingStart = new Date(nowMs - 720 * 60_000).toISOString();
     const boundedLimit = Number.isFinite(limit)
       ? Math.min(Math.max(Math.round(limit), 1), 100)
       : 100;
@@ -298,7 +300,7 @@ export class FirestoreProgramDeliveryStore {
 
     while (sessions.length < boundedLimit) {
       let query = collection
-        .where("startsAt", ">=", normalizedNow)
+        .where("startsAt", ">=", earliestOngoingStart)
         .orderBy("startsAt", "asc")
         .orderBy(FieldPath.documentId(), "asc")
         .limit(pageSize);
@@ -310,7 +312,8 @@ export class FirestoreProgramDeliveryStore {
       const snapshot = await query.get();
       for (const doc of snapshot.docs) {
         const session = doc.data() as LiveProgramSession;
-        if (session.status === "scheduled") {
+        const endsAtMs = Date.parse(session.startsAt) + session.durationMinutes * 60_000;
+        if (session.status === "scheduled" && endsAtMs > nowMs) {
           sessions.push(session);
           if (sessions.length >= boundedLimit) break;
         }

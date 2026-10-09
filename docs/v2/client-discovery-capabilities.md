@@ -144,3 +144,7 @@ Supported commercial shapes can include:
 - enterprise/owned deployment with a separate operations model.
 
 Provider fees and payout timing must remain provider/commercial data. They are deliberately not hard-coded into learning or entitlement logic.
+
+- Pending subscription provider bindings preserve the exact live cohort assignment for activation after a paid invoice.
+- Learners can join an in-progress live session until its scheduled end, even if the session start time is past.
+- Administrators can explicitly clear an obsolete offering assignment when a product becomes asynchronous.

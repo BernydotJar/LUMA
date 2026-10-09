@@ -110,6 +110,23 @@ describe.runIf(emulatorEnabled)("FirestoreProgramDeliveryStore emulator", () => 
     expect(visible[0].session.joinUrl).toBe("https://example.com/A");
   });
 
+  it("shows an ongoing live session until its scheduled end", async () => {
+    const suffix = randomUUID();
+    const offering = await store!.upsertOffering({ tenantId: `live-tenant-${suffix}`,
+      programId: `live-program-${suffix}`, cohortKey: "live", title: "Ongoing cohort",
+      deliveryMode: "live", timezone: "America/Bogota" });
+    await store!.scheduleSession(offering.offeringId, { title: "Live session",
+      startsAt: "2026-10-08T12:00:00Z", durationMinutes: 120,
+      joinUrl: "https://meet.example.com/ongoing" });
+    const access = [{ tenantId: offering.tenantId, programId: offering.programId,
+      offeringId: offering.offeringId }];
+    const during = await store!.upcomingForPrograms(access, "2026-10-08T12:30:00Z");
+    expect(during).toHaveLength(1);
+    expect(during[0].session.joinUrl).toContain("ongoing");
+    const after = await store!.upcomingForPrograms(access, "2026-10-08T14:00:01Z");
+    expect(after).toHaveLength(0);
+  });
+
   it("rejects non-finite session durations", async () => {
     const suffix = randomUUID();
     const offering = await store!.upsertOffering({

@@ -92,6 +92,7 @@ export class CommerceEnrollmentOrchestrator {
           tenantId: binding.tenantId,
           productId: binding.productId,
           programId: binding.programId,
+          ...(binding.offeringId ? { offeringId: binding.offeringId } : {}),
         }
       : directMapping;
 

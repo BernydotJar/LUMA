@@ -9,6 +9,7 @@ export interface CommerceProviderBinding {
   tenantId: string;
   productId: string;
   programId: string;
+  offeringId?: string;
   customerId: string;
   email?: string;
   entitlementId: string;
@@ -21,7 +22,7 @@ export interface ProviderBindingInput {
   transactionExternalId: string;
   mapping: Pick<
     CommerceProductMapping,
-    "tenantId" | "productId" | "programId"
+    "tenantId" | "productId" | "programId" | "offeringId"
   >;
   customerId: string;
   email?: string;
@@ -112,13 +113,16 @@ export class FirestoreCommerceProviderBindingStore {
         programId: required(input.mapping.programId, "programId"),
         customerId: required(input.customerId, "customerId"),
       };
+      const offeringId = input.mapping.offeringId
+        ? required(input.mapping.offeringId, "offeringId") : current?.offeringId;
 
       if (
         current &&
         (current.tenantId !== immutableIdentity.tenantId ||
           current.productId !== immutableIdentity.productId ||
           current.programId !== immutableIdentity.programId ||
-          current.customerId !== immutableIdentity.customerId)
+          current.customerId !== immutableIdentity.customerId ||
+          (current.offeringId && offeringId && current.offeringId !== offeringId))
       ) {
         throw new Error("PROVIDER_BINDING_CONFLICT");
       }
@@ -129,6 +133,7 @@ export class FirestoreCommerceProviderBindingStore {
         provider,
         transactionExternalId,
         ...immutableIdentity,
+        ...(offeringId ? { offeringId } : {}),
         ...(email ? { email } : {}),
         entitlementId: required(
           input.entitlementId,

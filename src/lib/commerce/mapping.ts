@@ -20,7 +20,7 @@ export interface CommerceProductMappingInput {
   tenantId: string;
   productId: string;
   programId: string;
-  offeringId?: string;
+  offeringId?: string | null;
   active?: boolean;
 }
 
@@ -112,9 +112,11 @@ export class FirestoreCommerceProductMappingStore
         : undefined;
       const record: CommerceProductMapping = {
         ...normalized,
-        ...(input.offeringId
-          ? { offeringId: required(input.offeringId, "offeringId") }
-          : current?.offeringId ? { offeringId: current.offeringId } : {}),
+        ...(input.offeringId === null
+          ? {}
+          : input.offeringId !== undefined
+            ? { offeringId: required(input.offeringId, "offeringId") }
+            : current?.offeringId ? { offeringId: current.offeringId } : {}),
         active: input.active ?? current?.active ?? true,
         createdAt: current?.createdAt ?? updatedAt,
         updatedAt,
