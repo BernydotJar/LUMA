@@ -5,6 +5,7 @@ export type ProgramDeliveryMode = "asynchronous" | "live" | "hybrid";
 export type ProgramOfferingStatus = "draft" | "active" | "completed" | "archived";
 export type LiveSessionStatus = "scheduled" | "completed" | "cancelled";
 export type RecordingPolicy = "none" | "optional" | "available_after_session";
+export type ClassroomProvider = "external" | "livekit";
 
 export interface ProgramOffering {
   offeringId: string;
@@ -45,6 +46,8 @@ export interface LiveProgramSession {
   startsAt: string;
   durationMinutes: number;
   joinUrl?: string;
+  classroomProvider?: ClassroomProvider;
+  classroomCapacity?: number;
   recordingPolicy: RecordingPolicy;
   status: LiveSessionStatus;
   createdAt: string;
@@ -80,6 +83,8 @@ export interface LiveProgramSessionInput {
   startsAt: string;
   durationMinutes: number;
   joinUrl?: string;
+  classroomProvider?: ClassroomProvider;
+  classroomCapacity?: number;
   recordingPolicy?: RecordingPolicy;
   status?: LiveSessionStatus;
 }
@@ -201,9 +206,20 @@ export class FirestoreProgramDeliveryStore {
         throw new Error("durationMinutes must be between 10 and 720");
       }
 
-      const joinUrl = input.joinUrl === undefined
-        ? current?.joinUrl
-        : input.joinUrl.trim();
+      const classroomProvider = input.classroomProvider ?? current?.classroomProvider ?? "external";
+      if (!["external", "livekit"].includes(classroomProvider)) {
+        throw new Error("CLASSROOM_PROVIDER_INVALID");
+      }
+      const classroomCapacity = input.classroomCapacity ?? current?.classroomCapacity ?? 120;
+      if (!Number.isInteger(classroomCapacity) || classroomCapacity < 2 || classroomCapacity > 1000) {
+        throw new Error("CLASSROOM_CAPACITY_INVALID");
+      }
+      if (classroomProvider === "livekit" && input.joinUrl?.trim()) {
+        throw new Error("INTEGRATED_CLASSROOM_DISALLOWS_EXTERNAL_LINK");
+      }
+      const joinUrl = classroomProvider === "livekit"
+        ? undefined
+        : input.joinUrl === undefined ? current?.joinUrl : input.joinUrl.trim();
       if (joinUrl) {
         let parsed: URL;
         try {
@@ -223,6 +239,8 @@ export class FirestoreProgramDeliveryStore {
         startsAt: validIso(input.startsAt, "session.startsAt"),
         durationMinutes,
         ...(joinUrl ? { joinUrl } : {}),
+        classroomProvider,
+        ...(classroomProvider === "livekit" ? { classroomCapacity } : {}),
         recordingPolicy:
           input.recordingPolicy ??
           current?.recordingPolicy ??
@@ -234,6 +252,28 @@ export class FirestoreProgramDeliveryStore {
       transaction.set(ref, record);
       return record;
     });
+  }
+
+  /** Direct reads only; caller MUST authorize the requesting user before disclosure. */
+  async getClassroomSession(
+    offeringIdValue: string,
+    sessionIdValue: string,
+  ): Promise<{ offering: ProgramOffering; session: LiveProgramSession } | null> {
+    if (!/^[a-f0-9]{64}$/.test(offeringIdValue) ||
+        !/^[A-Za-z0-9_-]{1,128}$/.test(sessionIdValue)) {
+      throw new Error("CLASSROOM_IDENTIFIERS_INVALID");
+    }
+    const ref = this.offeringRef(offeringIdValue);
+    const [offeringSnapshot, sessionSnapshot] = await Promise.all([
+      ref.get(),
+      ref.collection("sessions").doc(sessionIdValue).get(),
+    ]);
+    if (!offeringSnapshot.exists || !sessionSnapshot.exists) return null;
+    const offering = offeringSnapshot.data() as ProgramOffering;
+    const session = sessionSnapshot.data() as LiveProgramSession;
+    if (session.offeringId !== offering.offeringId || offering.offeringId !== offeringIdValue ||
+        session.sessionId !== sessionIdValue) return null;
+    return { offering, session };
   }
 
   async listOfferingsForPrograms(

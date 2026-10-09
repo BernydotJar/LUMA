@@ -1,0 +1,47 @@
+.page{min-height:100vh;display:flex;flex-direction:column;background:radial-gradient(ellipse at 75% 0%,rgba(129,57,68,.12),transparent 50%),var(--bg,#f7f5f2);color:var(--ink,#2c2327);padding:24px max(22px,calc((100vw - 1480px)/2));gap:22px}
+.header{min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.back{display:inline-flex;align-items:center;gap:9px;color:inherit;text-decoration:none;font-size:13px;font-weight:600}
+.back:hover{text-decoration:underline}
+.brand{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:850;letter-spacing:.2em;color:#912f49}
+.secure{display:inline-flex;align-items:center;gap:8px;font-size:12px;opacity:.68}
+.lobby{display:grid;grid-template-columns:minmax(290px,.95fr) minmax(360px,1.25fr);gap:28px;align-items:center;max-width:1320px;width:100%;margin:auto}
+.intro{display:flex;flex-direction:column;gap:18px;padding:30px 16px}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#9a4057;display:inline-flex;align-items:center;gap:9px}
+.intro h1{font-size:clamp(30px,4.4vw,61px);line-height:1.09;letter-spacing:-.04em;margin:0;font-weight:700;max-width:620px}
+.intro p{max-width:480px;line-height:1.72;color:var(--muted,#70676b);margin:0}
+.guidance{display:flex;gap:13px;border:1px solid rgba(123,87,94,.19);border-radius:18px;padding:17px;background:rgba(255,255,255,.23);font-size:13px;line-height:1.6;color:var(--muted,#70676b)}
+.guidance svg{flex-shrink:0;color:#8f4052}
+.prejoin{background:rgba(255,255,255,.34);border:1px solid rgba(127,92,99,.24);box-shadow:0 16px 70px rgba(73,46,51,.08);border-radius:26px;padding:25px;min-width:0}
+.prejoin :global(.lk-prejoin){display:flex;flex-direction:column;gap:16px}
+.prejoin :global(.lk-video-container){width:100%;border-radius:18px;aspect-ratio:16/9;overflow:hidden;background:#29242a}
+.prejoin :global(video){width:100%;height:100%;object-fit:cover}
+.prejoin :global(.lk-button){border-radius:12px}
+.prejoin :global(button[type="submit"]){background:#7b2940;color:#fff;font-weight:700;border-radius:12px}
+.identityNote{font-size:11px;color:var(--muted,#70676b);margin:12px 0 0;text-align:center}
+.state{margin:auto;max-width:600px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px;line-height:1.6;padding:50px 24px}
+.state h1{font-size:clamp(32px,5vw,53px);line-height:1.08;letter-spacing:-.035em}
+.primary{background:#832c44;color:#fff;text-decoration:none;border-radius:12px;padding:13px 23px;font-weight:700}
+.classroom{display:flex;flex-direction:column;min-height:75vh;width:100%;gap:14px}
+.roomTitle{display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}
+.roomTitle h1{font-size:clamp(22px,2.5vw,34px);margin:6px 0;font-weight:700;letter-spacing:-.025em}
+.policy{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(125,70,83,.26);border-radius:999px;padding:9px 13px;font-size:12px;white-space:nowrap}
+.media{display:flex;flex:1;min-height:520px;gap:15px;background:#1d1b21;border-radius:24px;overflow:hidden;padding:15px;color:#fff}
+.video{flex:1;min-width:0;display:flex}
+.video :global(.lk-video-conference){height:100%;width:100%;background:#17161c;border-radius:15px;overflow:hidden}
+.video :global(.lk-video-conference-inner){height:100%}
+.video :global(.lk-control-bar){border-top:1px solid rgba(255,255,255,.12)}
+.roster{flex:0 0 238px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);border-radius:15px;padding:15px;max-height:70vh;overflow:auto}
+.roster h2{display:flex;align-items:center;gap:7px;font-size:14px;margin:0 0 10px}
+.roster h2 span{margin-left:auto;opacity:.65}
+.roster p{color:#c4bec4;font-size:12px;line-height:1.6}
+.roster ul{list-style:none;margin:12px 0;padding:0;display:flex;flex-direction:column;gap:9px}
+.roster li{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(255,255,255,.12);padding:7px 0}
+.personName{font-size:12px;word-break:break-word}
+.roster li small{font-size:10px;color:#dbb7c6}
+.roster button{border:1px solid rgba(255,255,255,.2);border-radius:9px;background:transparent;color:#fff;cursor:pointer;padding:7px 9px;font-size:11px}
+.roster button:disabled{opacity:.5;cursor:default}
+.error{position:sticky;bottom:20px;align-self:center;background:#66233a;color:#fff;border-radius:14px;padding:13px 19px;display:flex;gap:18px;align-items:center;font-size:13px;box-shadow:0 10px 35px rgba(60,20,30,.2)}
+.error button{color:inherit;background:none;border:1px solid currentColor;border-radius:8px;padding:6px}
+.footer{margin-top:auto;text-align:center;font-size:11px;opacity:.6;padding:15px}
+@media(max-width:1024px){.lobby{grid-template-columns:1fr;max-width:730px}.intro{padding:20px 0}.media{flex-direction:column}.roster{flex:auto;max-height:260px;min-width:0}}
+@media(max-width:640px){.page{padding:14px;gap:16px}.secure{display:none}.prejoin{padding:12px}.media{padding:8px;min-height:510px}.policy{white-space:normal}.roomTitle{align-items:flex-start}}

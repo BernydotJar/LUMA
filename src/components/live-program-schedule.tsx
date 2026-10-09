@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { CalendarClock, ExternalLink, Radio, RefreshCw } from "lucide-react";
 import { useLumaAuth } from "@/components/auth-provider";
 import {
@@ -121,7 +122,11 @@ export function LiveProgramSchedule() {
                 {" "}· {item.session.durationMinutes} min
               </p>
             </div>
-            {item.session.joinUrl ? (
+            {item.session.classroomProvider === "livekit" ? (
+              <Link href={`/classroom/${encodeURIComponent(item.offeringId)}/${encodeURIComponent(item.session.sessionId)}`} aria-label={`Entrar al aula de ${item.session.title}`}>
+                Abrir aula <Radio size={14} />
+              </Link>
+            ) : item.session.joinUrl ? (
               <a
                 href={item.session.joinUrl}
                 target="_blank"
