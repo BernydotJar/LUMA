@@ -157,7 +157,7 @@ export function AppShell({
           </summary>
           <div className={styles.mobileMoreMenu} aria-label="Otras secciones">
             {mobileSecondary.map(({ href, label, icon: Icon }) => (
-              <Link href={href} key={href} aria-label={label}>
+              <Link href={href} key={href} aria-label={label} className={href === activeHref ? styles.mobileActive : undefined} aria-current={href === activeHref ? "page" : undefined}>
                 <Icon size={19} aria-hidden="true" />
                 <span>{label}</span>
               </Link>

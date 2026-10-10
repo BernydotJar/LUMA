@@ -199,10 +199,16 @@ test.describe("LUMA product showcase", () => {
     await expect(tabs.nth(2)).toHaveAttribute("aria-selected", "true");
   });
 
-  test("header navigation only advertises real destinations", async ({ page }) => {
+  test("header navigation only advertises real destinations", async ({ page }, testInfo) => {
     await page.goto("/learn");
-    await expect(page.getByRole("link", { name: "Explorar prácticas" })).toHaveAttribute("href", "/learn/experiences");
+    const explore = testInfo.project.name === "mobile"
+      ? page.getByRole("navigation", { name: "Navegación móvil" }).getByRole("link", { name: "Programa", exact: true })
+      : page.getByRole("link", { name: "Explorar prácticas" });
+    await expect(explore).toBeVisible();
+    await expect(explore).toHaveAttribute("href", "/learn/experiences");
     await expect(page.getByRole("button", { name: "Notificaciones" })).toHaveCount(0);
+    await explore.click();
+    await expect(page).toHaveURL(/\/learn\/experiences$/);
   });
 
   test("iconography catalog changes material while preserving semantics", async ({ page }) => {
@@ -217,8 +223,11 @@ test.describe("LUMA product showcase", () => {
 
   test("premium semantic objects appear in the intended product moments", async ({ page }) => {
     await page.goto("/learn");
-    await expect(page.locator('[data-variant="prism"]').first()).toBeVisible();
+    await expect(page.locator('section[data-variant="hero"]')).toHaveCount(1);
     await expect(page.locator('[data-variant="orbit"]').first()).toBeVisible();
+    // The prism belongs to experience configuration, not the editorial practice hero.
+    await page.goto("/experience");
+    await expect(page.locator('[data-variant="prism"]').first()).toBeVisible();
 
     await page.goto("/studio");
     await expect(page.locator('[data-variant="strata"]').first()).toBeVisible();

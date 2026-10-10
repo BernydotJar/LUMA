@@ -36,6 +36,7 @@ test.describe("responsive mobile product", () => {
     await expect(nav.getByRole("link", { name: "Hoy", exact: true })).toBeVisible();
     await expect(nav.getByRole("link", { name: "Ruta", exact: true })).toBeVisible();
     await expect(nav.getByRole("link", { name: "Programa", exact: true })).toBeVisible();
+    await nav.locator("summary").click();
     await expect(nav.getByRole("link", { name: "Certificados", exact: true })).toBeVisible();
     await expect(nav.getByRole("link", { name: "LUMA", exact: true })).toBeVisible();
     await expect(nav.getByRole("link")).toHaveCount(5);
