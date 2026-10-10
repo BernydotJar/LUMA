@@ -31,6 +31,20 @@ describe("academic certificates authorization and verification", () => {
     expect(canManageCertificates({ unrestricted: false, tenantIds: ["tenant-a"], learnerIds: [] },
       "coach-a", offering)).toBe(true);
   });
+  it("lets tenant administrators manage only their organization's certificates", () => {
+    const adminAccess = {
+      unrestricted: false, institutionalAdmin: true,
+      tenantIds: ["tenant-a"], learnerIds: [],
+    };
+    expect(canManageCertificates(adminAccess, "admin-not-coach", offering)).toBe(true);
+    expect(canManageCertificates({
+      ...adminAccess, tenantIds: ["tenant-b"],
+    }, "admin-not-coach", offering)).toBe(false);
+    expect(canManageCertificates({
+      unrestricted: false, institutionalAdmin: true,
+      tenantIds: [], learnerIds: ["learner-in-another-tenant"],
+    }, "admin-not-coach", offering, "learner-in-another-tenant")).toBe(false);
+  });
   it("rejects invalid IDs and unsupported approval evidence", () => {
     expect(() => documentId("../tenant", "tenant")).toThrow();
     expect(() => validateAttestation({

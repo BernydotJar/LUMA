@@ -1,5 +1,8 @@
+import { authorizedAdminTenants, isInstitutionalAdmin, isPlatformSuperuser } from "./tenant-admin-access";
 export interface LearningCoachAccess {
   unrestricted: boolean;
+  /** Tenant administrators can manage academic data only within these organizations. */
+  institutionalAdmin?: boolean;
   tenantIds: string[];
   learnerIds: string[];
 }
@@ -23,15 +26,19 @@ function unique(values: string[]): string[] {
 export function learningCoachAccessFromClaims(
   claims: Readonly<Record<string, unknown>>,
 ): LearningCoachAccess {
-  const role = typeof claims.role === "string" ? claims.role : "";
-  const unrestricted =
-    claims.admin === true ||
-    claims.superuser === true ||
-    role === "admin" ||
-    role === "superuser";
-
-  if (unrestricted) {
+  // The platform superuser is the only globally unrestricted role.
+  // A tenant administrator must never inherit global coach/learner access.
+  if (isPlatformSuperuser(claims)) {
     return { unrestricted: true, tenantIds: [], learnerIds: [] };
+  }
+  if (isInstitutionalAdmin(claims)) {
+    return {
+      unrestricted: false,
+      institutionalAdmin: true,
+      tenantIds: authorizedAdminTenants(claims),
+      // Arbitrary learner claims must not expand a tenant administrator's scope.
+      learnerIds: [],
+    };
   }
 
   const tenantIds = unique([

@@ -5,7 +5,7 @@ import {
   resolveCoachLearningScope,
   type CoachEnrollmentReader,
 } from "./coach-scoped-learning";
-import type { LearningCoachAccess } from "./coach-access";
+import { learningCoachAccessFromClaims, type LearningCoachAccess } from "./coach-access";
 import type { CommerceEnrollmentRecord } from "./commerce/enrollment";
 
 const scope = { tenantId: "tenant-a", programId: "program-a" };
@@ -45,6 +45,29 @@ describe("coach program-scoped reads", () => {
       unrestricted: false, tenantIds: ["tenant-b"], learnerIds: [],
     }, headers(), env)).toThrow("COACH_SCOPE_REQUIRED");
     expect(resolveCoachLearningScope(access, headers(), env)).toEqual(scope);
+  });
+
+  it("denies a tenant admin from selecting another tenant or reading a foreign learner", async () => {
+    const tenantAdmin = learningCoachAccessFromClaims({
+      role: "admin", adminTenantIds: ["tenant-a"],
+      coachTenantIds: ["tenant-b"], coachLearnerIds: ["foreign-learner"],
+    });
+    expect(tenantAdmin.unrestricted).toBe(false);
+    expect(tenantAdmin.tenantIds).toEqual(["tenant-a"]);
+    expect(tenantAdmin.learnerIds).toEqual([]);
+
+    expect(() => resolveCoachLearningScope(tenantAdmin, headers(), {
+      ...env, LUMA_LEARNING_TENANT_ID: "tenant-b",
+    })).toThrow("COACH_SCOPE_REQUIRED");
+
+    const reader = store({
+      "learner-a": [record("learner-a")],
+      "foreign-learner": [record("foreign-learner", { tenantId: "tenant-b" })],
+    });
+    expect(await listScopedCoachLearnerIds(tenantAdmin, scope, reader, 20))
+      .toEqual(["learner-a"]);
+    await expect(assertScopedCoachLearner(tenantAdmin, scope, "foreign-learner", reader))
+      .rejects.toThrow("COACH_LEARNER_SCOPE_FORBIDDEN");
   });
 
   it("requires explicit program choice in multi-program deployment", () => {

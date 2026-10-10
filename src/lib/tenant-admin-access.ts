@@ -9,12 +9,18 @@ export function isInstitutionalAdmin(claims: Record<string, unknown>): boolean {
 }
 
 export function authorizedAdminTenants(claims: Record<string, unknown>): string[] {
-  const values = [claims.adminTenantIds, claims.tenantIds, claims.tenantId]
-    .flatMap(value => typeof value === "string" ? [value] :
-      Array.isArray(value)
-        ? value.filter((item): item is string => typeof item === "string")
-        : []);
-  return [...new Set(values.filter(validLearningScopeId))].sort();
+  // The dedicated role assignment is authoritative when provisioned, including
+  // [] after revocation. Do not expand admin authority using learner/coach scopes.
+  const explicit = Object.prototype.hasOwnProperty.call(claims, "adminTenantIds");
+  const values = explicit
+    ? [claims.adminTenantIds]
+    : [claims.tenantIds, claims.tenantId]; // legacy Firebase admin claims only
+  const scopes = values.flatMap(value => typeof value === "string" ? [value] :
+    Array.isArray(value)
+      ? value.filter((item): item is string => typeof item === "string") : []);
+  return [...new Set(scopes.filter(value =>
+    validLearningScopeId(value) && /^[A-Za-z0-9_-]{1,128}$/.test(value),
+  ))].sort();
 }
 
 /** Never treat a tenant-scoped administrator as a platform superuser. */

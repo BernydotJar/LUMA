@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import type { CommerceEnrollmentRecord } from "./commerce/enrollment";
 import { isActiveCommerceEnrollment } from "./commerce/enrollment";
+import { authorizedAdminTenants } from "./tenant-admin-access";
 import type { LiveProgramSession, ProgramOffering } from "./program-delivery";
 
 export type LiveClassroomRole = "instructor" | "learner";
@@ -145,12 +146,8 @@ export function resolveClassroomRole(
   if (claims.superuser === true || role === "superuser") {
     return "instructor";
   }
-  const tenantScopes = [claims.tenantId, claims.tenantIds, claims.adminTenantIds]
-    .flatMap((scope) => typeof scope === "string" ? [scope] :
-      Array.isArray(scope) ? scope.filter((id): id is string => typeof id === "string") : [])
-    .map((id) => id.trim());
   if ((claims.admin === true || role === "admin") &&
-      tenantScopes.includes(offering.tenantId)) {
+      authorizedAdminTenants(claims as Record<string, unknown>).includes(offering.tenantId)) {
     return "instructor";
   }
   if (

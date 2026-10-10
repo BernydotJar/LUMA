@@ -12,7 +12,7 @@ export async function GET(
   context: { params: Promise<{ offeringId: string; sessionId: string }> },
 ) {
   try {
-    const user = await requireLearningUser(request);
+    const user = await requireLearningUser(request, { checkRevoked: true });
     const { offeringId, sessionId } = await context.params;
     const data = await programDeliveryStore.getClassroomSession(offeringId, sessionId);
     if (!data || data.session.classroomProvider !== "livekit") {

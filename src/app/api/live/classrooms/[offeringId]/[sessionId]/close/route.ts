@@ -12,7 +12,7 @@ export async function POST(
   context: { params: Promise<{ offeringId: string; sessionId: string }> },
 ) {
   try {
-    const user = await requireLearningUser(request);
+    const user = await requireLearningUser(request, { checkRevoked: true });
     const { offeringId, sessionId } = await context.params;
     const data = await programDeliveryStore.getClassroomSession(offeringId, sessionId);
     if (!data) return NextResponse.json({ error: "classroom_not_found" }, { status: 404 });

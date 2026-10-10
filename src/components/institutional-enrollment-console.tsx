@@ -63,7 +63,8 @@ export function InstitutionalEnrollmentConsole() {
       const claims = token.claims;
       const isSuperuser = claims.superuser === true || claims.role === "superuser";
       const isAdmin = isSuperuser || claims.admin === true || claims.role === "admin";
-      const tenants = [claims.tenantId, claims.tenantIds, claims.adminTenantIds]
+      const explicit = Object.prototype.hasOwnProperty.call(claims, "adminTenantIds");
+      const tenants = (explicit ? [claims.adminTenantIds] : [claims.tenantId, claims.tenantIds])
         .flatMap(value => typeof value === "string" ? [value] :
           Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : []);
       const unique = [...new Set(tenants)].sort();

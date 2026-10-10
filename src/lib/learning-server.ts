@@ -10,7 +10,10 @@ export function learningStoreForScope(scope?: LearningScope): FirestoreLearningS
   return scope ? new FirestoreLearningStore(firebaseAdminFirestore, scope) : learningStore;
 }
 
-export async function requireLearningUser(request: Request) {
+export async function requireLearningUser(
+  request: Request,
+  options: { checkRevoked?: boolean } = {},
+) {
   const authorization = request.headers.get("authorization");
   if (!authorization?.startsWith("Bearer ")) {
     throw new Error("AUTH_REQUIRED");
@@ -19,11 +22,11 @@ export async function requireLearningUser(request: Request) {
   const token = authorization.slice("Bearer ".length).trim();
   if (!token) throw new Error("AUTH_REQUIRED");
 
-  return firebaseAdminAuth.verifyIdToken(token);
+  return firebaseAdminAuth.verifyIdToken(token, options.checkRevoked === true);
 }
 
 export async function requireLearningCoach(request: Request) {
-  const decoded = await requireLearningUser(request);
+  const decoded = await requireLearningUser(request, { checkRevoked: true });
   const role = typeof decoded.role === "string" ? decoded.role : "";
   const allowed =
     decoded.coach === true ||
@@ -39,7 +42,7 @@ export async function requireLearningCoach(request: Request) {
 }
 
 export async function requireLearningAdmin(request: Request) {
-  const decoded = await requireLearningUser(request);
+  const decoded = await requireLearningUser(request, { checkRevoked: true });
   const role = typeof decoded.role === "string" ? decoded.role : "";
   const allowed =
     decoded.admin === true ||

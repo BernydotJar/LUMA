@@ -48,6 +48,15 @@ describe("LUMA integrated classroom authorization", () => {
     expect(resolveClassroomRole({ uid: "admin", admin: true }, offering, [])).toBeNull();
     expect(resolveClassroomRole({ uid: "admin", admin: true, adminTenantIds: ["other"] }, offering, [])).toBeNull();
     expect(resolveClassroomRole({ uid: "admin", admin: true, adminTenantIds: ["seres"] }, offering, [])).toBe("instructor");
+    // Dedicated admin assignment must override legacy user/coach tenant claims.
+    expect(resolveClassroomRole({
+      uid: "admin", admin: true, tenantIds: ["seres"],
+      adminTenantIds: ["another-tenant"],
+    }, offering, [])).toBeNull();
+    expect(resolveClassroomRole({
+      uid: "admin", admin: true, tenantId: "seres",
+      adminTenantIds: [],
+    }, offering, [])).toBeNull();
     expect(resolveClassroomRole({ uid: "owner", superuser: true }, offering, [])).toBe("instructor");
   });
   it("isolates room names and participant IDs without exposing UIDs or emails", () => {

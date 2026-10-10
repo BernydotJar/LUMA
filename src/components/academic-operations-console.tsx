@@ -63,7 +63,8 @@ export function AcademicOperationsConsole() {
       if (cancelled) return;
       const c = token.claims;
       const superuser = c.superuser === true || c.role === "superuser";
-      const tenants = [c.adminTenantIds, c.tenantIds, c.tenantId]
+      const explicit = Object.prototype.hasOwnProperty.call(c, "adminTenantIds");
+      const tenants = (explicit ? [c.adminTenantIds] : [c.tenantIds, c.tenantId])
         .flatMap(value => typeof value === "string" ? [value] :
           Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : []);
       const list = [...new Set(tenants)].sort();

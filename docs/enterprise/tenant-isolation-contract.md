@@ -75,3 +75,7 @@ The LUMA adapter rejects the **entire response** if envelope or ANY hit is missi
 - A multi-program learner/coach may specify a verified program via `x-luma-program-id`; current first-pilot UI is optimized for one program, optionally selected by server-side `LUMA_LEARNING_PROGRAM_ID`.
 - The sample coach queue remains a bounded sample, never a complete risk census or a measured impact dashboard.
 - The scoped RAG backend, secrets, real merchant receipts, integration tests on deployed services, backup/restore and load/capacity proof remain **NOT YET VERIFIED**. The pilot activation gate must stay BLOCKED until those requirements are met.
+
+## 2026-10-09 — administrative role hardening
+
+Role checks now distinguish platform superuser from a tenant-scoped admin in coach dashboards, intervention queues, academic certificates, institutional admissions and LiveKit instructor admission. Dedicated `adminTenantIds` claims take precedence over generic/legacy tenant assignments; an empty array revokes access even if old coach/learner tenant claims remain. Administrator provisioning is documented in [Tenant admin provisioning](./tenant-admin-provisioning.md). Token revocation is checked on privileged and classroom routes, with explicit API-side tenant validation. The showcase mode remains separate from production entitlements and cannot be treated as enterprise tenant isolation.

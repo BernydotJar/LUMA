@@ -33,3 +33,7 @@ The certificate endpoints were found to accept an unrestricted administrative ro
 ### Operational capability: group admission
 
 A separate, bounded CSV/column batch entry point extends institutional admissions to groups of up to 100 seats per request. Each row uses the same Firestore transaction/audit as individual seats; batch retries are idempotent and partial failures are explicit. Production acceptance requires an authorized administrator real-identity test and observed grant+claim+revoke for at least one uploaded batch; the implementation itself does not assert that an external email notification was sent.
+
+### Tenant administrator operationalization — new development increment
+
+Added explicit role/tenant separation across coach data, interventions, certificates and live-classroom admission; production-grade dry-run admin role provisioning with project/email/plan confirmations, Firestore audit intent and Firebase token revocation. No real user permissions were changed. CI must validate authority regression and application build; live pilot acceptance additionally requires a verified admin+coach+learner browser/API/data test in entitled mode. Details: [tenant-admin-provisioning.md](tenant-admin-provisioning.md).
