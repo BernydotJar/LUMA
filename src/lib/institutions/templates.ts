@@ -1,4 +1,4 @@
-import { gruvBrand, seresDeExcelenciaBrand } from "./public-brand";
+import { gruvBrand, lumaPlatformBrand, seresDeExcelenciaBrand } from "./public-brand";
 import type { InstitutionTemplate } from "./config";
 
 export const seresDeExcelenciaTemplate: InstitutionTemplate = Object.freeze({
@@ -27,6 +27,23 @@ export const gruvLanguagesTemplate: InstitutionTemplate = Object.freeze({
   features: Object.freeze({
     tutor: true,
     adaptivePractice: true,
+    liveClassroom: false,
+    voicePractice: false,
+    certificates: false,
+    commerce: false,
+  }),
+});
+
+/** Safe neutral starter. New tenants must never inherit SE institutional branding. */
+export const lumaPlatformTemplate: InstitutionTemplate = Object.freeze({
+  shellId: "luma-platform",
+  domain: "adult-learning",
+  locale: "es-419",
+  competencyFrameworkId: "competency-evidence-v1",
+  brand: lumaPlatformBrand,
+  features: Object.freeze({
+    tutor: false,
+    adaptivePractice: false,
     liveClassroom: false,
     voicePractice: false,
     certificates: false,

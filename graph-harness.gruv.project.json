@@ -5,17 +5,26 @@
   "gate_definitions": [
     {
       "id": "adversarial-product-review",
-      "required_evidence_kinds": ["critic"],
+      "required_evidence_kinds": [
+        "critic"
+      ],
       "blocking": true
     },
     {
       "id": "independent-quality",
-      "required_evidence_kinds": ["test", "build", "security", "verification"],
+      "required_evidence_kinds": [
+        "test",
+        "build",
+        "security",
+        "verification"
+      ],
       "blocking": true
     },
     {
       "id": "production-activation",
-      "required_evidence_kinds": ["production"],
+      "required_evidence_kinds": [
+        "production"
+      ],
       "blocking": true
     }
   ],
@@ -28,8 +37,12 @@
       "depends_on": [],
       "capability": "full-stack-product",
       "gates": {
-        "review": ["adversarial-product-review"],
-        "done": ["independent-quality"]
+        "review": [
+          "adversarial-product-review"
+        ],
+        "done": [
+          "independent-quality"
+        ]
       },
       "allowed_paths": [
         "AGENTS.md",
@@ -46,20 +59,64 @@
       ]
     },
     {
+      "id": "LUMA-GRUV-002A-institution-draft-persistence",
+      "kind": "platform-foundation",
+      "title": "Build disabled-by-default, auditable institution draft configuration service",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "secure-config-persistence",
+      "gates": {
+        "review": [
+          "adversarial-product-review"
+        ],
+        "done": [
+          "independent-quality"
+        ]
+      },
+      "allowed_paths": [
+        "AGENTS.md",
+        "README.md",
+        ".github/workflows/quality.yml",
+        "src/lib/institutions/**",
+        "src/app/api/platform/institutions/**",
+        "src/lib/institution-config-server.ts",
+        "specs/068-institution-draft-control-plane.md",
+        "docs/enterprise/institution-config-draft-operations.md",
+        "architecture/luma-gruv-product-line.md",
+        "docs/strategy/luma-gruv-operating-command.md",
+        "evidence/gruv-productization-002/**",
+        "graph-harness.gruv.project.json",
+        "graph-harness.gruv.events.jsonl"
+      ]
+    },
+    {
       "id": "LUMA-GRUV-002-trusted-tenant-control-plane",
       "kind": "platform-capability",
       "title": "Create verified self-service institution and tenant/program management",
       "status": "pending",
-      "depends_on": ["LUMA-GRUV-001-institution-contract"],
+      "depends_on": [
+        "LUMA-GRUV-001-institution-contract",
+        "LUMA-GRUV-002A-institution-draft-persistence"
+      ],
       "capability": "security-and-institution-operations",
       "gates": {
-        "review": ["adversarial-product-review"],
-        "done": ["independent-quality", "production-activation"]
+        "review": [
+          "adversarial-product-review"
+        ],
+        "done": [
+          "independent-quality",
+          "production-activation"
+        ]
       },
       "allowed_paths": [
-        "src/lib/institutions/**", "src/lib/learning-entitlement*", "src/app/api/**",
-        "docs/enterprise/**", "specs/**", "evidence/gruv-productization-002/**",
-        "graph-harness.gruv.project.json", "graph-harness.gruv.events.jsonl"
+        "src/lib/institutions/**",
+        "src/lib/learning-entitlement*",
+        "src/app/api/**",
+        "docs/enterprise/**",
+        "specs/**",
+        "evidence/gruv-productization-002/**",
+        "graph-harness.gruv.project.json",
+        "graph-harness.gruv.events.jsonl"
       ]
     },
     {
@@ -67,16 +124,27 @@
       "kind": "product-vertical",
       "title": "Prove GRUV adapts professional language learning using LUMA Core",
       "status": "pending",
-      "depends_on": ["LUMA-GRUV-002-trusted-tenant-control-plane"],
+      "depends_on": [
+        "LUMA-GRUV-002-trusted-tenant-control-plane"
+      ],
       "capability": "learning-product-and-measurement",
       "gates": {
-        "review": ["adversarial-product-review"],
-        "done": ["independent-quality", "production-activation"]
+        "review": [
+          "adversarial-product-review"
+        ],
+        "done": [
+          "independent-quality",
+          "production-activation"
+        ]
       },
       "allowed_paths": [
-        "src/**", "specs/**", "architecture/**", "docs/strategy/**",
+        "src/**",
+        "specs/**",
+        "architecture/**",
+        "docs/strategy/**",
         "evidence/gruv-productization-003/**",
-        "graph-harness.gruv.project.json", "graph-harness.gruv.events.jsonl"
+        "graph-harness.gruv.project.json",
+        "graph-harness.gruv.events.jsonl"
       ]
     }
   ]

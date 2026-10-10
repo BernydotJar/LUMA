@@ -49,6 +49,7 @@ Use small Git branches and reviewed PRs into a protected `main`; a dedicated UI 
 | Gate | Deliverable | Exit criteria |
 | --- | --- | --- |
 | GRUV-001 | Institutional product/brand contracts | Seres visuals unchanged; GRUV defined as disabled product shell; fail-closed tenant/program lookup; tests and architecture spec |
+| GRUV-002A | Disabled draft configuration and audit | Local source-only, versioned drafts, tenant-admin isolation, transaction retry, emulator verification and independent review |
 | GRUV-002 | True institutional control plane | Server-verified tenant membership, dynamic brand/program configuration, RBAC, admin audit, isolation tests and recovery |
 | GRUV-003 | End-to-end second-institution acceptance | Two independently authorized organizations, different approved content, Twin events, retrieval and payments isolated |
 | GRUV-004 | GRUV language vertical | Calibrated diagnostic, reusable Twin, situational practice, voice guardrails and evidence-based progression |

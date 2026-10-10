@@ -38,3 +38,11 @@ The attached Spanish video transcript summarizes *Designing Data-Intensive Appli
 ## Success criteria
 
 Two independent, authorized institutions can eventually use the same learning engine with different branding and curriculum without exposing each other's data. Until then, call the multi-tenant SaaS flow a target, not a verified production feature.
+
+## Current institutional control-plane increment
+
+- Read `specs/068-institution-draft-control-plane.md` and `docs/enterprise/institution-config-draft-operations.md` before touching tenant onboarding.
+- `LUMA_INSTITUTION_DRAFT_ADMIN_ENABLED` defaults off, and must not be set in production without an independent security/release decision.
+- Only platform superusers may create institutional drafts. Tenant administrators must have dedicated `adminTenantIds` and revoked-token checks; legacy learner/coach scope claims are insufficient.
+- `InstitutionDraft` is NOT the published `InstitutionConfigStore`, so drafts cannot change entitlement, curriculum access, AI provider budget or CEFR certification.
+- Firestore emulator tests use an isolated `demo-*` project. The local workstation has a Java 21 runtime under `/opt/luma-jre21`; do not change system Java or production IAM to run tests.

@@ -22,3 +22,10 @@ export const gruvBrand = {
   shortName: "GRUV",
   palette: ["#F8F0D8", "#B75230", "#7D6E43", "#542A36", "#242420"],
 } as const satisfies PublicInstitutionBrand;
+
+/** Default platform identity for a new organization; contains no client assets. */
+export const lumaPlatformBrand = {
+  displayName: "LUMA Learning",
+  shortName: "LUMA",
+  palette: ["#F5F5F7", "#1D1D1F", "#0A84FF", "#2BB3B1"],
+} as const satisfies PublicInstitutionBrand;

@@ -121,6 +121,8 @@ jobs:
           --only auth,firestore
           "npm run test:run --
           src/lib/tenant-admin-auth.emulator.test.ts
+          src/lib/institutions/draft-store.emulator.test.ts
+          src/lib/institutions/draft-route.emulator.test.ts
           --maxWorkers=1"
 
   browser:

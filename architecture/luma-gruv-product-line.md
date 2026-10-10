@@ -44,3 +44,11 @@
 ## Production boundary
 
 The first increment creates versioned configuration contracts and preserves the Seres appearance. It does not introduce a tenant configuration database, trusted tenant switching, actual GRUV enrollment, GRUV website or GRUV speech evaluation. Those require GRUV-002/003/004 and independent proof.
+
+## GRUV-002A — Draft control plane extension
+
+The secure preparatory slice uses Firestore document transactions on `institutionConfigDrafts/{sha256(tenantId)}`. A single transaction commits both the new immutable configuration revision and an idempotency audit receipt. `configVersion` defines a per-tenant total update order; wall-clock timestamps are observability metadata, **not concurrency tokens**. This is an explicit DDIA trade-off: strong consistency for sensitive configuration writes, without requiring a distributed message broker.
+
+The draft collection is not queried by learner entitlements and exposes no `getByTenantId()` implementation for the published-config interface. In particular, Seres de Excelencia's active experience cannot be affected by editing a GRUV draft. The route is disabled by default, and new tenant creation is platform-superuser-only. Dedicated `adminTenantIds` are mandatory for tenant-scoped draft updates; the legacy admin-claim fallback is prohibited in this new control plane.
+
+A later publication/activation workflow will need authoritative program ownership, explicit approval, separate active configuration storage, append-only publication events/outbox, IAM testing, cross-tenant RAG proof, resource quotas, backup/restore and rollback. The source module is **not that publication workflow**.
