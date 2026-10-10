@@ -1,0 +1,12 @@
+{
+  "finding": "Mobile learner LUMA link hidden after adding Certificates",
+  "initial_ci_run": 38000978682,
+  "classification": "VERIFIED_REPRODUCIBLE_UI_REGRESSION",
+  "failed_test": "e2e/showcase.spec.ts:38 mobile (3 attempts)",
+  "root_cause": "learner navigation has 5 entries but mobile rendered only first 4",
+  "fix": "learner mobile uses five links and five-column grid; studio remains four links",
+  "regression_test": "e2e/responsive-mobile.spec.ts: learner navigation retains both certificates and LUMA",
+  "local_eslint": "PASS",
+  "new_browser_ci": "PENDING",
+  "production_deploy": "NOT_PERFORMED"
+}

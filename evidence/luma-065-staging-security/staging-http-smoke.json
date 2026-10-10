@@ -1,0 +1,1 @@
+{"checks": 11, "content_kind": "SYNTHETIC_ONLY", "database_enforcement": "FORCED_RLS_AND_EXACT_PRE_RANK_FILTER", "database_kind": "DISPOSABLE_LOCAL_ONLY", "external_services_changed": false, "http_server": "127.0.0.1_EPHEMERAL_STOPPED_AFTER_SMOKE", "result": "PASS", "vertex": "SYNTHETIC_EMBEDDER_ONLY"}

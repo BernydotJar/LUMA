@@ -90,3 +90,20 @@ The token file is created with mode `0600`; copy it through approved secret deli
 - Semantic quality, source citation relevance, video timestamp precision, content deletion effectiveness across backups, ingress throttling, Cloud Run IAM/API Gateway and p95 under peak concurrency remain **NOT YET VERIFIED**.
 - Do not claim contractual uptime, retention, RTO/RPO, unlimited concurrency or proven economic savings from these tests.
 - Enterprise activation and the Product's independent security reviewer remain separate release gates. Use `docs/enterprise/luma-064-scoped-rag.md` as the decision record.
+
+## LUMA-065 — Synthetic staging validation (October 9, 2026)
+
+Run the full gateway over a **localhost-only ephemeral HTTP socket** against a disposable PostgreSQL/pgvector `_stage` or `_test` database. A fake deterministic embedding is explicitly scoped to this test runner; the production ASGI import still requires Google Vertex AI and will not use fake embeddings.
+
+```bash
+# Create a disposable local database and apply sql/001_scoped_rag.sql separately.
+# Use a read-only role with luma_rag_reader membership (not DB owner/superuser).
+# Do NOT point these values to production or a Cloud SQL proxy.
+export LUMA_RAG_STAGING_ADMIN_DSN='postgresql://staging_admin@/luma065_stage?host=/local/socket'
+export LUMA_RAG_STAGING_API_DSN='postgresql://staging_reader@/luma065_stage?host=/local/socket'
+python scripts/staging_http_smoke.py
+```
+
+Guardrails: only `_stage`/`_test` databases with Unix socket or loopback connections are permitted; all identities and data are random/synthetic; tokens exist only in memory; access logs are off; traffic stays on `127.0.0.1`; the HTTP server stops after verification and all test records are deleted in a `finally` cleanup. The CI workflow runs the same test with a disposable pgvector service.
+
+This smoke test **does not** claim an internet-accessible GCP staging deployment, live Vertex model availability, public ingress security, or actual client content readiness. See `docs/enterprise/luma-065-staging-security.md`.

@@ -1696,6 +1696,36 @@
         "graph-harness.project.json",
         "graph-harness.events.jsonl"
       ]
+    },
+    {
+      "id": "LUMA-065-scoped-rag-staging-security",
+      "kind": "security-hardening",
+      "title": "Synthetic HTTP staging verification and read-only grant-enforcement for scoped retrieval",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-064-scoped-rag-retrieval-backend"
+      ],
+      "capability": "isolated-rag-staging-evidence",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "services/scoped-rag/**",
+        ".github/workflows/scoped-rag.yml",
+        "docs/enterprise/**",
+        "specs/066-scoped-rag-staging-security.md",
+        "evidence/luma-065-staging-security/**",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "src/components/app-shell.tsx",
+        "src/components/app-shell.module.css",
+        "e2e/responsive-mobile.spec.ts"
+      ]
     }
   ]
 }

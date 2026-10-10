@@ -518,6 +518,8 @@
     background: linear-gradient(to bottom, rgba(235,227,210,.98) 75%, rgba(235,227,210,0));
   }
   .shell[data-mode="learner"] .mobileNav {
+    /* Five first-class learner destinations: Hoy, Ruta, Programa, Certificados, LUMA. */
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     border-color: rgba(255,255,255,.72);
     background:
       linear-gradient(145deg, rgba(255,255,255,.72), rgba(255,248,232,.32)),
@@ -525,6 +527,9 @@
     box-shadow: 0 20px 48px rgba(76,45,29,.18), inset 0 1px 0 rgba(255,255,255,.9);
   }
   .shell[data-mode="learner"] .mobileNav a {
+    min-width: 0;
+    white-space: nowrap;
+    font-size: clamp(.52rem, 2vw, .58rem);
     color: #806a58;
   }
   .shell[data-mode="learner"] .mobileNav .mobileActive {
