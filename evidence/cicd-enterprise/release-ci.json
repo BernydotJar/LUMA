@@ -1,38 +1,38 @@
 {
-  "runId": "38030894624",
-  "gitSha": "cee98c8030bb66d2f72c63c2a343f05b10416701",
+  "runId": "38094698864",
+  "gitSha": "d2053fdc047e9b868dc90fe04687ccadd98afd01",
   "conclusion": "success",
-  "url": "https://github.com/BernydotJar/LUMA/actions/runs/38030894624",
+  "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864",
   "jobs": [
     {
-      "name": "firestore",
+      "name": "security",
       "conclusion": "success",
-      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38030894624/job/114151428195"
+      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864/job/114338095333"
     },
     {
       "name": "verify",
       "conclusion": "success",
-      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38030894624/job/114151428285"
+      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864/job/114338095436"
     },
     {
-      "name": "security",
+      "name": "firestore",
       "conclusion": "success",
-      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38030894624/job/114151428302"
+      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864/job/114338095454"
     },
     {
       "name": "identity-roles",
       "conclusion": "success",
-      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38030894624/job/114151428316"
+      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864/job/114338095464"
     },
     {
       "name": "browser",
       "conclusion": "success",
-      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38030894624/job/114151736736"
+      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864/job/114338518660"
     },
     {
       "name": "deploy",
       "conclusion": "skipped",
-      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38030894624/job/114152203329"
+      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864/job/114339012258"
     }
   ]
 }
