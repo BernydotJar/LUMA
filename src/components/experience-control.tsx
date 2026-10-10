@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Crown, Moon, Sparkles, Sun, UsersRound } from "lucide-react";
+import { Moon, Sparkles, Sun, UsersRound } from "lucide-react";
 import { useLumaTheme } from "@/components/theme-provider";
 import { lumaThemes, type LumaThemeId } from "@/lib/themes";
 import styles from "./experience-control.module.css";
@@ -23,14 +23,24 @@ export function ExperienceControl({ mode }: { mode: "learner" | "studio" }) {
     setTheme(nextTheme.id);
   }
 
+  if (mode === "learner") {
+    return (
+      <button
+        className={styles.learnerThemeButton}
+        type="button"
+        aria-label={`Cambiar tema. Tema actual: ${currentTheme.label}`}
+        title={`Cambiar tema: ${currentTheme.label}`}
+        onClick={cycleTheme}
+      >
+        <CurrentThemeIcon size={18} aria-hidden="true" />
+      </button>
+    );
+  }
+
   return (
-    <div className={styles.control} aria-label="Controles de superusuario">
-      <Link className={styles.consoleLink} href="/experience">
-        <Crown size={14} />
-        <span>Superusuario</span>
-      </Link>
+    <div className={styles.control} aria-label="Preferencias de experiencia">
       <div className={styles.roleSwitch} aria-label="Cambiar experiencia">
-        <Link href="/learn" data-active={mode === "learner"}>
+        <Link href="/learn" data-active={false}>
           <UsersRound size={14} /> Participante
         </Link>
         <Link href="/studio" data-active={mode === "studio"}>

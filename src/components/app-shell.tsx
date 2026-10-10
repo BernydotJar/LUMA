@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Bell,
   Award,
   BookOpen,
   BrainCircuit,
@@ -77,8 +76,8 @@ export function AppShell({
       <aside className={`${styles.sidebar} glass`}>
         <BrandMark />
         <div className={styles.workspaceLabel}>
-          <span>{studio ? "Inteligencia del entrenador" : "Ruta activa"}</span>
-          <strong>{studio ? "Practitioner 2026" : "Practitioner · Poder"}</strong>
+          <span>{studio ? "Inteligencia del entrenador" : "TU ESPACIO"}</span>
+          <strong>{studio ? "Practitioner 2026" : "Aprender con LUMA"}</strong>
         </div>
         <nav
           className={styles.navigation}
@@ -122,13 +121,13 @@ export function AppShell({
           <div className={styles.topbarActions}>
             <ExperienceControl mode={mode} />
             {actions}
-            <button className={styles.iconButton} type="button" aria-label="Buscar">
+            <Link
+              className={styles.iconButton}
+              href={studio ? "/library" : "/learn/experiences"}
+              aria-label={studio ? "Buscar contenido del programa" : "Explorar prácticas"}
+            >
               <Search size={19} />
-            </button>
-            <button className={styles.iconButton} type="button" aria-label="Notificaciones">
-              <Bell size={19} />
-              <span className={styles.notificationDot} />
-            </button>
+            </Link>
             <AccountMenu mode={mode} />
           </div>
         </header>

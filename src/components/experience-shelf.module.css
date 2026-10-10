@@ -1,214 +1,133 @@
 .section {
-  margin-top: 18px;
-  padding: 34px 0 18px;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  margin-top: 27px;
+  padding: 23px 0 0;
+  border-top: 1px solid var(--cx-line);
+  color: var(--cx-ink);
 }
-
 .heading {
-  display: grid;
-  grid-template-columns: minmax(0,1fr) auto;
-  align-items: end;
-  gap: 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 22px;
 }
-
 .heading h2 {
-  max-width: 900px;
   margin-top: 9px;
-  font-size: clamp(2.25rem, 4.5vw, 4.6rem);
-  font-weight: 630;
-  line-height: .9;
-  letter-spacing: -.06em;
+  font-size: clamp(1.85rem, 2.8vw, 2.7rem);
+  font-weight: 690;
+  line-height: 1.12;
+  letter-spacing: -.054em;
 }
-
 .heading > a {
-  margin-bottom: 4px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: var(--muted-strong);
-  font-size: .59rem;
-  font-weight: 820;
+  gap: 7px;
+  color: var(--cx-accent);
+  font-size: .8rem;
+  font-weight: 740;
+  white-space: nowrap;
 }
-
+.heading > a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .fieldNotes {
-  margin-top: 26px;
+  margin-top: 19px;
   display: grid;
-  grid-template-columns: 1.22fr 1fr .86fr;
-  align-items: stretch;
-  gap: 9px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
 }
-
 .note {
-  min-height: 270px;
-  padding: 18px 18px 20px;
-  border: 1px solid var(--line);
-  position: relative;
-  display: grid;
-  grid-template-columns: 36px 1fr;
-  grid-template-rows: auto 1fr;
-  column-gap: 12px;
-  overflow: hidden;
-  background:
-    linear-gradient(160deg, color-mix(in srgb, var(--bg-elevated) 84%, transparent), color-mix(in srgb, var(--bg-soft) 60%, transparent));
-  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
-}
-
-.note[data-index="2"] {
-  margin-top: 20px;
-  min-height: 250px;
-}
-
-.note[data-index="3"] {
-  margin-top: 42px;
-  min-height: 228px;
-}
-
-.note::after {
-  content: "";
-  width: 1px;
-  position: absolute;
-  top: 16px;
-  bottom: 16px;
-  left: 51px;
-  background: var(--line);
-}
-
-.index {
-  grid-row: 1 / -1;
-  align-self: start;
-  color: var(--accent);
-  font-size: .55rem;
-  font-weight: 900;
-  letter-spacing: .1em;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-}
-
-.noteObject {
-  height: 82px;
+  min-height: 252px;
+  padding: 20px;
+  border: 1px solid var(--cx-line);
+  border-radius: 19px;
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  transform: translateX(-6px);
+  flex-direction: column;
+  background: var(--cx-card);
+  transition: border-color .2s ease, transform .2s ease;
 }
-
+.note:hover { border-color: var(--cx-accent); transform: translateY(-2px); }
+.index {
+  color: var(--cx-accent);
+  font-size: .67rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+.noteObject {
+  width: 74px;
+  height: 64px;
+  margin-top: 4px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  opacity: .85;
+}
 .noteCopy {
-  align-self: end;
+  min-width: 0;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
-
 .noteCopy > span {
-  color: var(--muted);
-  font-size: .49rem;
-  font-weight: 820;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  color: var(--cx-muted);
+  font-size: .68rem;
+  font-weight: 680;
 }
-
 .noteCopy h3 {
-  margin-top: 7px;
-  font-size: clamp(1.65rem, 2.5vw, 2.8rem);
+  margin-top: 9px;
+  color: var(--cx-ink);
+  font-size: clamp(1.22rem, 1.7vw, 1.64rem);
   font-weight: 690;
-  line-height: .88;
-  letter-spacing: -.055em;
+  line-height: 1.12;
+  letter-spacing: -.04em;
 }
-
 .noteCopy p {
-  max-width: 360px;
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: .63rem;
-  line-height: 1.5;
+  max-width: 380px;
+  margin-top: 9px;
+  color: var(--cx-muted);
+  font-size: .74rem;
+  line-height: 1.55;
 }
-
 .noteCopy a {
-  margin-top: 18px;
-  padding-top: 11px;
-  border-top: 1px solid var(--line);
+  min-height: 44px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--cx-line);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--ink);
-  font-size: .57rem;
-  font-weight: 840;
+  gap: 8px;
+  color: var(--cx-accent);
+  font-size: .77rem;
+  font-weight: 750;
 }
-
-@media (max-width: 900px) {
-  .fieldNotes {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .note[data-index="2"],
-  .note[data-index="3"] {
-    margin-top: 0;
-  }
-
-  .note[data-index="3"] {
-    grid-column: 1 / -1;
-    min-height: 220px;
-  }
+.noteCopy a:hover { text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 980px) {
+  .fieldNotes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .note:last-child { grid-column: 1 / -1; min-height: 225px; }
 }
-
 @media (max-width: 760px) {
-  .section {
-    margin-top: 14px;
-    padding: 28px 0 16px;
-    overflow: hidden;
-  }
-
-  .heading {
-    padding-inline: 2px;
-    grid-template-columns: 1fr;
-    gap: 11px;
-  }
-
-  .heading h2 {
-    max-width: 340px;
-    font-size: clamp(2.6rem, 12.5vw, 3.8rem);
-  }
-
-  .heading > a {
-    width: fit-content;
-  }
-
+  .section { margin-top: 22px; padding-top: 20px; }
+  .heading { align-items: flex-start; flex-direction: column; gap: 3px; }
+  .heading h2 { font-size: 1.9rem; }
   .fieldNotes {
     width: calc(100% + 12px);
-    margin-top: 22px;
-    padding: 0 12px 9px 0;
+    padding: 0 12px 12px 0;
     display: flex;
-    gap: 8px;
     overflow-x: auto;
+    overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    overscroll-behavior-x: contain;
+    gap: 9px;
   }
-
   .fieldNotes::-webkit-scrollbar { display: none; }
-
-  .note,
-  .note[data-index="2"],
-  .note[data-index="3"] {
-    flex: 0 0 min(82vw, 315px);
-    min-height: 294px;
-    margin-top: 0;
-    grid-column: auto;
+  .note, .note:last-child {
+    flex: 0 0 min(83vw, 305px);
+    min-height: 248px;
     scroll-snap-align: start;
-  }
-
-  .noteCopy h3 {
-    font-size: 2.1rem;
-  }
-
-  .noteObject {
-    height: 96px;
+    grid-column: auto;
   }
 }
-
-.noteCopy a {
-  min-height: 44px;
-}
-
-.heading > a {
-  min-height: 44px;
-  align-items: center;
+@media (prefers-reduced-motion: reduce) {
+  .note { transition: none; }
+  .note:hover { transform: none; }
 }

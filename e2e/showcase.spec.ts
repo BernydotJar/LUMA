@@ -10,8 +10,8 @@ test.describe("LUMA product showcase", () => {
   test("showcase root enters the learner product immediately", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveURL(/\/learn$/);
-    await expect(page.getByRole("heading", { name: /Hoy llevas lo que sabes a la práctica/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Continuar · 12 min/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Aprender se nota en lo que haces/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Empezar práctica · 12 min/i })).toBeVisible();
   });
 
   test("onboarding calibrates a learner and enters the journey", async ({ page }) => {
@@ -74,7 +74,7 @@ test.describe("LUMA product showcase", () => {
   test("learner can inspect recommendation and ask the grounded tutor", async ({ page }) => {
     await page.goto("/learn");
     await page.getByRole("button", { name: /¿Por qué esta práctica/i }).click();
-    await expect(page.getByText(/Lo que LUMA observó/i)).toBeVisible();
+    await expect(page.getByText(/El motivo de esta sugerencia/i)).toBeVisible();
     await page.getByRole("textbox", { name: "Pregunta a LUMA" }).fill("¿Qué es un P.A.S.?");
     await page.getByRole("button", { name: "Enviar pregunta" }).click();
     await expect(page.getByText(/pensamiento automático saboteador/i)).toBeVisible();
@@ -162,16 +162,47 @@ test.describe("LUMA product showcase", () => {
     await expect(page.getByText(/Prototipo 01/i)).toHaveCount(0);
   });
 
-  test("adult progress is expressed as capability, transfer and next demonstration", async ({ page }) => {
+  test("learner progress is honest before and after practice evidence", async ({ page }) => {
     await page.goto("/learn");
-    await expect(page.getByRole("heading", { name: /Tu progreso se expresa en capacidades demostradas/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Elige lo que quieres desarrollar/i })).toHaveAttribute("href", "/onboarding");
+    await expect(page.locator("#journey summary")).toContainText("Preparar mi ruta personal");
+    await page.locator("#journey summary").click();
+    await expect(page.getByRole("heading", { name: /Una ruta empieza con una intención/i })).toBeVisible();
+    await expect(page.getByText("Gestionar mis emociones y transformar creencias que me frenan", { exact: true })).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: /Tu avance cobra forma con cada práctica/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Iniciar práctica/i })).toBeVisible();
+    await expect(page.getByText(/Capacidad demostrada/i)).toHaveCount(0);
+    await expect(page.getByText(/Práctica P\.A\.S\. · 3\/3 criterios/i)).toHaveCount(0);
+    await expect(page.getByRole("tab")).toHaveCount(0);
+
+    await page.evaluate(() => window.localStorage.setItem("luma-latest-learning-event", JSON.stringify({
+      type: "SIMULATION_COMPLETED",
+      conceptId: "pas",
+      correctCount: 2,
+      rubricId: "pas-v1",
+      evidenceCategory: "scored",
+      twinAuthority: "eligible",
+      criteria: [
+        { id: "one", label: "Distinguir hechos", passed: true, attempts: 1 },
+        { id: "two", label: "Identificar emoción", passed: true, attempts: 1 },
+        { id: "three", label: "Reformular", passed: false, attempts: 2 },
+      ],
+    })));
+    await page.reload();
+    await expect(page.getByRole("heading", { name: /Tu avance se apoya en evidencias concretas/i })).toBeVisible();
     const tabs = page.getByRole("tab");
     await expect(tabs).toHaveCount(3);
-    await expect(tabs.nth(0)).toContainText(/Capacidad demostrada/i);
-    await expect(tabs.nth(1)).toContainText(/Transferencia reciente/i);
+    await expect(tabs.nth(0)).toContainText(/Práctica registrada/i);
+    await expect(tabs.nth(1)).toContainText(/Cumpliste 2 de 3 criterios/i);
     await expect(tabs.nth(2)).toContainText(/Siguiente demostración/i);
     await tabs.nth(2).click();
     await expect(tabs.nth(2)).toHaveAttribute("aria-selected", "true");
+  });
+
+  test("header navigation only advertises real destinations", async ({ page }) => {
+    await page.goto("/learn");
+    await expect(page.getByRole("link", { name: "Explorar prácticas" })).toHaveAttribute("href", "/learn/experiences");
+    await expect(page.getByRole("button", { name: "Notificaciones" })).toHaveCount(0);
   });
 
   test("iconography catalog changes material while preserving semantics", async ({ page }) => {
