@@ -9,6 +9,8 @@
 5. The main workflow independently repeats validation, obtains short-lived OIDC credentials, uploads the verified archive, creates a build and checks its capacity and provenance. It then confirms main and traffic have not moved before creating a rollout.
 6. A successful rollout alone is not the end. The expected build must serve 100% traffic, `/api/version` must match the tested SHA, and the desktop/mobile browser checks must pass. The rollback request is validated without changing traffic; only then may the final release result become `VERIFIED`.
 
+Artifacts are namespaced by workflow attempt. When repeating a candidate, rerun the entire workflow so build, source and browser artifacts belong to the same attempt; rerunning only a downstream failed job deliberately cannot reuse an earlier attempt implicitly.
+
 Do not use a local manual deployment to bypass a failed main workflow. If an artifact is missing, a run is superseded, or a review digest is stale, repair the cause rather than changing the expected SHA. Review approval is not automatically granted by the existence of this runbook.
 
 ## Verification coverage

@@ -271,6 +271,9 @@ test.describe("LUMA product showcase", () => {
         await page.waitForURL(/\/learn$/);
       }
       await page.locator("body").waitFor({ state: "visible" });
+      if (path === "/" || path === "/learn") {
+        await expect(page.getByRole("link", { name: "Accede para personalizar tu experiencia" })).toBeVisible();
+      }
       await expectNoA11yViolations(page);
     }
   });
