@@ -206,9 +206,9 @@ test.describe("LUMA product showcase", () => {
       : page.getByRole("link", { name: "Explorar prácticas" });
     await expect(explore).toBeVisible();
     await expect(explore).toHaveAttribute("href", "/learn/experiences");
+    await expect(page.getByRole("button", { name: "Notificaciones" })).toHaveCount(0);
     await explore.click();
     await expect(page).toHaveURL(/\/learn\/experiences$/);
-    await expect(page.getByRole("button", { name: "Notificaciones" })).toHaveCount(0);
   });
 
   test("iconography catalog changes material while preserving semantics", async ({ page }) => {

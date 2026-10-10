@@ -43,7 +43,7 @@ test.describe("LUMA adaptive learning loop", () => {
 
     await expect(page.getByText("Gestionar mejor mis emociones", { exact: true }).first()).toBeVisible();
     // The editorial home removed the redundant time-budget sentence. Verify the
-    // persisted input used by the adaptive planner, not obsolete presentation copy.
+    // persisted planner input while retaining every goal-specific action assertion.
     await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("luma-onboarding") ?? "{}").minutes)).toBe(8);
     const learnerAAction = (await page.locator("#next-action-title").textContent())?.trim();
 

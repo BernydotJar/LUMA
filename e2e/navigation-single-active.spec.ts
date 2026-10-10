@@ -16,5 +16,6 @@ test("studio navigation selects one most-specific destination", async ({ page },
     await expect(nav).toBeVisible();
     await expect(nav.locator('[aria-current="page"]')).toHaveCount(1);
     await expect(nav.getByRole("link", { name: label, exact: true })).toHaveAttribute("aria-current", "page");
+    await expect(nav.getByRole("link", { name: label, exact: true })).toBeVisible();
   }
 });
