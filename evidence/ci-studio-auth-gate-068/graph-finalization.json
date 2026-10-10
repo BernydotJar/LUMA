@@ -1,0 +1,8 @@
+{
+  "node": "LUMA-068-studio-ci-strict-locator",
+  "node_status": "done",
+  "reviewed_commit": "3f4409f04451d338ad720ea809e2c3f7f4c85cb3",
+  "event_count": 680,
+  "software_gate": "PASS",
+  "production_deployed": false
+}
