@@ -20,6 +20,11 @@ const app = emulatorHost ? initializeApp(
 ) : undefined;
 const auth = app ? getAuth(app) : undefined;
 
+/** Firebase exposes provider claims as an object; normalize to a map at the test boundary. */
+function scopedTenants(decoded: object): string[] {
+  return authorizedAdminTenants(Object.fromEntries(Object.entries(decoded)));
+}
+
 const offering: ProgramOffering = {
   offeringId: "o".repeat(64), tenantId: "tenant-a",
   programId: "executive", title: "Executive Skills",
@@ -66,7 +71,7 @@ describe.runIf(Boolean(emulatorHost && firestoreHost))("Firebase Auth/Firestore 
       expect((await requireLearningAdmin(request)).uid).toBe(user.uid);
       expect((await requireLearningCoachAccess(request)).access.tenantIds).toEqual(["tenant-a"]);
       expect(decoded.admin).toBe(true);
-      expect(authorizedAdminTenants(decoded)).toEqual(["tenant-a"]);
+      expect(scopedTenants(decoded)).toEqual(["tenant-a"]);
       expect(() => assertTenantAdmin(decoded, "tenant-a")).not.toThrow();
       expect(() => assertTenantAdmin(decoded, "tenant-b")).toThrow("TENANT_ADMIN_FORBIDDEN");
       const coachScope = learningCoachAccessFromClaims(decoded);
@@ -90,7 +95,7 @@ describe.runIf(Boolean(emulatorHost && firestoreHost))("Firebase Auth/Firestore 
       await new Promise(resolve => setTimeout(resolve, 1250));
       const tokenAfter = await signIn(email, password);
       const updated = await auth!.verifyIdToken(tokenAfter, true);
-      expect(authorizedAdminTenants(updated)).toEqual([]);
+      expect(scopedTenants(updated)).toEqual([]);
       expect(learningCoachAccessFromClaims(updated)).toMatchObject({
         unrestricted: false, institutionalAdmin: true,
         tenantIds: [], learnerIds: [],
@@ -156,7 +161,7 @@ describe.runIf(Boolean(emulatorHost && firestoreHost))("Firebase Auth/Firestore 
       });
       const withAdmin = await signIn(email, password);
       const current = await auth!.verifyIdToken(withAdmin, true);
-      expect(authorizedAdminTenants(current)).toEqual(["tenant-a"]);
+      expect(scopedTenants(current)).toEqual(["tenant-a"]);
       expect(() => assertTenantAdmin(current, "tenant-b")).toThrow("TENANT_ADMIN_FORBIDDEN");
 
       const revokeDraft = await execute("revoke");
