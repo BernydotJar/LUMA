@@ -65,6 +65,30 @@ jobs:
           src/lib/learning-store.emulator.test.ts
           src/lib/live-classroom-attendance.emulator.test.ts"
 
+  identity-roles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - run: npm ci
+      - name: Exercise role grant, token revocation, and Firestore audit
+        run: >-
+          npx --yes firebase-tools@15.30.2
+          emulators:exec
+          --project demo-luma-role-provisioning
+          --only auth,firestore
+          "npm run test:run --
+          src/lib/tenant-admin-auth.emulator.test.ts
+          --maxWorkers=1"
+
   browser:
     runs-on: ubuntu-latest
     timeout-minutes: 20

@@ -49,3 +49,17 @@ For revocation use `--action revoke` in the dry-run AND the apply step. Multiple
 4. Confirm independent enterprise learner-data controls: `LUMA_LEARNING_ACCESS_MODE=entitled`, scoped program/tenant storage, provider settings and real signed-in purchase or institutional entitlement. `showcase` remains a demo profile.
 
 See `docs/enterprise/tenant-isolation-contract.md`.
+
+## Reproducible authorization integration gate
+
+CI includes an independent `identity-roles` job, using **only** local Auth and Firestore emulators with the `demo-luma-role-provisioning` project (no production credentials or real accounts). The integration test creates a disposable verified user, signs in, checks the server's privileged access path and denied foreign-tenant classroom admission, then revokes and verifies that the old token is invalid. It separately executes the **actual provisioning CLI** through read-only preview, plan-hash-confirmed grant and revoke, confirming Firebase custom claims and durable Firestore audit records for both operations.
+
+To run locally:
+
+```bash
+npx firebase-tools@15.30.2 emulators:exec \
+  --project demo-luma-role-provisioning --only auth,firestore \
+  'npm run test:run -- src/lib/tenant-admin-auth.emulator.test.ts --maxWorkers=1'
+```
+
+**Boundary:** emulator evidence demonstrates application integration, not Google IAM permissions of the production App Hosting service account. Production release still requires a controlled verified test-admin role assignment and revocation with actual project IAM, no real learner data, strict entitlement mode and tenant-scoped Firestore paths. Never claim that a passing emulator test proves a signed enterprise-pilot acceptance.
