@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "21a9b8ca-8e01-49b6-a961-a69b0017f09c",
-  "event_count": 680,
+  "last_event_id": "efc1c6b8-4813-4537-8b26-38413b308a44",
+  "event_count": 685,
   "ready_nodes": [
     "LUMA-036-liquid-glass-refraction-v2"
   ],
@@ -1525,7 +1525,11 @@
         "233f3bcd-9ab0-48d5-85c4-1d087ca2137b",
         "246f3ad5-707d-4b71-a5e0-6015cf55b3e2",
         "4db84fe6-dee9-4577-93ce-8ea4d0a25c8b",
-        "b771aa18-5b18-42a0-b4ed-f6141c034da2"
+        "5249e035-2f8b-4f5f-a80c-b57405658f5f",
+        "a5db06a1-5818-491b-ac77-2d664e92875a",
+        "b771aa18-5b18-42a0-b4ed-f6141c034da2",
+        "b7864ded-8777-4521-a94a-ed1dc1f8022e",
+        "e3c32956-8fd2-4d18-a96f-5413cbdaa589"
       ],
       "approval_count": 0
     }
