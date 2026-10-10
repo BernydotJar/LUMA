@@ -5,93 +5,84 @@ import { useState } from "react";
 import {
   ArrowRight,
   BookOpenCheck,
-  Check,
   ChevronDown,
+  Clock3,
   ExternalLink,
   Sparkles,
-  Timer,
 } from "lucide-react";
-import { SemanticObject } from "@/components/semantic-object";
 import type { RankedLearningAction } from "@/types/learning";
 import styles from "./learner-components.module.css";
 
-export function NextActionCard({ action }: { action: RankedLearningAction }) {
+export function NextActionCard({
+  action,
+  personalized = true,
+  variant = "standard",
+}: {
+  action: RankedLearningAction;
+  personalized?: boolean;
+  variant?: "hero" | "standard";
+}) {
   const [showReason, setShowReason] = useState(false);
   const actionHref = action.href ?? "/learn/experiences";
+  const reasonCopy = personalized
+    ? action.reason
+    : "Una práctica del programa para explorar tu punto de partida. Todavía no se han evaluado tus capacidades.";
   const actionKindLabel =
-    action.kind === "continue"
-      ? "Siguiente reto"
-      : action.kind === "review"
-        ? "Refuerzo recomendado"
-        : action.kind === "diagnostic"
-          ? "Comprobación breve"
-          : action.kind === "simulation"
-            ? "Simulación"
-            : "Práctica guiada";
+    action.kind === "review" ? "Refuerzo"
+      : action.kind === "diagnostic" ? "Diagnóstico"
+        : action.kind === "simulation" ? "Simulación"
+          : action.kind === "continue" ? "Siguiente paso" : "Práctica guiada";
 
   return (
-    <section className={`${styles.nextAction} content-surface`} aria-labelledby="next-action-title">
-      <div className={styles.nextActionGlow} aria-hidden="true" />
+    <section
+      className={styles.nextAction + " content-surface"}
+      data-variant={variant}
+      aria-labelledby="next-action-title"
+    >
       <div className={styles.nextActionTop}>
-        <span className="eyebrow"><span className="eyebrow-dot" /> Tu siguiente movimiento</span>
-        <div className={styles.nextActionMeta}>
-          <span><Timer size={14} /> {action.minutes} min</span>
-          <span><Sparkles size={14} /> Adaptado hoy</span>
-        </div>
+        <span className={styles.practiceEyebrow}>
+          <Sparkles size={15} aria-hidden="true" />
+          PARA CONTINUAR
+        </span>
+        <span className={styles.practiceDuration}><Clock3 size={15} aria-hidden="true" /> {action.minutes} min</span>
       </div>
 
       <div className={styles.nextActionContent}>
-        <span className={styles.actionObject} aria-hidden="true">
-          <SemanticObject variant="prism" size="md" />
-        </span>
         <div>
-          <p className={styles.kicker}>{actionKindLabel} · aplicación real</p>
+          <p className={styles.kicker}>{actionKindLabel}</p>
           <h2 id="next-action-title">{action.title}</h2>
           <p className={styles.actionDescription}>{action.description}</p>
         </div>
       </div>
 
-      <div className={styles.actionReasonStrip}>
-        <span><Check size={15} /> Alineado con tu objetivo</span>
-        <span><Check size={15} /> {Math.round(action.confidence * 100)}% de confianza de recomendación</span>
-        <span><Check size={15} /> Cabe en tus {action.minutes} minutos</span>
-      </div>
-
       <div className={styles.nextActionFooter}>
         <Link className="button-primary" href={actionHref}>
-          Continuar · {action.minutes} min <ArrowRight size={17} />
+          {personalized ? "Continuar" : "Empezar práctica"} · {action.minutes} min
+          <ArrowRight size={18} aria-hidden="true" />
         </Link>
         <button
           className={styles.whyButton}
           type="button"
-          onClick={() => setShowReason((current) => !current)}
+          aria-controls="practice-recommendation-explanation"
           aria-expanded={showReason}
+          onClick={() => setShowReason((current) => !current)}
         >
-          ¿Por qué esta práctica?
-          <ChevronDown
-            size={16}
-            style={{ transform: showReason ? "rotate(180deg)" : undefined }}
-          />
+          ¿Por qué esta práctica? <ChevronDown size={16} aria-hidden="true" />
         </button>
       </div>
-
       {showReason && (
-        <div className={styles.explanationPanel}>
-          <div className={styles.explanationLead}>
-            <strong>Lo que LUMA observó</strong>
-            <p>{action.reason}</p>
-          </div>
-          <dl>
-            <div><dt>Señal</dt><dd>{action.reason}</dd></div>
-            <div><dt>Lectura</dt><dd>LUMA priorizó esta acción frente a las alternativas que compiten por tu tiempo disponible.</dd></div>
-            <div><dt>Siguiente señal</dt><dd>Tu resultado volverá a ordenar la ruta; completar contenido por sí solo no equivale a dominio.</dd></div>
-          </dl>
-          <div className={styles.explanationFooter}>
-            <p className={styles.inferenceNote}>Hipótesis de aprendizaje: {Math.round(action.confidence * 100)}% de confianza. Se actualiza con cada nueva señal.</p>
-            <a href={action.sourceUrl} target="_blank" rel="noreferrer">
-              <BookOpenCheck size={14} /> Ver fuente <ExternalLink size={12} />
+        <div className={styles.explanationPanel} id="practice-recommendation-explanation">
+          <strong>El motivo de esta sugerencia</strong>
+          <p>{reasonCopy}</p>
+          <p className={styles.inferenceNote}>
+            Es una orientación, no una certificación de dominio. Las prácticas evaluadas ayudan a revisarla.
+          </p>
+          {action.sourceUrl && (
+            <a href={action.sourceUrl} target="_blank" rel="noopener noreferrer">
+              <BookOpenCheck size={15} aria-hidden="true" /> Ver material de referencia
+              <ExternalLink size={13} aria-hidden="true" />
             </a>
-          </div>
+          )}
         </div>
       )}
     </section>

@@ -1,57 +1,61 @@
-import { Check, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowUpRight, CircleCheck, Layers3 } from "lucide-react";
 import { SemanticObject } from "@/components/semantic-object";
 import type { TwinDimension } from "@/types/learning";
 import styles from "./learning-pulse.module.css";
 
-const signalLabel: Record<string, { label: string; state: string }> = {
-  knowledge: { label: "Comprensión", state: "Sólida" },
-  application: { label: "Aplicación", state: "En desarrollo" },
-  confidence: { label: "Confianza", state: "Creciendo" },
+const dimensionLabel: Record<string, string> = {
+  knowledge: "Comprensión",
+  application: "Aplicación",
+  confidence: "Confianza personal",
 };
 
-export function LearningPulse({ dimensions }: { dimensions: TwinDimension[] }) {
+const bandLabel: Record<TwinDimension["band"], string> = {
+  strong: "Base sólida",
+  developing: "En desarrollo",
+  "needs-attention": "Necesita práctica",
+};
+
+export function LearningPulse({
+  dimensions,
+  personalized,
+  hasVerifiedEvidence,
+}: {
+  dimensions: TwinDimension[];
+  personalized: boolean;
+  hasVerifiedEvidence: boolean;
+}) {
   const focus = dimensions.filter((item) =>
     ["knowledge", "application", "confidence"].includes(item.id),
   );
-
   return (
     <aside className={styles.panel} aria-labelledby="learning-pulse-title">
-      <div className={styles.panelGlow} aria-hidden="true" />
-      <header>
-        <span className={styles.kicker}><Sparkles size={14} /> Tu progreso</span>
-        <span className={styles.progressMark} aria-hidden="true">
-          <Check size={16} />
-        </span>
+      <header className={styles.header}>
+        <span className={styles.eyebrow}><Layers3 size={15} aria-hidden="true" /> TU MAPA DE HABILIDADES</span>
+        <span className={styles.orbit} aria-hidden="true"><SemanticObject variant="orbit" size="sm" /></span>
       </header>
-
-      <div className={styles.stage} aria-hidden="true">
-        <SemanticObject
-          variant="orbit"
-          size="lg"
-          className={styles.progressObject}
-        />
-        {focus.map((item, index) => {
-          const signal = signalLabel[item.id];
+      <h2 id="learning-pulse-title">Una mirada a tu recorrido.</h2>
+      <p className={styles.description}>
+        {personalized
+          ? "Tu perfil orienta la práctica. El dominio solo se confirma con criterios evaluados."
+          : "Al empezar, podrás registrar tus experiencias y comprobar qué vas desarrollando."}
+      </p>
+      <dl className={styles.metrics} aria-label="Señales de aprendizaje">
+        {focus.map((item) => {
+          const status = !personalized ? "Por explorar"
+            : item.id === "confidence" ? "Autopercepción"
+              : item.id === "application" && hasVerifiedEvidence
+                ? bandLabel[item.band] : "Por comprobar";
           return (
-            <span
-              className={styles.floatingMetric}
-              data-index={index}
-              key={item.id}
-            >
-              <small>{signal.label}</small>
-              <strong>{signal.state}</strong>
-            </span>
+            <div className={styles.metric} key={item.id}>
+              <dt><CircleCheck size={15} aria-hidden="true" /> {dimensionLabel[item.id]}</dt>
+              <dd>{status}</dd>
+            </div>
           );
         })}
-      </div>
-
-      <div className={styles.readout}>
-        <span className={styles.signal}><TrendingUp size={14} /> Progreso esta semana</span>
-        <h2 id="learning-pulse-title">La aplicación es tu foco de hoy.</h2>
-        <p>
-          La práctica convierte reconocimiento en una respuesta que puedes usar
-          en situaciones reales.
-        </p>
+      </dl>
+      <div className={styles.note}>
+        <ArrowUpRight size={15} aria-hidden="true" />
+        <span>{hasVerifiedEvidence ? "Consulta el registro de tu práctica para revisar los criterios." : "Tu siguiente práctica puede aportar la primera evidencia."}</span>
       </div>
     </aside>
   );

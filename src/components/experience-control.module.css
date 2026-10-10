@@ -164,3 +164,29 @@
 .themeSwitch button {
   min-height: 40px;
 }
+
+
+.learnerThemeButton {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: var(--nav-accent, var(--ink));
+  background: var(--nav-surface, var(--glass));
+  cursor: pointer;
+  transition: background .18s ease, border-color .18s ease;
+}
+.learnerThemeButton:hover {
+  border-color: var(--nav-accent, var(--accent));
+  background: var(--nav-active, var(--glass-strong));
+}
+.learnerThemeButton:focus-visible {
+  outline: 3px solid var(--nav-accent, var(--accent));
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .learnerThemeButton { transition: none; }
+}

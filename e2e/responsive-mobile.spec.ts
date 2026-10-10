@@ -46,7 +46,7 @@ test.describe("responsive mobile product", () => {
   test("practice suggestions use horizontal snap rather than stacked dashboard cards", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "mobile", "Mobile-specific interaction check.");
     await page.goto("/learn");
-    await expect(page.getByRole("heading", { name: /Una idea se vuelve útil cuando la pruebas/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Para seguir explorando/i })).toBeVisible();
 
     const behavior = await page.evaluate(() => {
       const strip = document.querySelector('[class*="fieldNotes"]');

@@ -953,3 +953,96 @@
     background: var(--surface-strong) !important;
   }
 }
+
+
+
+/* Learner workspace: the lesson is the protagonist, not the control plane. */
+:global(html[data-theme="se"]) .shell[data-mode="learner"] {
+  --nav-page: #f5f6f5;
+  --nav-surface: rgba(255,255,255,.94);
+  --nav-ink: #26313b;
+  --nav-muted: #647078;
+  --nav-accent: #844b67;
+  --nav-line: rgba(47,58,61,.12);
+  --nav-active: #f2eaf0;
+}
+:global(html[data-theme="light"]) .shell[data-mode="learner"] {
+  --nav-page: #f6f7f8;
+  --nav-surface: rgba(255,255,255,.92);
+  --nav-ink: #25303a;
+  --nav-muted: #67737b;
+  --nav-accent: #456ba8;
+  --nav-line: rgba(42,56,67,.12);
+  --nav-active: #eaf1fc;
+}
+:global(html[data-theme="dark"]) .shell[data-mode="learner"] {
+  --nav-page: #21191d;
+  --nav-surface: rgba(45,35,40,.96);
+  --nav-ink: #f3e8dc;
+  --nav-muted: #c5b6ac;
+  --nav-accent: #edc78f;
+  --nav-line: rgba(249,231,218,.14);
+  --nav-active: rgba(237,199,143,.13);
+}
+.shell[data-mode="learner"] { background: var(--nav-page); }
+.shell[data-mode="learner"] .sidebar {
+  background: var(--nav-surface);
+  border-color: var(--nav-line);
+  box-shadow: 0 10px 32px rgba(33,43,50,.035);
+}
+.shell[data-mode="learner"] .workspaceLabel {
+  background: transparent;
+  border-color: var(--nav-line);
+}
+.shell[data-mode="learner"] .workspaceLabel span,
+.shell[data-mode="learner"] .navigation a,
+.shell[data-mode="learner"] .sidebarBottom a {
+  color: var(--nav-muted);
+}
+.shell[data-mode="learner"] .workspaceLabel strong { color: var(--nav-ink); }
+.shell[data-mode="learner"] .navigation a:hover,
+.shell[data-mode="learner"] .sidebarBottom a:hover {
+  color: var(--nav-ink);
+  background: var(--nav-active);
+  transform: none;
+}
+:global(html[data-theme]) .shell[data-mode="learner"] .navigation .activeNav {
+  border: 1px solid var(--nav-line);
+  color: var(--nav-accent) !important;
+  background: var(--nav-active) !important;
+  box-shadow: none !important;
+}
+:global(html[data-theme]) .shell[data-mode="learner"] .activeDot {
+  background: var(--nav-accent) !important;
+}
+.shell[data-mode="learner"] .sidebarBottom { border-color: var(--nav-line); }
+.shell[data-mode="learner"] .topbar {
+  background: linear-gradient(to bottom, var(--nav-page) 72%, transparent) !important;
+  box-shadow: none;
+}
+.shell[data-mode="learner"] .pageTitle h1 { color: var(--nav-ink); font-weight: 700; }
+.shell[data-mode="learner"] .pageTitle p { color: var(--nav-muted); }
+.shell[data-mode="learner"] .iconButton {
+  border: 1px solid var(--nav-line);
+  background: var(--nav-surface) !important;
+  color: var(--nav-ink);
+  box-shadow: none !important;
+}
+.shell[data-mode="learner"] .content {
+  max-width: 1500px;
+  padding-top: 9px;
+}
+@media (max-width: 760px) {
+  :global(html[data-theme]) .shell[data-mode="learner"] .mobileNav {
+    background: var(--nav-surface) !important;
+    border-color: var(--nav-line) !important;
+    box-shadow: 0 12px 28px rgba(31,39,44,.09) !important;
+  }
+  :global(html[data-theme]) .shell[data-mode="learner"] .mobileNav .mobileActive {
+    color: var(--nav-accent) !important;
+    background: var(--nav-active) !important;
+    box-shadow: none !important;
+  }
+  .shell[data-mode="learner"] .content { padding-top: 5px; }
+  .shell[data-mode="learner"] .topbar { min-height: 69px; }
+}

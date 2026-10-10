@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, MoveRight, Sparkles } from "lucide-react";
+import { ArrowRight, MoveRight, BookOpen } from "lucide-react";
 import { SemanticObject } from "@/components/semantic-object";
 import { featuredLearningExperiences } from "@/lib/learning-content";
 import styles from "./experience-shelf.module.css";
@@ -9,10 +9,10 @@ export function ExperienceShelf() {
     <section className={styles.section} aria-labelledby="experience-shelf-title">
       <header className={styles.heading}>
         <div>
-          <span className="eyebrow"><Sparkles size={14} /> Prácticas sugeridas</span>
-          <h2 id="experience-shelf-title">Una idea se vuelve útil cuando la pruebas.</h2>
+          <span className="eyebrow"><BookOpen size={14} /> OTRAS EXPERIENCIAS</span>
+          <h2 id="experience-shelf-title">Para seguir explorando.</h2>
         </div>
-        <Link href="/learn/experiences">Explorar todas <ArrowRight size={15} /></Link>
+        <Link href="/learn/experiences">Ver todas <ArrowRight size={15} /></Link>
       </header>
 
       <div className={styles.fieldNotes}>
