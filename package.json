@@ -15,7 +15,9 @@
     "verify": "npm run lint && npm run typecheck && npm run test:run && npm run build",
     "audit:visual": "node scripts/visual-audit.mjs",
     "audit:glass": "node scripts/glass-adversarial-audit.mjs",
-    "audit:uiux": "node scripts/uiux-adversarial-audit.mjs"
+    "audit:uiux": "node scripts/uiux-adversarial-audit.mjs",
+    "prebuild": "node scripts/release/manifest.mjs",
+    "test:release": "vitest run scripts/release/policy.test.mjs"
   },
   "dependencies": {
     "@firebase/app": "0.16.2",
@@ -41,6 +43,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
+    "google-auth-library": "11.1.0",
     "typescript": "^5",
     "vitest": "5.0.3"
   },

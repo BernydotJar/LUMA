@@ -1,0 +1,63 @@
+{
+  "project": "luma-learning-intelligence",
+  "provider": "projects/161313706596/locations/global/workloadIdentityPools/github-luma/providers/production",
+  "email": "luma-github-release@luma-learning-intelligence.iam.gserviceaccount.com",
+  "roleName": "projects/luma-learning-intelligence/roles/lumaAppHostingRelease",
+  "permissions": [
+    "firebaseapphosting.backends.get",
+    "firebaseapphosting.builds.create",
+    "firebaseapphosting.builds.get",
+    "firebaseapphosting.operations.get",
+    "firebaseapphosting.rollouts.create",
+    "firebaseapphosting.rollouts.get",
+    "firebaseapphosting.traffic.get",
+    "resourcemanager.projects.get",
+    "serviceusage.services.use"
+  ],
+  "attributeCondition": "assertion.repository_id == '1403901485' && assertion.repository_owner_id == '16258017' && assertion.ref == 'refs/heads/main' && assertion.sub == 'repo:BernydotJar/LUMA:environment:production' && assertion.workflow_ref == 'BernydotJar/LUMA/.github/workflows/quality.yml@refs/heads/main' && assertion.event_name == 'push'",
+  "sourceBucket": "firebaseapphosting-sources-161313706596-us-central1",
+  "mode": "APPLY",
+  "operations": [
+    {
+      "operation": "Verified existing project and source bucket",
+      "at": "2026-10-10T05:54:34.126Z"
+    },
+    {
+      "operation": "Enabled identity API sts.googleapis.com",
+      "at": "2026-10-10T05:54:36.166Z"
+    },
+    {
+      "operation": "Created minimal App Hosting release role",
+      "at": "2026-10-10T05:54:37.445Z"
+    },
+    {
+      "operation": "Created dedicated keyless release service account",
+      "at": "2026-10-10T05:54:38.184Z"
+    },
+    {
+      "operation": "Created dedicated WIF pool",
+      "at": "2026-10-10T05:54:43.062Z"
+    },
+    {
+      "operation": "Created repository/owner/main/environment/workflow/event-restricted WIF provider",
+      "at": "2026-10-10T05:54:47.942Z"
+    },
+    {
+      "operation": "Bound only the approved repository principal to release identity",
+      "at": "2026-10-10T05:54:48.584Z"
+    },
+    {
+      "operation": "Granted custom release role; existing IAM bindings preserved",
+      "at": "2026-10-10T05:54:50.009Z"
+    },
+    {
+      "operation": "Granted create-only source uploads on the existing source bucket",
+      "at": "2026-10-10T05:54:51.302Z"
+    },
+    {
+      "operation": "Configuration read back; no user-managed keys; no runtime or traffic mutation",
+      "at": "2026-10-10T05:54:51.463Z"
+    }
+  ],
+  "status": "CONFIGURED_NOT_YET_OIDC_EXECUTION_VERIFIED"
+}

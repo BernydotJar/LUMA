@@ -42,7 +42,9 @@ test.describe("LUMA adaptive learning loop", () => {
     });
 
     await expect(page.getByText("Gestionar mejor mis emociones", { exact: true }).first()).toBeVisible();
-    await expect(page.getByText(/Tienes 8 minutos/i)).toBeVisible();
+    // The editorial home removed the redundant time-budget sentence. Verify the
+    // persisted input used by the adaptive planner, not obsolete presentation copy.
+    await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("luma-onboarding") ?? "{}").minutes)).toBe(8);
     const learnerAAction = (await page.locator("#next-action-title").textContent())?.trim();
 
     await completeOnboarding(page, {
@@ -52,7 +54,7 @@ test.describe("LUMA adaptive learning loop", () => {
     });
 
     await expect(page.getByText("Comunicarme con más claridad", { exact: true }).first()).toBeVisible();
-    await expect(page.getByText(/Tienes 35 minutos/i)).toBeVisible();
+    await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("luma-onboarding") ?? "{}").minutes)).toBe(35);
     const learnerBAction = (await page.locator("#next-action-title").textContent())?.trim();
 
     await completeOnboarding(page, {

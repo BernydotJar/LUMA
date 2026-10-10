@@ -1,0 +1,30 @@
+{
+  "project": "luma-learning-intelligence",
+  "provider": "projects/161313706596/locations/global/workloadIdentityPools/github-luma/providers/production",
+  "email": "luma-github-release@luma-learning-intelligence.iam.gserviceaccount.com",
+  "roleName": "projects/luma-learning-intelligence/roles/lumaAppHostingRelease",
+  "permissions": [
+    "firebaseapphosting.backends.get",
+    "firebaseapphosting.builds.create",
+    "firebaseapphosting.builds.get",
+    "firebaseapphosting.operations.get",
+    "firebaseapphosting.rollouts.create",
+    "firebaseapphosting.rollouts.get",
+    "firebaseapphosting.traffic.get",
+    "resourcemanager.projects.get",
+    "serviceusage.services.use"
+  ],
+  "attributeCondition": "assertion.repository_id == '1403901485' && assertion.repository_owner_id == '16258017' && assertion.ref == 'refs/heads/main' && assertion.sub == 'repo:BernydotJar/LUMA:environment:production' && assertion.workflow_ref == 'BernydotJar/LUMA/.github/workflows/quality.yml@refs/heads/main' && assertion.event_name == 'push'",
+  "sourceBucket": "firebaseapphosting-sources-161313706596-us-central1",
+  "mode": "INSPECT",
+  "operations": [
+    {
+      "operation": "Verified existing project and source bucket",
+      "at": "2026-10-10T06:13:06.648Z"
+    },
+    {
+      "operation": "INSPECT_ONLY_NO_CHANGES",
+      "at": "2026-10-10T06:13:06.650Z"
+    }
+  ]
+}

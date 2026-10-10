@@ -3,7 +3,7 @@ name: Product quality
 on:
   pull_request:
   push:
-    branches: [main, "feat/**"]
+    branches: [main]
 
 permissions:
   contents: read
@@ -11,10 +11,12 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: npm
@@ -22,14 +24,36 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run test:run
+      - name: Prepare the exact committed release source
+        run: node scripts/release/prepare.mjs
+        env:
+          RELEASE_DIR: ${{ runner.temp }}/release
       - run: npm run build
+      - name: Preserve the production build for browser verification
+        run: tar -czf "$RUNNER_TEMP/production-build.tgz" .next
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: production-build-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/production-build.tgz
+          if-no-files-found: error
+          retention-days: 7
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-source-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/release/source.zip
+            ${{ runner.temp }}/release/manifest.json
+          if-no-files-found: error
+          retention-days: 30
 
   security:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
           cache: npm
@@ -41,12 +65,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
           cache: npm
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
         with:
           distribution: temurin
           java-version: "21"
@@ -69,12 +95,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
           cache: npm
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
         with:
           distribution: temurin
           java-version: "21"
@@ -90,23 +118,113 @@ jobs:
           --maxWorkers=1"
 
   browser:
+    needs: [verify]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: production-build-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verified-build
+      - run: tar -xzf "$RUNNER_TEMP/verified-build/production-build.tgz"
       - run: npm run test:e2e
         env:
           CI: "true"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: playwright-report
-          path: evidence/playwright-report
-          if-no-files-found: ignore
-          retention-days: 7
+          name: playwright-report-${{ github.run_attempt }}
+          path: |
+            evidence/playwright-report
+            test-results
+          if-no-files-found: error
+          retention-days: 14
+
+  deploy:
+    needs: [verify, security, firestore, identity-roles, browser]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment:
+      name: production
+      url: https://luma--luma-learning-intelligence.us-central1.hosted.app
+    concurrency:
+      group: luma-production
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    env:
+      RELEASE_DIR: ${{ runner.temp }}/release
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: release-source-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/release
+      - name: Verify keyless deployment configuration
+        env:
+          PROVIDER: ${{ vars.LUMA_WIF_PROVIDER }}
+          SERVICE_ACCOUNT: ${{ vars.LUMA_DEPLOY_SERVICE_ACCOUNT }}
+        run: |
+          test -n "$PROVIDER"
+          test -n "$SERVICE_ACCOUNT"
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          project_id: luma-learning-intelligence
+          workload_identity_provider: ${{ vars.LUMA_WIF_PROVIDER }}
+          service_account: ${{ vars.LUMA_DEPLOY_SERVICE_ACCOUNT }}
+      - name: Deploy the validated source to the existing backend
+        id: promote
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/release/apphosting.mjs deploy
+      - name: Verify production SHA, routes, roles, appearance, and navigation
+        run: node scripts/release/smoke.mjs
+      - name: Validate rollback without changing live traffic
+        run: node scripts/release/apphosting.mjs rollback-validate
+      - name: Finalize verified release
+        run: node scripts/release/apphosting.mjs finalize
+      - name: Restore previous verified revision after failure when safe
+        if: failure() && steps.promote.outcome != 'skipped'
+        run: |
+          if test -f "$RELEASE_DIR/release-result.json"; then
+            node scripts/release/apphosting.mjs recover
+          fi
+      - name: Publish release decision
+        if: always()
+        run: |
+          if test -f "$RELEASE_DIR/release-result.json"; then
+            node -e 'const fs=require("node:fs"); const r=JSON.parse(fs.readFileSync(process.env.RELEASE_DIR+"/release-result.json"));fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,`## LUMA release\nStatus: ${r.status}\nCommit: ${r.gitSha}\nBuild: ${r.buildId ?? "not created"}\n`);'
+          else
+            echo '## Release blocked before promotion' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: production-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/release/manifest.json
+            ${{ runner.temp }}/release/release-result.json
+            ${{ runner.temp }}/release/smoke.json
+            ${{ runner.temp }}/release/screenshots
+          if-no-files-found: error
+          retention-days: 90

@@ -23,6 +23,8 @@
 # misc
 .DS_Store
 *.pem
+# Ephemeral GitHub OIDC credentials are not repository content.
+gha-creds-*.json
 
 # debug
 npm-debug.log*
