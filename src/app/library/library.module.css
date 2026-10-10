@@ -452,11 +452,23 @@
 
 @media (max-width: 760px) {
   .hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero > div { min-width: 0; }
+  .hero h2 {
+    font-size: clamp(2rem, 8vw, 2.6rem);
+    overflow-wrap: anywhere;
   }
 
   .qualityScore {
     min-height: 180px;
+    min-width: 0;
+  }
+
+  .qualityScore > strong {
+    font-size: clamp(2.45rem, 9vw, 3.5rem);
+    overflow-wrap: anywhere;
   }
 
   .pipeline {

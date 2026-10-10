@@ -1,0 +1,95 @@
+
+> luma-learning-intelligence@0.1.0 prebuild
+> node scripts/release/manifest.mjs
+
+
+> luma-learning-intelligence@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.3.8 (webpack)
+✓ Running next.config.ts took 45ms
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 11.9s
+  Running TypeScript ...
+  Finished TypeScript in 7.1s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/52) ...
+  Generating static pages using 11 workers (13/52)
+  Generating static pages using 11 workers (26/52)
+  Generating static pages using 11 workers (39/52)
+✓ Generating static pages using 11 workers (52/52) in 700ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/certificates
+├ ƒ /api/certificates/[id]
+├ ƒ /api/certificates/[id]/download
+├ ƒ /api/certificates/[id]/revoke
+├ ƒ /api/certificates/completions
+├ ƒ /api/certificates/console
+├ ƒ /api/certificates/issuers
+├ ƒ /api/certificates/mine
+├ ƒ /api/certificates/verify/[id]
+├ ƒ /api/certificates/webhooks/docusign
+├ ƒ /api/coach/interventions
+├ ƒ /api/coach/learners
+├ ƒ /api/coach/learners/[learnerId]
+├ ƒ /api/commerce/access
+├ ƒ /api/commerce/admin/access-trace
+├ ƒ /api/commerce/admin/mappings
+├ ƒ /api/commerce/webhooks/[provider]
+├ ƒ /api/content-intelligence/search
+├ ƒ /api/enrollments/institutional
+├ ƒ /api/enrollments/institutional/[id]
+├ ƒ /api/enrollments/institutional/bulk
+├ ƒ /api/enrollments/institutional/offerings
+├ ƒ /api/health
+├ ƒ /api/learning/events
+├ ƒ /api/learning/plan
+├ ƒ /api/live/classrooms/[offeringId]/[sessionId]/attendance
+├ ƒ /api/live/classrooms/[offeringId]/[sessionId]/close
+├ ƒ /api/live/classrooms/[offeringId]/[sessionId]/moderate
+├ ƒ /api/live/classrooms/[offeringId]/[sessionId]/token
+├ ƒ /api/live/webhooks
+├ ƒ /api/programs/admin/offerings
+├ ƒ /api/programs/admin/offerings/[offeringId]/sessions
+├ ƒ /api/programs/my-schedule
+├ ƒ /api/reflections
+├ ƒ /api/tutor
+├ ƒ /api/version
+├ ƒ /classroom/[offeringId]/[sessionId]
+├ ○ /experience
+├ ○ /iconography
+├ ○ /learn
+├ ○ /learn/certificates
+├   /learn/experience/[slug]
+│ ├ ● /learn/experience/congruencia-tres-canales
+│ ├ ● /learn/experience/calibracion-observar-antes-de-interpretar
+│ ├ ● /learn/experience/rapport-sintonia-con-respeto
+│ └ ● [+4 more paths]
+├ ○ /learn/experiences
+├ ○ /learn/session/pas
+├ ○ /library
+├ ○ /login
+├ ○ /onboarding
+├ ○ /preview/liquid-light
+├ ○ /studio
+├ ○ /studio/certificates
+├ ○ /studio/class-intelligence
+├ ○ /studio/enrollments
+├ ƒ /studio/learners/[learnerId]
+├ ○ /studio/learners/mariana
+├ ○ /studio/programs
+├ ○ /studio/reflections
+├ ○ /twin
+└ ƒ /verify/[id]
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand

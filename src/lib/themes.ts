@@ -20,7 +20,7 @@ export const lumaThemes: readonly LumaTheme[] = [
     label: seresDeExcelenciaBrand.displayName,
     shortLabel: seresDeExcelenciaBrand.shortName,
     description:
-      "Una interpretación premium de la identidad institucional: azul luminoso, rosa transformación y ciruela profunda.",
+      "Azul, rosa y ciruela inspirados en los recursos públicos de Seres; códigos pendientes de validación institucional.",
     source: seresDeExcelenciaBrand.sourceUrl,
     palette: seresDeExcelenciaBrand.palette,
     iconographyPath: "/iconography/se",

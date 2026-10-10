@@ -1771,6 +1771,47 @@
       "metadata": {
         "authorization": "Explicit user request to implement the supplied enterprise CI/CD brief; no production release before verification"
       }
+    },
+    {
+      "id": "LUMA-067-se-liquid-glass-brand-v4",
+      "kind": "product-surface",
+      "title": "Seres de Excelencia optical glass and public-asset brand provenance",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-056-liquid-glass-functional-layer-v3"
+      ],
+      "capability": "se-optical-material",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/components/experience-console.tsx",
+        "src/components/experience-console.module.css",
+        "src/components/app-shell.module.css",
+        "src/lib/themes.ts",
+        "README.md",
+        "docs/design/**",
+        "docs/iconography/README.md",
+        "specs/067-seres-liquid-glass-optical-layer.md",
+        "e2e/seres-liquid-glass.spec.ts",
+        "scripts/audit-seres-glass.mjs",
+        "scripts/finalize_se_liquid_glass_graph.py",
+        "evidence/se-liquid-glass-v4/**",
+        "evidence/glass-adversarial/report.json",
+        "evidence/graph-harness-status.json",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "src/app/library/library.module.css",
+        "src/components/twin-detail.module.css",
+        "scripts/audit-seres-webkit.mjs"
+      ],
+      "metadata": {
+        "brand_status": "public-reference-awaiting-owner-approval",
+        "extends": "LUMA-056-liquid-glass-functional-layer-v3",
+        "dependency_policy": "no-new-optical-runtime"
+      }
     }
   ]
 }

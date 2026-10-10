@@ -163,11 +163,70 @@
   box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
 }
 
+/* Seres: colored light is behind a bounded glass lens, never on the wordmark. */
 .themePreview[data-theme-preview="se"] {
+  isolation: isolate;
   background:
-    radial-gradient(circle at 85% 18%, rgba(255,67,140,.34), transparent 43%),
-    radial-gradient(circle at 8% 88%, rgba(0,162,241,.28), transparent 48%),
-    #ffffff;
+    radial-gradient(ellipse at 83% 22%, rgba(255,67,140,.36), transparent 47%),
+    radial-gradient(ellipse at 12% 82%, rgba(0,162,241,.34), transparent 51%),
+    linear-gradient(138deg, #e9f6ff, #fafcff 47%, #fff0f7 82%, #eff7ff);
+}
+
+.themePreview[data-theme-preview="se"]::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -55% -20%;
+  transform: rotate(-25deg);
+  background: linear-gradient(90deg,
+    transparent 18%, rgba(0,162,241,.20) 27%,
+    rgba(255,255,255,.08) 37%, rgba(255,67,140,.22) 48%,
+    rgba(255,255,255,.06) 58%, rgba(0,162,241,.13) 68%, transparent 77%);
+  pointer-events: none;
+}
+
+.seOpticalLens {
+  position: absolute;
+  z-index: 1;
+  inset: 20% 10% 20%;
+  border: 1px solid rgba(255,255,255,.9);
+  border-radius: 29px;
+  background: linear-gradient(145deg,
+    rgba(255,255,255,.48), rgba(255,255,255,.06) 56%, rgba(255,255,255,.19));
+  -webkit-backdrop-filter: blur(9px) saturate(1.26);
+  backdrop-filter: blur(9px) saturate(1.26);
+  transform: rotate(-4deg);
+  box-shadow:
+    0 17px 35px rgba(37,89,136,.13),
+    inset 1px 1px 0 rgba(255,255,255,.96),
+    inset -1px -1px 0 rgba(0,162,241,.18),
+    inset 0 0 25px rgba(255,255,255,.18);
+  pointer-events: none;
+}
+
+.seOpticalLens::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 27px;
+  background: radial-gradient(ellipse at 16% 5%, rgba(255,255,255,.58), transparent 52%);
+  pointer-events: none;
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .seOpticalLens { background: rgba(248,251,255,.84); }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .seOpticalLens {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgba(255,255,255,.94);
+  }
+}
+
+@media (prefers-contrast: more) {
+  .seOpticalLens { border-color: rgba(0,85,145,.56); }
 }
 
 .themePreview[data-theme-preview="light"] {

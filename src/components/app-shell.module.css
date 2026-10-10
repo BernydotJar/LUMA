@@ -1051,3 +1051,61 @@
   .shell[data-mode="learner"] .content { padding-top: 5px; }
   .shell[data-mode="learner"] .topbar { min-height: 69px; }
 }
+
+/* Seres optical shell: translucent functional navigation, never content cards. */
+:global(html[data-theme="se"]) .sidebar {
+  border-color: rgba(255,255,255,.87) !important;
+  background:
+    linear-gradient(149deg, rgba(255,255,255,.43), rgba(255,255,255,.06) 59%, rgba(255,255,255,.16)),
+    rgba(224,243,254,.36) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  backdrop-filter: blur(20px) saturate(1.2);
+  box-shadow:
+    0 24px 56px rgba(22,82,126,.13),
+    inset 1px 1px 0 rgba(255,255,255,.95),
+    inset -1px -1px 0 rgba(0,162,241,.12) !important;
+}
+
+:global(html[data-theme="se"]) .iconButton,
+:global(html[data-theme="se"]) .profileButton {
+  border-color: rgba(255,255,255,.84) !important;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.44), rgba(255,255,255,.07)),
+    rgba(229,245,255,.34) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.17);
+  backdrop-filter: blur(16px) saturate(1.17);
+  box-shadow:
+    0 8px 20px rgba(32,84,118,.09),
+    inset 1px 1px 0 rgba(255,255,255,.94),
+    inset -1px -1px 0 rgba(0,162,241,.12) !important;
+}
+
+:global(html[data-theme="se"]) .mobileNav {
+  border-color: rgba(255,255,255,.84) !important;
+  background:
+    linear-gradient(146deg, rgba(255,255,255,.46), rgba(255,255,255,.08)),
+    rgba(224,243,254,.42) !important;
+  box-shadow:
+    0 18px 42px rgba(22,82,126,.16),
+    inset 0 1px 0 rgba(255,255,255,.92) !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :global(html[data-theme="se"]) .sidebar,
+  :global(html[data-theme="se"]) .mobileNav,
+  :global(html[data-theme="se"]) .iconButton,
+  :global(html[data-theme="se"]) .profileButton {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: #fff !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :global(html[data-theme="se"]) .sidebar,
+  :global(html[data-theme="se"]) .mobileNav,
+  :global(html[data-theme="se"]) .iconButton,
+  :global(html[data-theme="se"]) .profileButton {
+    border-color: rgba(0,85,145,.42) !important;
+  }
+}
