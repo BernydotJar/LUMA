@@ -1,0 +1,35 @@
+{
+  "observedAt": "2026-10-10T06:17:05.954Z",
+  "backend": {
+    "name": "projects/luma-learning-intelligence/locations/us-central1/backends/luma",
+    "uri": "luma--luma-learning-intelligence.us-central1.hosted.app",
+    "repository": null
+  },
+  "build": {
+    "name": "projects/161313706596/locations/us-central1/backends/luma/builds/build-2026-10-10-001",
+    "state": "READY",
+    "gitSha": null,
+    "capacity": {
+      "cpu": 1,
+      "memoryMib": 512,
+      "concurrency": 80,
+      "maxInstances": 2
+    }
+  },
+  "traffic": {
+    "splits": [
+      {
+        "build": "projects/161313706596/locations/us-central1/backends/luma/builds/build-2026-10-10-001",
+        "percent": 100
+      }
+    ]
+  },
+  "rollbackValidation": {
+    "status": "PASS_REQUEST_VALIDATION_ONLY",
+    "validateOnly": true,
+    "operation": "",
+    "done": true,
+    "unchangedTraffic": true
+  },
+  "productionRelease": "NOT_YET_VERIFIED"
+}
