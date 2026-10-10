@@ -8,7 +8,9 @@ export function isInstitutionalAdmin(claims: Record<string, unknown>): boolean {
   return isPlatformSuperuser(claims) || claims.admin === true || claims.role === "admin";
 }
 
-export function authorizedAdminTenants(claims: Record<string, unknown>): string[] {
+export function authorizedAdminTenants(claims: {
+  adminTenantIds?: unknown; tenantIds?: unknown; tenantId?: unknown;
+}): string[] {
   // The dedicated role assignment is authoritative when provisioned, including
   // [] after revocation. Do not expand admin authority using learner/coach scopes.
   const explicit = Object.prototype.hasOwnProperty.call(claims, "adminTenantIds");

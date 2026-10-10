@@ -147,7 +147,7 @@ export function resolveClassroomRole(
     return "instructor";
   }
   if ((claims.admin === true || role === "admin") &&
-      authorizedAdminTenants(claims as Record<string, unknown>).includes(offering.tenantId)) {
+      authorizedAdminTenants(claims).includes(offering.tenantId)) {
     return "instructor";
   }
   if (
