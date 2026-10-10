@@ -1,0 +1,24 @@
+{
+  "status": "CONFIGURED_REQUIRES_WORKFLOW_EXECUTION",
+  "observedAt": "2026-10-10T06:47:04.354Z",
+  "provider": "projects/161313706596/locations/global/workloadIdentityPools/github-luma/providers/production",
+  "repository": {
+    "id": 1403901485,
+    "ownerId": 16258017,
+    "createdAt": "2026-10-04T04:43:35Z"
+  },
+  "githubOidcSettings": {
+    "use_default": true,
+    "use_immutable_subject": true,
+    "sub_claim_prefix": "repo:BernydotJar@16258017/LUMA@1403901485"
+  },
+  "beforeCondition": "assertion.repository_id == '1403901485' && assertion.repository_owner_id == '16258017' && assertion.ref == 'refs/heads/main' && assertion.sub == 'repo:BernydotJar/LUMA:environment:production' && assertion.workflow_ref == 'BernydotJar/LUMA/.github/workflows/quality.yml@refs/heads/main' && assertion.event_name == 'push'",
+  "expectedCondition": "assertion.repository_id == '1403901485' && assertion.repository_owner_id == '16258017' && assertion.ref == 'refs/heads/main' && assertion.sub == 'repo:BernydotJar@16258017/LUMA@1403901485:environment:production' && assertion.workflow_ref == 'BernydotJar/LUMA/.github/workflows/quality.yml@refs/heads/main' && assertion.event_name == 'push'",
+  "actualCondition": "assertion.repository_id == '1403901485' && assertion.repository_owner_id == '16258017' && assertion.ref == 'refs/heads/main' && assertion.sub == 'repo:BernydotJar@16258017/LUMA@1403901485:environment:production' && assertion.workflow_ref == 'BernydotJar/LUMA/.github/workflows/quality.yml@refs/heads/main' && assertion.event_name == 'push'",
+  "mappingUnchanged": true,
+  "issuerUnchanged": true,
+  "permissionChanges": [],
+  "scopeChanges": [],
+  "explanation": "Replaces the obsolete name-only subject with the exact immutable subject reported by GitHub. Repository/owner numeric IDs, main branch, production environment, exact workflow and push-event requirements remain unchanged. No token was requested, printed or persisted by this migration.",
+  "reference": "https://docs.github.com/en/actions/reference/security/oidc#immutable-subject-claims"
+}

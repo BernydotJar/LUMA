@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-10-10T19:12:23.686Z",
+  "project": "luma-learning-intelligence",
+  "status": "PASS",
+  "backendIdentityVerified": true,
+  "immutableWifConditionVerified": true,
+  "exactComputeIamBindingVerified": true,
+  "releaseProjectRoles": [
+    "projects/luma-learning-intelligence/roles/lumaAppHostingRelease"
+  ],
+  "sourceBucketRoles": [
+    "roles/storage.objectCreator"
+  ],
+  "releaseUserManagedKeyCount": 0,
+  "projectWideActAs": false
+}

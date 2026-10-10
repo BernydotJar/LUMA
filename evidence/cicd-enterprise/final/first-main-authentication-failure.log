@@ -1,0 +1,17 @@
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	﻿2026-10-10T06:45:18.4370979Z ##[group]Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4371466Z with:
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4371701Z   project_id: luma-learning-intelligence
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4372307Z   workload_identity_provider: projects/161313706596/locations/global/workloadIdentityPools/github-luma/providers/production
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4373074Z   service_account: luma-github-release@luma-learning-intelligence.iam.gserviceaccount.com
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4373857Z   create_credentials_file: true
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4374186Z   export_environment_variables: true
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4374474Z   universe: googleapis.com
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4374724Z   cleanup_credentials: true
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4374973Z   access_token_lifetime: 3600s
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4375340Z   access_token_scopes: https://www.googleapis.com/auth/cloud-platform
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4375729Z   id_token_include_email: false
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4375972Z env:
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4376193Z   RELEASE_DIR: /home/runner/work/_temp/release
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.4376513Z ##[endgroup]
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.6589832Z Created credentials file at "/home/runner/work/LUMA/LUMA/gha-creds-053aaf67779a6429.json"
+deploy	Run google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093	2026-10-10T06:45:18.8271234Z ##[error]google-github-actions/auth failed with: failed to generate Google Cloud federated token for //iam.googleapis.com/projects/161313706596/locations/global/workloadIdentityPools/github-luma/providers/production: {"error":"unauthorized_client","error_description":"The given credential is rejected by the attribute condition."}

@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-10T19:05:27.895Z",
+  "project": "luma-learning-intelligence",
+  "target": "projects/luma-learning-intelligence/serviceAccounts/firebase-app-hosting-compute@luma-learning-intelligence.iam.gserviceaccount.com",
+  "member": "serviceAccount:luma-github-release@luma-learning-intelligence.iam.gserviceaccount.com",
+  "role": "roles/iam.serviceAccountUser",
+  "mode": "APPLY",
+  "status": "VERIFIED_SCOPED_BINDING",
+  "bindingsAdded": 1,
+  "before": {
+    "etagPresent": true,
+    "bindingCount": 0,
+    "alreadyGranted": false
+  },
+  "after": {
+    "etagPresent": true,
+    "bindingCount": 1,
+    "scopedGrantVerified": true
+  }
+}

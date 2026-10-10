@@ -36,9 +36,31 @@ Provider: `projects/161313706596/locations/global/workloadIdentityPools/github-l
 
 The custom `lumaAppHostingRelease` role grants nine read/create/use permissions needed to inspect the backend, create/read builds and rollouts, read traffic/operations, and identify/use the project. It grants no backend update/delete, IAM administration, secret access, database permission or runtime service-account administration. `roles/storage.objectCreator` is scoped to the existing App Hosting source bucket. The service account has no user-managed keys.
 
+### Production build identity: scoped actAs remediation (10 October 2026)
+
+The first OIDC-authenticated production attempt reached source upload but App Hosting rejected `builds.create` with `iam.serviceAccounts.actAs` denied on `firebase-app-hosting-compute@luma-learning-intelligence.iam.gserviceaccount.com`. This is distinct from the initial immutable-subject failure. An operator inspected the runtime service account's own IAM policy (zero bindings), reviewed the narrow scope with local IBM Granite (`CONDITIONAL_PASS` with one low finding), and granted only `roles/iam.serviceAccountUser` to `luma-github-release@luma-learning-intelligence.iam.gserviceaccount.com` **on that one compute service account**. No project-wide impersonation role, runtime role edit, service account key, additional backend or broad Cloud IAM grant was created. The write preserved IAM etags, and read-back confirmed exactly one scoped binding.
+
+Evidence: `evidence/cicd-enterprise/final/failed-deploy-attempt2.json`, `actas-remediation.json`, `actas-inspection.json`, `granite-actas-review.json` and the read-only-first operator script `grant-runtime-actas.mjs`. Normal production delivery never executes the operator script. The ongoing GitHub Actions attempt must still finish every quality check, build/rollout, browser smoke, SHA comparison, and release ledger; scoped IAM success alone is not a production release.
+
+Google Cloud reference: https://docs.cloud.google.com/iam/docs/service-accounts-actas
+
 The environment variables `LUMA_WIF_PROVIDER` and `LUMA_DEPLOY_SERVICE_ACCOUNT` hold public identifiers, not credentials. OIDC credentials are short-lived and created only inside the deployment job. They are not included in release archives or evidence artifacts.
 
 `bootstrap-wif.mjs` is an operator-only, fixed-project bootstrap using the existing Firebase CLI login. Its default mode inspects without writing. `--apply` creates only the named release identity, role, pool/provider and additive IAM bindings. Existing IAM bindings are retained with concurrency etags. Existing unexpected role/provider configuration causes a stop instead of silently broadening trust. `configure-github.mjs` verifies actual successful check names before configuring protection and environment variables.
+
+## Verified immutable-subject migration
+
+GitHub's live repository OIDC settings report `use_immutable_subject=true` and `sub_claim_prefix=repo:BernydotJar@16258017/LUMA@1403901485`. The initial name-only subject condition was rejected before the first deployment. The actual production condition now requires:
+
+```text
+assertion.sub == 'repo:BernydotJar@16258017/LUMA@1403901485:environment:production'
+```
+
+All other repository ID, owner ID, main-ref, exact-workflow and push-event predicates remain unchanged. No role or permission was added. The correction and read-back are recorded in `evidence/cicd-enterprise/final/immutable-oidc-migration.json`; the raw Granite review is `granite-oidc-review.json`. The full main workflow was rerun after this operational correction. The first rejected attempt is retained as a failure, not relabeled successful.
+
+The original bootstrap script and `identity-configuration.json` preserve the initial provisioning state. The audited, idempotent migration entry point is `evidence/cicd-enterprise/final/migrate-immutable-oidc.mjs`: its default mode inspects; `--apply` updates only this literal subject after checking the live GitHub setting. It rejects unexpected independent policy drift. Do not replay the original bootstrap's `--apply` over the migrated policy; its old-condition guard intentionally stops instead of reverting the active trust policy. Normal delivery uses OIDC and does not execute either operator bootstrap.
+
+Reference: https://docs.github.com/en/actions/reference/security/oidc#immutable-subject-claims
 
 ## Graph operating model
 
@@ -61,6 +83,26 @@ Configuration evidence proves configuration, not that OIDC execution or a produc
 No capacity or billing-plan increase is part of this implementation. Source archives, managed builds, retained artifacts and normal runtime traffic still consume their providers' resources; this is not a claim of zero cost. No new paid vendor or permanent runner is introduced. Preserve source/build evidence required for rollback before applying retention cleanup. Do not delete old builds merely because a new deployment succeeded.
 
 Repository administrators retain policy-recovery access in Settings, but there is no configured merge bypass. A policy change for an incident must be explicit, recorded and restored. Never weaken checks or add `continue-on-error` to push a broken release through.
+
+## Verified first GitHub Actions production release — 10 October 2026
+
+The approved main SHA `7daba30e1469bda7b9198353d95f3f7db7b74ee1` completed the **fourth full attempt** of [GitHub Actions run 38031714611](https://github.com/BernydotJar/LUMA/actions/runs/38031714611), with all six jobs successful: `verify`, `security`, `firestore`, `identity-roles`, `browser`, and `deploy`. The separate PR #33 run `38031484177` also passed its five required checks before protected merge.
+
+The first attempt was rejected by immutable GitHub OIDC subject mismatch, and the second by missing `iam.serviceAccounts.actAs`; their actual errors and independently reviewed narrow remediations remain in `evidence/cicd-enterprise/final/`. The third was canceled after an unusual GitHub-hosted runner dependency-install stall *before Playwright began*; the complete workflow was rerun rather than treating its unfinished gate as PASS. Attempt four completed all gates and independently verified production.
+
+The successful production build ID is `gh-7daba30e1469-38031714611-4`. Its Firebase rollout is `projects/luma-learning-intelligence/locations/us-central1/backends/luma/rollouts/gh-7daba30e1469-38031714611-4`. The rollout reached `SUCCEEDED` and the build reached `READY` with **100% of backend traffic** on that build. The cache-disabled `GET /api/version` response was directly verified to expose the expected Git SHA and GitHub run ID on both the native Firebase domain and `https://luma.lch-app.cloud`. The independent verifier checked backend/repository/protection, build labels, rollout and traffic, capacity, health, release manifest and smoke results.
+
+Production browser smoke: **PASS** — six critical routes on desktop plus six on mobile; three themes and persistence, most-specific selected Studio navigation, authentication-entry navigation and anonymous role restrictions on both layouts; zero recorded JavaScript or first-party HTTP 5xx errors. Production `/api/health`: HTTP 200. Build capacity was unchanged (1 CPU / 512 MiB / 0–2 instances / concurrency 80). The predecessor `build-2026-10-10-001` remains available as a READY build but its historical source SHA was not proved. A `validateOnly=true` rollback-request check succeeded without a traffic change; **no destructive rollback drill was performed**.
+
+Release controller receipt: `evidence/cicd-enterprise/production/release-result.json` with status `VERIFIED`, timestamped hash-linked events ending in `PRODUCTION_VERIFIED`; `production/smoke.json` has status `PASS` and no errors. Independently verified summary: `evidence/cicd-enterprise/final/independent-production-verification.json`. Graph Harness event ledger was appended through the existing kernel (not manually edited), and its `LUMA-CICD-002-release-pipeline` node reached `DONE` after `cicd-production` passed; 659 events in the validated chain.
+
+The exact source/build, smoke screenshots, and runner logs are preserved in GitHub Actions workflow artifacts, including [production-evidence-38031714611-4](https://github.com/BernydotJar/LUMA/actions/runs/38031714611/artifacts/11679961688). Screenshots remain outside Git source history. This evidence-only documentation update is kept on a separate audit branch to avoid an unnecessary additional `main` push and Firebase build for a historical release record.
+
+### Remaining operating boundaries
+
+* The browser smoke proves anonymous authorization and login navigation. Real Google SSO with authorized tenant participants is not asserted as part of this production run; Auth/Firestore role flows passed their isolated emulator gates.
+* The predecessor without SHA provenance is not eligible for unattended rollback; incident restoration from that baseline requires deliberate operator verification. From this release forward, the first SHA-verified build provides a provable rollback target for a **future** release if its integrity remains intact.
+* Cloud Build and retained source/artifact storage incur normal provider costs. No additional backend, preview environment, extra runtime capacity, or persistent CI runner was created.
 
 ## Primary references
 

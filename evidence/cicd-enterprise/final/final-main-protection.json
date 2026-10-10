@@ -1,0 +1,1 @@
+{"adminEnforced":true,"deletionsAllowed":false,"forcePushesAllowed":false,"humanApprovalCount":0,"pullRequestRequired":true,"requiredChecks":[{"app_id":15368,"context":"verify"},{"app_id":15368,"context":"security"},{"app_id":15368,"context":"firestore"},{"app_id":15368,"context":"identity-roles"},{"app_id":15368,"context":"browser"}],"strictChecks":true}

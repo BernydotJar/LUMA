@@ -1,0 +1,12 @@
+{
+  "reviewType":"independent-adversarial-iam-release-remediation",
+  "observedFailure":"Firebase App Hosting createBuild rejected iam.serviceAccounts.actAs on firebase-app-hosting-compute@luma-learning-intelligence.iam.gserviceaccount.com",
+  "actualProductionTraffic":"Previous READY build remains at 100%; no rollout occurred",
+  "target":"Existing compute service account only, not project or tenant-wide IAM",
+  "actor":"luma-github-release@luma-learning-intelligence.iam.gserviceaccount.com",
+  "proposedBinding":"roles/iam.serviceAccountUser on exactly that runtime service account",
+  "existingReleasePermissions":"Custom role with build and rollout create/read, source bucket objectCreator; Workload Identity Federation constrained to immutable GitHub repository identity, main, production environment, quality.yml push",
+  "implementationPath":"evidence/cicd-enterprise/final/grant-runtime-actas.mjs",
+  "guards":"Dry-run default, exact account names, immutable OIDC subject and branch condition checks, getIamPolicy etag, existing bindings preserved, scoped grant read-back",
+  "risksToTest":["Identity trust broadening","Service account impersonation beyond App Hosting","Credentials leakage","IAM etag concurrency","Privilege escalation via code deployment","Cost exposure from repeated builds","Production rollback and release verification","Audit evidence integrity"]
+}

@@ -1,0 +1,112 @@
+{
+  "status": "PASS",
+  "gitSha": "7daba30e1469bda7b9198353d95f3f7db7b74ee1",
+  "url": "https://luma--luma-learning-intelligence.us-central1.hosted.app",
+  "routes": [
+    {
+      "route": "/",
+      "mobile": false,
+      "status": 200,
+      "destination": "/learn"
+    },
+    {
+      "route": "/experience",
+      "mobile": false,
+      "status": 200,
+      "destination": "/experience"
+    },
+    {
+      "route": "/learn",
+      "mobile": false,
+      "status": 200,
+      "destination": "/learn"
+    },
+    {
+      "route": "/studio",
+      "mobile": false,
+      "status": 200,
+      "destination": "/studio"
+    },
+    {
+      "route": "/library",
+      "mobile": false,
+      "status": 200,
+      "destination": "/library"
+    },
+    {
+      "route": "/studio/certificates",
+      "mobile": false,
+      "status": 200,
+      "destination": "/studio/certificates"
+    },
+    {
+      "route": "/",
+      "mobile": true,
+      "status": 200,
+      "destination": "/learn"
+    },
+    {
+      "route": "/experience",
+      "mobile": true,
+      "status": 200,
+      "destination": "/experience"
+    },
+    {
+      "route": "/learn",
+      "mobile": true,
+      "status": 200,
+      "destination": "/learn"
+    },
+    {
+      "route": "/studio",
+      "mobile": true,
+      "status": 200,
+      "destination": "/studio"
+    },
+    {
+      "route": "/library",
+      "mobile": true,
+      "status": 200,
+      "destination": "/library"
+    },
+    {
+      "route": "/studio/certificates",
+      "mobile": true,
+      "status": 200,
+      "destination": "/studio/certificates"
+    }
+  ],
+  "checks": [
+    {
+      "name": "three-themes-and-persistence",
+      "mobile": false,
+      "status": "PASS"
+    },
+    {
+      "name": "single-active-studio-navigation",
+      "mobile": false,
+      "status": "PASS"
+    },
+    {
+      "name": "unauthenticated-role-boundary-and-login-navigation",
+      "mobile": false,
+      "status": "PASS"
+    },
+    {
+      "name": "three-themes-and-persistence",
+      "mobile": true,
+      "status": "PASS"
+    },
+    {
+      "name": "single-active-studio-navigation",
+      "mobile": true,
+      "status": "PASS"
+    },
+    {
+      "name": "unauthenticated-role-boundary-and-login-navigation",
+      "mobile": true,
+      "status": "PASS"
+    }
+  ],
+  "errors": []
+}

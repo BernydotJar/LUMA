@@ -34,7 +34,7 @@ Authenticated role grant, token revocation and persistence are exercised in the 
 
 An automatically eligible rollback target must be the captured previous build, still READY, with matching exposed SHA and release labels, and a successful prior main workflow whose deployment job succeeded. A label or HTTP 200 alone is not proof of a previously verified release.
 
-The migration baseline `build-2026-10-10-001` was serving normally but had no verified Git SHA. It is not silently upgraded to a SHA-proven known-good release. The first gated deployment therefore has a stricter manual-recovery boundary if it fails after promotion.
+The migration baseline `build-2026-10-10-001` was serving normally but had no verified Git SHA. It is not silently upgraded to a SHA-proven known-good release. The first gated deployment therefore has a stricter manual-recovery boundary if it fails after promotion. A separate operator-only `validateOnly=true` rollout check against this READY baseline returned success with traffic unchanged at 100%; see `evidence/cicd-enterprise/final/prior-rollback-validate-only.json`. This validates the rollback request shape and target availability but **does not** prove that a future actual rollback will succeed. If the first SHA-proven deployment fails after traffic changes, follow the captured baseline and manual incident-recovery procedure instead of representing the unknown original SHA as verified.
 
 ## Safe rollback validation
 
@@ -59,3 +59,18 @@ The record helper uses the existing kernel through `GRAPH_HARNESS_ROOT`; default
 ## Genuine completion criteria
 
 CI green; enforced main protection; successful OIDC execution with the intended principal; reviewed source bound to Graph approval; successful main workflow and rollout; matching build/SHA at 100% traffic; successful production smoke; non-mutating rollback validation; preserved evidence; Graph production gate PASS. A missing criterion remains visible as BLOCKED/PARTIAL.
+
+
+## First verified enterprise deployment: production handoff (10 October 2026)
+
+* Protected `main` commit: `7daba30e1469bda7b9198353d95f3f7db7b74ee1`.
+* GitHub workflow: https://github.com/BernydotJar/LUMA/actions/runs/38031714611 — **attempt 4, SUCCESS**, including the deployment job.
+* Serving Firebase build: `gh-7daba30e1469-38031714611-4` with 100% traffic.
+* Rollout: `gh-7daba30e1469-38031714611-4`, `SUCCEEDED`.
+* `/api/version`: exact SHA on both native App Hosting and `luma.lch-app.cloud` public endpoints.
+* Production smoke: 12 routed desktop/mobile checks, themes/persistence, Studio navigation, login entry and anonymous role boundaries **PASS**, no JavaScript or first-party HTTP 5xx errors.
+* Independent verification: `evidence/cicd-enterprise/final/independent-production-verification.json` **VERIFIED**; Graph Harness `LUMA-CICD-002-release-pipeline` **DONE** with appended production gate evidence.
+* The prior build `build-2026-10-10-001` was READY with 100% traffic before promotion and has a successful non-mutating `validateOnly` request receipt. Its original SHA remains unverified; there was no live reversal of user traffic.
+* Next deployment: capture and independently validate the current SHA-proven build as its eligible rollback target. Never use the old unproven build as an automatically verified rollback target.
+
+This handoff is historical evidence for one production release, not a change to the CI gate definitions. The actual GitHub Actions release evidence artifact is https://github.com/BernydotJar/LUMA/actions/runs/38031714611/artifacts/11679961688.

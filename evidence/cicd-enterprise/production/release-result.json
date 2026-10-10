@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "gitSha": "7daba30e1469bda7b9198353d95f3f7db7b74ee1",
+  "runId": "38031714611",
+  "project": "luma-learning-intelligence",
+  "backend": "luma",
+  "status": "VERIFIED",
+  "events": [
+    {
+      "phase": "INDEPENDENT_GRAPH_GATE_VERIFIED",
+      "at": "2026-10-10T19:22:48.692Z",
+      "previousHash": null,
+      "sourceDigest": "4b0fc2faa433f2698d022a452690a1bcb6181b5976ba0ff82c1ad408cc90f9dd",
+      "graphEventId": "cb3e6afd-fab3-4ea7-b2f1-05d1ba3f5ec0",
+      "hash": "f9285dfbcec944b6687a37d9443847bbe90ca92753dc30c4f74fde8ea52a0e04"
+    },
+    {
+      "phase": "PREFLIGHT_PASSED",
+      "at": "2026-10-10T19:22:50.955Z",
+      "previousHash": "f9285dfbcec944b6687a37d9443847bbe90ca92753dc30c4f74fde8ea52a0e04",
+      "previous": {
+        "buildId": "build-2026-10-10-001",
+        "gitSha": null,
+        "knownGood": false
+      },
+      "hash": "5c9d2e212056030489679a9cf3ec87fa09924d75ec275d40cd49d43f4646555a"
+    },
+    {
+      "phase": "SOURCE_UPLOADED",
+      "at": "2026-10-10T19:22:51.455Z",
+      "previousHash": "5c9d2e212056030489679a9cf3ec87fa09924d75ec275d40cd49d43f4646555a",
+      "object": "releases/7daba30e1469bda7b9198353d95f3f7db7b74ee1/38031714611-4.zip",
+      "archiveSha256": "e8e3002151529fb1f40a2cebf7c1be1cbac7615644660b94e4c67f78857c9f40",
+      "hash": "e129ae31e2253c232e60f83116997e211daa558e628a5a14497f72c2cc66de07"
+    },
+    {
+      "phase": "BUILD_READY",
+      "at": "2026-10-10T19:26:55.619Z",
+      "previousHash": "e129ae31e2253c232e60f83116997e211daa558e628a5a14497f72c2cc66de07",
+      "buildId": "gh-7daba30e1469-38031714611-4",
+      "image": "us-central1-docker.pkg.dev/luma-learning-intelligence/firebaseapphosting-images/luma:gh-7daba30e1469-38031714611-4",
+      "buildLogsUri": "https://console.cloud.google.com/cloud-build/builds;region=us-central1/467d8cd1-e264-4460-9e87-62cec1d26635?project=161313706596",
+      "hash": "a3bd26e9239e75f073ba23d5b39a116f25d4c958ba11ef659daa3f626ca3f6a1"
+    },
+    {
+      "phase": "PROMOTION_STARTED",
+      "at": "2026-10-10T19:26:56.631Z",
+      "previousHash": "a3bd26e9239e75f073ba23d5b39a116f25d4c958ba11ef659daa3f626ca3f6a1",
+      "hash": "91c4710ad705100b30440d9f7f7900437f647021bb812371a35c4ce6ed130b9f"
+    },
+    {
+      "phase": "EXPECTED_SHA_SERVING",
+      "at": "2026-10-10T19:27:08.403Z",
+      "previousHash": "91c4710ad705100b30440d9f7f7900437f647021bb812371a35c4ce6ed130b9f",
+      "rollout": "projects/luma-learning-intelligence/locations/us-central1/backends/luma/rollouts/gh-7daba30e1469-38031714611-4",
+      "hash": "d50266910a9a246339bd8dc66719d3f6840dc0f5215a67061fcf56d26aba8a8d"
+    },
+    {
+      "phase": "ROLLBACK_REQUEST_VALIDATED_WITHOUT_CHANGING_TRAFFIC",
+      "at": "2026-10-10T19:27:31.003Z",
+      "previousHash": "d50266910a9a246339bd8dc66719d3f6840dc0f5215a67061fcf56d26aba8a8d",
+      "buildId": "build-2026-10-10-001",
+      "hash": "c80bcb2148e02b6c793fd0e1a0f292580053e59e4eacb85b6a868a3cdfaee553"
+    },
+    {
+      "phase": "PRODUCTION_VERIFIED",
+      "at": "2026-10-10T19:27:31.940Z",
+      "previousHash": "c80bcb2148e02b6c793fd0e1a0f292580053e59e4eacb85b6a868a3cdfaee553",
+      "hash": "b2715f7b6ecc4828a5a33adc0c7b16f12691dbd80de9d784ba2578e02a5bff3e"
+    }
+  ],
+  "previous": {
+    "buildId": "build-2026-10-10-001",
+    "gitSha": null,
+    "knownGood": false
+  },
+  "buildId": "gh-7daba30e1469-38031714611-4",
+  "archiveSha256": "e8e3002151529fb1f40a2cebf7c1be1cbac7615644660b94e4c67f78857c9f40"
+}

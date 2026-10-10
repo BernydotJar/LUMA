@@ -1,0 +1,26 @@
+{
+  "model": "ibm/granite3.3:2b",
+  "complete": true,
+  "reviewedAt": "2026-10-10T06:48:07.316Z",
+  "migrationSha256": "3d1b42cc88a7f434d0e25e49b64c553baecaf47acf4dec952775240067d4adc8",
+  "evaluation": {
+    "verdict": "PASS",
+    "findings": [
+      {
+        "id": "O1",
+        "severity": "low",
+        "evidence": "The migration replaces the obsolete name-only subject with the exact immutable subject reported by GitHub, as per the official documentation. The repository ID, owner ID, main branch, production environment, exact workflow, and push-event requirements remain unchanged. No token was requested, printed, or persisted by this migration.",
+        "risk": "low",
+        "fix": "No action required. The migration adheres to the official GitHub documentation."
+      }
+    ],
+    "limitations": [
+      "This analysis is based on the provided configuration and does not account for potential runtime issues or unforeseen circumstances."
+    ]
+  },
+  "metadata": {
+    "doneReason": "stop",
+    "promptEvalCount": 967,
+    "evalCount": 142
+  }
+}

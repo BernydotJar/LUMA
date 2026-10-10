@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "gitSha": "7daba30e1469bda7b9198353d95f3f7db7b74ee1",
+  "runId": "38031714611",
+  "project": "luma-learning-intelligence",
+  "backend": "luma",
+  "status": "FAILED",
+  "events": [
+    {
+      "phase": "INDEPENDENT_GRAPH_GATE_VERIFIED",
+      "at": "2026-10-10T06:53:27.037Z",
+      "previousHash": null,
+      "sourceDigest": "4b0fc2faa433f2698d022a452690a1bcb6181b5976ba0ff82c1ad408cc90f9dd",
+      "graphEventId": "cb3e6afd-fab3-4ea7-b2f1-05d1ba3f5ec0",
+      "hash": "fe54508ad8cf953ce57db28960d659e528eaea987550477a71a155eac0f9e2ce"
+    },
+    {
+      "phase": "PREFLIGHT_PASSED",
+      "at": "2026-10-10T06:53:31.313Z",
+      "previousHash": "fe54508ad8cf953ce57db28960d659e528eaea987550477a71a155eac0f9e2ce",
+      "previous": {
+        "buildId": "build-2026-10-10-001",
+        "gitSha": null,
+        "knownGood": false
+      },
+      "hash": "65d744c1196ea139336dd3e79a8d1d044781818d23497ea29f3e1b77d1667edb"
+    },
+    {
+      "phase": "SOURCE_UPLOADED",
+      "at": "2026-10-10T06:53:31.543Z",
+      "previousHash": "65d744c1196ea139336dd3e79a8d1d044781818d23497ea29f3e1b77d1667edb",
+      "object": "releases/7daba30e1469bda7b9198353d95f3f7db7b74ee1/38031714611-2.zip",
+      "archiveSha256": "391e2982433bb53e91cd33fd628fd62fe4198ccc675c2ca12fe4ebb820d2f0c3",
+      "hash": "7dbc56796a30ce9feafbc4bf5bcd6a3e279ff99d59478cc579309c82cc3e6d2e"
+    },
+    {
+      "phase": "RELEASE_FAILED",
+      "at": "2026-10-10T06:53:31.735Z",
+      "previousHash": "7dbc56796a30ce9feafbc4bf5bcd6a3e279ff99d59478cc579309c82cc3e6d2e",
+      "error": "Permission \"iam.serviceAccounts.actAs\" denied on \"firebase-app-hosting-compute@luma-learning-intelligence.iam.gserviceaccount.com\"",
+      "hash": "b1344a0cd2b21dd6d7cf2cd9f44bbebe17b3997b0b8220b6d3740a00e28978a0"
+    },
+    {
+      "phase": "RECOVERY_NOT_NEEDED_PRIOR_BUILD_STILL_SERVING",
+      "at": "2026-10-10T06:53:32.247Z",
+      "previousHash": "b1344a0cd2b21dd6d7cf2cd9f44bbebe17b3997b0b8220b6d3740a00e28978a0",
+      "hash": "0f6a8b789088958e58864a7d13321f3723f51f10d2d685fc19aeb4d8e68bebcb"
+    }
+  ],
+  "previous": {
+    "buildId": "build-2026-10-10-001",
+    "gitSha": null,
+    "knownGood": false
+  },
+  "buildId": "gh-7daba30e1469-38031714611-2",
+  "archiveSha256": "391e2982433bb53e91cd33fd628fd62fe4198ccc675c2ca12fe4ebb820d2f0c3"
+}

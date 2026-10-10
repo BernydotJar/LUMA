@@ -1,0 +1,18 @@
+{
+  "model": "ibm/granite3.3:2b",
+  "complete": true,
+  "reviewedAt": "2026-10-10T19:05:14.862Z",
+  "evaluation": {
+    "verdict": "CONDITIONAL_PASS",
+    "findings": [
+      {
+        "severity": "LOW",
+        "risk": "Unauthorized access risk",
+        "mitigation": "Bind roles/iam.serviceAccountUser ONLY on firebase-app-hosting-compute service account, ensuring release identity adheres to OIDC provider's immutable repository ID, owner ID, main, production env, exact workflow, and push event restrictions. This mitigation ensures script's idempotency and policy etag checks."
+      }
+    ],
+    "limitations": [
+      "Remediation assumes the OIDC provider's restrictions are correctly enforced and adhered to."
+    ]
+  }
+}

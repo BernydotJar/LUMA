@@ -1,0 +1,8 @@
+verify	Run npm run test:run	2026-10-10T06:36:26.5619552Z  Test Files  51 passed | 7 skipped (58)
+verify	Run npm run test:run	2026-10-10T06:36:26.5620685Z       Tests  291 passed | 52 skipped (343)
+identity-roles	Exercise role grant, token revocation, and Firestore audit	2026-10-10T06:36:40.4767056Z  Test Files  1 passed (1)
+identity-roles	Exercise role grant, token revocation, and Firestore audit	2026-10-10T06:36:40.4767706Z       Tests  2 passed (2)
+firestore	Run stateful Firestore integration gates	2026-10-10T06:36:44.5067543Z  Test Files  6 passed (6)
+firestore	Run stateful Firestore integration gates	2026-10-10T06:36:44.5068905Z       Tests  50 passed (50)
+browser	Run npm run test:e2e	2026-10-10T06:39:40.6914148Z   7 skipped
+browser	Run npm run test:e2e	2026-10-10T06:39:40.6914413Z   109 passed (1.4m)

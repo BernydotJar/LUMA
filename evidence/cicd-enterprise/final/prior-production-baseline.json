@@ -1,0 +1,56 @@
+{
+  "observedAt": "2026-10-10T19:07:09.540Z",
+  "backend": "https://luma--luma-learning-intelligence.us-central1.hosted.app",
+  "revision": "build-2026-10-10-001",
+  "shaStatus": "UNVERIFIED_PRIOR_ARCHIVE",
+  "routes": [
+    {
+      "requested": "/api/health",
+      "status": 200,
+      "servedPath": "/api/health",
+      "digest": "43cf26205dd9fc94"
+    },
+    {
+      "requested": "/api/version",
+      "status": 404,
+      "servedPath": "/api/version",
+      "digest": "2126f2f272f4f932"
+    },
+    {
+      "requested": "/",
+      "status": 200,
+      "servedPath": "/",
+      "digest": "438289a10138db4e"
+    },
+    {
+      "requested": "/experience",
+      "status": 200,
+      "servedPath": "/experience",
+      "digest": "6490f61a1f81202c"
+    },
+    {
+      "requested": "/learn",
+      "status": 200,
+      "servedPath": "/learn",
+      "digest": "9ec6e0429eee9ade"
+    },
+    {
+      "requested": "/studio",
+      "status": 200,
+      "servedPath": "/studio",
+      "digest": "3bf1d606fcd57a42"
+    },
+    {
+      "requested": "/library",
+      "status": 200,
+      "servedPath": "/library",
+      "digest": "97182c9bdeaba840"
+    },
+    {
+      "requested": "/studio/certificates",
+      "status": 200,
+      "servedPath": "/studio/certificates",
+      "digest": "4e07b346b9e51c04"
+    }
+  ]
+}

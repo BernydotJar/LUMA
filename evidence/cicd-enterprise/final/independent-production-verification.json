@@ -1,0 +1,208 @@
+{
+  "observedAt": "2026-10-10T19:28:13.924Z",
+  "status": "VERIFIED",
+  "expectedGitSha": "7daba30e1469bda7b9198353d95f3f7db7b74ee1",
+  "workflowRunId": "38031714611",
+  "github": {
+    "url": "https://github.com/BernydotJar/LUMA/actions/runs/38031714611",
+    "mainProtected": true,
+    "requiredChecks": [
+      {
+        "context": "verify",
+        "app_id": 15368
+      },
+      {
+        "context": "security",
+        "app_id": 15368
+      },
+      {
+        "context": "firestore",
+        "app_id": 15368
+      },
+      {
+        "context": "identity-roles",
+        "app_id": 15368
+      },
+      {
+        "context": "browser",
+        "app_id": 15368
+      }
+    ],
+    "administratorBypass": false,
+    "humanApprovalCount": 0,
+    "jobs": [
+      {
+        "name": "firestore",
+        "conclusion": "success",
+        "url": "https://github.com/BernydotJar/LUMA/actions/runs/38031714611/job/114292349645"
+      },
+      {
+        "name": "security",
+        "conclusion": "success",
+        "url": "https://github.com/BernydotJar/LUMA/actions/runs/38031714611/job/114292349803"
+      },
+      {
+        "name": "verify",
+        "conclusion": "success",
+        "url": "https://github.com/BernydotJar/LUMA/actions/runs/38031714611/job/114292349863"
+      },
+      {
+        "name": "identity-roles",
+        "conclusion": "success",
+        "url": "https://github.com/BernydotJar/LUMA/actions/runs/38031714611/job/114292349890"
+      },
+      {
+        "name": "browser",
+        "conclusion": "success",
+        "url": "https://github.com/BernydotJar/LUMA/actions/runs/38031714611/job/114292802681"
+      },
+      {
+        "name": "deploy",
+        "conclusion": "success",
+        "url": "https://github.com/BernydotJar/LUMA/actions/runs/38031714611/job/114293345089"
+      }
+    ]
+  },
+  "firebase": {
+    "backend": "projects/luma-learning-intelligence/locations/us-central1/backends/luma",
+    "url": "https://luma--luma-learning-intelligence.us-central1.hosted.app",
+    "build": "projects/161313706596/locations/us-central1/backends/luma/builds/gh-7daba30e1469-38031714611-4",
+    "rollout": "projects/luma-learning-intelligence/locations/us-central1/backends/luma/rollouts/gh-7daba30e1469-38031714611-4",
+    "rolloutState": "SUCCEEDED",
+    "servingPercent": 100,
+    "version": {
+      "schemaVersion": 1,
+      "repository": "BernydotJar/LUMA",
+      "gitSha": "7daba30e1469bda7b9198353d95f3f7db7b74ee1",
+      "gitTree": "1ba15a83fc49f50caeb6f28e65fa591bef19371a",
+      "commitTime": "2026-10-10T00:39:50-06:00",
+      "runId": "38031714611"
+    },
+    "capacity": {
+      "cpu": 1,
+      "memoryMib": 512,
+      "concurrency": 80,
+      "maxInstances": 2
+    },
+    "healthStatus": 200
+  },
+  "smoke": {
+    "status": "PASS",
+    "routes": [
+      {
+        "route": "/",
+        "mobile": false,
+        "status": 200,
+        "destination": "/learn"
+      },
+      {
+        "route": "/experience",
+        "mobile": false,
+        "status": 200,
+        "destination": "/experience"
+      },
+      {
+        "route": "/learn",
+        "mobile": false,
+        "status": 200,
+        "destination": "/learn"
+      },
+      {
+        "route": "/studio",
+        "mobile": false,
+        "status": 200,
+        "destination": "/studio"
+      },
+      {
+        "route": "/library",
+        "mobile": false,
+        "status": 200,
+        "destination": "/library"
+      },
+      {
+        "route": "/studio/certificates",
+        "mobile": false,
+        "status": 200,
+        "destination": "/studio/certificates"
+      },
+      {
+        "route": "/",
+        "mobile": true,
+        "status": 200,
+        "destination": "/learn"
+      },
+      {
+        "route": "/experience",
+        "mobile": true,
+        "status": 200,
+        "destination": "/experience"
+      },
+      {
+        "route": "/learn",
+        "mobile": true,
+        "status": 200,
+        "destination": "/learn"
+      },
+      {
+        "route": "/studio",
+        "mobile": true,
+        "status": 200,
+        "destination": "/studio"
+      },
+      {
+        "route": "/library",
+        "mobile": true,
+        "status": 200,
+        "destination": "/library"
+      },
+      {
+        "route": "/studio/certificates",
+        "mobile": true,
+        "status": 200,
+        "destination": "/studio/certificates"
+      }
+    ],
+    "checks": [
+      {
+        "name": "three-themes-and-persistence",
+        "mobile": false,
+        "status": "PASS"
+      },
+      {
+        "name": "single-active-studio-navigation",
+        "mobile": false,
+        "status": "PASS"
+      },
+      {
+        "name": "unauthenticated-role-boundary-and-login-navigation",
+        "mobile": false,
+        "status": "PASS"
+      },
+      {
+        "name": "three-themes-and-persistence",
+        "mobile": true,
+        "status": "PASS"
+      },
+      {
+        "name": "single-active-studio-navigation",
+        "mobile": true,
+        "status": "PASS"
+      },
+      {
+        "name": "unauthenticated-role-boundary-and-login-navigation",
+        "mobile": true,
+        "status": "PASS"
+      }
+    ],
+    "errors": []
+  },
+  "rollback": {
+    "previous": {
+      "buildId": "build-2026-10-10-001",
+      "gitSha": null,
+      "knownGood": false
+    },
+    "requestValidated": true,
+    "destructiveDrillPerformed": false
+  }
+}

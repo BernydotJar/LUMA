@@ -1,0 +1,20 @@
+{
+  "observedAt": "2026-10-10T19:07:49.008Z",
+  "requestedBuildId": "build-2026-10-10-001",
+  "validateOnly": true,
+  "status": "PASS_NON_MUTATING_VALIDATION",
+  "targetState": "READY",
+  "trafficBefore": [
+    {
+      "build": "projects/161313706596/locations/us-central1/backends/luma/builds/build-2026-10-10-001",
+      "percent": 100
+    }
+  ],
+  "trafficAfter": [
+    {
+      "build": "projects/161313706596/locations/us-central1/backends/luma/builds/build-2026-10-10-001",
+      "percent": 100
+    }
+  ],
+  "responseType": "validationResponse"
+}
