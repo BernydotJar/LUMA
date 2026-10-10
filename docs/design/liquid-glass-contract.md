@@ -41,7 +41,7 @@ This contract is derived from the user-supplied Apple Liquid Glass motion refere
 
 ### Seres de Excelencia
 
-Glass sits over institutional blue / pink / plum fields but never uses those colors to imply gender.
+Glass sits over public-logo-derived blue / pink and supporting plum accents without implying gender. Exact values are provisional pending brand-owner approval. The selected Seres preview has a **bounded optical pane behind the original image**, while interactive controls and navigation use refractive CSS material. The logo itself must not be distorted. See `docs/design/seres-brand-provenance.md`.
 
 ### Liquid Light
 

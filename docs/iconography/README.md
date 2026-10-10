@@ -49,6 +49,6 @@ The SVG set is the deterministic baseline. It is accessible, small, source-contr
 
 ## Provenance
 
-The institutional SE palette was measured from the official Seres de Excelencia website and public logo asset. The original logo is retained under `public/brand/seres-de-excelencia/logo-source.png`; the optimized product copy is `logo.png`.
+The SE palette is a **public-asset-derived interpretation, pending institutional brand-owner approval**. The optimized product logo is `public/brand/seres-de-excelencia/logo.png`; there is no checked-in `logo-source.png`. See [Seres brand provenance](../design/seres-brand-provenance.md) for public source URLs, competing public variants and evidence classification.
 
 The animation pipeline is inspired by and compatible with the MIT-licensed `samyost1/3dicon` workflow. LUMA keeps its own prompts, review receipts, generated assets and provider choices.

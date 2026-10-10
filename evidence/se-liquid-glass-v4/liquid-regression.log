@@ -1,0 +1,19 @@
+
+Running 14 tests using 2 workers
+
+  ✓   2 [chromium] › e2e/liquid-glass-v2.spec.ts:9:1 › Liquid Light renders bounded refraction without nested glass (5.2s)
+  ✓   1 [chromium] › e2e/liquid-glass-v2.spec.ts:46:1 › Dense content surfaces stay out of the backdrop-filter layer (7.0s)
+  ✓   3 [chromium] › e2e/liquid-glass-v2.spec.ts:65:1 › appearance previews keep brands and labels unobstructed (1.9s)
+  ✓   5 [chromium] › e2e/seres-liquid-glass.spec.ts:45:1 › Seres uses functional glass in navigation without wrapping content cards (1.2s)
+  ✓   4 [chromium] › e2e/seres-liquid-glass.spec.ts:7:1 › Seres preview has a bounded refractive layer behind a readable unmodified logo (1.5s)
+  ✓   6 [chromium] › e2e/seres-liquid-glass.spec.ts:59:1 › reduced transparency turns off Seres refraction and navigation backdrop (1.5s)
+  ✓   7 [chromium] › e2e/seres-liquid-glass.spec.ts:75:1 › theme selection remains exclusive and accessible (3.6s)
+  ✓   8 [mobile] › e2e/liquid-glass-v2.spec.ts:9:1 › Liquid Light renders bounded refraction without nested glass (6.0s)
+  ✓  10 [mobile] › e2e/liquid-glass-v2.spec.ts:65:1 › appearance previews keep brands and labels unobstructed (2.2s)
+  ✓   9 [mobile] › e2e/liquid-glass-v2.spec.ts:46:1 › Dense content surfaces stay out of the backdrop-filter layer (6.9s)
+  ✓  11 [mobile] › e2e/seres-liquid-glass.spec.ts:7:1 › Seres preview has a bounded refractive layer behind a readable unmodified logo (2.6s)
+  ✓  12 [mobile] › e2e/seres-liquid-glass.spec.ts:45:1 › Seres uses functional glass in navigation without wrapping content cards (2.3s)
+  ✓  13 [mobile] › e2e/seres-liquid-glass.spec.ts:59:1 › reduced transparency turns off Seres refraction and navigation backdrop (3.2s)
+  ✓  14 [mobile] › e2e/seres-liquid-glass.spec.ts:75:1 › theme selection remains exclusive and accessible (4.7s)
+
+  14 passed (32.1s)
