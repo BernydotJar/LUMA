@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "node": "LUMA-067-se-liquid-glass-brand-v4",
+  "node_status": "done",
+  "reviewed_commit": "2f0f040f7732bf73a06040d80d0271af678cd4e3",
+  "event_count": 664,
+  "brand_owner_approved": false
+}

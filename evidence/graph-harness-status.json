@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "6f48e441-2eff-4153-80e7-25bfb42f6cb8",
-  "event_count": 630,
+  "last_event_id": "fd8272af-2106-41bc-a950-8172c82fb9ec",
+  "event_count": 664,
   "ready_nodes": [
     "LUMA-036-liquid-glass-refraction-v2"
   ],
@@ -1409,8 +1409,100 @@
       "active_gates": {},
       "active_evidence_ids": [],
       "approval_count": 0
+    },
+    {
+      "id": "LUMA-063-tenant-program-twin-rag-isolation",
+      "kind": "security-hardening",
+      "title": "Tenant/program-scoped Learning Twin, coach authorization, and private RAG evidence boundary",
+      "status": "ready",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-057-commerce-enrollment-activation",
+        "LUMA-059-engagement-intervention-runtime",
+        "LUMA-060-content-intelligence-search"
+      ],
+      "capability": "enterprise-tenant-isolation",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-064-scoped-rag-retrieval-backend",
+      "kind": "security-hardening",
+      "title": "Server-enforced tenant/program RAG retrieval and citable corpus lifecycle",
+      "status": "ready",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-063-tenant-program-twin-rag-isolation",
+        "LUMA-060-content-intelligence-search"
+      ],
+      "capability": "isolated-knowledge-intelligence",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-065-scoped-rag-staging-security",
+      "kind": "security-hardening",
+      "title": "Synthetic HTTP staging verification and read-only grant-enforcement for scoped retrieval",
+      "status": "ready",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-064-scoped-rag-retrieval-backend"
+      ],
+      "capability": "isolated-rag-staging-evidence",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-067-se-liquid-glass-brand-v4",
+      "kind": "product-surface",
+      "title": "Seres de Excelencia optical glass and public-asset brand provenance",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-056-liquid-glass-functional-layer-v3"
+      ],
+      "capability": "se-optical-material",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "1a053abd-2db2-46fb-9907-17bdff74f652",
+        "5ff61352-af6d-4e47-a16c-866835587f72",
+        "6987a3a3-4581-4e6f-8c0c-d265f81d2655",
+        "74d59b49-7e49-45fe-a350-b767a6ead6c0",
+        "786e065d-73cb-48b3-b3da-f5488e189837",
+        "7a64f67e-c1cb-4a69-8a39-ff571e537081",
+        "b0566d85-2f31-4b19-bfe4-9c2c923f92b5",
+        "b35de3bb-b737-4d69-a023-68d957f4fb79",
+        "bd93cc67-f077-47d9-b4d1-8a9db5103c95",
+        "d78d1a41-c9c6-4240-8364-f9b4b7c02912"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-CICD-002-release-pipeline",
+      "kind": "release-engineering",
+      "title": "Protected CI, keyless release and exact production verification",
+      "status": "review",
+      "revision": 0,
+      "depends_on": [],
+      "capability": "enterprise-delivery",
+      "active_gates": {
+        "cicd-release": "PASS"
+      },
+      "active_evidence_ids": [
+        "1a62f065-0248-44fb-9706-747670246c38",
+        "233f3bcd-9ab0-48d5-85c4-1d087ca2137b",
+        "246f3ad5-707d-4b71-a5e0-6015cf55b3e2",
+        "4db84fe6-dee9-4577-93ce-8ea4d0a25c8b",
+        "b771aa18-5b18-42a0-b4ed-f6141c034da2"
+      ],
+      "approval_count": 0
     }
   ],
-  "checkpoint_count": 17,
+  "checkpoint_count": 24,
   "repair_plan_count": 0
 }

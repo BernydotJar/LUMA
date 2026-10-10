@@ -31,13 +31,13 @@ The current representative corpus is **Practitioner · Módulo 3 — Redescubrie
 
 | Theme | Purpose | Primary visual language |
 |---|---|---|
-| **Seres de Excelencia** | Institutional expression | official blue, transformation pink, plum, clean white materials |
+| **Seres de Excelencia** | Institutional expression | public-logo blue/pink and supporting plum; brand-owner approval pending |
 | **Liquid Light** | Premium light experience | system-light surfaces, restrained lens behavior, active blue, teal and violet |
 | **Nocturne Intelligence** | Deep work and analytical sessions | aubergine, champagne, burnt orange, sage and warm ivory |
 
 Theme selection is persisted with `luma-theme-v1` in the showcase. Theme changes presentation, not learning logic, permissions, evidence, or source truth.
 
-The SE palette and logo are derived from official Seres de Excelencia public brand assets. Those institutional assets remain the property of their respective owner and are not relicensed by the repository MIT license.
+The SE palette is a **provisional interpretation of publicly accessible brand assets** and is **not an approved corporate palette**. See `docs/design/seres-brand-provenance.md`. The logo and related institutional assets remain the property of their owner and are not relicensed by the repository MIT license.
 
 ## Product routes
 

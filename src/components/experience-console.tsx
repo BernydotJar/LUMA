@@ -66,14 +66,17 @@ export function ExperienceConsole() {
             >
               <div className={styles.themePreview} data-theme-preview={item.id}>
                 {item.id === "se" ? (
-                  <Image
-                    src="/brand/seres-de-excelencia/logo.png"
+                  <>
+                    <span className={styles.seOpticalLens} aria-hidden="true" />
+                    <Image
+                      src="/brand/seres-de-excelencia/logo.png"
                     className={styles.previewBrand}
                     alt="Seres de Excelencia"
                     width={220}
                     height={72}
-                    sizes="(max-width: 760px) 180px, 220px"
-                  />
+                      sizes="(max-width: 760px) 180px, 220px"
+                    />
+                  </>
                 ) : item.id === "light" ? (
                   <LiquidGlassPreview />
                 ) : (
