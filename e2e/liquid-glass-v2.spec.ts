@@ -60,3 +60,39 @@ test("Dense content surfaces stay out of the backdrop-filter layer", async ({ pa
     await expect(page.locator(".glass .glass")).toHaveCount(0);
   }
 });
+
+
+test("appearance previews keep brands and labels unobstructed", async ({ page }) => {
+  await page.goto("/experience", { waitUntil: "domcontentloaded" });
+  const cards = page.locator('button[aria-pressed][class*="themeCard"]');
+  await expect(cards).toHaveCount(3);
+  const metrics = await page.evaluate(() => {
+    const previews = Array.from(document.querySelectorAll<HTMLElement>('[data-theme-preview]'));
+    return previews.map((preview) => {
+      const brand = preview.querySelector<HTMLElement>('img, [class*="previewTitle"], [class*="sceneWord"]');
+      const lens = preview.querySelector<HTMLElement>('[class*="lens"]:not([class*="Clip"]):not([class*="Tint"]):not([class*="Glint"])');
+      const brandRect = brand?.getBoundingClientRect();
+      const previewRect = preview.getBoundingClientRect();
+      const lensRect = lens?.getBoundingClientRect();
+      const intersectsLens = Boolean(brandRect && lensRect &&
+        brandRect.left < lensRect.right && brandRect.right > lensRect.left &&
+        brandRect.top < lensRect.bottom && brandRect.bottom > lensRect.top);
+      return {
+        id: preview.dataset.themePreview,
+        visible: Boolean(brandRect && brandRect.width > 0 && brandRect.height > 0),
+        insidePreview: Boolean(brandRect && brandRect.left >= previewRect.left &&
+          brandRect.right <= previewRect.right && brandRect.top >= previewRect.top &&
+          brandRect.bottom <= previewRect.bottom),
+        intersectsLens,
+        decorativePills: preview.querySelectorAll(':scope > i').length,
+      };
+    });
+  });
+  expect(metrics.map((entry) => entry.id)).toEqual(["se", "light", "dark"]);
+  for (const metric of metrics) {
+    expect(metric.visible).toBe(true);
+    expect(metric.insidePreview).toBe(true);
+    expect(metric.intersectsLens).toBe(false);
+    expect(metric.decorativePills).toBe(0);
+  }
+});

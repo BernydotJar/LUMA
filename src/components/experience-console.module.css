@@ -186,26 +186,48 @@
     #24181a;
 }
 
-.themePreview > span {
-  font-size: 1.4rem;
-  font-weight: 800;
-  letter-spacing: -.04em;
+/* Preview artwork is deliberately separated from text/brand: no floating chip may cross it. */
+.previewBrand {
+  position: relative;
+  z-index: 2;
+  width: min(62%, 220px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 18px rgba(37, 67, 92, .08));
 }
 
-.themePreview > i {
-  width: 44%;
-  height: 18px;
+.previewTitle {
+  position: relative;
+  z-index: 2;
+  max-width: 85%;
+  color: #f7eadb;
+  font-size: clamp(1.15rem, 2vw, 1.65rem);
+  font-weight: 760;
+  letter-spacing: -.045em;
+  line-height: 1.14;
+  text-align: center;
+  text-shadow: 0 3px 16px rgba(0,0,0,.22);
+}
+
+.previewAccent {
   position: absolute;
-  left: 12%;
-  bottom: 22px;
-  border: 1px solid rgba(255,255,255,.35);
-  border-radius: 999px;
-  background: rgba(255,255,255,.3);
-  backdrop-filter: blur(12px);
+  z-index: 1;
+  left: 16%;
+  right: 16%;
+  bottom: 17px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.36), transparent);
+  pointer-events: none;
 }
 
-.themePreview > i:nth-of-type(2) { width: 26%; left: auto; right: 12%; bottom: 53px; }
-.themePreview > i:nth-of-type(3) { width: 18%; left: 42%; bottom: 82px; }
+.themePreview[data-theme-preview="dark"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 55%, rgba(247,234,219,.075), transparent 52%);
+}
+
 
 .themeMeta {
   padding: 17px 6px 4px;
