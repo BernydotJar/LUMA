@@ -1,0 +1,25 @@
+{
+  "model": "ibm/granite3.3:2b",
+  "complete": true,
+  "reviewedSourceDigest": "b33120a7239bd5c103c55f413f5477b6fce645cab78e28d2f081f99eefcb08e0",
+  "sourceSha256": "e5e2e27f07a5db568ff9ea2335a117105b2712e5a3519f621d6f0f793ad7cfb8",
+  "reviewedAt": "2026-10-10T06:24:05.878Z",
+  "evaluation": {
+    "verdict": "BLOCKED",
+    "findings": [
+      {
+        "id": "G1",
+        "severity": "critical",
+        "file": "scripts/release/apphosting.mjs",
+        "evidence": "The script 'scripts/release/apphosting.mjs' uses 'process.env.GITHUB_SHA' for verifying the integrity of the release manifest. However, this variable is not explicitly validated against a trusted source, making it vulnerable to manipulation. An attacker could potentially manipulate the 'GITHUB_SHA' environment variable to bypass integrity checks. This could lead to the deployment of an unverified or malicious release. The fix involves implementing a more robust mechanism to validate 'GITHUB_SHA' against a trusted source, such as a secure secret management system or a trusted third-party service.",
+        "risk": "High",
+        "fix": "Implement a secure mechanism to validate 'GITHUB_SHA' against a trusted source, ensuring its integrity and authenticity."
+      }
+    ]
+  },
+  "metadata": {
+    "doneReason": "stop",
+    "promptEvalCount": 9868,
+    "evalCount": 186
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "checks": [
+    "execFileSync passes shell metacharacters literally without invoking a shell",
+    "Manifest validation rejects command-like SHA values"
+  ],
+  "scope": "Deterministic verification of Granite command-injection allegations; not a full penetration test"
+}

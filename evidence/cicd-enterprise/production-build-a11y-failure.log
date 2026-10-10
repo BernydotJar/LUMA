@@ -1,0 +1,420 @@
+browser	Run npm run test:e2e	﻿2026-10-10T06:21:34.6181710Z ##[group]Run npm run test:e2e
+browser	Run npm run test:e2e	2026-10-10T06:21:34.6182048Z [36;1mnpm run test:e2e[0m
+browser	Run npm run test:e2e	2026-10-10T06:21:34.6242824Z shell: /usr/bin/bash -e {0}
+browser	Run npm run test:e2e	2026-10-10T06:21:34.6243102Z env:
+browser	Run npm run test:e2e	2026-10-10T06:21:34.6243294Z   CI: true
+browser	Run npm run test:e2e	2026-10-10T06:21:34.6243490Z ##[endgroup]
+browser	Run npm run test:e2e	2026-10-10T06:21:34.7244838Z 
+browser	Run npm run test:e2e	2026-10-10T06:21:34.7245272Z > luma-learning-intelligence@0.1.0 test:e2e
+browser	Run npm run test:e2e	2026-10-10T06:21:34.7245867Z > playwright test
+browser	Run npm run test:e2e	2026-10-10T06:21:34.7246071Z 
+browser	Run npm run test:e2e	2026-10-10T06:21:36.0844763Z [WebServer] ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+browser	Run npm run test:e2e	2026-10-10T06:21:36.7379779Z 
+browser	Run npm run test:e2e	2026-10-10T06:21:36.7380893Z Running 116 tests using 2 workers
+browser	Run npm run test:e2e	2026-10-10T06:21:36.7381164Z 
+browser	Run npm run test:e2e	2026-10-10T06:21:41.1981816Z   ✓    2 [chromium] › e2e/adaptive-loop.spec.ts:79:3 › LUMA adaptive learning loop › successful practice evidence changes the next best action (3.7s)
+browser	Run npm run test:e2e	2026-10-10T06:21:41.8511636Z   ✓    3 [chromium] › e2e/auth.spec.ts:4:3 › Google authentication entry points › login explains Google access and lets a learner explore experiences (629ms)
+browser	Run npm run test:e2e	2026-10-10T06:21:41.8697731Z   ✓    1 [chromium] › e2e/adaptive-loop.spec.ts:37:3 › LUMA adaptive learning loop › canonical learner states receive materially different next actions (4.4s)
+browser	Run npm run test:e2e	2026-10-10T06:21:42.0363332Z   -    5 [chromium] › e2e/auth.spec.ts:19:3 › Google authentication entry points › login remains within the mobile viewport
+browser	Run npm run test:e2e	2026-10-10T06:21:42.9841945Z   ✓    4 [chromium] › e2e/auth.spec.ts:12:3 › Google authentication entry points › guest learner surface offers access without pretending to know the learner name (1.1s)
+browser	Run npm run test:e2e	2026-10-10T06:21:43.4209061Z   ✓    6 [chromium] › e2e/class-intelligence.spec.ts:4:3 › AI-native class entry › P.A.S. diagnostic records routing evidence without claiming mastery (1.4s)
+browser	Run npm run test:e2e	2026-10-10T06:21:45.0483591Z   ✓    8 [chromium] › e2e/class-intelligence.spec.ts:84:3 › AI-native class entry › P.A.S. simulation emits rubric-based scored evidence (1.6s)
+browser	Run npm run test:e2e	2026-10-10T06:21:45.3261768Z   ✓    7 [chromium] › e2e/class-intelligence.spec.ts:57:3 › AI-native class entry › every published experience exposes a learning contract (2.3s)
+browser	Run npm run test:e2e	2026-10-10T06:21:46.0071722Z   ✓    9 [chromium] › e2e/class-intelligence.spec.ts:112:3 › AI-native class entry › coach can inspect learning objectives and their evidence (939ms)
+browser	Run npm run test:e2e	2026-10-10T06:21:46.2218862Z   ✓   10 [chromium] › e2e/client-capabilities.spec.ts:4:3 › V2 client discovery capabilities › content intelligence is visible in the library without leaking internal locators (877ms)
+browser	Run npm run test:e2e	2026-10-10T06:21:46.3990101Z   ✓   11 [chromium] › e2e/client-capabilities.spec.ts:16:3 › V2 client discovery capabilities › commerce access requires authentication (373ms)
+browser	Run npm run test:e2e	2026-10-10T06:21:46.4286000Z   ✓   12 [chromium] › e2e/client-capabilities.spec.ts:21:3 › V2 client discovery capabilities › content intelligence search requires authentication (191ms)
+browser	Run npm run test:e2e	2026-10-10T06:21:46.4412629Z   ✓   13 [chromium] › e2e/client-capabilities.spec.ts:29:3 › V2 client discovery capabilities › learner live schedule requires authentication (25ms)
+browser	Run npm run test:e2e	2026-10-10T06:21:46.4568840Z   ✓   14 [chromium] › e2e/client-capabilities.spec.ts:34:3 › V2 client discovery capabilities › coach interventions require a coach identity (14ms)
+browser	Run npm run test:e2e	2026-10-10T06:21:46.4681580Z   ✓   15 [chromium] › e2e/client-capabilities.spec.ts:39:3 › V2 client discovery capabilities › commerce mappings fail closed without an admin identity (15ms)
+browser	Run npm run test:e2e	2026-10-10T06:21:46.4872378Z   ✓   16 [chromium] › e2e/coach-source.spec.ts:4:3 › Coach authoritative learner source › coach API requires authentication (14ms)
+browser	Run npm run test:e2e	2026-10-10T06:21:47.4905061Z   ✓   17 [chromium] › e2e/coach-source.spec.ts:10:3 › Coach authoritative learner source › persistent learner detail never falls back to showcase data without coach authorization (1.0s)
+browser	Run npm run test:e2e	2026-10-10T06:21:47.6235406Z   ✓   18 [chromium] › e2e/coach-source.spec.ts:17:3 › Coach authoritative learner source › existing showcase coach experience remains available (1.1s)
+browser	Run npm run test:e2e	2026-10-10T06:21:48.6124159Z   ✓   19 [chromium] › e2e/content-beta.spec.ts:3:1 › beta content catalog is available to the learner (1.1s)
+browser	Run npm run test:e2e	2026-10-10T06:21:50.2500742Z   ✓   20 [chromium] › e2e/content-beta.spec.ts:12:1 › a reflection creates a practice receipt (2.6s)
+browser	Run npm run test:e2e	2026-10-10T06:21:50.4721113Z   ✓   21 [chromium] › e2e/enterprise-boundary.spec.ts:5:1 › enterprise surfaces do not expose internal delivery artifacts (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:21:51.4553084Z   ✓   22 [chromium] › e2e/enterprise-boundary.spec.ts:22:1 › experience configuration offers real next steps (1.2s)
+browser	Run npm run test:e2e	2026-10-10T06:21:51.5354165Z   ✓   23 [chromium] › e2e/enterprise-boundary.spec.ts:31:1 › unauthenticated coach dashboard does not invent business outcomes (1.0s)
+browser	Run npm run test:e2e	2026-10-10T06:21:52.4470766Z   ✓   24 [chromium] › e2e/enterprise-boundary.spec.ts:42:1 › institutional admissions reject anonymous requests and hide admin controls (977ms)
+browser	Run npm run test:e2e	2026-10-10T06:21:52.5335045Z   ✓   25 [chromium] › e2e/enterprise-boundary.spec.ts:56:1 › academic operations are available only to authenticated administrators (980ms)
+browser	Run npm run test:e2e	2026-10-10T06:21:53.3829714Z   ✓   26 [chromium] › e2e/enterprise-boundary.spec.ts:72:1 › anonymous clients cannot import an institutional enrollment batch (921ms)
+browser	Run npm run test:e2e	2026-10-10T06:21:53.5648400Z   ✓   27 [chromium] › e2e/learner-home-editorial.spec.ts:4:3 › learner-first editorial CX › the first viewport has exactly one primary practice action (1.0s)
+browser	Run npm run test:e2e	2026-10-10T06:21:54.5736104Z   ✓   28 [chromium] › e2e/learner-home-editorial.spec.ts:31:3 › learner-first editorial CX › learners see actual navigation rather than internal controls (1.2s)
+browser	Run npm run test:e2e	2026-10-10T06:21:54.9059932Z   ✓   29 [chromium] › e2e/learner-home-editorial.spec.ts:41:3 › learner-first editorial CX › the full learning path is available without filling the default screen (1.3s)
+browser	Run npm run test:e2e	2026-10-10T06:21:56.3984365Z   ✓   30 [chromium] › e2e/liquid-glass-v2.spec.ts:9:1 › Liquid Light renders bounded refraction without nested glass (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:21:57.5482506Z   ✓   32 [chromium] › e2e/liquid-glass-v2.spec.ts:65:1 › appearance previews keep brands and labels unobstructed (1.1s)
+browser	Run npm run test:e2e	2026-10-10T06:21:58.0758835Z   ✓   33 [chromium] › e2e/live-classroom-auth.spec.ts:7:1 › the branded classroom never issues media credentials to a guest (510ms)
+browser	Run npm run test:e2e	2026-10-10T06:21:58.4088865Z   ✓   31 [chromium] › e2e/liquid-glass-v2.spec.ts:46:1 › Dense content surfaces stay out of the backdrop-filter layer (3.5s)
+browser	Run npm run test:e2e	2026-10-10T06:21:58.5801680Z   -   35 [chromium] › e2e/responsive-mobile.spec.ts:4:3 › responsive mobile product › mobile learner header does not overlap and navigation remains usable
+browser	Run npm run test:e2e	2026-10-10T06:21:58.7324638Z   -   36 [chromium] › e2e/responsive-mobile.spec.ts:31:3 › responsive mobile product › learner navigation retains both certificates and LUMA on mobile
+browser	Run npm run test:e2e	2026-10-10T06:21:58.8813535Z   -   37 [chromium] › e2e/responsive-mobile.spec.ts:58:3 › responsive mobile product › all seven program modules are selectable on mobile
+browser	Run npm run test:e2e	2026-10-10T06:21:59.0318141Z   -   38 [chromium] › e2e/responsive-mobile.spec.ts:73:3 › responsive mobile product › practice suggestions use horizontal snap rather than stacked dashboard cards
+browser	Run npm run test:e2e	2026-10-10T06:21:59.6681454Z   ✓   34 [chromium] › e2e/navigation-single-active.spec.ts:3:1 › studio navigation selects one most-specific destination (1.6s)
+browser	Run npm run test:e2e	2026-10-10T06:22:00.3082876Z   ✓   39 [chromium] › e2e/showcase.spec.ts:10:3 › LUMA product showcase › showcase root enters the learner product immediately (1.0s)
+browser	Run npm run test:e2e	2026-10-10T06:22:01.3212904Z   ✓   41 [chromium] › e2e/showcase.spec.ts:38:3 › LUMA product showcase › coachee navigation keeps internal intelligence out of the learning surface (992ms)
+browser	Run npm run test:e2e	2026-10-10T06:22:01.4265287Z   ✓   40 [chromium] › e2e/showcase.spec.ts:17:3 › LUMA product showcase › onboarding calibrates a learner and enters the journey (1.6s)
+browser	Run npm run test:e2e	2026-10-10T06:22:01.4688164Z   -   42 [chromium] › e2e/showcase.spec.ts:50:3 › LUMA product showcase › secondary destinations remain available to mobile learners
+browser	Run npm run test:e2e	2026-10-10T06:22:02.5519561Z   ✓   44 [chromium] › e2e/showcase.spec.ts:66:3 › LUMA product showcase › coach view exposes proprietary Learning Twin evidence (1.1s)
+browser	Run npm run test:e2e	2026-10-10T06:22:02.6403514Z   ✓   43 [chromium] › e2e/showcase.spec.ts:60:3 › LUMA product showcase › legacy Twin route opens the coach intelligence view (1.2s)
+browser	Run npm run test:e2e	2026-10-10T06:22:04.9019376Z   ✓   46 [chromium] › e2e/showcase.spec.ts:85:3 › LUMA product showcase › tutor blocks unsupported high-stakes course claims (2.2s)
+browser	Run npm run test:e2e	2026-10-10T06:22:04.9050816Z   ✓   45 [chromium] › e2e/showcase.spec.ts:74:3 › LUMA product showcase › learner can inspect recommendation and ask the grounded tutor (2.3s)
+browser	Run npm run test:e2e	2026-10-10T06:22:06.3130808Z   ✓   47 [chromium] › e2e/showcase.spec.ts:97:3 › LUMA product showcase › curriculum reflection creates a reviewable artifact without updating learner state (1.4s)
+browser	Run npm run test:e2e	2026-10-10T06:22:06.5081923Z   ✓   48 [chromium] › e2e/showcase.spec.ts:115:3 › LUMA product showcase › practice produces a real evidence receipt (1.6s)
+browser	Run npm run test:e2e	2026-10-10T06:22:07.9726015Z   ✓   50 [chromium] › e2e/showcase.spec.ts:157:3 › LUMA product showcase › experience configuration focuses on learning actions (1.4s)
+browser	Run npm run test:e2e	2026-10-10T06:22:08.8068373Z   ✓   49 [chromium] › e2e/showcase.spec.ts:131:3 › LUMA product showcase › superuser can compare roles and persist a visual theme (2.5s)
+browser	Run npm run test:e2e	2026-10-10T06:22:09.8130649Z   ✓   51 [chromium] › e2e/showcase.spec.ts:165:3 › LUMA product showcase › learner progress is honest before and after practice evidence (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:22:10.3752554Z   ✓   52 [chromium] › e2e/showcase.spec.ts:202:3 › LUMA product showcase › header navigation only advertises real destinations (1.6s)
+browser	Run npm run test:e2e	2026-10-10T06:22:11.1157067Z   ✓   53 [chromium] › e2e/showcase.spec.ts:214:3 › LUMA product showcase › iconography catalog changes material while preserving semantics (1.3s)
+browser	Run npm run test:e2e	2026-10-10T06:22:12.0872966Z   ✓   55 [chromium] › e2e/showcase.spec.ts:238:3 › LUMA product showcase › Content Intelligence leads with transformation, not the AI operating model (955ms)
+browser	Run npm run test:e2e	2026-10-10T06:22:12.0879726Z   ✓   54 [chromium] › e2e/showcase.spec.ts:224:3 › LUMA product showcase › premium semantic objects appear in the intended product moments (1.7s)
+browser	Run npm run test:e2e	2026-10-10T06:22:13.1325438Z   ✓   56 [chromium] › e2e/showcase.spec.ts:249:3 › LUMA product showcase › studio requires authorized access to participant evidence (1.0s)
+browser	Run npm run test:e2e	2026-10-10T06:22:14.1790775Z   ✘   57 [chromium] › e2e/showcase.spec.ts:255:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks (2.0s)
+browser	Run npm run test:e2e	2026-10-10T06:22:17.9925673Z   ✘   59 [chromium] › e2e/showcase.spec.ts:255:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks (retry #1) (2.7s)
+browser	Run npm run test:e2e	2026-10-10T06:22:20.8748245Z   ✓   58 [chromium] › e2e/spanish-ui.spec.ts:36:1 › client-facing product terminology stays in Spanish (7.7s)
+browser	Run npm run test:e2e	2026-10-10T06:22:23.1023166Z   ✓   60 [mobile] › e2e/adaptive-loop.spec.ts:37:3 › LUMA adaptive learning loop › canonical learner states receive materially different next actions (4.5s)
+browser	Run npm run test:e2e	2026-10-10T06:22:24.3811904Z   ✓   62 [mobile] › e2e/auth.spec.ts:4:3 › Google authentication entry points › login explains Google access and lets a learner explore experiences (1.3s)
+browser	Run npm run test:e2e	2026-10-10T06:22:24.9660678Z   ✓   61 [mobile] › e2e/adaptive-loop.spec.ts:79:3 › LUMA adaptive learning loop › successful practice evidence changes the next best action (3.4s)
+browser	Run npm run test:e2e	2026-10-10T06:22:26.1840284Z   ✓   64 [mobile] › e2e/auth.spec.ts:19:3 › Google authentication entry points › login remains within the mobile viewport (1.2s)
+browser	Run npm run test:e2e	2026-10-10T06:22:26.2277931Z   ✓   63 [mobile] › e2e/auth.spec.ts:12:3 › Google authentication entry points › guest learner surface offers access without pretending to know the learner name (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:22:28.4882797Z   ✓   65 [mobile] › e2e/class-intelligence.spec.ts:4:3 › AI-native class entry › P.A.S. diagnostic records routing evidence without claiming mastery (2.3s)
+browser	Run npm run test:e2e	2026-10-10T06:22:28.9339361Z   ✓   66 [mobile] › e2e/class-intelligence.spec.ts:57:3 › AI-native class entry › every published experience exposes a learning contract (2.7s)
+browser	Run npm run test:e2e	2026-10-10T06:22:30.2702731Z   ✓   67 [mobile] › e2e/class-intelligence.spec.ts:84:3 › AI-native class entry › P.A.S. simulation emits rubric-based scored evidence (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:22:30.8194029Z   ✓   68 [mobile] › e2e/class-intelligence.spec.ts:112:3 › AI-native class entry › coach can inspect learning objectives and their evidence (1.9s)
+browser	Run npm run test:e2e	2026-10-10T06:22:30.8702112Z   ✓   70 [mobile] › e2e/client-capabilities.spec.ts:16:3 › V2 client discovery capabilities › commerce access requires authentication (29ms)
+browser	Run npm run test:e2e	2026-10-10T06:22:30.8963775Z   ✓   71 [mobile] › e2e/client-capabilities.spec.ts:21:3 › V2 client discovery capabilities › content intelligence search requires authentication (11ms)
+browser	Run npm run test:e2e	2026-10-10T06:22:30.9211288Z   ✓   72 [mobile] › e2e/client-capabilities.spec.ts:29:3 › V2 client discovery capabilities › learner live schedule requires authentication (11ms)
+browser	Run npm run test:e2e	2026-10-10T06:22:30.9381568Z   ✓   73 [mobile] › e2e/client-capabilities.spec.ts:34:3 › V2 client discovery capabilities › coach interventions require a coach identity (8ms)
+browser	Run npm run test:e2e	2026-10-10T06:22:30.9617976Z   ✓   74 [mobile] › e2e/client-capabilities.spec.ts:39:3 › V2 client discovery capabilities › commerce mappings fail closed without an admin identity (12ms)
+browser	Run npm run test:e2e	2026-10-10T06:22:30.9901560Z   ✓   75 [mobile] › e2e/coach-source.spec.ts:4:3 › Coach authoritative learner source › coach API requires authentication (10ms)
+browser	Run npm run test:e2e	2026-10-10T06:22:31.9855873Z   ✓   69 [mobile] › e2e/client-capabilities.spec.ts:4:3 › V2 client discovery capabilities › content intelligence is visible in the library without leaking internal locators (1.7s)
+browser	Run npm run test:e2e	2026-10-10T06:22:32.8579465Z   ✓   76 [mobile] › e2e/coach-source.spec.ts:10:3 › Coach authoritative learner source › persistent learner detail never falls back to showcase data without coach authorization (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:22:33.7716193Z   ✓   77 [mobile] › e2e/coach-source.spec.ts:17:3 › Coach authoritative learner source › existing showcase coach experience remains available (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:22:34.6486972Z   ✓   78 [mobile] › e2e/content-beta.spec.ts:3:1 › beta content catalog is available to the learner (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:22:36.8764935Z   ✓   79 [mobile] › e2e/content-beta.spec.ts:12:1 › a reflection creates a practice receipt (3.1s)
+browser	Run npm run test:e2e	2026-10-10T06:22:37.0225746Z   ✓   80 [mobile] › e2e/enterprise-boundary.spec.ts:5:1 › enterprise surfaces do not expose internal delivery artifacts (2.4s)
+browser	Run npm run test:e2e	2026-10-10T06:22:38.8592950Z   ✓   81 [mobile] › e2e/enterprise-boundary.spec.ts:22:1 › experience configuration offers real next steps (2.0s)
+browser	Run npm run test:e2e	2026-10-10T06:22:38.9957353Z   ✓   82 [mobile] › e2e/enterprise-boundary.spec.ts:31:1 › unauthenticated coach dashboard does not invent business outcomes (1.9s)
+browser	Run npm run test:e2e	2026-10-10T06:22:40.6280222Z   ✓   83 [mobile] › e2e/enterprise-boundary.spec.ts:42:1 › institutional admissions reject anonymous requests and hide admin controls (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:22:40.8298915Z   ✓   84 [mobile] › e2e/enterprise-boundary.spec.ts:56:1 › academic operations are available only to authenticated administrators (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:22:42.3690501Z   ✓   85 [mobile] › e2e/enterprise-boundary.spec.ts:72:1 › anonymous clients cannot import an institutional enrollment batch (1.7s)
+browser	Run npm run test:e2e	2026-10-10T06:22:42.5949537Z   ✓   86 [mobile] › e2e/learner-home-editorial.spec.ts:4:3 › learner-first editorial CX › the first viewport has exactly one primary practice action (1.7s)
+browser	Run npm run test:e2e	2026-10-10T06:22:44.1892496Z   ✓   87 [mobile] › e2e/learner-home-editorial.spec.ts:31:3 › learner-first editorial CX › learners see actual navigation rather than internal controls (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:22:44.7432946Z   ✓   88 [mobile] › e2e/learner-home-editorial.spec.ts:41:3 › learner-first editorial CX › the full learning path is available without filling the default screen (2.1s)
+browser	Run npm run test:e2e	2026-10-10T06:22:46.8165246Z   ✓   89 [mobile] › e2e/liquid-glass-v2.spec.ts:9:1 › Liquid Light renders bounded refraction without nested glass (2.6s)
+browser	Run npm run test:e2e	2026-10-10T06:22:48.6087813Z   ✓   91 [mobile] › e2e/liquid-glass-v2.spec.ts:65:1 › appearance previews keep brands and labels unobstructed (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:22:49.1933493Z   ✓   90 [mobile] › e2e/liquid-glass-v2.spec.ts:46:1 › Dense content surfaces stay out of the backdrop-filter layer (4.4s)
+browser	Run npm run test:e2e	2026-10-10T06:22:49.4914641Z   ✓   92 [mobile] › e2e/live-classroom-auth.spec.ts:7:1 › the branded classroom never issues media credentials to a guest (865ms)
+browser	Run npm run test:e2e	2026-10-10T06:22:51.3222158Z   ✓   93 [mobile] › e2e/navigation-single-active.spec.ts:3:1 › studio navigation selects one most-specific destination (2.1s)
+browser	Run npm run test:e2e	2026-10-10T06:22:52.1791404Z   ✓   94 [mobile] › e2e/responsive-mobile.spec.ts:4:3 › responsive mobile product › mobile learner header does not overlap and navigation remains usable (2.7s)
+browser	Run npm run test:e2e	2026-10-10T06:22:53.3161574Z   ✓   95 [mobile] › e2e/responsive-mobile.spec.ts:31:3 › responsive mobile product › learner navigation retains both certificates and LUMA on mobile (2.0s)
+browser	Run npm run test:e2e	2026-10-10T06:22:54.6770236Z   ✓   96 [mobile] › e2e/responsive-mobile.spec.ts:58:3 › responsive mobile product › all seven program modules are selectable on mobile (2.5s)
+browser	Run npm run test:e2e	2026-10-10T06:22:55.0386180Z   ✓   97 [mobile] › e2e/responsive-mobile.spec.ts:73:3 › responsive mobile product › practice suggestions use horizontal snap rather than stacked dashboard cards (1.7s)
+browser	Run npm run test:e2e	2026-10-10T06:22:56.5864086Z   ✓   98 [mobile] › e2e/showcase.spec.ts:10:3 › LUMA product showcase › showcase root enters the learner product immediately (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:22:58.0292293Z   ✓   99 [mobile] › e2e/showcase.spec.ts:17:3 › LUMA product showcase › onboarding calibrates a learner and enters the journey (2.9s)
+browser	Run npm run test:e2e	2026-10-10T06:22:58.4681141Z   ✓  100 [mobile] › e2e/showcase.spec.ts:38:3 › LUMA product showcase › coachee navigation keeps internal intelligence out of the learning surface (1.9s)
+browser	Run npm run test:e2e	2026-10-10T06:23:00.0440650Z   ✓  101 [mobile] › e2e/showcase.spec.ts:50:3 › LUMA product showcase › secondary destinations remain available to mobile learners (2.0s)
+browser	Run npm run test:e2e	2026-10-10T06:23:00.3361123Z   ✓  102 [mobile] › e2e/showcase.spec.ts:60:3 › LUMA product showcase › legacy Twin route opens the coach intelligence view (1.9s)
+browser	Run npm run test:e2e	2026-10-10T06:23:01.8599866Z   ✓  103 [mobile] › e2e/showcase.spec.ts:66:3 › LUMA product showcase › coach view exposes proprietary Learning Twin evidence (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:23:03.4093213Z   ✓  104 [mobile] › e2e/showcase.spec.ts:74:3 › LUMA product showcase › learner can inspect recommendation and ask the grounded tutor (3.1s)
+browser	Run npm run test:e2e	2026-10-10T06:23:05.0078436Z   ✓  105 [mobile] › e2e/showcase.spec.ts:85:3 › LUMA product showcase › tutor blocks unsupported high-stakes course claims (3.1s)
+browser	Run npm run test:e2e	2026-10-10T06:23:05.2414372Z   ✓  106 [mobile] › e2e/showcase.spec.ts:97:3 › LUMA product showcase › curriculum reflection creates a reviewable artifact without updating learner state (1.8s)
+browser	Run npm run test:e2e	2026-10-10T06:23:06.9384092Z   ✓  107 [mobile] › e2e/showcase.spec.ts:115:3 › LUMA product showcase › practice produces a real evidence receipt (1.9s)
+browser	Run npm run test:e2e	2026-10-10T06:23:07.4986361Z   ✓  108 [mobile] › e2e/showcase.spec.ts:131:3 › LUMA product showcase › superuser can compare roles and persist a visual theme (2.2s)
+browser	Run npm run test:e2e	2026-10-10T06:23:08.9723348Z   ✓  109 [mobile] › e2e/showcase.spec.ts:157:3 › LUMA product showcase › experience configuration focuses on learning actions (2.0s)
+browser	Run npm run test:e2e	2026-10-10T06:23:09.7107834Z   ✓  110 [mobile] › e2e/showcase.spec.ts:165:3 › LUMA product showcase › learner progress is honest before and after practice evidence (2.2s)
+browser	Run npm run test:e2e	2026-10-10T06:23:11.0887589Z   ✓  111 [mobile] › e2e/showcase.spec.ts:202:3 › LUMA product showcase › header navigation only advertises real destinations (2.1s)
+browser	Run npm run test:e2e	2026-10-10T06:23:11.7291779Z   ✓  112 [mobile] › e2e/showcase.spec.ts:214:3 › LUMA product showcase › iconography catalog changes material while preserving semantics (2.0s)
+browser	Run npm run test:e2e	2026-10-10T06:23:13.2795773Z   ✓  113 [mobile] › e2e/showcase.spec.ts:224:3 › LUMA product showcase › premium semantic objects appear in the intended product moments (2.2s)
+browser	Run npm run test:e2e	2026-10-10T06:23:13.7013683Z   ✓  114 [mobile] › e2e/showcase.spec.ts:238:3 › LUMA product showcase › Content Intelligence leads with transformation, not the AI operating model (1.9s)
+browser	Run npm run test:e2e	2026-10-10T06:23:13.9371259Z   -  116 [mobile] › e2e/showcase.spec.ts:255:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks
+browser	Run npm run test:e2e	2026-10-10T06:23:14.9853750Z   ✓  115 [mobile] › e2e/showcase.spec.ts:249:3 › LUMA product showcase › studio requires authorized access to participant evidence (1.7s)
+browser	Run npm run test:e2e	2026-10-10T06:23:22.1661553Z   ✓  117 [mobile] › e2e/spanish-ui.spec.ts:36:1 › client-facing product terminology stays in Spanish (8.2s)
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2505827Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2511690Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2524768Z   1) [chromium] › e2e/showcase.spec.ts:255:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2525631Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2525739Z     Error: [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2525951Z       {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2526196Z         "id": "color-contrast",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2526470Z         "impact": "serious",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2526939Z         "tags": [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2527306Z           "cat.color",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2527707Z           "wcag2aa",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2528069Z           "wcag143",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2528428Z           "TTv5",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2528809Z           "TT13.c",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2529492Z           "EN-301-549",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2529763Z           "EN-9.1.4.3",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2530160Z           "ACT"
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2530520Z         ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2531578Z         "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2532885Z         "help": "Elements must meet minimum color contrast ratio thresholds",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2534054Z         "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2534895Z         "nodes": [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2535241Z           {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2535574Z             "any": [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2535932Z               {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2536345Z                 "id": "color-contrast",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2536820Z                 "data": {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2537268Z                   "fgColor": "#00a2f1",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2537778Z                   "bgColor": "#faf9f6",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2538299Z                   "contrastRatio": 2.68,
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2538848Z                   "fontSize": "7.0pt (9.28px)",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2539763Z                   "fontWeight": "bold",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2540291Z                   "messageKey": null,
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2540853Z                   "expectedContrastRatio": "4.5:1"
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2541364Z                 },
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2541776Z                 "relatedNodes": [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2542208Z                   {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2543013Z                     "html": "<section class=\"learn_intro__oZcks\" aria-labelledby=\"learner-home-title\">",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2543842Z                     "target": [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2544329Z                       ".learn_intro__oZcks"
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2544791Z                     ]
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2545156Z                   }
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2545504Z                 ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2545913Z                 "impact": "serious",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2547504Z                 "message": "Element has insufficient color contrast of 2.68 (foreground color: #00a2f1, background color: #faf9f6, font size: 7.0pt (9.28px), font weight: bold). Expected contrast ratio of 4.5:1"
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2548877Z               }
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2549509Z             ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2549859Z             "all": [],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2550235Z             "none": [],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2550662Z             "impact": "serious",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2551123Z             "html": "<a href=\"/login\">Accede para personalizar tu experiencia</a>",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2551516Z             "target": [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2551876Z               ".learner-greeting_guestGreeting__QF_yC > a[href$=\"login\"]"
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2552240Z             ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2553211Z             "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.68 (foreground color: #00a2f1, background color: #faf9f6, font size: 7.0pt (9.28px), font weight: bold). Expected contrast ratio of 4.5:1"
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2554336Z           }
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2554537Z         ]
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2554721Z       }
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2554906Z     ]
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2555019Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2555200Z     expect(received).toEqual(expected) // deep equality
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2555439Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2555540Z     - Expected  -  1
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2555884Z     + Received  + 56
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2556015Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2556103Z     - Array []
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2556303Z     + Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2556502Z     +   Object {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2557099Z     +     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2557841Z     +     "help": "Elements must meet minimum color contrast ratio thresholds",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2558608Z     +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2559513Z     +     "id": "color-contrast",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2559829Z     +     "impact": "serious",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2560085Z     +     "nodes": Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2560308Z     +       Object {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2560548Z     +         "all": Array [],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2560787Z     +         "any": Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2561025Z     +           Object {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2561278Z     +             "data": Object {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2561564Z     +               "bgColor": "#faf9f6",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2561872Z     +               "contrastRatio": 2.68,
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2562331Z     +               "expectedContrastRatio": "4.5:1",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2562672Z     +               "fgColor": "#00a2f1",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2562985Z     +               "fontSize": "7.0pt (9.28px)",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2563533Z     +               "fontWeight": "bold",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2563998Z     +               "messageKey": null,
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2564447Z     +             },
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2564748Z     +             "id": "color-contrast",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2565054Z     +             "impact": "serious",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2565949Z     +             "message": "Element has insufficient color contrast of 2.68 (foreground color: #00a2f1, background color: #faf9f6, font size: 7.0pt (9.28px), font weight: bold). Expected contrast ratio of 4.5:1",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2566778Z     +             "relatedNodes": Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2567044Z     +               Object {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2567523Z     +                 "html": "<section class=\"learn_intro__oZcks\" aria-labelledby=\"learner-home-title\">",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2568009Z     +                 "target": Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2568314Z     +                   ".learn_intro__oZcks",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2568590Z     +                 ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2568814Z     +               },
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2569023Z     +             ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2569568Z     +           },
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2569784Z     +         ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2570076Z     +         "failureSummary": "Fix any of the following:
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2570960Z     +   Element has insufficient color contrast of 2.68 (foreground color: #00a2f1, background color: #faf9f6, font size: 7.0pt (9.28px), font weight: bold). Expected contrast ratio of 4.5:1",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2571850Z     +         "html": "<a href=\"/login\">Accede para personalizar tu experiencia</a>",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2572271Z     +         "impact": "serious",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2572547Z     +         "none": Array [],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2572828Z     +         "target": Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2573212Z     +           ".learner-greeting_guestGreeting__QF_yC > a[href$=\"login\"]",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2573579Z     +         ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2573786Z     +       },
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2573979Z     +     ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2574182Z     +     "tags": Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2574414Z     +       "cat.color",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2574646Z     +       "wcag2aa",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2575030Z     +       "wcag143",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2575239Z     +       "TTv5",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2575449Z     +       "TT13.c",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2575664Z     +       "EN-301-549",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2575894Z     +       "EN-9.1.4.3",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2576111Z     +       "ACT",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2576315Z     +     ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2576618Z     +   },
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2576805Z     + ]
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2576913Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2577113Z       4 | async function expectNoA11yViolations(page: Page) {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2577682Z       5 |   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2578365Z     > 6 |   expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2578901Z         |                                                                           ^
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2579607Z       7 | }
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2579814Z       8 |
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2580112Z       9 | test.describe("LUMA product showcase", () => {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2580641Z         at expectNoA11yViolations (/home/runner/work/LUMA/LUMA/e2e/showcase.spec.ts:6:75)
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2581196Z         at /home/runner/work/LUMA/LUMA/e2e/showcase.spec.ts:274:7
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2581453Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2581930Z     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2582714Z     test-results/showcase-LUMA-product-show-80086-tisfy-automated-WCAG-checks-chromium/test-failed-1.png
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2583518Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2583811Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2584282Z     Error Context: test-results/showcase-LUMA-product-show-80086-tisfy-automated-WCAG-checks-chromium/error-context.md
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2584789Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2585143Z     Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2585449Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2585539Z     Error: [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2585920Z       {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2586330Z         "id": "color-contrast",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2586805Z         "impact": "serious",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2587244Z         "tags": [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2587620Z           "cat.color",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2588017Z           "wcag2aa",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2588420Z           "wcag143",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2588783Z           "TTv5",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2589338Z           "TT13.c",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2589714Z           "EN-301-549",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2590122Z           "EN-9.1.4.3",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2590520Z           "ACT"
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2590885Z         ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2591962Z         "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2593323Z         "help": "Elements must meet minimum color contrast ratio thresholds",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2594788Z         "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2595378Z         "nodes": [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2595592Z           {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2595796Z             "any": [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2596007Z               {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2596380Z                 "id": "color-contrast",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2596872Z                 "data": {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2597161Z                   "fgColor": "#00a2f1",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2597682Z                   "bgColor": "#faf9f6",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2598228Z                   "contrastRatio": 2.68,
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2598732Z                   "fontSize": "7.0pt (9.28px)",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2599391Z                   "fontWeight": "bold",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2599975Z                   "messageKey": null,
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2600558Z                   "expectedContrastRatio": "4.5:1"
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2601098Z                 },
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2601531Z                 "relatedNodes": [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2601993Z                   {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2602784Z                     "html": "<section class=\"learn_intro__oZcks\" aria-labelledby=\"learner-home-title\">",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2603603Z                     "target": [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2604095Z                       ".learn_intro__oZcks"
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2604557Z                     ]
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2605173Z                   }
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2605536Z                 ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2605962Z                 "impact": "serious",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2607575Z                 "message": "Element has insufficient color contrast of 2.68 (foreground color: #00a2f1, background color: #faf9f6, font size: 7.0pt (9.28px), font weight: bold). Expected contrast ratio of 4.5:1"
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2608978Z               }
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2609562Z             ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2609920Z             "all": [],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2610292Z             "none": [],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2610716Z             "impact": "serious",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2611450Z             "html": "<a href=\"/login\">Accede para personalizar tu experiencia</a>",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2612135Z             "target": [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2612783Z               ".learner-greeting_guestGreeting__QF_yC > a[href$=\"login\"]"
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2613415Z             ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2615162Z             "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.68 (foreground color: #00a2f1, background color: #faf9f6, font size: 7.0pt (9.28px), font weight: bold). Expected contrast ratio of 4.5:1"
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2616902Z           }
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2617239Z         ]
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2617560Z       }
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2617882Z     ]
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2618063Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2618392Z     expect(received).toEqual(expected) // deep equality
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2618816Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2618991Z     - Expected  -  1
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2619708Z     + Received  + 56
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2619953Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2620105Z     - Array []
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2620445Z     + Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2620776Z     +   Object {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2621849Z     +     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2623174Z     +     "help": "Elements must meet minimum color contrast ratio thresholds",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2624344Z     +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2625251Z     +     "id": "color-contrast",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2625738Z     +     "impact": "serious",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2626181Z     +     "nodes": Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2626573Z     +       Object {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2626989Z     +         "all": Array [],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2627414Z     +         "any": Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2627834Z     +           Object {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2628280Z     +             "data": Object {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2629061Z     +               "bgColor": "#faf9f6",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2629870Z     +               "contrastRatio": 2.68,
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2630471Z     +               "expectedContrastRatio": "4.5:1",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2631059Z     +               "fgColor": "#00a2f1",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2631615Z     +               "fontSize": "7.0pt (9.28px)",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2632190Z     +               "fontWeight": "bold",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2632720Z     +               "messageKey": null,
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2633180Z     +             },
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2633604Z     +             "id": "color-contrast",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2634139Z     +             "impact": "serious",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2635760Z     +             "message": "Element has insufficient color contrast of 2.68 (foreground color: #00a2f1, background color: #faf9f6, font size: 7.0pt (9.28px), font weight: bold). Expected contrast ratio of 4.5:1",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2637261Z     +             "relatedNodes": Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2637643Z     +               Object {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2638143Z     +                 "html": "<section class=\"learn_intro__oZcks\" aria-labelledby=\"learner-home-title\">",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2638799Z     +                 "target": Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2651325Z     +                   ".learn_intro__oZcks",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2651872Z     +                 ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2652528Z     +               },
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2652911Z     +             ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2653281Z     +           },
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2653635Z     +         ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2654157Z     +         "failureSummary": "Fix any of the following:
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2655809Z     +   Element has insufficient color contrast of 2.68 (foreground color: #00a2f1, background color: #faf9f6, font size: 7.0pt (9.28px), font weight: bold). Expected contrast ratio of 4.5:1",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2657474Z     +         "html": "<a href=\"/login\">Accede para personalizar tu experiencia</a>",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2658236Z     +         "impact": "serious",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2658731Z     +         "none": Array [],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2659466Z     +         "target": Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2660175Z     +           ".learner-greeting_guestGreeting__QF_yC > a[href$=\"login\"]",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2660838Z     +         ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2661184Z     +       },
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2661541Z     +     ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2661893Z     +     "tags": Array [
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2662304Z     +       "cat.color",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2662703Z     +       "wcag2aa",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2663081Z     +       "wcag143",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2663457Z     +       "TTv5",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2663816Z     +       "TT13.c",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2664196Z     +       "EN-301-549",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2664591Z     +       "EN-9.1.4.3",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2664979Z     +       "ACT",
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2665330Z     +     ],
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2665662Z     +   },
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2665981Z     + ]
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2666166Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2666526Z       4 | async function expectNoA11yViolations(page: Page) {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2667557Z       5 |   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2668781Z     > 6 |   expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2669986Z         |                                                                           ^
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2670546Z       7 | }
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2670881Z       8 |
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2671366Z       9 | test.describe("LUMA product showcase", () => {
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2672319Z         at expectNoA11yViolations (/home/runner/work/LUMA/LUMA/e2e/showcase.spec.ts:6:75)
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2673274Z         at /home/runner/work/LUMA/LUMA/e2e/showcase.spec.ts:274:7
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2673729Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2674546Z     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2676268Z     test-results/showcase-LUMA-product-show-80086-tisfy-automated-WCAG-checks-chromium-retry1/test-failed-1.png
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2677898Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2678456Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2679025Z     Error Context: test-results/showcase-LUMA-product-show-80086-tisfy-automated-WCAG-checks-chromium-retry1/error-context.md
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2680093Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2680560Z     attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2681355Z     test-results/showcase-LUMA-product-show-80086-tisfy-automated-WCAG-checks-chromium-retry1/trace.zip
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2681910Z     Usage:
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2682032Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2682778Z         npx playwright show-trace test-results/showcase-LUMA-product-show-80086-tisfy-automated-WCAG-checks-chromium-retry1/trace.zip
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2683382Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2683758Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2684062Z 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2684153Z   1 failed
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2684801Z     [chromium] › e2e/showcase.spec.ts:255:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks 
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2685348Z   7 skipped
+browser	Run npm run test:e2e	2026-10-10T06:23:22.2685571Z   108 passed (1.8m)
+browser	Run npm run test:e2e	2026-10-10T06:23:22.3700140Z ##[error]Process completed with exit code 1.

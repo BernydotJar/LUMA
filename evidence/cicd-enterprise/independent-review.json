@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "reviewedSourceDigest": "4b0fc2faa433f2698d022a452690a1bcb6181b5976ba0ff82c1ad408cc90f9dd",
+  "reviewer": "Deterministic source verification plus independent GitHub-hosted checks; not a separate human approval",
+  "scope": "Release-code readiness only. Production rollout, OIDC execution, traffic, serving SHA and browser smoke remain separate uncompleted gates.",
+  "unresolvedCritical": 0,
+  "unresolvedHigh": 0,
+  "dispositions": [
+    {
+      "id": "G1",
+      "status": "false-positive",
+      "evidence": [
+        "e2e/showcase.spec.ts now waits for the anonymous learner login link before the unchanged Axe WCAG assertion on / and /learn.",
+        "src/components/learner-greeting.tsx explicitly renders that link when authentication is initialized and no user is signed in; Playwright supplies a fresh anonymous context.",
+        "The new assertion does not skip a route, ignore an Axe rule, delete a test or catch an accessibility failure. It prevents the audit from racing the loading placeholder.",
+        "src/components/learner-greeting.module.css replaces an insufficient decorative accent with the existing theme-specific foreground token and adds an underline. The required CI browser check still decides whether the production rendering passes."
+      ],
+      "reason": "The cumulative Granite output labels the visibility assertion high severity but describes no defect or bypass and itself returns PASS. The actual assertion strengthens coverage. Its alleged concern is closed as unsupported, not by removing the test."
+    }
+  ],
+  "priorReviewDispositions": [
+    {
+      "review": "granite-review-v3.json",
+      "id": "G1",
+      "status": "false-positive",
+      "evidence": [
+        "scripts/release/apphosting.mjs verifyGitHub reads GitHub branches/main and requires protected=true and branch.commit.sha===manifest.gitSha.",
+        "It reads the actual Actions run and checks head_sha, push event and main branch, then checks every required job through the GitHub API.",
+        "verifyGitHub is called before cloud changes and again before rollout; the manifest is not accepted solely on the basis of GITHUB_SHA.",
+        "The configured OIDC provider additionally constrains repository ID, owner ID, main ref, production subject, exact quality.yml workflow and push event."
+      ]
+    },
+    {
+      "review": "granite-review-v2.json",
+      "ids": [
+        "G1",
+        "G4"
+      ],
+      "status": "false-positive",
+      "evidence": [
+        ".github/workflows/quality.yml injects the automatic github.token only into the deployment step. Repository permissions are contents:read and actions:read; id-token:write authorizes OIDC, not repository writes.",
+        "The token is used only in a header to the fixed GitHub API origin and is never serialized to the manifest, evidence, console output or source archive.",
+        "OIDC public resource identifiers are environment variables, not service-account keys. The dedicated account has no user-managed keys according to the recorded IAM API read-back."
+      ]
+    },
+    {
+      "review": "granite-review-v2.json",
+      "ids": [
+        "G2",
+        "G3"
+      ],
+      "status": "false-positive",
+      "evidence": [
+        "prepare.mjs uses execFileSync with fixed executable names and argument arrays, not a shell command string. gitSha and gitTree must be 40 lowercase hexadecimal characters; archive roots are fixed and follow the -- separator.",
+        "review-gate.mjs uses a fixed git argument list and a fixed Python program; the directory and event ID are separate argv entries, never interpolated into the Python source or a shell.",
+        "argument-safety-probe.json records an executed literal-argv test and rejection of command-like SHA values. The release-policy tests also reject invalid manifests and cross-project/backend targets.",
+        "An exception propagates to a failed release gate; it is not converted to PASS."
+      ]
+    }
+  ],
+  "independentChecks": {
+    "unitTests": "291 passed locally; 52 existing emulator-only cases are exercised in the separate Firestore/Auth jobs, not misrepresented as local passes.",
+    "graphChain": "640 existing events independently rehashed successfully; no event or event hash was repaired.",
+    "branchAndIdentity": "Actual GitHub and IAM configuration was read back into github-protection.json and identity-configuration.json.",
+    "rollbackValidation": "The App Hosting API accepted validateOnly for the existing READY build and traffic remained identical; this was not an actual rollback drill.",
+    "candidateCi": "All five required GitHub-hosted jobs succeeded for this exact commit; browser tested the production build extracted from the release archive."
+  },
+  "realDefectsRepaired": [
+    "Original seven browser failures: actual mobile secondary selection state and obsolete presentation/navigation expectations, without dropping behavioral assertions.",
+    "GitHub runner context incorrectly referenced at job-env scope: initialization moved to a runner step.",
+    "Archive allowlist referenced a nonexistent PostCSS file: corrected against the actual tree.",
+    "Existing TypeScript tests import service contracts: included those contracts and made CI build the exact release archive.",
+    "Production-build Axe exposed insufficient guest-login contrast: corrected the foreground and made auth-ready audit timing explicit."
+  ],
+  "limitations": [
+    "This is not a separate human two-person approval. Main still requires PRs and all five checks, including for administrators.",
+    "A raw model severity label is not accepted or suppressed without checking its concrete assertion against code and evidence; raw outputs remain preserved.",
+    "The legacy serving build has no verified Git SHA. It is not treated as an automatically eligible SHA-proven rollback target.",
+    "Production browser smoke does not sign in as a real participant; role grants, revocation and persistence are tested using isolated emulators.",
+    "A source-bound pre-promotion approval is not proof of successful production deployment."
+  ],
+  "primaryReferences": [
+    "https://nodejs.org/download/release/latest-jod/docs/api/child_process.html#child_processexecfilesyncfile-args-options",
+    "https://docs.github.com/es/actions/tutorials/authenticate-with-github_token",
+    "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#context-availability",
+    "https://firebase.google.com/docs/reference/apphosting/rest/v1beta/projects.locations.backends.rollouts/create"
+  ],
+  "ciRunId": "38030894624",
+  "testedCommit": "cee98c8030bb66d2f72c63c2a343f05b10416701",
+  "nonBlockingMaintenance": [
+    "GitHub reports Node 20 deprecation for pinned action versions and a planned ubuntu-latest migration beginning October 19, 2026. These are maintenance warnings, not ignored failed checks; action/runner upgrades require a separately verified change."
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "observedAt": "2026-10-10T05:57:27.839Z",
+  "repository": "BernydotJar/LUMA",
+  "protection": {
+    "url": "https://api.github.com/repos/BernydotJar/LUMA/branches/main/protection",
+    "required_status_checks": {
+      "url": "https://api.github.com/repos/BernydotJar/LUMA/branches/main/protection/required_status_checks",
+      "strict": true,
+      "contexts": [
+        "verify",
+        "security",
+        "firestore",
+        "identity-roles",
+        "browser"
+      ],
+      "contexts_url": "https://api.github.com/repos/BernydotJar/LUMA/branches/main/protection/required_status_checks/contexts",
+      "checks": [
+        {
+          "context": "verify",
+          "app_id": 15368
+        },
+        {
+          "context": "security",
+          "app_id": 15368
+        },
+        {
+          "context": "firestore",
+          "app_id": 15368
+        },
+        {
+          "context": "identity-roles",
+          "app_id": 15368
+        },
+        {
+          "context": "browser",
+          "app_id": 15368
+        }
+      ]
+    },
+    "required_pull_request_reviews": {
+      "url": "https://api.github.com/repos/BernydotJar/LUMA/branches/main/protection/required_pull_request_reviews",
+      "dismiss_stale_reviews": true,
+      "require_code_owner_reviews": false,
+      "require_last_push_approval": false,
+      "required_approving_review_count": 0
+    },
+    "required_signatures": {
+      "url": "https://api.github.com/repos/BernydotJar/LUMA/branches/main/protection/required_signatures",
+      "enabled": false
+    },
+    "enforce_admins": {
+      "url": "https://api.github.com/repos/BernydotJar/LUMA/branches/main/protection/enforce_admins",
+      "enabled": true
+    },
+    "required_linear_history": {
+      "enabled": false
+    },
+    "allow_force_pushes": {
+      "enabled": false
+    },
+    "allow_deletions": {
+      "enabled": false
+    },
+    "block_creations": {
+      "enabled": false
+    },
+    "required_conversation_resolution": {
+      "enabled": true
+    },
+    "lock_branch": {
+      "enabled": false
+    },
+    "allow_fork_syncing": {
+      "enabled": false
+    }
+  },
+  "environment": {
+    "name": "production",
+    "deployment_branch_policy": {
+      "protected_branches": true,
+      "custom_branch_policies": false
+    }
+  },
+  "humanApprovalCount": 0,
+  "note": "PR and verified CI are mandatory for all actors, including administrators. No separate human approval is configured for this owner-operated repository. Administrative policy recovery remains available in repository Settings; it is not a merge bypass."
+}

@@ -15,7 +15,9 @@
   min-height: 40px;
   display: inline-flex;
   align-items: center;
-  color: var(--accent);
+  color: var(--cx-ink, var(--ink));
+  text-decoration: underline;
+  text-underline-offset: .2em;
   font-size: .58rem;
   font-weight: 820;
 }

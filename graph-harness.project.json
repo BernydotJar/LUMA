@@ -20,6 +20,22 @@
         "visual"
       ],
       "blocking": true
+    },
+    {
+      "id": "cicd-release",
+      "required_evidence_kinds": [
+        "critic",
+        "verification",
+        "ci"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "cicd-production",
+      "required_evidence_kinds": [
+        "production"
+      ],
+      "blocking": true
     }
   ],
   "nodes": [
@@ -1726,6 +1742,35 @@
         "src/components/app-shell.module.css",
         "e2e/responsive-mobile.spec.ts"
       ]
+    },
+    {
+      "id": "LUMA-CICD-002-release-pipeline",
+      "kind": "release-engineering",
+      "title": "Protected CI, keyless release and exact production verification",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "enterprise-delivery",
+      "gates": {
+        "review": [
+          "cicd-release"
+        ],
+        "done": [
+          "cicd-production"
+        ]
+      },
+      "allowed_paths": [
+        ".github/**",
+        "scripts/release/**",
+        "docs/operations/**",
+        "evidence/cicd-enterprise/**",
+        "src/app/api/version/**",
+        "src/generated/**",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl"
+      ],
+      "metadata": {
+        "authorization": "Explicit user request to implement the supplied enterprise CI/CD brief; no production release before verification"
+      }
     }
   ]
 }
