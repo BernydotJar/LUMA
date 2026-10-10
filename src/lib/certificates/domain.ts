@@ -94,7 +94,12 @@ export function canManageCertificates(
   learnerId?: string,
 ): boolean {
   if (access.unrestricted) return true;
-  // Cohort assignment AND explicit scope are both required.
+  // A tenant-scoped administrator may operate the academic certificate flow
+  // for their own organization without also appearing as a cohort coach.
+  if (access.institutionalAdmin) {
+    return access.tenantIds.includes(offering.tenantId);
+  }
+  // Coach access still requires BOTH assigned cohort and explicit scope.
   if (!offering.coachIds.includes(uid)) return false;
   return access.tenantIds.includes(offering.tenantId) ||
     Boolean(learnerId && access.learnerIds.includes(learnerId));

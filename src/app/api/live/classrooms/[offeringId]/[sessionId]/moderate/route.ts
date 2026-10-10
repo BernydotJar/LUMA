@@ -10,7 +10,7 @@ export async function POST(
   context: { params: Promise<{ offeringId: string; sessionId: string }> },
 ) {
   try {
-    const user = await requireLearningUser(request);
+    const user = await requireLearningUser(request, { checkRevoked: true });
     const { offeringId, sessionId } = await context.params;
     const classroom = await authorizeClassroom(user, offeringId, sessionId);
     if (classroom.role !== "instructor") {

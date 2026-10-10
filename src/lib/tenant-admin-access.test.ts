@@ -14,6 +14,17 @@ describe("cross-module tenant administrative authority", () => {
       .toThrow("TENANT_ADMIN_REQUIRED");
     expect(() => assertTenantAdmin({ superuser: true }, "tenant-b")).not.toThrow();
   });
+  it("prioritizes explicit adminTenantIds and makes revocation fail closed", () => {
+    const role = { admin: true, tenantId: "tenant-b",
+      tenantIds: ["tenant-c"], adminTenantIds: ["tenant-a"] };
+    expect(authorizedAdminTenants(role)).toEqual(["tenant-a"]);
+    expect(() => assertTenantAdmin(role, "tenant-b")).toThrow("TENANT_ADMIN_FORBIDDEN");
+    expect(() => assertTenantAdmin(role, "tenant-a")).not.toThrow();
+    const revoked = { ...role, adminTenantIds: [] };
+    expect(authorizedAdminTenants(revoked)).toEqual([]);
+    expect(() => assertTenantAdmin(revoked, "tenant-b")).toThrow("TENANT_ADMIN_FORBIDDEN");
+  });
+
   it("enforces tenant boundaries for all certificate administrative actions", () => {
     expect(() => assertCertificateTenantAccess(
       { admin: true, adminTenantIds: ["tenant-a"] }, "tenant-b",
