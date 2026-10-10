@@ -1394,11 +1394,11 @@
 @media (max-width: 760px) {
   :global(html[data-theme]) .nextAction[data-variant="hero"] {
     min-height: 0;
-    padding: 22px;
+    padding: 18px;
     border-radius: 19px;
   }
-  :global(html[data-theme]) .nextAction[data-variant="hero"] .nextActionContent { margin: 25px 0 17px; }
+  :global(html[data-theme]) .nextAction[data-variant="hero"] .nextActionContent { margin: 17px 0 12px; }
   :global(html[data-theme]) .nextAction[data-variant="hero"] h2 { font-size: clamp(1.6rem, 6.9vw, 2.2rem); }
   :global(html[data-theme]) .nextAction[data-variant="hero"] .actionDescription { font-size: .76rem; }
-  :global(html[data-theme]) .nextAction[data-variant="hero"] .nextActionFooter :global(.button-primary) { min-height: 49px; }
+  :global(html[data-theme]) .nextAction[data-variant="hero"] .nextActionFooter :global(.button-primary) { min-height: 49px; scroll-margin-block: 78px calc(104px + env(safe-area-inset-bottom, 0px)); }
 }

@@ -286,15 +286,16 @@ a.goalLine:hover span { text-decoration: underline; text-underline-offset: 3px; 
   .progressArea { grid-template-columns: 1fr; }
 }
 @media (max-width: 760px) {
-  .intro { padding: 27px 21px 20px; border-radius: 23px; gap: 24px; }
-  .introCopy > p:not(.introBody) { margin-top: 17px; }
+  .intro { padding: 18px 20px 15px; border-radius: 23px; gap: 14px; }
+  .introCopy > p:not(.introBody) { margin-top: 10px; }
+  .introCopy > div:first-of-type { margin-top: 10px; }
   .introCopy h2 {
-    margin-top: 11px;
-    font-size: clamp(2.35rem, 10.5vw, 3.4rem);
+    margin-top: 8px;
+    font-size: clamp(2.25rem, 10vw, 3.3rem);
     line-height: 1.04;
   }
-  .introBody { margin-top: 14px; font-size: .82rem; line-height: 1.56; }
-  .goalLine { margin-top: 15px; min-height: 38px; font-size: .72rem; }
+  .introBody { margin-top: 10px; font-size: .82rem; line-height: 1.56; }
+  .goalLine { margin-top: 10px; min-height: 38px; font-size: .72rem; }
   .quickNav { grid-template-columns: 1fr; gap: 8px; margin-top: 10px; }
   .quickNav a:last-child { grid-column: auto; }
   .quickNav a { min-height: 67px; padding: 13px 17px; border-radius: 15px; }

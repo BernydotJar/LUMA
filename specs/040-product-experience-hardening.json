@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "luma.cx-hardening.workstream.v1",
+  "workstreamId": "LUMA-CXH-20261010",
+  "baselineCommit": "7daba30e1469bda7b9198353d95f3f7db7b74ee1",
+  "executionBrief": "docs/product-experience-hardening/AGENT_EXECUTION.md",
+  "priorities": "docs/product-experience-hardening/PRIORITIES.md",
+  "acceptanceMatrix": "docs/product-experience-hardening/ACCEPTANCE_MATRIX.md",
+  "controls": {
+    "method": [
+      "Producer",
+      "Critic",
+      "Fixer",
+      "Independent Verifier",
+      "Release Gate",
+      "Evidence"
+    ],
+    "releaseMode": "gated",
+    "mergeRequires": [
+      "passing_ci_on_exact_sha",
+      "browser_geometry",
+      "a11y_smoke",
+      "independent_review",
+      "human_approval"
+    ],
+    "restricted": [
+      "production_account_changes",
+      "real_learner_data_access",
+      "payments_or_emails",
+      "external_calls_without_approval",
+      "secret_exfiltration"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "CXH-001",
+      "priority": "P0",
+      "state": "in_progress",
+      "title": "Mobile primary CTA + safe-area",
+      "dependsOn": [],
+      "paths": [
+        "src/app/learn/learn.module.css",
+        "src/components/learner-components.module.css",
+        "src/components/app-shell.module.css",
+        "e2e/mobile-cta-occlusion.spec.ts"
+      ],
+      "evidence": [
+        "evidence/cx-hardening-2026-10-10/baseline.json",
+        "evidence/cx-hardening-2026-10-10/after.json"
+      ],
+      "acceptance": "CTA unobstructed on 390x844/428x926 with >=8px nav clearance; 320/360 accessible after scroll; 3 themes, no horizontal overflow."
+    },
+    {
+      "id": "CXH-002",
+      "priority": "P0",
+      "state": "queued",
+      "title": "Scoped real-role learner-to-coach QA journey",
+      "dependsOn": [
+        "CXH-001"
+      ],
+      "paths": [
+        "e2e/",
+        "src/lib/learning-api-client.ts",
+        "src/lib/learning-entitlement.ts",
+        "src/lib/learning-server.ts"
+      ],
+      "evidence": [
+        "evidence/cx-hardening-2026-10-10/actors.md"
+      ],
+      "acceptance": "Emulator/staging tenant only: authorized learner and coach E2E with signed entitlement, server receipt across contexts, foreign-tenant denial; production actors require explicit approval."
+    },
+    {
+      "id": "CXH-003",
+      "priority": "P1",
+      "state": "queued",
+      "title": "WCAG 2.2 AA / 3 themes / manual accessibility",
+      "dependsOn": [
+        "CXH-001"
+      ],
+      "paths": [
+        "e2e/",
+        "src/app/",
+        "src/components/"
+      ],
+      "evidence": [
+        "evidence/cx-hardening-2026-10-10/a11y.md"
+      ],
+      "acceptance": "Automated axe 0 serious or critical on core flows, keyboard, focus, reduced motion and documented manual VoiceOver/TalkBack."
+    },
+    {
+      "id": "CXH-004",
+      "priority": "P1",
+      "state": "queued",
+      "title": "Performance and stability metrics",
+      "dependsOn": [
+        "CXH-001"
+      ],
+      "paths": [
+        "scripts/",
+        "src/app/",
+        "src/components/"
+      ],
+      "evidence": [
+        "evidence/cx-hardening-2026-10-10/performance.md"
+      ],
+      "acceptance": "Reproducible lab before/after; field LCP p75<=2.5s, INP p75<=200ms, CLS p75<=0.1 only when representative RUM exists."
+    },
+    {
+      "id": "CXH-005",
+      "priority": "P2",
+      "state": "queued",
+      "title": "Measured premium interaction polish",
+      "dependsOn": [
+        "CXH-002",
+        "CXH-003"
+      ],
+      "paths": [
+        "src/app/",
+        "src/components/"
+      ],
+      "evidence": [
+        "evidence/cx-hardening-2026-10-10/ux-review.md"
+      ],
+      "acceptance": "No fake states or inert controls; approved copy, accessible microinteractions, no regression of role/tenant boundaries."
+    },
+    {
+      "id": "CXH-006",
+      "priority": "gate",
+      "state": "queued",
+      "title": "Independent verification and release",
+      "dependsOn": [
+        "CXH-001",
+        "CXH-002",
+        "CXH-003",
+        "CXH-004"
+      ],
+      "paths": [
+        ".github/workflows/quality.yml",
+        "scripts/release/",
+        "evidence/"
+      ],
+      "evidence": [
+        "evidence/cx-hardening-2026-10-10/release-decision.md"
+      ],
+      "acceptance": "Exact SHA passes GitHub security/identity/Firestore/browser/verify/build, independent critic/verifier and human release approval; deployment smoke + rollback evidence."
+    }
+  ]
+}

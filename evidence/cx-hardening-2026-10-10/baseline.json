@@ -1,0 +1,95 @@
+{
+  "schema": "luma.cx.mobile-geometry.v1",
+  "capturedAt": "2026-10-10",
+  "sourceCommit": "7daba30e1469bda7b9198353d95f3f7db7b74ee1",
+  "url": "https://luma.lch-app.cloud/learn",
+  "browser": "headless Chromium via Playwright; mobile emulation; 2x DPR, touch",
+  "phase": "BEFORE",
+  "timing": "DOMContentLoaded + 450ms; guest state, SE theme",
+  "cases": [
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "httpStatus": 200,
+      "cta": {
+        "top": 747.375,
+        "bottom": 796.375,
+        "height": 49
+      },
+      "nav": {
+        "top": 762,
+        "bottom": 834
+      },
+      "horizontalOverflowPx": 0,
+      "verticalOverlapPx": 34.375,
+      "clearancePx": -34.375,
+      "assessment": "FAIL: primary CTA partially obscured by fixed nav"
+    },
+    {
+      "viewport": {
+        "width": 428,
+        "height": 926
+      },
+      "httpStatus": 200,
+      "cta": {
+        "top": 712.75,
+        "bottom": 761.75,
+        "height": 49
+      },
+      "nav": {
+        "top": 844,
+        "bottom": 916
+      },
+      "horizontalOverflowPx": 0,
+      "verticalOverlapPx": 0,
+      "clearancePx": 82.25,
+      "assessment": "PASS at first viewport"
+    },
+    {
+      "viewport": {
+        "width": 360,
+        "height": 740
+      },
+      "httpStatus": 200,
+      "cta": {
+        "top": 755.53125,
+        "bottom": 804.53125,
+        "height": 49
+      },
+      "nav": {
+        "top": 658,
+        "bottom": 730
+      },
+      "horizontalOverflowPx": 0,
+      "verticalOverlapPx": 0,
+      "clearancePx": -146.53125,
+      "assessment": "BELOW FIRST VIEWPORT: must be reachable after scroll"
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "httpStatus": 200,
+      "cta": {
+        "top": 828.125,
+        "bottom": 877.125,
+        "height": 49
+      },
+      "nav": {
+        "top": 486,
+        "bottom": 558
+      },
+      "horizontalOverflowPx": 0,
+      "verticalOverlapPx": 0,
+      "clearancePx": -391.125,
+      "assessment": "BELOW FIRST VIEWPORT: must be reachable after scroll"
+    }
+  ],
+  "limitations": [
+    "This measures guest homepage only. It does not prove keyboard, screen-reader, sign-in or production entitlements.",
+    "Not a Web Vitals / RUM measurement."
+  ]
+}
