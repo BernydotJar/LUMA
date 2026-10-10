@@ -30,8 +30,13 @@ test("experience configuration offers real next steps", async ({ page }) => {
 
 test("unauthenticated coach dashboard does not invent business outcomes", async ({ page }) => {
   await page.goto("/studio");
-  await expect(page.getByText(/Accede para consultar a tus participantes/i)).toBeVisible();
-  await expect(page.getByRole("link", { name: /Iniciar sesi[oó]n/i })).toHaveAttribute("href", "/login");
+  // CI observed duplicate heading matches during hydration. Scope the
+  // assertion to one accessible access-control status region.
+  const authGate = page.getByRole("status")
+    .filter({ has: page.getByRole("heading", { name: /Accede para consultar a tus participantes/i }) })
+    .first();
+  await expect(authGate.getByRole("heading", { name: /Accede para consultar a tus participantes/i })).toBeVisible();
+  await expect(authGate.getByRole("link", { name: /Iniciar sesi[oó]n/i })).toHaveAttribute("href", "/login");
   const body = await page.locator("body").innerText();
   expect(body).not.toContain("+18.4%");
   expect(body).not.toContain("128");
