@@ -45,6 +45,16 @@ const studioNavigation = [
   { href: "/learn", label: "Vista participante", icon: Sparkles },
 ];
 
+/** Only the most-specific matching destination is selected. */
+export function activeNavigationHref(pathname: string, hrefs: readonly string[]): string | null {
+  const candidates = hrefs.filter((href) => {
+    if (href.includes("#")) return false;
+    const route = href.split("#")[0];
+    return pathname === route || (route !== "/learn" && pathname.startsWith(`${route}/`));
+  });
+  return candidates.sort((a, b) => b.length - a.length)[0] ?? null;
+}
+
 export function AppShell({
   children,
   mode = "learner",
@@ -60,6 +70,7 @@ export function AppShell({
 }) {
   const pathname = usePathname();
   const navigation = mode === "studio" ? studioNavigation : learnerNavigation;
+  const activeHref = activeNavigationHref(pathname, navigation.map((item) => item.href));
   const studio = mode === "studio";
   // The learner's LUMA assistant must stay visible on mobile.
   // Secondary destinations are accessible via "Más", never silently removed.
@@ -84,14 +95,9 @@ export function AppShell({
           aria-label={studio ? "Navegación del entrenador" : "Navegación de aprendizaje"}
         >
           {navigation.map(({ href, label, icon: Icon }) => {
-            const pathOnly = href.split("#")[0];
-            const hasHash = href.includes("#");
-            const active =
-              !hasHash &&
-              (pathname === pathOnly ||
-                (pathOnly !== "/learn" && pathname.startsWith(pathOnly)));
+            const active = href === activeHref;
             return (
-              <Link href={href} key={href} aria-label={label} className={active ? styles.activeNav : undefined}>
+              <Link href={href} key={href} aria-label={label} className={active ? styles.activeNav : undefined} aria-current={active ? "page" : undefined}>
                 <Icon size={19} strokeWidth={1.8} />
                 <span>{label}</span>
                 {active && <span className={styles.activeDot} />}
@@ -136,14 +142,9 @@ export function AppShell({
 
       <nav className={`${styles.mobileNav} glass`} data-mode={mode} aria-label="Navegación móvil">
         {mobilePrimary.map(({ href, label, icon: Icon }) => {
-          const pathOnly = href.split("#")[0];
-          const hasHash = href.includes("#");
-          const active =
-            !hasHash &&
-            (pathname === pathOnly ||
-              (pathOnly !== "/learn" && pathname.startsWith(pathOnly)));
+          const active = href === activeHref;
           return (
-            <Link href={href} key={href} aria-label={label} className={active ? styles.mobileActive : undefined}>
+            <Link href={href} key={href} aria-label={label} className={active ? styles.mobileActive : undefined} aria-current={active ? "page" : undefined}>
               <Icon size={20} />
               <span>{label}</span>
             </Link>
