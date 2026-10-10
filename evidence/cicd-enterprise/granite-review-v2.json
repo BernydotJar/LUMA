@@ -1,0 +1,49 @@
+{
+  "model": "ibm/granite3.3:2b",
+  "complete": true,
+  "reviewedSourceDigest": "2bdc22fa12dec1214dbc922cd45f63dec0ed7d5ce761513bf487e5c4b3c5f30d",
+  "sourceSha256": "77460ef401ba4d1affd407630851d9006acb168048d204aabf9eb1e80b8db6ad",
+  "reviewedAt": "2026-10-10T06:19:00.044Z",
+  "evaluation": {
+    "verdict": "BLOCKED",
+    "findings": [
+      {
+        "id": "G1",
+        "severity": "critical",
+        "file": "scripts/release/apphosting.mjs",
+        "evidence": "The script 'scripts/release/apphosting.mjs' uses 'process.env.GH_TOKEN' for GitHub read token without proper validation or secret management. This poses a significant security risk as the token could be exposed or misused.",
+        "risk": "High",
+        "fix": "Implement proper secret management for GitHub read token, ensuring it's not exposed in the code or environment variables. Consider using environment variable secrets or a secrets management service."
+      },
+      {
+        "id": "G2",
+        "severity": "critical",
+        "file": "scripts/release/prepare.mjs",
+        "evidence": "The script 'scripts/release/prepare.mjs' uses 'git' command without proper input validation, potentially allowing for command injection attacks. This could lead to unauthorized code execution or data access.",
+        "risk": "High",
+        "fix": "Implement proper input validation for 'git' command arguments to prevent command injection attacks."
+      },
+      {
+        "id": "G3",
+        "severity": "critical",
+        "file": "scripts/release/review-gate.mjs",
+        "evidence": "The script 'scripts/release/review-gate.mjs' uses 'execFileSync' to execute external commands without proper error handling or input sanitization, potentially exposing sensitive information or allowing for command injection attacks.",
+        "risk": "High",
+        "fix": "Implement proper error handling and input sanitization for 'execFileSync' calls to prevent command injection and sensitive information exposure."
+      },
+      {
+        "id": "G4",
+        "severity": "critical",
+        "file": "scripts/release/apphosting.mjs",
+        "evidence": "The script 'scripts/release/apphosting.mjs' uses 'process.env.GH_TOKEN' for GitHub read token without proper validation or secret management, similar to 'scripts/release/apphosting.mjs'. This poses a significant security risk as the token could be exposed or misused.",
+        "risk": "High",
+        "fix": "Implement proper secret management for GitHub read token, ensuring it's not exposed in the code or environment variables. Consider using environment variable secrets or a secrets management service."
+      }
+    ]
+  },
+  "metadata": {
+    "doneReason": "stop",
+    "promptEvalCount": 9761,
+    "evalCount": 436
+  }
+}

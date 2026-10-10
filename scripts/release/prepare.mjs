@@ -13,7 +13,7 @@ const git = (...args) => execFileSync('git', args, { cwd: root, encoding: 'utf8'
 const changed = git('diff', '--name-only', manifest.gitSha).trim().split('\n').filter(Boolean).filter(path => path !== 'src/generated/release-manifest.json');
 invariant(changed.length === 0, `Tested checkout differs from archived commit: ${changed.join(', ')}`);
 // Upload committed application roots, not credentials or historical reports.
-const roots = ['package.json', 'package-lock.json', 'apphosting.yaml', 'next.config.ts', 'tsconfig.json', 'src', 'public', 'scripts'];
+const roots = ['package.json', 'package-lock.json', 'apphosting.yaml', 'next.config.ts', 'tsconfig.json', 'src', 'public', 'scripts', 'services'];
 const files = git('ls-tree', '-r', '--name-only', manifest.gitSha, '--', ...roots).trim().split('\n');
 for (const file of files) invariant(!/(^|\/)(\.env(?:\.|$)|gha-creds-|.*\.(pem|p12|pfx|key)$)/i.test(file), `Forbidden release file: ${file}`);
 const staging = mkdtempSync(resolve(tmpdir(), 'luma-source-'));

@@ -9,7 +9,7 @@ export const hash = value => createHash('sha256').update(value).digest('hex');
 export function reviewedSourceDigest(directory = root) {
   const paths = execFileSync('git', ['ls-files', '-z', '--cached', '--others', '--exclude-standard'], { cwd: directory, encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 }).split('\0').filter(Boolean);
   const files = [...new Set(paths)].filter(file =>
-    /^(src\/|public\/|scripts\/|e2e\/|\.github\/)/.test(file) ||
+    /^(src\/|public\/|scripts\/|services\/|e2e\/|\.github\/)/.test(file) ||
     /^(package(-lock)?\.json|apphosting\.yaml|next\.config\.ts|tsconfig\.json|postcss\.config\.mjs|playwright\.config\.ts|vitest\.config\.ts|eslint\.config\.mjs|firebase\.json|firestore\.(rules|indexes\.json))$/.test(file),
   ).filter(file => file !== 'src/generated/release-manifest.json').sort();
   invariant(files.length > 0, 'No reviewed source files found');
