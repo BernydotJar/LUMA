@@ -68,17 +68,18 @@ export function ExperienceConsole() {
                 {item.id === "se" ? (
                   <Image
                     src="/brand/seres-de-excelencia/logo.png"
+                    className={styles.previewBrand}
                     alt="Seres de Excelencia"
-                    width={168}
-                    height={40}
-                    sizes="168px"
+                    width={220}
+                    height={72}
+                    sizes="(max-width: 760px) 180px, 220px"
                   />
                 ) : item.id === "light" ? (
                   <LiquidGlassPreview />
                 ) : (
-                  <span>{item.shortLabel}</span>
+                  <span className={styles.previewTitle}>{item.label}</span>
                 )}
-                {item.id !== "light" ? <><i /><i /><i /></> : null}
+                {item.id !== "light" ? <span className={styles.previewAccent} aria-hidden="true" /> : null}
               </div>
               <span className={styles.themeMeta}>
                 <small>{item.shortLabel}</small>
