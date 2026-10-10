@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Check, LogOut, Pencil, UserRound, X } from "lucide-react";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import { useLumaAuth } from "@/components/auth-provider";
 import { firstDisplayName } from "@/lib/profile-name";
 import styles from "./account-menu.module.css";
@@ -15,6 +15,9 @@ export function AccountMenu({ mode }: { mode: "learner" | "studio" }) {
   const [notice, setNotice] = useState("");
   const [saving, setSaving] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const popoverId = useId();
 
   useEffect(() => {
     function onPointerDown(event: PointerEvent) {
@@ -27,6 +30,23 @@ export function AccountMenu({ mode }: { mode: "learner" | "studio" }) {
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
   }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    closeRef.current?.focus();
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      setOpen(false);
+      setEditing(false);
+      setNotice("");
+      triggerRef.current?.focus();
+    }
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [open]);
 
   if (loading) {
     return <div className={styles.skeleton} role="status" aria-label="Cargando sesión" />;
@@ -63,10 +83,12 @@ export function AccountMenu({ mode }: { mode: "learner" | "studio" }) {
     <div className={styles.account} ref={containerRef}>
       <button
         className={styles.accountButton}
+        ref={triggerRef}
         type="button"
         aria-expanded={open}
         aria-haspopup="dialog"
-        aria-label={`Abrir perfil de ${label}`}
+        aria-controls={open ? popoverId : undefined}
+        aria-label={`${open ? "Cerrar" : "Abrir"} perfil de ${label}`}
         onClick={() => {
           setOpen((value) => !value);
           setNotice("");
@@ -80,7 +102,7 @@ export function AccountMenu({ mode }: { mode: "learner" | "studio" }) {
       </button>
 
       {open && (
-        <section className={styles.popover} role="dialog" aria-label="Perfil de LUMA">
+        <section id={popoverId} className={styles.popover} role="dialog" aria-label="Perfil de LUMA">
           <header>
             <div>
               <span className={styles.avatarLarge}>{initial}</span>
@@ -89,7 +111,10 @@ export function AccountMenu({ mode }: { mode: "learner" | "studio" }) {
                 <small>{user.email}</small>
               </div>
             </div>
-            <button type="button" aria-label="Cerrar perfil" onClick={() => setOpen(false)}>
+            <button ref={closeRef} type="button" aria-label="Cerrar perfil" onClick={() => {
+              setOpen(false);
+              triggerRef.current?.focus();
+            }}>
               <X size={16} />
             </button>
           </header>
@@ -99,6 +124,7 @@ export function AccountMenu({ mode }: { mode: "learner" | "studio" }) {
               <label htmlFor="preferred-name">¿Cómo quieres que te llamemos?</label>
               <input
                 id="preferred-name"
+                autoFocus
                 autoComplete="nickname"
                 maxLength={48}
                 value={name}

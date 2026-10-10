@@ -14,6 +14,13 @@
   --glass-saturation: 1.12;
   --surface: rgba(11, 27, 22, .94);
   --surface-strong: rgba(11, 27, 22, .98);
+  --content-fill: #0b1b16;
+  --optical-control-fill: rgba(17, 39, 32, .82);
+  --optical-popover-fill: rgba(11, 27, 22, .96);
+  --optical-rim: rgba(255, 255, 255, .18);
+  --optical-blur: 12px;
+  --optical-saturation: 1.08;
+  --focus-ring: #c9f15a;
   --accent: #c9f15a;
   --accent-soft: rgba(201, 241, 90, 0.14);
   --mint: #75dfc2;
@@ -146,7 +153,7 @@ h3 {
 .content-surface {
   position: relative;
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: var(--content-fill);
   box-shadow:
     0 18px 54px color-mix(in srgb, var(--ink) 7%, transparent),
     inset 0 1px 0 color-mix(in srgb, var(--ink-strong) 5%, transparent);
@@ -229,7 +236,7 @@ a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid rgba(201, 241, 90, 0.42);
+  outline: 3px solid var(--focus-ring);
   outline-offset: 3px;
 }
 
@@ -355,6 +362,13 @@ html[data-theme="se"] {
   --glass-saturation: 1.08;
   --surface: rgba(255, 255, 255, .92);
   --surface-strong: rgba(255, 255, 255, .97);
+  --content-fill: #ffffff;
+  --optical-control-fill: rgba(255,255,255,.76);
+  --optical-popover-fill: rgba(255,255,255,.96);
+  --optical-rim: rgba(61,97,131,.2);
+  --optical-blur: 13px;
+  --optical-saturation: 1.08;
+  --focus-ring: #006fab;
   --accent: #00a2f1;
   --accent-soft: rgba(0, 162, 241, .12);
   --mint: #2bb3b1;
@@ -384,6 +398,13 @@ html[data-theme="light"] {
   --glass-saturation: 1.08;
   --surface: rgba(255, 255, 255, .88);
   --surface-strong: rgba(255, 255, 255, .96);
+  --content-fill: #ffffff;
+  --optical-control-fill: rgba(255,255,255,.7);
+  --optical-popover-fill: rgba(255,255,255,.96);
+  --optical-rim: rgba(29,29,31,.18);
+  --optical-blur: 12px;
+  --optical-saturation: 1.08;
+  --focus-ring: #0059b9;
   --accent: #0a84ff;
   --accent-soft: rgba(10, 132, 255, .12);
   --mint: #2bb3b1;
@@ -413,6 +434,13 @@ html[data-theme="dark"] {
   --glass-saturation: 1.04;
   --surface: rgba(36, 24, 26, .92);
   --surface-strong: rgba(36, 24, 26, .97);
+  --content-fill: #24181a;
+  --optical-control-fill: rgba(48,29,32,.86);
+  --optical-popover-fill: rgba(36,24,26,.97);
+  --optical-rim: rgba(255,238,210,.18);
+  --optical-blur: 12px;
+  --optical-saturation: 1.04;
+  --focus-ring: #efc86a;
   --accent: #efc86a;
   --accent-soft: rgba(239, 200, 106, .12);
   --mint: #9dac78;
@@ -515,7 +543,9 @@ html[data-theme="dark"] .content-surface {
   }
 
   .glass {
-    background: var(--glass-strong);
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: var(--content-fill) !important;
   }
 }
 

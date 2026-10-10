@@ -150,9 +150,9 @@
 .profileButton {
   border: 1px solid var(--line);
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.055);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  background: var(--optical-control-fill);
+  -webkit-backdrop-filter: blur(var(--optical-blur)) saturate(var(--optical-saturation));
+  backdrop-filter: blur(var(--optical-blur)) saturate(var(--optical-saturation));
   cursor: pointer;
 }
 
@@ -163,6 +163,13 @@
   display: grid;
   place-items: center;
   border-radius: 15px;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.iconButton:hover {
+  transform: translateY(-1px);
+  border-color: var(--optical-rim);
+  box-shadow: inset 0 1px 0 var(--optical-rim);
 }
 
 .notificationDot {
@@ -942,14 +949,57 @@
 
 @media (prefers-reduced-transparency: reduce) {
   .topbar,
+  .sidebar,
+  .mobileNav,
   .iconButton,
   .profileButton {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
 
+  .sidebar,
+  .mobileNav,
   .iconButton,
   .profileButton {
-    background: var(--surface-strong) !important;
+    background: var(--content-fill) !important;
+  }
+}
+
+/* v4: keyboard focus must survive active materials and theme overrides. */
+.navigation a:focus-visible,
+.mobileNav a:focus-visible,
+.mobileMore summary:focus-visible,
+.iconButton:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  :global(html[data-theme]) .shell .sidebar,
+  :global(html[data-theme]) .shell .mobileNav,
+  :global(html[data-theme]) .shell .iconButton,
+  :global(html[data-theme]) .shell .profileButton {
+    background: var(--content-fill) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  :global(html[data-theme]) .shell .topbar {
+    background: var(--content-fill) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :global(html[data-theme]) .shell .sidebar,
+  :global(html[data-theme]) .shell .mobileNav,
+  :global(html[data-theme]) .shell .iconButton {
+    border-color: var(--ink) !important;
+  }
+  .navigation .activeNav,
+  .mobileNav .mobileActive {
+    outline: 2px solid var(--ink);
+    outline-offset: -2px;
   }
 }

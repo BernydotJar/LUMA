@@ -116,3 +116,35 @@ This placement rule intentionally keeps the content visually dominant while navi
 - Keep the UI navigation and bounded optical demonstration as functional glass surfaces.
 - Treat Glass-HQ WebGPU v0.0.1 as a reference and opt-in experiment, not a global runtime dependency; full cross-browser validation is required.
 - A change to material class must not modify component semantics, permission checks, or event handling.
+
+## Unified Optical System v4
+
+### Material taxonomy and placement
+
+| Material | Implementation | Appropriate surfaces | Exclusions |
+| --- | --- | --- | --- |
+| Content | `content-surface`, `--content-fill` | Long-form reading, coach evidence, learning cards, data panels and reflections | Backdrop filtering, refracted or chromatically shifted text |
+| Regular | `--optical-control-fill`, `--optical-popover-fill`, `--optical-blur` | Navigation and secondary controls, account and contextual popovers | Nested glass, scroll-heavy data tables |
+| Clear | Local, opt-in specimen only | Over media/visual backgrounds when underlying context matters | Charts, rubrics, scorecards, body text panels |
+| Refractive | Existing local SVG displacement with cloned stable DOM scene | Optical Lab demonstration and deliberately bounded previews | Core learning workflow and automatic runtime upgrade to WebGPU |
+
+The `se`, `light` and `dark` themes provide explicit values for `--content-fill`, `--optical-control-fill`, `--optical-popover-fill`, `--optical-rim`, `--optical-blur`, `--optical-saturation` and `--focus-ring`. The account popover and user-experience switch use the same optical control token family, and dense information surfaces are fully opaque in every theme.
+
+### Accessible behavior
+
+- Keyboard focus must be visible against every theme. Active navigation destinations expose `aria-current="page"`.
+- Account menu supports Escape to dismiss and returns focus to its trigger; its internal scroll area remains reachable on mobile.
+- The reduced-transparency and increased-contrast preferences disable backdrop effects on functional navigation, toolbars and account menus, with an opaque material fallback.
+- The SVG lens skips generating its displacement map when reduced transparency is enabled. Reduced motion follows the product-wide rule.
+- The Optical Lab at `/preview/optical-lab` is deliberately not indexed. An available WebGPU adapter is **not** proof that a WebGPU refraction engine has been integrated.
+
+### Acceptance and performance gates
+
+1. Run existing unit/TS/ESLint/build checks. Do not claim build PASS if the shared sandbox exits 137 or times out.
+2. Run Chromium desktop and mobile regression including at minimum navigation, content opacity, material selector and reduced-transparency mode.
+3. Run the expanded adversarial matrix: 14 routes x 3 themes x 2 viewports = 84 scenarios. Capture warnings for protected and redirected routes without treating auth placeholders as full authenticated user-flow coverage.
+4. Run the opt-in WebKit Playwright project (`LUMA_WEBKIT=1`) with a supported browser binary to check Safari-like rendering. WebKit Playwright is evidence for the rendering engine, not proof of physical-device Safari parity.
+5. Block promotion if there are WCAG A/AA failures, new text clipping, nested glass, broken protected workflows, or unusable reduced-motion/transparency fallbacks. Compare blur coverage/performance against an equivalent baseline instead of claiming unmeasured speed improvements.
+6. Review a rendered visual snapshot on physical iOS Safari before claiming a fully production-verified optical implementation.
+
+Glass-HQ is a design and experimental reference. It is not an unconditional dependency or a polyfill; evaluate it separately with controlled performance, browser-support and accessibility measurements.

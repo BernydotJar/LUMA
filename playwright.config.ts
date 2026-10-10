@@ -22,6 +22,9 @@ export default defineConfig({
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "mobile", use: { ...devices["iPhone 14"], browserName: "chromium" } }
+    { name: "mobile", use: { ...devices["iPhone 14"], browserName: "chromium" } },
+    ...(process.env.LUMA_WEBKIT === "1"
+      ? [{ name: "webkit", use: { ...devices["Desktop Safari"], browserName: "webkit" as const } }]
+      : []),
   ]
 });

@@ -78,9 +78,10 @@
   right: 0;
   z-index: 140;
   color: var(--ink);
-  background: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
+  background: var(--optical-popover-fill);
   box-shadow: 0 28px 80px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.42);
-  backdrop-filter: blur(24px) saturate(125%);
+  -webkit-backdrop-filter: blur(var(--optical-blur)) saturate(var(--optical-saturation));
+  backdrop-filter: blur(var(--optical-blur)) saturate(var(--optical-saturation));
 }
 
 .popover header,
@@ -206,7 +207,7 @@
 }
 
 .nameForm button[type="submit"] {
-  color: #fff;
+  color: var(--active-control-ink, #102015);
   border-color: transparent;
   background: var(--accent);
 }
@@ -250,5 +251,23 @@
 
   .skeleton {
     width: 44px;
+  }
+}
+
+/* Regular optical material for the account popover; solid in accessibility modes. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .popover, .accountButton, .signInLink {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--content-fill);
+    border-color: var(--line-strong);
+  }
+}
+
+@media (max-width: 760px) {
+  .popover {
+    max-height: calc(100dvh - 88px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 }

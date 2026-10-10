@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Bell,
   Award,
   BookOpen,
   BrainCircuit,
@@ -92,7 +91,7 @@ export function AppShell({
               (pathname === pathOnly ||
                 (pathOnly !== "/learn" && pathname.startsWith(pathOnly)));
             return (
-              <Link href={href} key={href} aria-label={label} className={active ? styles.activeNav : undefined}>
+              <Link href={href} key={href} aria-label={label} aria-current={active ? "page" : undefined} className={active ? styles.activeNav : undefined}>
                 <Icon size={19} strokeWidth={1.8} />
                 <span>{label}</span>
                 {active && <span className={styles.activeDot} />}
@@ -122,13 +121,9 @@ export function AppShell({
           <div className={styles.topbarActions}>
             <ExperienceControl mode={mode} />
             {actions}
-            <button className={styles.iconButton} type="button" aria-label="Buscar">
+            <Link href="/library" className={styles.iconButton} aria-label="Buscar en biblioteca" title="Buscar en biblioteca">
               <Search size={19} />
-            </button>
-            <button className={styles.iconButton} type="button" aria-label="Notificaciones">
-              <Bell size={19} />
-              <span className={styles.notificationDot} />
-            </button>
+            </Link>
             <AccountMenu mode={mode} />
           </div>
         </header>
@@ -144,7 +139,7 @@ export function AppShell({
             (pathname === pathOnly ||
               (pathOnly !== "/learn" && pathname.startsWith(pathOnly)));
           return (
-            <Link href={href} key={href} aria-label={label} className={active ? styles.mobileActive : undefined}>
+            <Link href={href} key={href} aria-label={label} aria-current={active ? "page" : undefined} className={active ? styles.mobileActive : undefined}>
               <Icon size={20} />
               <span>{label}</span>
             </Link>
