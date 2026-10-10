@@ -7,6 +7,7 @@ import { LiquidGlassPreview } from "@/components/liquid-glass-preview";
 import { SemanticObject } from "@/components/semantic-object";
 import { useLumaTheme } from "@/components/theme-provider";
 import { lumaThemes } from "@/lib/themes";
+import { seresDeExcelenciaBrand } from "@/lib/institutions/public-brand";
 import styles from "./experience-console.module.css";
 
 const capabilities = [
@@ -67,9 +68,9 @@ export function ExperienceConsole() {
               <div className={styles.themePreview} data-theme-preview={item.id}>
                 {item.id === "se" ? (
                   <Image
-                    src="/brand/seres-de-excelencia/logo.png"
+                    src={seresDeExcelenciaBrand.logoPath}
                     className={styles.previewBrand}
-                    alt="Seres de Excelencia"
+                    alt={seresDeExcelenciaBrand.displayName}
                     width={220}
                     height={72}
                     sizes="(max-width: 760px) 180px, 220px"
