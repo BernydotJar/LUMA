@@ -46,3 +46,11 @@ Two independent, authorized institutions can eventually use the same learning en
 - Only platform superusers may create institutional drafts. Tenant administrators must have dedicated `adminTenantIds` and revoked-token checks; legacy learner/coach scope claims are insufficient.
 - `InstitutionDraft` is NOT the published `InstitutionConfigStore`, so drafts cannot change entitlement, curriculum access, AI provider budget or CEFR certification.
 - Firestore emulator tests use an isolated `demo-*` project. The local workstation has a Java 21 runtime under `/opt/luma-jre21`; do not change system Java or production IAM to run tests.
+
+## Institutional publication preflight (GRUV-002B)
+
+- Follow `specs/069-institution-publication-readiness.md`. Publication inspection is only a **read-only** source capability; it never publishes a tenant or grants learner access.
+- `LUMA_INSTITUTION_PREFLIGHT_ENABLED` is unset/disabled by default. No production API activation as an implication of local tests.
+- A revoked-ID-token-verified **platform superuser** is required. Tenant-scoped admins/learners/coaches cannot use publication preflight.
+- Never treat `localChecksPassed`, `inspectionDigest`, active offering presence or an AI evaluation as authorization. `activationAllowed` must remain `false` without a separate security-reviewed publication mechanism.
+- Each `programId` query is tenant-scoped and limited; over-cap or corrupt reads fail closed. Production Firestore index deployment and point-in-time consistency are separate release gates.

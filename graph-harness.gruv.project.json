@@ -90,13 +90,48 @@
       ]
     },
     {
+      "id": "LUMA-GRUV-002B-publication-readiness",
+      "kind": "platform-foundation",
+      "title": "Evidence-based institution publication preflight that cannot activate tenants",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "program-provenance-and-safety",
+      "gates": {
+        "review": [
+          "adversarial-product-review"
+        ],
+        "done": [
+          "independent-quality"
+        ]
+      },
+      "allowed_paths": [
+        "AGENTS.md",
+        "README.md",
+        "docs/strategy/luma-gruv-operating-command.md",
+        "architecture/luma-gruv-product-line.md",
+        "docs/enterprise/institution-publication-preflight.md",
+        "specs/069-institution-publication-readiness.md",
+        "src/lib/institutions/**",
+        "src/lib/institution-config-server.ts",
+        "src/app/api/platform/institutions/**",
+        "src/app/api/platform/**",
+        "firestore.indexes.json",
+        ".github/workflows/quality.yml",
+        "evidence/gruv-productization-002b/**",
+        "graph-harness.gruv.project.json",
+        "graph-harness.gruv.events.jsonl",
+        "e2e/institution-preflight-disabled.spec.ts"
+      ]
+    },
+    {
       "id": "LUMA-GRUV-002-trusted-tenant-control-plane",
       "kind": "platform-capability",
       "title": "Create verified self-service institution and tenant/program management",
       "status": "pending",
       "depends_on": [
         "LUMA-GRUV-001-institution-contract",
-        "LUMA-GRUV-002A-institution-draft-persistence"
+        "LUMA-GRUV-002A-institution-draft-persistence",
+        "LUMA-GRUV-002B-publication-readiness"
       ],
       "capability": "security-and-institution-operations",
       "gates": {

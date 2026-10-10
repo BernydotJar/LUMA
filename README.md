@@ -17,6 +17,8 @@ Engineering instructions and source-level contracts:
 - [`specs/067-gruv-productization-institution-contract.md`](specs/067-gruv-productization-institution-contract.md) — initial brand/config extraction
 - [`specs/068-institution-draft-control-plane.md`](specs/068-institution-draft-control-plane.md) — next secure, draft-only platform slice
 - [`docs/enterprise/institution-config-draft-operations.md`](docs/enterprise/institution-config-draft-operations.md) — admin draft API, data contracts, emulator tests and activation limits
+- [`specs/069-institution-publication-readiness.md`](specs/069-institution-publication-readiness.md) — read-only institutional evidence preflight, never activation
+- [`docs/enterprise/institution-publication-preflight.md`](docs/enterprise/institution-publication-preflight.md) — operator interpretation and safety gates
 - [`graph-harness.gruv.project.json`](graph-harness.gruv.project.json) — separate typed engineering graph with append-only evidence ledger
 
 Institution drafts are **disabled by default** (`LUMA_INSTITUTION_DRAFT_ADMIN_ENABLED` must be explicitly set server-side), and cannot serve as authorization or activate a tenant. No production configuration, payment settings, or live client records should be changed to demonstrate this increment. The GRUV-001 and independent real multi-tenant gates must be closed before a commercial rollout.
