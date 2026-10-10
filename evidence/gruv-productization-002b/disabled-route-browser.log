@@ -1,0 +1,14 @@
+
+> luma-learning-intelligence@0.1.0 test:e2e
+> playwright test e2e/institution-preflight-disabled.spec.ts --project=chromium --project=mobile
+
+[WebServer] ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+
+Running 4 tests using 2 workers
+
+  ✓  2 [chromium] › e2e/institution-preflight-disabled.spec.ts:3:1 › institution publication preflight is unavailable without an explicit server flag (566ms)
+  ✓  1 [chromium] › e2e/institution-preflight-disabled.spec.ts:10:1 › institution publication preview exposes no mutation endpoint (582ms)
+  ✓  4 [mobile] › e2e/institution-preflight-disabled.spec.ts:3:1 › institution publication preflight is unavailable without an explicit server flag (19ms)
+  ✓  3 [mobile] › e2e/institution-preflight-disabled.spec.ts:10:1 › institution publication preview exposes no mutation endpoint (29ms)
+
+  4 passed (2.2s)

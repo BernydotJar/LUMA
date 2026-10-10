@@ -1,0 +1,43 @@
+{
+  "complete": true,
+  "sourceDigest": "57827927659694640ef989db2187ebbfede8eddfd820ae5d9bb60e50ec6c7c9e",
+  "files": [
+    "src/lib/institutions/publication-preflight.ts",
+    "src/app/api/platform/institutions/[tenantId]/publication-preflight/route.ts",
+    "src/lib/institutions/publication-preflight-server.ts"
+  ],
+  "scope": "source-only-read-only-preflight",
+  "model": "ibm/granite3.3:2b",
+  "reviewedAt": "2026-10-10T23:22:19.207Z",
+  "evaluation": {
+    "verdict": "BLOCKED",
+    "findings": [
+      {
+        "severity": "critical",
+        "file": "src/lib/institutions/publication-preflight-server.ts",
+        "evidence": "The `institutionPublicationInspector` is instantiated with `firebaseAdminFirestore` and `institutionDraftStore`, indicating that it has access to Firestore and institution draft storage. This allows it to perform inspections and potentially bypass security restrictions.",
+        "risk": "A malicious tenant could manipulate Firestore data or institution drafts to bypass security checks and publish unauthorized content.",
+        "fix": "Implement stricter access controls to limit `institutionPublicationInspector` to only read-only operations, ensuring it cannot modify Firestore data or institution drafts."
+      },
+      {
+        "severity": "critical",
+        "file": "src/app/api/platform/institutions/[tenantId]/publication-preflight/route.ts",
+        "evidence": "The route handles GET requests for preflight checks, which can be exploited to perform unauthorized inspections. This is a security risk as it allows potential attackers to bypass security checks without triggering authentication or authorization mechanisms.",
+        "risk": "An attacker could use this endpoint to perform unauthorized inspections, potentially bypassing security measures and gaining unauthorized access to sensitive data.",
+        "fix": "Implement authentication and authorization checks for this route, ensuring that only authorized users (e.g., learning administrators) can access preflight checks. Additionally, limit the scope of data accessed by the route to only what is necessary for preflight checks."
+      },
+      {
+        "severity": "high",
+        "file": "src/lib/institutions/publication-preflight.ts",
+        "evidence": "The `inspect` function in `FirestoreInstitutionPublicationInspector` performs queries on Firestore collections, which could potentially expose sensitive data if not properly secured. This is a risk as it might allow unauthorized access to tenant data.",
+        "risk": "An attacker could exploit the Firestore queries to extract sensitive information about tenants, potentially leading to data breaches or unauthorized access.",
+        "fix": "Ensure that Firestore queries are scoped to only the necessary data and that access controls are in place to prevent unauthorized data access. Consider using Firestore security rules to restrict query access based on tenant ID or other relevant criteria."
+      }
+    ]
+  },
+  "usage": {
+    "promptTokens": 2277,
+    "outputTokens": 452,
+    "doneReason": "stop"
+  }
+}
