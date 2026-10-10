@@ -31,7 +31,8 @@ Self-service tenant creation, new database migrations, payment activation, exter
 ## Architecture notes
 
 - `src/lib/institutions/public-brand.ts`: public-only brand metadata used by existing SE visuals.
-- `src/lib/institutions/config.ts`: immutable composition, schema validation and fail-closed lookup by **already authorized** learning scope.
+- `src/lib/institutions/config.ts`: neutral immutable composition, schema validation and fail-closed lookup by **already authorized** learning scope.
+- `src/lib/institutions/templates.ts`: Seres and GRUV product templates outside the neutral configuration engine.
 - No `tenantId` is accepted from query strings, unverified browser state or theme selection.
 - A future trusted store must return versioned institution configurations and implement atomic publish, idempotent event and audit contracts. Until then this module is NOT wired into access decisions.
 
