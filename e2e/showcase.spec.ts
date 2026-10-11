@@ -165,8 +165,12 @@ test.describe("LUMA product showcase", () => {
   test("learner progress is honest before and after practice evidence", async ({ page }) => {
     await page.goto("/learn");
     await expect(page.getByRole("link", { name: /Elige lo que quieres desarrollar/i })).toHaveAttribute("href", "/onboarding");
-    await expect(page.locator("#journey summary")).toContainText("Preparar mi ruta personal");
-    await page.locator("#journey summary").click();
+    const journeySummary = page.locator("#journey summary");
+    // Hydration may temporarily mount more than one candidate. Enforce eventual
+    // uniqueness before strict text/interaction checks, never silently pick first.
+    await expect(journeySummary).toHaveCount(1);
+    await expect(journeySummary).toContainText("Preparar mi ruta personal");
+    await journeySummary.click();
     await expect(page.getByRole("heading", { name: /Una ruta empieza con una intención/i })).toBeVisible();
     await expect(page.getByText("Gestionar mis emociones y transformar creencias que me frenan", { exact: true })).toHaveCount(0);
     await expect(page.getByRole("heading", { name: /Tu avance cobra forma con cada práctica/i })).toBeVisible();

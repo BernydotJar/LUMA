@@ -1343,7 +1343,7 @@
   font-size: .85rem;
 }
 :global(html[data-theme]) .nextAction[data-variant="hero"] .whyButton {
-  min-height: 40px;
+  min-height: 44px;
   width: fit-content;
   padding: 6px 2px;
   border: 0;

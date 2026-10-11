@@ -53,6 +53,8 @@ test.describe("LUMA P0 mobile CTA geometry", () => {
         }, theme);
         await page.goto("/learn");
         const cta = page.locator('section[data-variant="hero"] a.button-primary');
+        // Fail if a duplicate CTA persists, rather than masking it with .first().
+        await expect(cta).toHaveCount(1);
         await expect(cta).toBeVisible();
         await expect(page.getByRole("navigation", { name: "Navegación móvil" })).toBeVisible();
         await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
