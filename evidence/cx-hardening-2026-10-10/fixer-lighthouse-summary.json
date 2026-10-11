@@ -1,0 +1,177 @@
+{
+  "measuredOn": "2026-10-10",
+  "gitBase": "7d1715c5171c464d6a4abd786f912418817fb397",
+  "source": "uncommitted fix branch build",
+  "environment": "localhost Next.js production build; no CDN/real-user p75",
+  "kind": "Lighthouse laboratory only",
+  "runs": [
+    {
+      "device": "mobile",
+      "iteration": 1,
+      "tool": "Lighthouse 12.8.2",
+      "formFactor": "mobile",
+      "performanceScore": 97,
+      "accessibilityScore": 100,
+      "lcpMs": 2667.7871999999998,
+      "fcpMs": 1058.5248,
+      "cls": 0.02701774604752101,
+      "tbtMs": 27.5,
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "view": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "sourceUrl": "http://127.0.0.1:3140/learn"
+    },
+    {
+      "device": "mobile",
+      "iteration": 2,
+      "tool": "Lighthouse 12.8.2",
+      "formFactor": "mobile",
+      "performanceScore": 97,
+      "accessibilityScore": 100,
+      "lcpMs": 2641.1118500000002,
+      "fcpMs": 1055.4079,
+      "cls": 0.02701774604752101,
+      "tbtMs": 16.5,
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "view": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "sourceUrl": "http://127.0.0.1:3140/learn"
+    },
+    {
+      "device": "mobile",
+      "iteration": 3,
+      "tool": "Lighthouse 12.8.2",
+      "formFactor": "mobile",
+      "performanceScore": 97,
+      "accessibilityScore": 100,
+      "lcpMs": 2652.6825,
+      "fcpMs": 1054.455,
+      "cls": 0.02701774604752101,
+      "tbtMs": 23,
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "view": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "sourceUrl": "http://127.0.0.1:3140/learn"
+    },
+    {
+      "device": "desktop",
+      "iteration": 1,
+      "tool": "Lighthouse 12.8.2",
+      "formFactor": "desktop",
+      "performanceScore": 99,
+      "accessibilityScore": 100,
+      "lcpMs": 856.68835,
+      "fcpMs": 284.7681,
+      "cls": 0,
+      "tbtMs": 0,
+      "throttling": {
+        "rttMs": 40,
+        "throughputKbps": 10240,
+        "requestLatencyMs": 0,
+        "downloadThroughputKbps": 0,
+        "uploadThroughputKbps": 0,
+        "cpuSlowdownMultiplier": 1
+      },
+      "view": {
+        "mobile": false,
+        "width": 1350,
+        "height": 940,
+        "deviceScaleFactor": 1,
+        "disabled": false
+      },
+      "sourceUrl": "http://127.0.0.1:3140/learn"
+    },
+    {
+      "device": "desktop",
+      "iteration": 2,
+      "tool": "Lighthouse 12.8.2",
+      "formFactor": "desktop",
+      "performanceScore": 99,
+      "accessibilityScore": 100,
+      "lcpMs": 857.7036999999998,
+      "fcpMs": 285.0582,
+      "cls": 0,
+      "tbtMs": 0,
+      "throttling": {
+        "rttMs": 40,
+        "throughputKbps": 10240,
+        "requestLatencyMs": 0,
+        "downloadThroughputKbps": 0,
+        "uploadThroughputKbps": 0,
+        "cpuSlowdownMultiplier": 1
+      },
+      "view": {
+        "mobile": false,
+        "width": 1350,
+        "height": 940,
+        "deviceScaleFactor": 1,
+        "disabled": false
+      },
+      "sourceUrl": "http://127.0.0.1:3140/learn"
+    },
+    {
+      "device": "desktop",
+      "iteration": 3,
+      "tool": "Lighthouse 12.8.2",
+      "formFactor": "desktop",
+      "performanceScore": 99,
+      "accessibilityScore": 100,
+      "lcpMs": 863.1381499999999,
+      "fcpMs": 286.6109,
+      "cls": 0,
+      "tbtMs": 0,
+      "throttling": {
+        "rttMs": 40,
+        "throughputKbps": 10240,
+        "requestLatencyMs": 0,
+        "downloadThroughputKbps": 0,
+        "uploadThroughputKbps": 0,
+        "cpuSlowdownMultiplier": 1
+      },
+      "view": {
+        "mobile": false,
+        "width": 1350,
+        "height": 940,
+        "deviceScaleFactor": 1,
+        "disabled": false
+      },
+      "sourceUrl": "http://127.0.0.1:3140/learn"
+    }
+  ]
+}
