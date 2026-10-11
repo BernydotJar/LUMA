@@ -1,0 +1,32 @@
+i  emulators: Starting emulators: auth, firestore
+i  emulators: Detected demo project ID "demo-luma-gruv-approval", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+i  firestore: Firestore Emulator logging to firestore-debug.log
+✔  firestore: Firestore Emulator was started in standard edition.
+✔  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: npm run test:run -- src/lib/institutions/publication-plan-store.emulator.test.ts src/lib/institutions/publication-plan-route.emulator.test.ts --maxWorkers=1
+
+> luma-learning-intelligence@0.1.0 test:run
+> vitest run src/lib/institutions/publication-plan-store.emulator.test.ts src/lib/institutions/publication-plan-route.emulator.test.ts --maxWorkers=1
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace/projects/LUMA-gruv-002c[39m
+
+ [32m✓[39m src/lib/institutions/publication-plan-store.emulator.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 5034[2mms[22m[39m
+   [32m✓[39m Transactional publication planning, dual control and safe withdrawal [2m(7)[22m
+     [33m[2m✓[22m[39m prepares an inert candidate and stores immutable audit+revision once[33m 1087[2mms[22m[39m
+     [33m[2m✓[22m[39m prevents stale CAS and simultaneous competing reviewers[33m 3462[2mms[22m[39m
+ [32m✓[39m src/lib/institutions/publication-plan-route.emulator.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1585[2mms[22m[39m
+   [32m✓[39m Firebase platform-only publication plan endpoint [2m(2)[22m
+     [33m[2m✓[22m[39m enforces dual authority, clean input, withdrawal, and token revocation[33m 1579[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+[2m   Start at [22m 00:24:28
+[2m   Duration [22m 8.40s[2m (tests 81%, import 16%, transform 3%)[22m
+
+✔  Script exited successfully (code 0)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+i  auth: Stopping Authentication Emulator
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator
