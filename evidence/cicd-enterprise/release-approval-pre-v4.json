@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "sourceDigest": "4b0fc2faa433f2698d022a452690a1bcb6181b5976ba0ff82c1ad408cc90f9dd",
+  "testedCommit": "cee98c8030bb66d2f72c63c2a343f05b10416701",
+  "unresolvedCritical": 0,
+  "unresolvedHigh": 0,
+  "graphEventId": "cb3e6afd-fab3-4ea7-b2f1-05d1ba3f5ec0",
+  "graphEventHash": "816c27615cd40b431eba94ca1bde1ac6cfde9c4305a10a249eb93ecb8e1ee184",
+  "critic": {
+    "sha256": "29d633fd024a375e32163b2b76ef8710f08821441ef08e313fec3bf304bda694"
+  },
+  "verifier": {
+    "sha256": "78fc38f6652ce69082f7deeb6d7b924d6ef0d252db9699b38231a5050a30bdfe"
+  }
+}

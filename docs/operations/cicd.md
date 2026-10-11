@@ -67,3 +67,19 @@ Repository administrators retain policy-recovery access in Settings, but there i
 - Firebase App Hosting build/archive API: https://firebase.google.com/docs/reference/apphosting/rest/v1beta/projects.locations.backends.builds
 - Rollout creation and non-mutating validation: https://firebase.google.com/docs/reference/apphosting/rest/v1beta/projects.locations.backends.rollouts/create
 - Google Cloud deployment-pipeline Workload Identity Federation: https://docs.cloud.google.com/iam/docs/workload-identity-federation-with-deployment-pipelines
+
+## Source-bound review refresh on later product releases (2026-10-10)
+
+A prior release approval cannot authorize a new source tree. CI success and protected merge do **not** implicitly refresh `evidence/cicd-enterprise/release-approval.json`. Before a later source-changing release, independently review the exact changed content and regenerate the source-bound `granite-review.json`, `independent-review.json` and `release-approval.json`. A stale `sourceDigest` must fail **before** any cloud mutation. Never replace a digest with a guessed value or bypass `verifyReview()`.
+
+For the LUMA Liquid Glass v4 release, GitHub Actions run `38095030727` passed all five quality jobs but correctly stopped before a cloud upload: the old source approval `4b0fc2fa...` did not match source digest `7a52d332...`. `/api/version` remained on the previous verified production SHA. The recovery command also failed because its ledger did not contain a promotion target. This **did not** establish that the prior production revision was broken or changed.
+
+The safe refresh workflow is:
+
+1. Work on the **exact code** already tested by a successful five-check GitHub CI run. Verify no reviewed-source differences from the intended main release. Historic approval snapshots must be preserved under versioned evidence filenames.
+2. Produce a new adversarial review (including raw model input/output, full patch digest, unchanged release-security source proof and explicit unresolved finding dispositions). Independent deterministic verification must validate the real CI run, Graph hash chain and source digest.
+3. Append a new `cicd-release` PASS gate using `GraphRuntime` via `scripts/release/record-cicd.py --phase release --ci-run <successful-ci-run>`. That script must reject stale/incomplete critic or verifier evidence. Do not reset the ledger. Validate `node scripts/release/review-gate.mjs` *after* gate creation.
+4. Commit only evidence/Graph/documentation additions after reviewed code has stabilized. Source-only inputs to `reviewedSourceDigest` must remain identical to those tested. Open a protected PR and rerun all five checks. A different reviewed-source digest requires a new review.
+5. Merge and let the `main` push workflow independently verify source, Graph receipt, protected branch, quality jobs, Google WIF, rollout, smoke, rollback-validation and live version SHA. A Graph release gate **does not** certify production success. `cicd-production` remains separate.
+
+This protocol deliberately does not add an automatic exemption for stale reviews. A future CI design may surface review drift earlier, but it must avoid circular dependency between the initial successful code-quality checks and evidence attestation creation.
