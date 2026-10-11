@@ -54,3 +54,12 @@ Two independent, authorized institutions can eventually use the same learning en
 - A revoked-ID-token-verified **platform superuser** is required. Tenant-scoped admins/learners/coaches cannot use publication preflight.
 - Never treat `localChecksPassed`, `inspectionDigest`, active offering presence or an AI evaluation as authorization. `activationAllowed` must remain `false` without a separate security-reviewed publication mechanism.
 - Each `programId` query is tenant-scoped and limited; over-cap or corrupt reads fail closed. Production Firestore index deployment and point-in-time consistency are separate release gates.
+
+## Controlled publication plans (GRUV-002C)
+
+- Read `specs/070-institution-publication-plan.md` and `docs/enterprise/institution-publication-plan.md` before modifying publication, approval or rollback logic.
+- The separate server-only `LUMA_INSTITUTION_PLAN_ADMIN_ENABLED` flag remains unset and disabled in deployed environments. No change to tenant activation, entitlements or production IAM is authorized by source-only success.
+- Plans move `prepared -> reviewed -> withdrawn`; only a distinct verified Firebase platform superuser may review a plan. A review is NOT a production release approval, nor a signed published config.
+- A withdrawal is **plan withdrawal**, not actual production rollback. Future live rollback requires a separately designed contract for active configs, entitlements, retrieval caches, provider systems and audits.
+- Preserve transactional CAS, immutable revision history and idempotent receipts; test competing authors/reviewers, stale evidence, corrupt tenant identity and preflight outage.
+- Never use a planning receipt, advisory digest or AI critique to authorize a learner or activate GRUV.

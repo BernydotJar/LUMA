@@ -125,6 +125,8 @@ jobs:
           src/lib/institutions/draft-route.emulator.test.ts
           src/lib/institutions/publication-preflight.emulator.test.ts
           src/lib/institutions/publication-route.emulator.test.ts
+          src/lib/institutions/publication-plan-store.emulator.test.ts
+          src/lib/institutions/publication-plan-route.emulator.test.ts
           --maxWorkers=1"
 
   browser:

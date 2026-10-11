@@ -124,6 +124,38 @@
       ]
     },
     {
+      "id": "LUMA-GRUV-002C-governed-publication-plans",
+      "kind": "platform-foundation",
+      "title": "Immutable audited institutional preparation, dual review and withdrawal without activation",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "safe-publication-governance",
+      "gates": {
+        "review": [
+          "adversarial-product-review"
+        ],
+        "done": [
+          "independent-quality"
+        ]
+      },
+      "allowed_paths": [
+        "AGENTS.md",
+        "README.md",
+        "architecture/luma-gruv-product-line.md",
+        "docs/enterprise/institution-publication-plan.md",
+        "docs/strategy/luma-gruv-operating-command.md",
+        "specs/070-institution-publication-plan.md",
+        "src/lib/institutions/**",
+        "src/app/api/platform/institutions/**",
+        "src/lib/institution-config-server.ts",
+        ".github/workflows/quality.yml",
+        "e2e/institution-plan-disabled.spec.ts",
+        "evidence/gruv-productization-002c/**",
+        "graph-harness.gruv.project.json",
+        "graph-harness.gruv.events.jsonl"
+      ]
+    },
+    {
       "id": "LUMA-GRUV-002-trusted-tenant-control-plane",
       "kind": "platform-capability",
       "title": "Create verified self-service institution and tenant/program management",
@@ -131,7 +163,8 @@
       "depends_on": [
         "LUMA-GRUV-001-institution-contract",
         "LUMA-GRUV-002A-institution-draft-persistence",
-        "LUMA-GRUV-002B-publication-readiness"
+        "LUMA-GRUV-002B-publication-readiness",
+        "LUMA-GRUV-002C-governed-publication-plans"
       ],
       "capability": "security-and-institution-operations",
       "gates": {
