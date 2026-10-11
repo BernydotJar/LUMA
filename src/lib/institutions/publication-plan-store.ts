@@ -126,6 +126,7 @@ export class FirestoreInstitutionPublicationPlanStore {
     input: PreparePlanInput | ReviewPlanInput,
     build: (current: InstitutionPublicationPlan | null) => InstitutionPublicationPlan,
     expectedDraftVersion?: number,
+    expectedPlanDigest?: string,
   ): Promise<PublicationPlanReceipt> {
     if (!validActor(actorUid)) throw new Error("INSTITUTION_PLAN_ACTOR_INVALID");
     const head = this.ref(input.tenantId);
@@ -149,6 +150,11 @@ export class FirestoreInstitutionPublicationPlanStore {
       const previousRevision = current?.planRevision ?? 0;
       if (previousRevision !== input.expectedPlanRevision) {
         throw new Error("INSTITUTION_PLAN_VERSION_CONFLICT");
+      }
+      if (expectedPlanDigest !== undefined &&
+          (current?.readinessDigest !== expectedPlanDigest ||
+           current?.draftConfigVersion !== expectedDraftVersion)) {
+        throw new Error("INSTITUTION_PLAN_READINESS_CHANGED");
       }
       if (expectedDraftVersion !== undefined) {
         if (!draftSnap?.exists) throw new Error("INSTITUTION_PLAN_DRAFT_CHANGED");
@@ -223,6 +229,7 @@ export class FirestoreInstitutionPublicationPlanStore {
       action: input.action, reasonCode: input.reasonCode,
     });
     let reviewedDraftVersion: number | undefined;
+    let reviewedPlanDigest: string | undefined;
     if (safe.action === "review") {
       const previous = await this.ref(safe.tenantId).collection("audit").doc(sha256(safe.requestId)).get();
       if (!previous.exists) {
@@ -231,6 +238,7 @@ export class FirestoreInstitutionPublicationPlanStore {
         if (current.status !== "prepared") throw new Error("INSTITUTION_PLAN_STATE_CONFLICT");
         if (current.preparedBy === actorUid) throw new Error("INSTITUTION_PLAN_SELF_REVIEW_FORBIDDEN");
         reviewedDraftVersion = current.draftConfigVersion;
+        reviewedPlanDigest = current.readinessDigest;
         const snapshot = await this.inspector.inspect(safe.tenantId);
         if (!isValidPreflight(snapshot, {
           tenantId: safe.tenantId, requestId: safe.requestId,
@@ -252,6 +260,6 @@ export class FirestoreInstitutionPublicationPlanStore {
       if (current.status === "withdrawn") throw new Error("INSTITUTION_PLAN_STATE_CONFLICT");
       return { ...current, planRevision: current.planRevision + 1, status: "withdrawn",
         withdrawnBy: actorUid, withdrawnAt: now, updatedAt: now, activationAllowed: false };
-    }, reviewedDraftVersion);
+    }, reviewedDraftVersion, reviewedPlanDigest);
   }
 }

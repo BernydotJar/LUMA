@@ -10,7 +10,7 @@ As the LUMA platform operator, I want to prepare a candidate configuration based
 
 `NONE --prepare--> prepared --review_by_different_UID--> reviewed --withdraw--> withdrawn --prepare_new_revision--> prepared`
 
-A plan can also be withdrawn directly from `prepared`. Review does **not** mean published, enabled, released, approved by a compliance officer or deployed. `activationAllowed` remains **false** and no `getByTenantId` learning configuration interface is implemented. A reviewer must be a different Firebase UID from the preparer, and both must possess revoked-token-verified platform superuser authority at action time.
+A plan can also be withdrawn directly from `prepared`. Review does **not** mean published, enabled, released, approved by a compliance officer or deployed. `activationAllowed` remains **false** and no `getByTenantId` learning configuration interface is implemented. A reviewer must be a different Firebase UID from the preparer, and both must possess revoked-token-verified platform superuser authority at action time. A review transaction must recheck BOTH the draft version and the plan digest against the preflight inspected by the reviewer (not merely the plan revision).
 
 ## Execution contract
 

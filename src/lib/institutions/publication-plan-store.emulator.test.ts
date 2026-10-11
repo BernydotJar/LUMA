@@ -155,6 +155,36 @@ describe.runIf(enabled)("Transactional publication planning, dual control and sa
     await expect(plans!.getPlanForTenant(a)).rejects.toThrow("INSTITUTION_PLAN_CORRUPT");
   });
 
+  it("rejects a plan digest changed between preflight and the review transaction", async () => {
+    const a = tenant(); const owner = uid(); const { input } = await setup(a);
+    await plans!.prepare(input, owner);
+    const injectingInspector = new FirestoreInstitutionPublicationPlanStore(db!, {
+      inspect: async scope => {
+        const snapshot = await inspector!.inspect(scope);
+        // Simulate a concurrent mutation that keeps planRevision unchanged.
+        await planRecord(a).update({ readinessDigest: "f".repeat(64) });
+        return snapshot;
+      },
+    });
+    await expect(injectingInspector.transition(review(a, 1), uid()))
+      .rejects.toThrow("INSTITUTION_PLAN_READINESS_CHANGED");
+    expect((await plans!.getPlanForTenant(a))?.status).toBe("prepared");
+  });
+
+  it("rejects a draft mutation between read-only preflight and plan transaction", async () => {
+    const a = tenant(); const { input } = await setup(a);
+    const injectingInspector = new FirestoreInstitutionPublicationPlanStore(db!, {
+      inspect: async scope => {
+        const snapshot = await inspector!.inspect(scope);
+        await db!.collection("institutionConfigDrafts").doc(docId(a)).update({ "config.configVersion": 2 });
+        return snapshot;
+      },
+    });
+    await expect(injectingInspector.prepare(input, uid()))
+      .rejects.toThrow("INSTITUTION_PLAN_DRAFT_CHANGED");
+    expect((await planRecord(a).get()).exists).toBe(false);
+  });
+
   it("fails closed when readiness is blocked even with a syntactically valid requested digest", async () => {
     const a = tenant(); const { input, offering } = await setup(a);
     await offering.update({ status: "archived" });
