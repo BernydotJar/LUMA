@@ -1812,6 +1812,36 @@
         "extends": "LUMA-056-liquid-glass-functional-layer-v3",
         "dependency_policy": "no-new-optical-runtime"
       }
+    },
+    {
+      "id": "LUMA-068-studio-ci-strict-locator",
+      "kind": "release-hardening",
+      "title": "Fix duplicate Studio unauthenticated gate heading locator blocking Firebase release",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-067-se-liquid-glass-brand-v4"
+      ],
+      "capability": "ci-release-reliability",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "e2e/enterprise-boundary.spec.ts",
+        "specs/068-ci-studio-auth-gate.md",
+        "evidence/ci-studio-auth-gate-068/**",
+        "evidence/graph-harness-status.json",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "scripts/finalize_studio_ci_graph.py"
+      ],
+      "metadata": {
+        "incident_run": 38088552918,
+        "failed_job": 114320374253,
+        "scope": "test-only",
+        "production_release_separate": true
+      }
     }
   ]
 }

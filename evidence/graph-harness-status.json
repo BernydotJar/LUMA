@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "fd8272af-2106-41bc-a950-8172c82fb9ec",
-  "event_count": 664,
+  "last_event_id": "21a9b8ca-8e01-49b6-a961-a69b0017f09c",
+  "event_count": 680,
   "ready_nodes": [
     "LUMA-036-liquid-glass-refraction-v2"
   ],
@@ -1483,6 +1483,33 @@
       "approval_count": 0
     },
     {
+      "id": "LUMA-068-studio-ci-strict-locator",
+      "kind": "release-hardening",
+      "title": "Fix duplicate Studio unauthenticated gate heading locator blocking Firebase release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-067-se-liquid-glass-brand-v4"
+      ],
+      "capability": "ci-release-reliability",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "2099fa3a-7df2-41c8-be68-c72c2b52969e",
+        "302fa83a-a30f-4cfe-bacd-5d701ccf6eb7",
+        "3cfb891f-d81f-4bd3-917b-0f1121e5956a",
+        "472af19b-20f5-4416-a1cf-79e359cc9cf2",
+        "5e340fb4-5e55-43f7-b3f3-7b2bfdacdd51",
+        "60b2f5ec-c932-4b31-97ad-437d9ad962a8",
+        "92c801f2-0341-4b62-8e4a-ea69f9a43648",
+        "95b1eae0-17e9-48cb-bef4-4cc50c25b8a6",
+        "a08497d8-eb0c-44df-b809-946d8d2f3b30",
+        "c6d9f7d4-b40b-42ec-b86e-ea03a68d2759"
+      ],
+      "approval_count": 0
+    },
+    {
       "id": "LUMA-CICD-002-release-pipeline",
       "kind": "release-engineering",
       "title": "Protected CI, keyless release and exact production verification",
@@ -1503,6 +1530,6 @@
       "approval_count": 0
     }
   ],
-  "checkpoint_count": 24,
+  "checkpoint_count": 25,
   "repair_plan_count": 0
 }
