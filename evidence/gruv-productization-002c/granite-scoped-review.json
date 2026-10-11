@@ -1,0 +1,17 @@
+{
+  "model": "ibm/granite3.3:2b",
+  "file": "src/lib/institutions/publication-plan-store.ts",
+  "sourceDigest": "e10e989e9d4130eda70657843db1f23c93e44ddc29067feefa0433195ea99729",
+  "reviewedAt": "2026-10-11T00:27:19.162Z",
+  "complete": true,
+  "evaluation": {
+    "verdict": "BLOCKED",
+    "issue": "duplicate status in transition method",
+    "line": "writeTransition",
+    "reason": "The method `writeTransition` checks for `duplicate` status in the input `input.status` but does not handle the case where `current.status` is also 'duplicate'. This could lead to unexpected behavior or bugs when transitioning from 'prepared' to 'reviewed' or 'reviewed' to 'withdrawn' with the same status."
+  },
+  "stats": {
+    "promptTokens": 3318,
+    "outputTokens": 96
+  }
+}

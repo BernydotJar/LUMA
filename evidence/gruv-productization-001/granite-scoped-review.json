@@ -1,0 +1,43 @@
+{
+  "model": "ibm/granite3.3:2b",
+  "sourceDigest": "5e388d6818482dfa06b5012f77b39c99aee231c3f695c4f26828ac62d811145a",
+  "files": [
+    "src/lib/institutions/config.ts",
+    "src/lib/institutions/templates.ts",
+    "src/lib/institutions/public-brand.ts"
+  ],
+  "reviewScope": "config-source-only",
+  "reviewedAt": "2026-10-10T19:22:03.249Z",
+  "complete": true,
+  "evaluation": {
+    "verdict": "PASS",
+    "findings": [
+      {
+        "severity": "low",
+        "file": "src/lib/institutions/config.ts",
+        "evidence": "code",
+        "risk": "The code does not directly handle user inputs or external data sources, reducing the risk of invalid input validation and unsafe links. However, it does rely on the InstitutionConfigStore for data retrieval, which could potentially be a target for manipulation if not properly secured.",
+        "fix": "Ensure that the InstitutionConfigStore is secured against injection attacks and that data retrieval is validated before being used in the application."
+      },
+      {
+        "severity": "low",
+        "file": "src/lib/institutions/config.ts",
+        "evidence": "code",
+        "risk": "The code does not explicitly handle brand isolation, as it uses the same brand information for both template and composed configurations. This could potentially lead to unintended sharing of brand data across different contexts.",
+        "fix": "Consider creating separate brand instances for template and composed configurations to ensure proper brand isolation."
+      },
+      {
+        "severity": "low",
+        "file": "src/lib/institutions/templates.ts",
+        "evidence": "code",
+        "risk": "The templates are static and do not involve any dynamic data or user inputs, reducing the risk of fail-closed tenant/program lookup and mutable data issues.",
+        "fix": "No action required as the templates are static and do not involve dynamic data or user inputs."
+      }
+    ]
+  },
+  "usage": {
+    "promptTokens": 2087,
+    "outputTokens": 277,
+    "doneReason": "stop"
+  }
+}

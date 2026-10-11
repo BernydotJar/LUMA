@@ -1,0 +1,26 @@
+{
+  "model": "ibm/granite3.3:2b",
+  "files": [
+    "src/lib/institutions/publication-plan-store.ts",
+    "src/lib/institutions/publication-plan-input.ts",
+    "src/app/api/platform/institutions/[tenantId]/publication-plan/route.ts"
+  ],
+  "sourceDigest": "01c2aae311b0b1a9108307ab6929f3b4d80344e40137f231c29a7a1dbe275511",
+  "reviewedAt": "2026-10-11T00:22:29.329Z",
+  "complete": true,
+  "evaluation": {
+    "verdict": "BLOCKED",
+    "findings": [
+      {
+        "severity": "high",
+        "file": "src/lib/institutions/publication-plan-store.ts",
+        "evidence": "function writeTransition(actorUid: string, action: PlanAudit["
+      }
+    ]
+  },
+  "usage": {
+    "promptTokens": 6188,
+    "outputTokens": 74,
+    "finishReason": "stop"
+  }
+}

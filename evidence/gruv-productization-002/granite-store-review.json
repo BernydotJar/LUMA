@@ -1,0 +1,49 @@
+{
+  "model": "ibm/granite3.3:2b",
+  "scope": "store",
+  "sourceDigest": "0628483e6d139252089e572c26d8b63168a47d642a453cd7ec3987baae1beeaf",
+  "files": [
+    "src/lib/institutions/draft-store.ts",
+    "src/lib/institutions/draft-input.ts"
+  ],
+  "completed": true,
+  "reviewedAt": "2026-10-10T21:14:01.919Z",
+  "evaluation": {
+    "verdict": "BLOCKED",
+    "findings": [
+      {
+        "severity": "high",
+        "file": "src/lib/institutions/draft-store.ts",
+        "evidence": "updateWithReceipt function handling duplicate drafts",
+        "risk": "Duplicate drafts can be created with the same request digest and actor UID, leading to potential data corruption or inconsistencies.",
+        "fix": "Implement a mechanism to check for existing drafts before creating a new one, such as using a unique identifier for each draft instance."
+      },
+      {
+        "severity": "high",
+        "file": "src/lib/institutions/draft-store.ts",
+        "evidence": "updateWithReceipt function handling version conflicts",
+        "risk": "Version conflicts can occur when updating a draft with a version higher than the current draft's version, leading to data loss or inconsistencies.",
+        "fix": "Implement a version check before updating the draft, ensuring the new version is greater than the current draft's version."
+      },
+      {
+        "severity": "high",
+        "file": "src/lib/institutions/draft-store.ts",
+        "evidence": "updateWithReceipt function handling incorrect expected version",
+        "risk": "Incorrect expected version can lead to drafts being created with outdated configurations, causing inconsistencies.",
+        "fix": "Validate the expected version against the current draft's version before creating a new draft."
+      },
+      {
+        "severity": "high",
+        "file": "src/lib/institutions/draft-store.ts",
+        "evidence": "updateWithReceipt function handling invalid input",
+        "risk": "Invalid input, such as missing or incorrect fields, can lead to unexpected behavior or errors.",
+        "fix": "Implement input validation to ensure all required fields are present and correctly formatted before proceeding with the update process."
+      }
+    ]
+  },
+  "usage": {
+    "promptTokens": 3619,
+    "outputTokens": 328,
+    "doneReason": "stop"
+  }
+}

@@ -1,0 +1,219 @@
+{
+  "schema_version": "graph-harness.project.v1",
+  "project_id": "luma-gruv-productization",
+  "mode": "SHIP",
+  "gate_definitions": [
+    {
+      "id": "adversarial-product-review",
+      "required_evidence_kinds": [
+        "critic"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "independent-quality",
+      "required_evidence_kinds": [
+        "test",
+        "build",
+        "security",
+        "verification"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "production-activation",
+      "required_evidence_kinds": [
+        "production"
+      ],
+      "blocking": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "LUMA-GRUV-001-institution-contract",
+      "kind": "product-foundation",
+      "title": "Extract SE brand identity and define validated institution/product shell contracts",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "full-stack-product",
+      "gates": {
+        "review": [
+          "adversarial-product-review"
+        ],
+        "done": [
+          "independent-quality"
+        ]
+      },
+      "allowed_paths": [
+        "AGENTS.md",
+        "architecture/luma-gruv-product-line.md",
+        "docs/strategy/luma-gruv-operating-command.md",
+        "specs/067-gruv-productization-institution-contract.md",
+        "src/lib/institutions/**",
+        "src/lib/themes.ts",
+        "src/components/brand-mark.tsx",
+        "src/components/experience-console.tsx",
+        "evidence/gruv-productization-001/**",
+        "graph-harness.gruv.project.json",
+        "graph-harness.gruv.events.jsonl"
+      ]
+    },
+    {
+      "id": "LUMA-GRUV-002A-institution-draft-persistence",
+      "kind": "platform-foundation",
+      "title": "Build disabled-by-default, auditable institution draft configuration service",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "secure-config-persistence",
+      "gates": {
+        "review": [
+          "adversarial-product-review"
+        ],
+        "done": [
+          "independent-quality"
+        ]
+      },
+      "allowed_paths": [
+        "AGENTS.md",
+        "README.md",
+        ".github/workflows/quality.yml",
+        "src/lib/institutions/**",
+        "src/app/api/platform/institutions/**",
+        "src/lib/institution-config-server.ts",
+        "specs/068-institution-draft-control-plane.md",
+        "docs/enterprise/institution-config-draft-operations.md",
+        "architecture/luma-gruv-product-line.md",
+        "docs/strategy/luma-gruv-operating-command.md",
+        "evidence/gruv-productization-002/**",
+        "graph-harness.gruv.project.json",
+        "graph-harness.gruv.events.jsonl"
+      ]
+    },
+    {
+      "id": "LUMA-GRUV-002B-publication-readiness",
+      "kind": "platform-foundation",
+      "title": "Evidence-based institution publication preflight that cannot activate tenants",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "program-provenance-and-safety",
+      "gates": {
+        "review": [
+          "adversarial-product-review"
+        ],
+        "done": [
+          "independent-quality"
+        ]
+      },
+      "allowed_paths": [
+        "AGENTS.md",
+        "README.md",
+        "docs/strategy/luma-gruv-operating-command.md",
+        "architecture/luma-gruv-product-line.md",
+        "docs/enterprise/institution-publication-preflight.md",
+        "specs/069-institution-publication-readiness.md",
+        "src/lib/institutions/**",
+        "src/lib/institution-config-server.ts",
+        "src/app/api/platform/institutions/**",
+        "src/app/api/platform/**",
+        "firestore.indexes.json",
+        ".github/workflows/quality.yml",
+        "evidence/gruv-productization-002b/**",
+        "graph-harness.gruv.project.json",
+        "graph-harness.gruv.events.jsonl",
+        "e2e/institution-preflight-disabled.spec.ts"
+      ]
+    },
+    {
+      "id": "LUMA-GRUV-002C-governed-publication-plans",
+      "kind": "platform-foundation",
+      "title": "Immutable audited institutional preparation, dual review and withdrawal without activation",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "safe-publication-governance",
+      "gates": {
+        "review": [
+          "adversarial-product-review"
+        ],
+        "done": [
+          "independent-quality"
+        ]
+      },
+      "allowed_paths": [
+        "AGENTS.md",
+        "README.md",
+        "architecture/luma-gruv-product-line.md",
+        "docs/enterprise/institution-publication-plan.md",
+        "docs/strategy/luma-gruv-operating-command.md",
+        "specs/070-institution-publication-plan.md",
+        "src/lib/institutions/**",
+        "src/app/api/platform/institutions/**",
+        "src/lib/institution-config-server.ts",
+        ".github/workflows/quality.yml",
+        "e2e/institution-plan-disabled.spec.ts",
+        "evidence/gruv-productization-002c/**",
+        "graph-harness.gruv.project.json",
+        "graph-harness.gruv.events.jsonl"
+      ]
+    },
+    {
+      "id": "LUMA-GRUV-002-trusted-tenant-control-plane",
+      "kind": "platform-capability",
+      "title": "Create verified self-service institution and tenant/program management",
+      "status": "pending",
+      "depends_on": [
+        "LUMA-GRUV-001-institution-contract",
+        "LUMA-GRUV-002A-institution-draft-persistence",
+        "LUMA-GRUV-002B-publication-readiness",
+        "LUMA-GRUV-002C-governed-publication-plans"
+      ],
+      "capability": "security-and-institution-operations",
+      "gates": {
+        "review": [
+          "adversarial-product-review"
+        ],
+        "done": [
+          "independent-quality",
+          "production-activation"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/institutions/**",
+        "src/lib/learning-entitlement*",
+        "src/app/api/**",
+        "docs/enterprise/**",
+        "specs/**",
+        "evidence/gruv-productization-002/**",
+        "graph-harness.gruv.project.json",
+        "graph-harness.gruv.events.jsonl"
+      ]
+    },
+    {
+      "id": "LUMA-GRUV-003-validated-gruv-vertical",
+      "kind": "product-vertical",
+      "title": "Prove GRUV adapts professional language learning using LUMA Core",
+      "status": "pending",
+      "depends_on": [
+        "LUMA-GRUV-002-trusted-tenant-control-plane"
+      ],
+      "capability": "learning-product-and-measurement",
+      "gates": {
+        "review": [
+          "adversarial-product-review"
+        ],
+        "done": [
+          "independent-quality",
+          "production-activation"
+        ]
+      },
+      "allowed_paths": [
+        "src/**",
+        "specs/**",
+        "architecture/**",
+        "docs/strategy/**",
+        "evidence/gruv-productization-003/**",
+        "graph-harness.gruv.project.json",
+        "graph-harness.gruv.events.jsonl"
+      ]
+    }
+  ]
+}

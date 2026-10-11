@@ -1,0 +1,86 @@
+i  emulators: Starting emulators: auth, firestore
+i  emulators: Detected demo project ID "demo-luma-role-provisioning", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+i  firestore: Firestore Emulator logging to firestore-debug.log
+✔  firestore: Firestore Emulator was started in standard edition.
+✔  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: npm run test:run -- src/lib/tenant-admin-auth.emulator.test.ts src/lib/institutions/draft-store.emulator.test.ts src/lib/institutions/draft-route.emulator.test.ts src/lib/institutions/publication-preflight.emulator.test.ts src/lib/institutions/publication-route.emulator.test.ts src/lib/institutions/publication-plan-store.emulator.test.ts src/lib/institutions/publication-plan-route.emulator.test.ts --maxWorkers=1
+
+> luma-learning-intelligence@0.1.0 test:run
+> vitest run src/lib/tenant-admin-auth.emulator.test.ts src/lib/institutions/draft-store.emulator.test.ts src/lib/institutions/draft-route.emulator.test.ts src/lib/institutions/publication-preflight.emulator.test.ts src/lib/institutions/publication-route.emulator.test.ts src/lib/institutions/publication-plan-store.emulator.test.ts src/lib/institutions/publication-plan-route.emulator.test.ts --maxWorkers=1
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace/projects/LUMA-gruv-002c[39m
+
+ [31m❯[39m src/lib/institutions/publication-plan-store.emulator.test.ts [2m([22m[2m7 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 7756[2mms[22m[39m
+   [31m❯[39m Transactional publication planning, dual control and safe withdrawal [2m(7)[22m
+     [33m[2m✓[22m[39m prepares an inert candidate and stores immutable audit+revision once[33m 3365[2mms[22m[39m
+     [32m✓[39m requires a second authorized actor; review never activates the tenant[32m 298[2mms[22m[39m
+     [32m✓[39m rechecks evidence at review and rejects archived offerings/draft edits[32m 266[2mms[22m[39m
+[31m     [31m×[31m withdraws during preflight outage, preserves history, and enables a fresh nonactive plan[39m[33m 476[2mms[22m[39m
+     [33m[2m✓[22m[39m prevents stale CAS and simultaneous competing reviewers[33m 3026[2mms[22m[39m
+     [32m✓[39m rejects malformed internals, reused identifiers and cross-tenant corrupted records[32m 198[2mms[22m[39m
+     [32m✓[39m fails closed when readiness is blocked even with a syntactically valid requested digest[32m 119[2mms[22m[39m
+ [32m✓[39m src/lib/institutions/publication-plan-route.emulator.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 2724[2mms[22m[39m
+   [32m✓[39m Firebase platform-only publication plan endpoint [2m(2)[22m
+     [33m[2m✓[22m[39m enforces dual authority, clean input, withdrawal, and token revocation[33m 2705[2mms[22m[39m
+ [32m✓[39m src/lib/tenant-admin-auth.emulator.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 16824[2mms[22m[39m
+   [32m✓[39m Firebase Auth/Firestore tenant-admin role lifecycle [2m(2)[22m
+     [33m[2m✓[22m[39m checks tenant authority with an emulated ID token, revokes it and rejects a stale token[33m 2625[2mms[22m[39m
+     [33m[2m✓[22m[39m runs the actual operator CLI through dry-run, apply, grant, revoke and audit[33m 14195[2mms[22m[39m
+ [32m✓[39m src/lib/institutions/draft-route.emulator.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1528[2mms[22m[39m
+   [32m✓[39m Institution draft route with real emulator identity and Firestore [2m(2)[22m
+     [33m[2m✓[22m[39m permits only platform creation, tenant-scoped brand edits and rejects revoked/cross-tenant tokens[33m 1523[2mms[22m[39m
+ [32m✓[39m src/lib/institutions/draft-store.emulator.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 3052[2mms[22m[39m
+   [32m✓[39m Firestore institution draft transactional contract [2m(6)[22m
+     [33m[2m✓[22m[39m prevents lost updates when concurrent writers start from the same version[33m 2793[2mms[22m[39m
+ [32m✓[39m src/lib/institutions/publication-preflight.emulator.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 362[2mms[22m[39m
+ [32m✓[39m src/lib/institutions/publication-route.emulator.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1400[2mms[22m[39m
+   [32m✓[39m Platform-only read-only publication preflight API [2m(2)[22m
+     [33m[2m✓[22m[39m denies admin and anonymous access and distinguishes 404 and invalid tenant[33m 1395[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/lib/institutions/publication-plan-store.emulator.test.ts[2m > [22mTransactional publication planning, dual control and safe withdrawal[2m > [22mwithdraws during preflight outage, preserves history, and enables a fresh nonactive plan
+[31m[1mAssertionError[22m: promise resolved "{ …(5) }" instead of rejecting[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Error {[39m
+[32m-   "message": "rejected promise",[39m
+[31m+ {[39m
+[31m+   "activationAllowed": false,[39m
+[31m+   "appliedPlanRevision": 5,[39m
+[31m+   "duplicate": false,[39m
+[31m+   "status": "reviewed",[39m
+[31m+   "tenantId": "tenant-6b4a6bc4-48ee-45a3-b902-52f88f10418a",[39m
+[2m  }[22m
+
+[36m [2m❯[22m src/lib/institutions/publication-plan-store.emulator.test.ts:[2m125:61[22m[39m
+    [90m123|[39m     expect(history?.reasonCode).toBe("security-stop");
+    [90m124|[39m     expect(history?.activationAllowed).toBe(false);
+    [90m125|[39m     await expect(plans!.transition(review(id, 4), reviewer)).rejects.t…
+    [90m   |[39m                                                             [31m^[39m
+    [90m126|[39m     expect((await plans!.getPlanForTenant(id))?.reviewedBy).toBeUndefi…
+    [90m127|[39m   });
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m6 passed[39m[22m[90m (7)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m28 passed[39m[22m[90m (29)[39m
+[2m   Start at [22m 00:23:15
+[2m   Duration [22m 56.35s[2m (tests 62%, import 33%, transform 5%)[22m
+
+[2m     Import [22m [33m41 modules were evaluated 76 times[39m[2m · 17.79s total, 33% of tracked time[22m
+[2m            [22m [2m~8.19s faster with [22m[33misolate: false[39m[2m — shared modules are evaluated once per worker instead of once per file[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-isolation[22m
+
+⚠  Script exited unsuccessfully (code 1)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+i  auth: Stopping Authentication Emulator
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator
+
+Error: Script "npm run test:run -- src/lib/tenant-admin-auth.emulator.test.ts src/lib/institutions/draft-store.emulator.test.ts src/lib/institutions/draft-route.emulator.test.ts src/lib/institutions/publication-preflight.emulator.test.ts src/lib/institutions/publication-route.emulator.test.ts src/lib/institutions/publication-plan-store.emulator.test.ts src/lib/institutions/publication-plan-route.emulator.test.ts --maxWorkers=1" exited with code 1

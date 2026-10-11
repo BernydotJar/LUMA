@@ -1,3 +1,5 @@
+import { seresDeExcelenciaBrand } from "./institutions/public-brand";
+
 export const LUMA_THEME_STORAGE_KEY = "luma-theme-v1";
 
 export type LumaThemeId = "se" | "light" | "dark";
@@ -15,12 +17,12 @@ export type LumaTheme = {
 export const lumaThemes: readonly LumaTheme[] = [
   {
     id: "se",
-    label: "Seres de Excelencia",
-    shortLabel: "SE",
+    label: seresDeExcelenciaBrand.displayName,
+    shortLabel: seresDeExcelenciaBrand.shortName,
     description:
       "Azul, rosa y ciruela inspirados en los recursos públicos de Seres; códigos pendientes de validación institucional.",
-    source: "https://seresdeexcelencia.com/",
-    palette: ["#00A2F1", "#FF438C", "#993366", "#FFFFFF", "#333333"],
+    source: seresDeExcelenciaBrand.sourceUrl,
+    palette: seresDeExcelenciaBrand.palette,
     iconographyPath: "/iconography/se",
   },
   {

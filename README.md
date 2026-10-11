@@ -6,6 +6,25 @@ LUMA turns expert knowledge into individualized, measurable learning journeys. T
 
 > The intelligence is the moat. Clarity is the experience.
 
+## LUMA product line — Seres de Excelencia and GRUV
+
+The long-term product is **one LUMA learning-intelligence core** with institutional SaaS experiences and dedicated vertical products. **Seres de Excelencia** remains the priority customer implementation; **GRUV** is the selected working name of a proposed professional-language vertical. This does not imply that GRUV is deployed or that LUMA already supports self-service production tenant activation.
+
+Engineering instructions and source-level contracts:
+
+- [`AGENTS.md`](AGENTS.md) — operational command for Graph Engineering and evidence-led releases
+- [`docs/strategy/luma-gruv-operating-command.md`](docs/strategy/luma-gruv-operating-command.md) — product decisions, trade-offs, data quality and release sequencing
+- [`specs/067-gruv-productization-institution-contract.md`](specs/067-gruv-productization-institution-contract.md) — initial brand/config extraction
+- [`specs/068-institution-draft-control-plane.md`](specs/068-institution-draft-control-plane.md) — next secure, draft-only platform slice
+- [`docs/enterprise/institution-config-draft-operations.md`](docs/enterprise/institution-config-draft-operations.md) — admin draft API, data contracts, emulator tests and activation limits
+- [`specs/069-institution-publication-readiness.md`](specs/069-institution-publication-readiness.md) — read-only institutional evidence preflight, never activation
+- [`docs/enterprise/institution-publication-preflight.md`](docs/enterprise/institution-publication-preflight.md) — operator interpretation and safety gates
+- [`specs/070-institution-publication-plan.md`](specs/070-institution-publication-plan.md) — prepare, dual review, and withdraw a **nonactivating** institutional publication plan
+- [`docs/enterprise/institution-publication-plan.md`](docs/enterprise/institution-publication-plan.md) — transactional plan history, internal authority and emergency withdrawal runbook
+- [`graph-harness.gruv.project.json`](graph-harness.gruv.project.json) — separate typed engineering graph with append-only evidence ledger
+
+Institution drafts are **disabled by default** (`LUMA_INSTITUTION_DRAFT_ADMIN_ENABLED` must be explicitly set server-side), and cannot serve as authorization or activate a tenant. No production configuration, payment settings, or live client records should be changed to demonstrate this increment. The GRUV-001 and independent real multi-tenant gates must be closed before a commercial rollout.
+
 ## Client-showcase release
 
 This branch is a working, client-ready product showcase deployed on Firebase App Hosting. It includes:
