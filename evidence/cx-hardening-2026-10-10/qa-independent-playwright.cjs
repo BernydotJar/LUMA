@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- Standalone CommonJS QA evidence harness; application lint remains enforced. */
 /* Independent guest-surface QA at exact PR commit; never uses production credentials. */
 const fs = require("node:fs");
 const path = require("node:path");

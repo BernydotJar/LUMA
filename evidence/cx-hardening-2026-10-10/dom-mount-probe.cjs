@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- Standalone CommonJS QA evidence harness; application lint remains enforced. */
 const fs=require("fs");
 const {chromium}=require("playwright");
 const output="evidence/cx-hardening-2026-10-10/dom-mount-probe.json";
