@@ -1,0 +1,139 @@
+{
+  "runAt": "2026-10-10T23:26:02.195Z",
+  "sourceCommit": "7d1715c5171c464d6a4abd786f912418817fb397",
+  "protocol": "Lighthouse simulated throttling; localhost built from QA PR source. Measurements are NOT field p75, INP not measured",
+  "runs": [
+    {
+      "device": "mobile",
+      "iteration": 1,
+      "tool": "Lighthouse 12.8.2",
+      "scorePerformance": 97,
+      "scoreA11y": 100,
+      "lcpMs": 2644.352099999999,
+      "cls": 0.0270291844663921,
+      "tbtMs": 18.5,
+      "fcpMs": 1204.9014,
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "cpuSlowdownMultiplier": 4,
+      "viewport": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "url": "http://127.0.0.1:3124/learn"
+    },
+    {
+      "device": "mobile",
+      "iteration": 2,
+      "tool": "Lighthouse 12.8.2",
+      "scorePerformance": 96,
+      "scoreA11y": 100,
+      "lcpMs": 2689.7542999999996,
+      "cls": 0.0270291844663921,
+      "tbtMs": 40.5,
+      "fcpMs": 1205.8362,
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "cpuSlowdownMultiplier": 4,
+      "viewport": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "url": "http://127.0.0.1:3124/learn"
+    },
+    {
+      "device": "mobile",
+      "iteration": 3,
+      "tool": "Lighthouse 12.8.2",
+      "scorePerformance": 96,
+      "scoreA11y": 100,
+      "lcpMs": 2677.74655,
+      "cls": 0.0270291844663921,
+      "tbtMs": 34,
+      "fcpMs": 1206.4977,
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "cpuSlowdownMultiplier": 4,
+      "viewport": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "url": "http://127.0.0.1:3124/learn"
+    },
+    {
+      "device": "desktop",
+      "iteration": 1,
+      "tool": "Lighthouse 12.8.2",
+      "scorePerformance": 100,
+      "scoreA11y": 100,
+      "lcpMs": 590.9377999999999,
+      "cls": 0.001031594203158077,
+      "tbtMs": 0,
+      "fcpMs": 286.6252,
+      "rttMs": 40,
+      "throughputKbps": 10240,
+      "cpuSlowdownMultiplier": 1,
+      "viewport": {
+        "mobile": false,
+        "width": 1350,
+        "height": 940,
+        "deviceScaleFactor": 1,
+        "disabled": false
+      },
+      "url": "http://127.0.0.1:3124/learn"
+    },
+    {
+      "device": "desktop",
+      "iteration": 2,
+      "tool": "Lighthouse 12.8.2",
+      "scorePerformance": 100,
+      "scoreA11y": 100,
+      "lcpMs": 592.7207000000001,
+      "cls": 0.001031594203158077,
+      "tbtMs": 0,
+      "fcpMs": 285.8138,
+      "rttMs": 40,
+      "throughputKbps": 10240,
+      "cpuSlowdownMultiplier": 1,
+      "viewport": {
+        "mobile": false,
+        "width": 1350,
+        "height": 940,
+        "deviceScaleFactor": 1,
+        "disabled": false
+      },
+      "url": "http://127.0.0.1:3124/learn"
+    },
+    {
+      "device": "desktop",
+      "iteration": 3,
+      "tool": "Lighthouse 12.8.2",
+      "scorePerformance": 100,
+      "scoreA11y": 100,
+      "lcpMs": 608.6863999999999,
+      "cls": 0.001031594203158077,
+      "tbtMs": 0,
+      "fcpMs": 288.4576,
+      "rttMs": 40,
+      "throughputKbps": 10240,
+      "cpuSlowdownMultiplier": 1,
+      "viewport": {
+        "mobile": false,
+        "width": 1350,
+        "height": 940,
+        "deviceScaleFactor": 1,
+        "disabled": false
+      },
+      "url": "http://127.0.0.1:3124/learn"
+    }
+  ]
+}
