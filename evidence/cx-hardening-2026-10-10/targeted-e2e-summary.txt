@@ -1,0 +1,6 @@
+Original two locators, 10 repetitions x desktop and mobile, 2 workers, zero retries
+[38/40] [mobile] › e2e/showcase.spec.ts:165:3 › LUMA product showcase › learner progress is honest before and after practice evidence
+[39/40] [mobile] › e2e/mobile-cta-occlusion.spec.ts:48:7 › LUMA P0 mobile CTA geometry › CTA is fully accessible above bottom nav at 390x844 / dark
+[40/40] [mobile] › e2e/showcase.spec.ts:165:3 › LUMA product showcase › learner progress is honest before and after practice evidence
+  10 skipped
+  30 passed (26.3s)

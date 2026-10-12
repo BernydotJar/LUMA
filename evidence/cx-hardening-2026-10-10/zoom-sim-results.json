@@ -1,0 +1,23 @@
+{
+  "mode": "CSS zoom simulation NOT real browser zoom",
+  "data": [
+    {
+      "width": 390,
+      "scrollWidth": 561,
+      "ctaCount": 1,
+      "theme": "se"
+    },
+    {
+      "width": 390,
+      "scrollWidth": 561,
+      "ctaCount": 1,
+      "theme": "light"
+    },
+    {
+      "width": 390,
+      "scrollWidth": 561,
+      "ctaCount": 1,
+      "theme": "dark"
+    }
+  ]
+}

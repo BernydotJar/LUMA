@@ -1,0 +1,545 @@
+[
+  {
+    "theme": "se",
+    "states": [
+      {
+        "name": "LUMA para Seres de Excelencia, inicio",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 16.5,
+        "bottom": 60.5
+      },
+      {
+        "name": "Cambiar tema. Tema actual: Seres de Excelenci",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 16.5,
+        "bottom": 60.5
+      },
+      {
+        "name": "Acceder",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 16.5,
+        "bottom": 60.5
+      },
+      {
+        "name": "Accede para personalizar tu experiencia",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 121,
+        "bottom": 165
+      },
+      {
+        "name": "Elige lo que quieres desarrollar",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 315.4375,
+        "bottom": 353.4375
+      },
+      {
+        "name": "Empezar práctica · 12 min",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 582.171875,
+        "bottom": 631.171875
+      },
+      {
+        "name": "¿Por qué esta práctica?",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 636.171875,
+        "bottom": 676.171875
+      },
+      {
+        "name": "Explora tu programaExperiencias y prácticas",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 673.171875,
+        "bottom": 740.171875
+      },
+      {
+        "name": "Consulta tu rutaObjetivo y próximos pasos",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 336.171875,
+        "bottom": 403.171875
+      },
+      {
+        "name": "Pregunta a LUMAOrientación sobre el material",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 411.171875,
+        "bottom": 478.171875
+      },
+      {
+        "name": "Iniciar práctica",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 350.171875,
+        "bottom": 390.171875
+      },
+      {
+        "name": "Ver todas",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 348.3125,
+        "bottom": 392.3125
+      },
+      {
+        "name": "Abrir práctica",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 608.84375,
+        "bottom": 652.84375
+      },
+      {
+        "name": "Abrir práctica",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 608.84375,
+        "bottom": 652.84375
+      },
+      {
+        "name": "Abrir práctica",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 608.84375,
+        "bottom": 652.84375
+      },
+      {
+        "name": "Ver programa",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 347.71875,
+        "bottom": 391.71875
+      },
+      {
+        "name": "Preparar mi ruta personal",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 410.71875,
+        "bottom": 473.71875
+      },
+      {
+        "name": "Ayúdame a identificar un P.A.S.",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 446.03125,
+        "bottom": 490.03125
+      },
+      {
+        "name": "¿Por qué me recomiendas esta práctica?",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 446.03125,
+        "bottom": 490.03125
+      },
+      {
+        "name": "Dame un ejemplo de niveles lógicos",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 446.03125,
+        "bottom": 490.03125
+      },
+      {
+        "name": "",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 504.03125,
+        "bottom": 548.03125
+      },
+      {
+        "name": "Mis certificados",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 681.53125,
+        "bottom": 725.53125
+      },
+      {
+        "name": "Hoy",
+        "focusVisible": true,
+        "occluded": true,
+        "top": 771,
+        "bottom": 825
+      },
+      {
+        "name": "Ruta",
+        "focusVisible": true,
+        "occluded": true,
+        "top": 771,
+        "bottom": 825
+      },
+      {
+        "name": "Programa",
+        "focusVisible": true,
+        "occluded": true,
+        "top": 771,
+        "bottom": 825
+      }
+    ],
+    "reasonOpens": true
+  },
+  {
+    "theme": "light",
+    "states": [
+      {
+        "name": "LUMA inicio",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 16.5,
+        "bottom": 60.5
+      },
+      {
+        "name": "Cambiar tema. Tema actual: Luz Líquida",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 16.5,
+        "bottom": 60.5
+      },
+      {
+        "name": "Acceder",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 16.5,
+        "bottom": 60.5
+      },
+      {
+        "name": "Accede para personalizar tu experiencia",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 121,
+        "bottom": 165
+      },
+      {
+        "name": "Elige lo que quieres desarrollar",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 315.4375,
+        "bottom": 353.4375
+      },
+      {
+        "name": "Empezar práctica · 12 min",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 582.171875,
+        "bottom": 631.171875
+      },
+      {
+        "name": "¿Por qué esta práctica?",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 636.171875,
+        "bottom": 676.171875
+      },
+      {
+        "name": "Explora tu programaExperiencias y prácticas",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 673.171875,
+        "bottom": 740.171875
+      },
+      {
+        "name": "Consulta tu rutaObjetivo y próximos pasos",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 336.171875,
+        "bottom": 403.171875
+      },
+      {
+        "name": "Pregunta a LUMAOrientación sobre el material",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 411.171875,
+        "bottom": 478.171875
+      },
+      {
+        "name": "Iniciar práctica",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 350.171875,
+        "bottom": 390.171875
+      },
+      {
+        "name": "Ver todas",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 348.3125,
+        "bottom": 392.3125
+      },
+      {
+        "name": "Abrir práctica",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 608.84375,
+        "bottom": 652.84375
+      },
+      {
+        "name": "Abrir práctica",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 608.84375,
+        "bottom": 652.84375
+      },
+      {
+        "name": "Abrir práctica",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 608.84375,
+        "bottom": 652.84375
+      },
+      {
+        "name": "Ver programa",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 347.71875,
+        "bottom": 391.71875
+      },
+      {
+        "name": "Preparar mi ruta personal",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 410.71875,
+        "bottom": 473.71875
+      },
+      {
+        "name": "Ayúdame a identificar un P.A.S.",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 446.03125,
+        "bottom": 490.03125
+      },
+      {
+        "name": "¿Por qué me recomiendas esta práctica?",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 446.03125,
+        "bottom": 490.03125
+      },
+      {
+        "name": "Dame un ejemplo de niveles lógicos",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 446.03125,
+        "bottom": 490.03125
+      },
+      {
+        "name": "",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 504.03125,
+        "bottom": 548.03125
+      },
+      {
+        "name": "Mis certificados",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 681.53125,
+        "bottom": 725.53125
+      },
+      {
+        "name": "Hoy",
+        "focusVisible": true,
+        "occluded": true,
+        "top": 771,
+        "bottom": 825
+      },
+      {
+        "name": "Ruta",
+        "focusVisible": true,
+        "occluded": true,
+        "top": 771,
+        "bottom": 825
+      },
+      {
+        "name": "Programa",
+        "focusVisible": true,
+        "occluded": true,
+        "top": 771,
+        "bottom": 825
+      }
+    ],
+    "reasonOpens": true
+  },
+  {
+    "theme": "dark",
+    "states": [
+      {
+        "name": "LUMA inicio",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 16.5,
+        "bottom": 60.5
+      },
+      {
+        "name": "Cambiar tema. Tema actual: Inteligencia Noctu",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 16.5,
+        "bottom": 60.5
+      },
+      {
+        "name": "Acceder",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 16.5,
+        "bottom": 60.5
+      },
+      {
+        "name": "Accede para personalizar tu experiencia",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 121,
+        "bottom": 165
+      },
+      {
+        "name": "Elige lo que quieres desarrollar",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 315.4375,
+        "bottom": 353.4375
+      },
+      {
+        "name": "Empezar práctica · 12 min",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 582.171875,
+        "bottom": 631.171875
+      },
+      {
+        "name": "¿Por qué esta práctica?",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 636.171875,
+        "bottom": 676.171875
+      },
+      {
+        "name": "Explora tu programaExperiencias y prácticas",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 673.171875,
+        "bottom": 740.171875
+      },
+      {
+        "name": "Consulta tu rutaObjetivo y próximos pasos",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 336.171875,
+        "bottom": 403.171875
+      },
+      {
+        "name": "Pregunta a LUMAOrientación sobre el material",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 411.171875,
+        "bottom": 478.171875
+      },
+      {
+        "name": "Iniciar práctica",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 350.171875,
+        "bottom": 390.171875
+      },
+      {
+        "name": "Ver todas",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 348.3125,
+        "bottom": 392.3125
+      },
+      {
+        "name": "Abrir práctica",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 608.84375,
+        "bottom": 652.84375
+      },
+      {
+        "name": "Abrir práctica",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 608.84375,
+        "bottom": 652.84375
+      },
+      {
+        "name": "Abrir práctica",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 608.84375,
+        "bottom": 652.84375
+      },
+      {
+        "name": "Ver programa",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 347.71875,
+        "bottom": 391.71875
+      },
+      {
+        "name": "Preparar mi ruta personal",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 410.71875,
+        "bottom": 473.71875
+      },
+      {
+        "name": "Ayúdame a identificar un P.A.S.",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 446.03125,
+        "bottom": 490.03125
+      },
+      {
+        "name": "¿Por qué me recomiendas esta práctica?",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 446.03125,
+        "bottom": 490.03125
+      },
+      {
+        "name": "Dame un ejemplo de niveles lógicos",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 446.03125,
+        "bottom": 490.03125
+      },
+      {
+        "name": "",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 504.03125,
+        "bottom": 548.03125
+      },
+      {
+        "name": "Mis certificados",
+        "focusVisible": true,
+        "occluded": false,
+        "top": 681.53125,
+        "bottom": 725.53125
+      },
+      {
+        "name": "Hoy",
+        "focusVisible": true,
+        "occluded": true,
+        "top": 771,
+        "bottom": 825
+      },
+      {
+        "name": "Ruta",
+        "focusVisible": true,
+        "occluded": true,
+        "top": 771,
+        "bottom": 825
+      },
+      {
+        "name": "Programa",
+        "focusVisible": true,
+        "occluded": true,
+        "top": 771,
+        "bottom": 825
+      }
+    ],
+    "reasonOpens": true
+  }
+]

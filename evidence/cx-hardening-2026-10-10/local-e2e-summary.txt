@@ -1,0 +1,5 @@
+Full local suite (zero retries, 2 workers)
+[131/132] [mobile] › e2e/showcase.spec.ts:255:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks
+[132/132] [mobile] › e2e/spanish-ui.spec.ts:36:1 › client-facing product terminology stays in Spanish
+  15 skipped
+  117 passed (1.1m)
