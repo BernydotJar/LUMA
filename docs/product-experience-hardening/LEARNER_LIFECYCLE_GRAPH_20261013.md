@@ -46,3 +46,19 @@ flowchart LR
 ## Evidence and status
 
 See `evidence/learner-lifecycle-20261013/`. Release is **NO-GO until all gates are proven**. It is legitimate for implemented tasks to be in `review` while content, integrations, quality, security or explicit human acceptance are blocked. Document blocked dependencies rather than declaring the product finished.
+
+## Validated graph projection — 2026-10-13
+
+The typed append-only event chain contains **43 checksum-linked events** (implementation evidence, test/security/critic reviews, transitions and one checkpoint). `graph-harness ... validate` must pass in CI.
+
+| Node | Status | Gate summary |
+| --- | --- | --- |
+| LUMA-CX-101 identity isolation | **DONE** | Synthetic independent QA, security + critic evidence |
+| LUMA-CX-102 graded receipts | **DONE** | Firestore + browser, evidence-review PASS |
+| LUMA-CX-103 self-reported reflections | **DONE** | Scoped read/write, security-review PASS |
+| LUMA-CX-104 purchased-course disclosure and public samples | **DONE** | Access API 403, browser state, security-review PASS |
+| LUMA-CX-105 tutor unavailable recovery | **DONE** | Browser retry/agenda tests, evidence-review PASS |
+| LUMA-CX-106 full course player and published lessons | **BLOCKED** | Real approved curricular media/rights/manifests not present |
+| LUMA-CX-107 enterprise release | **NOT AUTHORIZED; RELEASE GATE BLOCKED** | E2E from real providers, manual checks, content, human signoff outstanding |
+
+These `DONE` markers mean *narrow implementation quality with synthetic QA*, not that the full enterprise product is releasable or that an independent external human has certified it. The original NO-GO for a complete program still applies.
