@@ -46,3 +46,9 @@ Recorded artifacts: `evidence/learner-lifecycle-20261013/firestore-full-postfix.
 ## Guest-access selector defect found in complete GitHub browser suite
 
 Full GitHub Actions browser job on SHA `558b35a6f9969763c5a1ed9ea4541731acd47696` (run `38462477308`) reported **123 passed, 7 skipped, 2 failed**. Both failures were the same accessible-name collision, on Chromium and mobile: `getByRole("link", { name: "Acceder", exact: true })` matched both the account-menu link and the public-practice enrollment notice. The UI now preserves the conventional account-menu label and calls the second, more specific guest action **"Iniciar sesión"**, with a regression assertion for exactly one of each. Targeted desktop/mobile rerun: **5 passed, 1 skipped, 0 failed**. Full GitHub browser suite must run again on the correction before the guest-access graph node is closed.
+
+## Complete GitHub Actions quality gate — successful QA commit
+
+The third full PR workflow, **run [38463504207](https://github.com/BernydotJar/LUMA/actions/runs/38463504207)**, on commit **`6c77cb6059653f614391f9a07211553b6cf9e73d`**, has every validation job **SUCCESS**: `verify`, `security`, `identity-roles`, `firestore`, and `browser`. The full production-build browser execution finished **125 passed, 7 skipped, 0 failed**. The `deploy` job was **SKIPPED** because this is a pull request, not a push to main. CI receipt: `evidence/learner-lifecycle-20261013/github-ci-verified.json`.
+
+This closes the narrow regression blockers identified on prior CI runs: undefined optional receipt and duplicate "Acceder" accessible names. Graph issues #46/#47/#49 have implementation quality evidence against the exact verified tree. **It does not certify a production deployment, seven real digital lessons, real payments, manual accessibility, field performance or external human release signoff.**

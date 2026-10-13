@@ -21,3 +21,9 @@ The current Practitioner front end exposes seven **editorial module covers**, se
 Institution-approved lesson inventory for all seven modules; actual media/transcript files and copyright/access rights; tenant/cohort mapping; instructor-approved ordering and completion standards; QA-owned storage bucket or signed-delivery credentials; one end-to-end published sample lesson fixture. Until these exist, the graph gate stays **BLOCKED** and LUMA remains NO-GO as a complete premium-course LMS.
 
 **Graph artifact:** `graph-harness.learner-lifecycle.project.json`, node `LUMA-CX-106-course-player`. No deployment, media publication, tenant permissions, Hotmart live webhook or certification is authorized by this plan alone.
+
+## Verified source inventory — 2026-10-13
+
+A read-only Google Drive metadata inspection found **all seven source documents** referenced by the module catalog: six PDFs and one DOCX (see `evidence/learner-lifecycle-20261013/curriculum-source-metadata.json`). This confirms the document references exist and are accessible to the connector, not that LUMA has rights to redistribute them or that the digital course lesson inventory is published. The documents' specific titles and educational contents must pass institutional editorial approval; metadata access alone does not establish an approved syllabus. No actual approved video media, trainer transcripts, learner progress checkpoints or source-license grant was verified in this inspection.
+
+**Impact on graph node LUMA-CX-106:** DOCUMENT SOURCE INVENTORY READY; PUBLISHED LESSON/SECURE MEDIA/RESUME DELIVERY BLOCKED. No public raw Drive deep-link delivery should be used as a substitute for program-entitled access.

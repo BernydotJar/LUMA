@@ -62,3 +62,17 @@ The typed append-only event chain contains **43 checksum-linked events** (implem
 | LUMA-CX-107 enterprise release | **NOT AUTHORIZED; RELEASE GATE BLOCKED** | E2E from real providers, manual checks, content, human signoff outstanding |
 
 These `DONE` markers mean *narrow implementation quality with synthetic QA*, not that the full enterprise product is releasable or that an independent external human has certified it. The original NO-GO for a complete program still applies.
+
+## Graph recovery after real CI failures — checkpoint 2026-10-13
+
+**Do not overwrite the original 43-event QA snapshot.** The append-only log now contains **86 verified events**. The subsequent events preserve two CI-discovered defects, descendant invalidations, localized repair work and evidence-based gate reinstatement:
+
+| CI execution | Finding and action | Result |
+| --- | --- | --- |
+| PR #51 run `38460562978` | Firestore serializer rejected optional `lastScoredEvidence: undefined`; invalidate scored-receipts node and release descendants, then repair serializer and test real 51-stateful suite | Repair implemented; full six-suite Firestore Emulator 51/51 PASS |
+| PR #51 run `38462477308` | Browser failure from two guest "Acceder" accessible names; invalidate course-access node and dependent tutor recovery, add distinct "Iniciar sesión" CTA and browser test | Targeted desktop/mobile 5 pass, 1 skipped |
+| PR #51 run `38463504207`, SHA `6c77cb6059653f614391f9a07211553b6cf9e73d` | `verify`, `security`, `identity-roles`, `firestore` and full `browser` all succeeded; browser **125 PASS, 7 skipped, 0 fail** | Five QA feature nodes **DONE** again; release **NO-GO**; deploy job skipped |
+
+Root-cause and exact-SHA execution evidence: `evidence/learner-lifecycle-20261013/adversarial-critic-postfix.json`, `auth-cta-postfix.json`, `firestore-full-postfix.json` and `github-ci-verified.json`. This is a deterministic automated quality closure; **not** human approval or a field production reliability certification. Pending offline results now bind to a server-confirmed UID/tenant/program, avoiding cross-program replay. The seven source files referenced by the program module catalog are accessible in Google Drive metadata (six PDF and one DOCX), but publication rights and actual lesson delivery are not approved.
+
+**Remaining:** LUMA-CX-106 PUBLISHED LESSON PLAYER / LICENSED ASSETS / SECURE DELIVERY / DURABLE RESUME is BLOCKED. LUMA-CX-107 ENTERPRISE RELEASE is BLOCKED until content, genuine provider staging, accessibility/performance and human/customer signoff. Do not merge this draft PR or deploy because these product-level gates are not finished. The next doc-only commit may trigger a new PR CI SHA; the preceding pass applies to the exact audited implementation tree, and new SHA must be monitored independently.
