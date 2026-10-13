@@ -53,7 +53,7 @@ export function CourseEnrollmentStatus() {
     return <div className={styles.notice} data-status="preview">
       <LockKeyhole size={17} aria-hidden="true" />
       <span><strong>Exploración de muestra.</strong> Estas prácticas introductorias no confirman una matrícula.</span>
-      <Link href="/login">Acceder <ArrowRight size={15} /></Link>
+      <Link href="/login">Iniciar sesión <ArrowRight size={15} /></Link>
     </div>;
   }
   if (!access || access.uid !== user.uid) return <p className={styles.loading} role="status">Consultando tu inscripción…</p>;
