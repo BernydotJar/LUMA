@@ -1,0 +1,58 @@
+{
+  "kind": "qa-recheck-browser-isolation",
+  "startedAt": "2026-10-13T06:37:07.547Z",
+  "environment": "local-next-and-demo-firebase-emulators-only",
+  "checks": [
+    {
+      "name": "Jeremy: datos locales de simulación de práctica reproducen rúbrica",
+      "status": "PASS",
+      "detail": {
+        "localRubric": "3/3"
+      }
+    },
+    {
+      "name": "Cambio Jeremy a Abigail: identidad correcta después de logout/login",
+      "status": "PASS",
+      "detail": {
+        "nameVisible": "Abigail"
+      }
+    },
+    {
+      "name": "Cambio Jeremy a Abigail: no heredar objetivo anterior",
+      "status": "FAIL",
+      "reason": "Jeremy goal is visible to Abigail"
+    },
+    {
+      "name": "Cambio Jeremy a Abigail: no heredar rúbrica de Jeremy",
+      "status": "FAIL",
+      "reason": "Jeremy scored evidence is visible to Abigail"
+    },
+    {
+      "name": "Cambio Jeremy a Abigail: eliminar datos locales no asociados a UID",
+      "status": "FAIL",
+      "reason": "Unscoped last event retained\n+ actual - expected\n\n+ '{\"eventId\":\"qa-synthetic-jeremy\",\"type\":\"SIMULATION_COMPLETED\",\"conceptId\":\"pas\",\"correctCount\":3,\"completedAt\":\"2026-10-13T06:37:16.272Z\",\"sourceId\":\"qa-demo-fixture\",\"rubricId\":\"pas-v1\",\"evidenceCategory\":\"scored\",\"twinAuthority\":\"eligible\",\"criteria\":[{\"id\":\"event-vs-interpretation\",\"label\":\"Distingue acontecimiento de interpretación\",\"passed\":true,\"attempts\":1},{\"id\":\"thought-emotion-link\","
+    },
+    {
+      "name": "Abigail: certificados vacíos sin error de carga",
+      "status": "PASS",
+      "detail": {
+        "noFalseCertificate": true
+      }
+    },
+    {
+      "name": "Abigail: viewport 390x844 no desborda horizontalmente",
+      "status": "PASS",
+      "detail": {
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "nav": true
+      }
+    }
+  ],
+  "productionWrites": false,
+  "pageErrors": [],
+  "finishedAt": "2026-10-13T06:37:23.315Z",
+  "passed": 4,
+  "failed": 3,
+  "verdict": "FAIL"
+}
