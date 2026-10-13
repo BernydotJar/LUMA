@@ -1,0 +1,437 @@
+{
+  "scenario": "US-LRN-001 | Jeremy, Abigail and Adan: Hotmart-to-full-course lifecycle",
+  "qaMode": "FIREBASE_EMULATORS_AND_LOCAL_NEXT_BROWSER",
+  "productionWrites": false,
+  "actualHotmartPurchase": false,
+  "realGoogleOAuth": false,
+  "referenceCommit": "7ef32ba9ff3c56896da536a86ca14286b99ddfb3",
+  "executedOn": "2026-10-13T06:30:41.140Z",
+  "syntheticLearnersOnly": true,
+  "personas": [
+    "Jeremy",
+    "Abigail",
+    "Adán",
+    "Julián (sin compra)",
+    "Sofía (entrenadora)",
+    "Coach ajeno (tenant aislado)"
+  ],
+  "checks": [
+    {
+      "name": "Hotmart compra aprobada Jeremy",
+      "status": "PASS"
+    },
+    {
+      "name": "Hotmart compra aprobada Abigail",
+      "status": "PASS"
+    },
+    {
+      "name": "Hotmart compra aprobada Adán",
+      "status": "PASS"
+    },
+    {
+      "name": "Invitado: entrada y estructura de aprendizaje",
+      "status": "PASS",
+      "detail": {
+        "url": "http://127.0.0.1:3290/learn"
+      }
+    },
+    {
+      "name": "Invitado: localizar curso y prácticas",
+      "status": "PASS",
+      "detail": {
+        "modules": 7,
+        "practices": 7
+      }
+    },
+    {
+      "name": "Invitado: catálogo marca acceso restringido al contenido comprado",
+      "status": "FAIL",
+      "priority": "P1",
+      "reason": "Program previews must explain whether paid content is locked"
+    },
+    {
+      "name": "Jeremy: bienvenida usa identidad, no Mariana",
+      "status": "PASS"
+    },
+    {
+      "name": "Jeremy: nombre del curso comprado visible al entrar",
+      "status": "FAIL",
+      "priority": "P1",
+      "reason": "Dashboard must show explicit purchased-course identity"
+    },
+    {
+      "name": "Jeremy: clase en vivo de su cohorte visible",
+      "status": "PASS",
+      "detail": {
+        "classroomLink": "/classroom/<qa-cohort>/qa-live-1"
+      }
+    },
+    {
+      "name": "Jeremy: compra vinculada a identidad Firebase verificada",
+      "status": "PASS"
+    },
+    {
+      "name": "Jeremy: onboarding completo por controles reales",
+      "status": "PASS",
+      "detail": {
+        "serverVersion": 1,
+        "minutes": 35
+      }
+    },
+    {
+      "name": "Jeremy: explora módulo, lección y práctica",
+      "status": "PASS",
+      "detail": {
+        "modules": 7,
+        "detailRoute": "/learn/experience/pas-detectar-y-reformular"
+      }
+    },
+    {
+      "name": "Jeremy: video/lección con posición reproducible",
+      "status": "FAIL",
+      "priority": "P1",
+      "reason": "No lesson player found; descriptive module cards are not playable lessons"
+    },
+    {
+      "name": "Jeremy: evaluación PAS 3 criterios en navegador",
+      "status": "PASS",
+      "detail": {
+        "receipt": "3/3",
+        "serverVersion": 2
+      }
+    },
+    {
+      "name": "Jeremy: progreso visible al volver a su ruta",
+      "status": "PASS",
+      "detail": {
+        "visibleOnSameDevice": true
+      }
+    },
+    {
+      "name": "Jeremy: avanza a dos experiencias complementarias y guarda reflexiones",
+      "status": "PASS",
+      "detail": {
+        "complementaryActivities": 2,
+        "activityType": "self-reported",
+        "serverRubricVersion": 2
+      }
+    },
+    {
+      "name": "Jeremy: la rúbrica PAS sigue visible tras explorar otras experiencias",
+      "status": "FAIL",
+      "priority": "P0",
+      "reason": "locator.waitFor: Timeout 13000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /Tu avance se apoya en evidencias concretas/i }) to be visible\n"
+    },
+    {
+      "name": "Jeremy: pregunta contextual al tutor (sin inventar fuente)",
+      "status": "PASS",
+      "detail": {
+        "fallback": "RAG scoped unavailable, explicitly disclosed"
+      }
+    },
+    {
+      "name": "Jeremy: tutor ofrece escalamiento cuando RAG no disponible",
+      "status": "FAIL",
+      "priority": "P1",
+      "reason": "No human escalation or actionable recovery alongside unavailable RAG"
+    },
+    {
+      "name": "Jeremy: certificados vacíos, sin diploma ficticio",
+      "status": "FAIL",
+      "priority": "P1",
+      "reason": "locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /Tus certificados aparecerán aquí/i }) to be visible\n"
+    },
+    {
+      "name": "Jeremy: nueva sesión recupera progreso en API",
+      "status": "PASS",
+      "detail": {
+        "serverVersion": 2,
+        "viewport": "390x844"
+      }
+    },
+    {
+      "name": "Jeremy: nueva sesión muestra criterios de práctica en UI",
+      "status": "FAIL",
+      "priority": "P0",
+      "reason": "locator.waitFor: Timeout 10000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /Tu avance se apoya en evidencias concretas/i }) to be visible\n"
+    },
+    {
+      "name": "Abigail: orientación inicial sin logros ajenos",
+      "status": "PASS"
+    },
+    {
+      "name": "Abigail: onboarding de ocho minutos, diagnóstico incorrecto",
+      "status": "PASS",
+      "detail": {
+        "minutes": 8,
+        "initialSignal": "diagnostic a"
+      }
+    },
+    {
+      "name": "Abigail: una respuesta incorrecta ofrece una pista",
+      "status": "PASS",
+      "detail": {
+        "recovery": "Correct choice unlocks next step"
+      }
+    },
+    {
+      "name": "Abigail: retroalimentación sobre errores evita atribuir 3/3 de dominio",
+      "status": "PASS"
+    },
+    {
+      "name": "Abigail: completa PAS tras recibir una pista y guarda sus intentos",
+      "status": "PASS",
+      "detail": {
+        "earnedCriteria": "3/3",
+        "attemptsFirstCriterion": 2,
+        "gradeMeaning": "one PAS activity only"
+      }
+    },
+    {
+      "name": "Abigail: el recibo reconoce que necesitó una pista",
+      "status": "FAIL",
+      "priority": "P1",
+      "reason": "3/3 correct after feedback must not be presented as independent first-try mastery"
+    },
+    {
+      "name": "Adán: tutor distingue contenido sin RAG",
+      "status": "PASS",
+      "detail": {
+        "behavior": "honest unavailable state"
+      }
+    },
+    {
+      "name": "Adán: pregunta de salud de alto impacto se escala sin afirmación clínica",
+      "status": "PASS",
+      "detail": {
+        "trust": "BLOCKED_CLAIM",
+        "learningMove": "ESCALATE"
+      }
+    },
+    {
+      "name": "Adán: reflexiones indican que son auto-reportadas",
+      "status": "PASS"
+    },
+    {
+      "name": "Adán: reflexión visible tras iniciar sesión en otro navegador",
+      "status": "FAIL",
+      "priority": "P1",
+      "reason": "Reflection should survive a fresh browser session"
+    },
+    {
+      "name": "Julián: API bloquea aprendizaje sin inscripción",
+      "status": "PASS"
+    },
+    {
+      "name": "Julián: interfaz no ofrece actividades de pago como si estuvieran abiertas",
+      "status": "FAIL",
+      "priority": "P0",
+      "reason": "Unentitled account can enter paid practice from UI\n\n3 !== 0\n"
+    },
+    {
+      "name": "Sofía: navegador autenticado para seguimiento",
+      "status": "PASS"
+    },
+    {
+      "name": "Sofía: panel entrenador carga datos de alumnos del tenant",
+      "status": "PASS"
+    },
+    {
+      "name": "Sofía: detalle del progreso de Jeremy autorizado",
+      "status": "PASS"
+    },
+    {
+      "name": "Entrenador ajeno: navegador autenticado",
+      "status": "PASS"
+    },
+    {
+      "name": "Entrenador ajeno: detalle 403 aunque conozca ID",
+      "status": "PASS"
+    },
+    {
+      "name": "Cambio de cuenta en mismo navegador no expone nota de Jeremy a Abigail",
+      "status": "FAIL",
+      "priority": "P0",
+      "reason": "page.goto: Page crashed\nCall log:\n  - navigating to \"http://127.0.0.1:3290/learn\", waiting until \"load\"\n"
+    },
+    {
+      "name": "Cambio de cuenta: no quedan eventos privados del usuario anterior en localStorage",
+      "status": "FAIL",
+      "priority": "P0",
+      "reason": "page.evaluate: Target crashed "
+    },
+    {
+      "name": "Jeremy: viewport móvil sin CTA oculto",
+      "status": "FAIL",
+      "priority": "P0",
+      "reason": "page.evaluate: Target crashed "
+    },
+    {
+      "name": "No quedan documentos falsos de Mariana en inscripción QA",
+      "status": "PASS",
+      "detail": {
+        "testEnrollments": 3
+      }
+    }
+  ],
+  "defects": [
+    {
+      "id": "CX-JOURNEY-01",
+      "name": "Invitado: catálogo marca acceso restringido al contenido comprado",
+      "priority": "P1",
+      "message": "Program previews must explain whether paid content is locked"
+    },
+    {
+      "id": "CX-JOURNEY-02",
+      "name": "Jeremy: nombre del curso comprado visible al entrar",
+      "priority": "P1",
+      "message": "Dashboard must show explicit purchased-course identity"
+    },
+    {
+      "id": "CX-JOURNEY-03",
+      "name": "Jeremy: video/lección con posición reproducible",
+      "priority": "P1",
+      "message": "No lesson player found; descriptive module cards are not playable lessons"
+    },
+    {
+      "id": "CX-JOURNEY-04",
+      "name": "Jeremy: la rúbrica PAS sigue visible tras explorar otras experiencias",
+      "priority": "P0",
+      "message": "locator.waitFor: Timeout 13000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /Tu avance se apoya en evidencias concretas/i }) to be visible\n"
+    },
+    {
+      "id": "CX-JOURNEY-05",
+      "name": "Jeremy: tutor ofrece escalamiento cuando RAG no disponible",
+      "priority": "P1",
+      "message": "No human escalation or actionable recovery alongside unavailable RAG"
+    },
+    {
+      "id": "CX-JOURNEY-06",
+      "name": "Jeremy: certificados vacíos, sin diploma ficticio",
+      "priority": "P1",
+      "message": "locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /Tus certificados aparecerán aquí/i }) to be visible\n"
+    },
+    {
+      "id": "CX-JOURNEY-07",
+      "name": "Jeremy: nueva sesión muestra criterios de práctica en UI",
+      "priority": "P0",
+      "message": "locator.waitFor: Timeout 10000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /Tu avance se apoya en evidencias concretas/i }) to be visible\n"
+    },
+    {
+      "id": "CX-JOURNEY-08",
+      "name": "Abigail: el recibo reconoce que necesitó una pista",
+      "priority": "P1",
+      "message": "3/3 correct after feedback must not be presented as independent first-try mastery"
+    },
+    {
+      "id": "CX-JOURNEY-09",
+      "name": "Adán: reflexión visible tras iniciar sesión en otro navegador",
+      "priority": "P1",
+      "message": "Reflection should survive a fresh browser session"
+    },
+    {
+      "id": "CX-JOURNEY-10",
+      "name": "Julián: interfaz no ofrece actividades de pago como si estuvieran abiertas",
+      "priority": "P0",
+      "message": "Unentitled account can enter paid practice from UI\n\n3 !== 0\n"
+    },
+    {
+      "id": "CX-JOURNEY-11",
+      "name": "Cambio de cuenta en mismo navegador no expone nota de Jeremy a Abigail",
+      "priority": "P0",
+      "message": "page.goto: Page crashed\nCall log:\n  - navigating to \"http://127.0.0.1:3290/learn\", waiting until \"load\"\n"
+    },
+    {
+      "id": "CX-JOURNEY-12",
+      "name": "Cambio de cuenta: no quedan eventos privados del usuario anterior en localStorage",
+      "priority": "P0",
+      "message": "page.evaluate: Target crashed "
+    },
+    {
+      "id": "CX-JOURNEY-13",
+      "name": "Jeremy: viewport móvil sin CTA oculto",
+      "priority": "P0",
+      "message": "page.evaluate: Target crashed "
+    }
+  ],
+  "screenshots": [
+    {
+      "case": "Invitado: catálogo marca acceso restringido al contenido comprado",
+      "path": "/tmp/luma-course-journey-jeremy-abigail-adan-screens/failure-01.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "jeremy-start",
+      "path": "/tmp/luma-course-journey-jeremy-abigail-adan-screens/jeremy-start.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Jeremy: nombre del curso comprado visible al entrar",
+      "path": "/tmp/luma-course-journey-jeremy-abigail-adan-screens/failure-02.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Jeremy: video/lección con posición reproducible",
+      "path": "/tmp/luma-course-journey-jeremy-abigail-adan-screens/failure-03.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "jeremy-practice-receipt",
+      "path": "/tmp/luma-course-journey-jeremy-abigail-adan-screens/jeremy-practice-receipt.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Jeremy: la rúbrica PAS sigue visible tras explorar otras experiencias",
+      "path": "/tmp/luma-course-journey-jeremy-abigail-adan-screens/failure-04.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Jeremy: tutor ofrece escalamiento cuando RAG no disponible",
+      "path": "/tmp/luma-course-journey-jeremy-abigail-adan-screens/failure-05.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "jeremy-new-device",
+      "path": "/tmp/luma-course-journey-jeremy-abigail-adan-screens/jeremy-new-device.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "abigail-first-visit",
+      "path": "/tmp/luma-course-journey-jeremy-abigail-adan-screens/abigail-first-visit.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Abigail: el recibo reconoce que necesitó una pista",
+      "path": "/tmp/luma-course-journey-jeremy-abigail-adan-screens/failure-08.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Adán: reflexión visible tras iniciar sesión en otro navegador",
+      "path": "/tmp/luma-course-journey-jeremy-abigail-adan-screens/failure-09.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Julián: interfaz no ofrece actividades de pago como si estuvieran abiertas",
+      "path": "/tmp/luma-course-journey-jeremy-abigail-adan-screens/failure-10.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "sofia-coach",
+      "path": "/tmp/luma-course-journey-jeremy-abigail-adan-screens/sofia-coach.png",
+      "containsSyntheticDataOnly": true
+    }
+  ],
+  "browser": "Chromium headless Playwright",
+  "environment": {
+    "project": "demo-luma-course-journey-e2e",
+    "tenant": "qa-course-journey",
+    "program": "pnl-practitioner",
+    "base": "http://127.0.0.1:3290",
+    "auth": "emulator",
+    "firestore": "emulator"
+  },
+  "verdict": "FAIL",
+  "passed": 30,
+  "failed": 13,
+  "finishedAt": "2026-10-13T06:34:28.172Z"
+}
