@@ -16,6 +16,7 @@ test("a reflection creates a practice receipt", async ({ page }) => {
   );
   await page.getByRole("button", { name: /Registrar práctica/i }).click();
   await expect(page.getByRole("heading", { name: /Ya dejaste una señal útil/i })).toBeVisible();
-  const event = await page.evaluate(() => window.localStorage.getItem("luma-latest-learning-event"));
-  expect(event).toContain("PRACTICE_REFLECTION_RECORDED");
+  await expect(page.getByText("Auto-reportada")).toBeVisible();
+  await expect(page.getByText(/Vista previa registrada en esta sesión/i)).toBeVisible();
+  expect(await page.evaluate(() => window.localStorage.getItem("luma-latest-learning-event"))).toBeNull();
 });

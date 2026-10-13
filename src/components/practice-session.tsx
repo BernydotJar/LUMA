@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { appendPersistentLearningEvent, hasPersistentLearningSession } from "@/lib/learning-api-client";
 import { moduleThreeSource } from "@/lib/luma-data";
+import { firebaseAuth } from "@/lib/firebase-client";
+import { guestLearningKeys, pendingLearningKey } from "@/lib/learner-client-storage";
 import { evaluatePasSimulation, type SimulationEvidenceReceipt } from "@/lib/simulation-evidence";
 import styles from "./practice-session.module.css";
 
@@ -56,7 +58,7 @@ export function PracticeSession() {
   const [attempted, setAttempted] = useState<Record<string, number>>({});
   const [completed, setCompleted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [syncState, setSyncState] = useState<"local" | "synced" | "pending">("local");
+  const [syncState, setSyncState] = useState<"local" | "synced" | "pending" | "preview">("local");
   const [evidenceReceipt, setEvidenceReceipt] = useState<SimulationEvidenceReceipt | null>(null);
   const current = steps[step];
   const selected = answers[current.id as keyof AnswerState];
@@ -93,22 +95,32 @@ export function PracticeSession() {
       evidenceCategory: receipt.evidenceCategory,
       twinAuthority: receipt.twinAuthority,
     };
-    window.localStorage.setItem("luma-latest-learning-event", JSON.stringify(event));
-
-    if (hasPersistentLearningSession()) {
+    const uid = firebaseAuth.currentUser?.uid;
+    if (uid && hasPersistentLearningSession()) {
+      const pendingKey = pendingLearningKey(uid);
       window.localStorage.setItem(
-        "luma-pending-learning-event",
-        JSON.stringify({ eventId, event }),
+        pendingKey,
+        JSON.stringify({ ownerUid: uid, eventId, event }),
       );
       try {
         const plan = await appendPersistentLearningEvent(eventId, event);
         if (plan) {
-          window.localStorage.removeItem("luma-pending-learning-event");
+          window.localStorage.removeItem(pendingKey);
           setSyncState("synced");
         }
-      } catch {
-        setSyncState("pending");
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "";
+        if (message.includes("403") || message.includes("401")) {
+          window.localStorage.removeItem(pendingKey);
+          setSyncState("preview");
+        } else {
+          setSyncState("pending");
+        }
       }
+    } else {
+      // Public practice preview has only guest-local results. No owner mixing.
+      window.localStorage.setItem(guestLearningKeys.latestScored, JSON.stringify(event));
+      setSyncState("preview");
     }
 
     setCompleted(true);
@@ -131,8 +143,8 @@ export function PracticeSession() {
         <div className="page-noise" />
         <section className={`${styles.completeCard} content-surface`}>
           <div className={styles.completeOrb}><Check size={54} /></div>
-          <span className="eyebrow"><span className="eyebrow-dot" /> Evidencia registrada</span>
-          <h1>Demostraste transferencia.</h1>
+          <span className="eyebrow"><span className="eyebrow-dot" /> {syncState === "synced" ? "Evidencia registrada" : "Resultado de la práctica de muestra"}</span>
+          <h1>{syncState === "synced" ? "Demostraste transferencia." : "Terminaste la práctica de muestra."}</h1>
           <p>Separaste acontecimiento, pensamiento y emoción; luego formulaste una alternativa comprobable. LUMA usará esta señal para ajustar tu progreso de aplicación.</p>
           <div className={styles.evidenceReceipt}>
             <div><span>Evento</span><strong>SIMULATION_COMPLETED</strong></div>
@@ -145,7 +157,7 @@ export function PracticeSession() {
             <Link className="button-primary" href="/learn">Volver a mi ruta <ArrowRight size={17} /></Link>
             <button className="button-secondary" type="button" onClick={reset}><RotateCcw size={16} /> Repetir con este caso</button>
           </div>
-          <p className={styles.receiptNote}>{syncState === "synced" ? "Evidencia sincronizada con tu perfil persistente. " : syncState === "pending" ? "La evidencia quedó pendiente de sincronización y LUMA volverá a intentarlo al regresar a tu ruta. " : ""}La siguiente comprobación será diferida para confirmar retención y aplicación.</p>
+          <p className={styles.receiptNote}>{syncState === "synced" ? "Evidencia sincronizada con tu perfil persistente. " : syncState === "pending" ? "La evidencia quedó pendiente de sincronización y LUMA volverá a intentarlo al regresar a tu ruta. " : syncState === "preview" ? "Esto es una demostración; no acredita el programa ni se guarda como logro de una matrícula. " : ""}La siguiente comprobación será diferida para confirmar retención y aplicación.</p>
         </section>
       </main>
     );
@@ -171,6 +183,7 @@ export function PracticeSession() {
           </div>
 
           <div className={styles.scenario}>
+            <span className="eyebrow">Actividad pública de muestra · el resultado solo acredita práctica si tu matrícula está activa y LUMA lo confirma.</span>
             <span className="eyebrow"><Target size={14} /> Caso de práctica</span>
             <h1>La entrega con dos errores</h1>
             <p>En una reunión, la directora muestra dos errores de una propuesta que preparaste. Dice: “Necesitamos revisar con más cuidado antes de compartir esto con el cliente”. Sientes calor en el rostro y dejas de participar.</p>

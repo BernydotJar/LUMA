@@ -16,7 +16,7 @@ export function LearningExperienceCard({
       <span className={styles.rail}>{experience.category}</span>
       <div className={styles.copy}>
         <div className={styles.meta}>
-          <span>Práctica</span>
+          <span>Práctica de muestra</span>
           <span><Clock3 size={13} /> {experience.minutes} min</span>
         </div>
         <h3>{experience.title}</h3>
@@ -26,7 +26,7 @@ export function LearningExperienceCard({
           <strong>{experience.capability}</strong>
         </div>
         <Link href={`/learn/experience/${experience.slug}`}>
-          Abrir práctica <ArrowRight size={15} />
+          Abrir práctica de muestra <ArrowRight size={15} />
         </Link>
       </div>
       <div className={styles.objectStage} aria-hidden="true">

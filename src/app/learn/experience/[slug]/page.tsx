@@ -22,7 +22,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       <Link className={styles.back} href="/learn/experiences"><ArrowLeft size={15} /> Volver</Link>
       <section className={styles.hero}>
         <div>
-          <span className="eyebrow">{experience.category} · {experience.minutes} min</span>
+          <span className="eyebrow">Vista previa educativa · {experience.category} · {experience.minutes} min</span>
           <h2>{experience.title}</h2>
           <p>{experience.summary}</p>
         </div>

@@ -60,6 +60,23 @@ describe("persistent learner state", () => {
     ).toBeGreaterThanOrEqual(0.88);
   });
 
+  it("persists the latest server-verified rubric outside the 50-event replay window", () => {
+    const initial = createPersistentLearnerRecord("jeremy", onboarding);
+    const event = verifyLearningEvent({
+      type: "SIMULATION_COMPLETED", conceptId: "pas",
+      answers: { thought: "pas", emotion: "shame", reframe: "balanced" },
+      attempts: { thought: 2, emotion: 1, reframe: 1 },
+    });
+    expect(event).toBeDefined();
+    const outcome = applyEventToPersistentLearner(initial.record, "pas-approved", event!);
+    expect(outcome.record.lastScoredEvidence).toMatchObject({
+      rubricId: "pas-v1", evidenceCategory: "scored", twinAuthority: "eligible",
+      eventId: "pas-approved", correctCount: 3,
+    });
+    expect(outcome.record.lastScoredEvidence?.criteria?.[0].attempts).toBe(2);
+    expect(initial.record.lastScoredEvidence).toBeUndefined();
+  });
+
   it("recomputes scored evidence instead of trusting a forged correctCount", () => {
     const verified = verifyLearningEvent({
       type: "SIMULATION_COMPLETED",

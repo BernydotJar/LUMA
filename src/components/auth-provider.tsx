@@ -21,6 +21,7 @@ import {
 } from "react";
 import { firebaseAuth } from "@/lib/firebase-client";
 import { sanitizePreferredName } from "@/lib/profile-name";
+import { discardLegacyLearnerData } from "@/lib/learner-client-storage";
 
 type AuthContextValue = {
   user: User | null;
@@ -42,6 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return onAuthStateChanged(firebaseAuth, (nextUser) => {
+      discardLegacyLearnerData(Boolean(nextUser));
       setUser(nextUser);
       setLoading(false);
     });

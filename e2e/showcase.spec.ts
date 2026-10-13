@@ -29,7 +29,7 @@ test.describe("LUMA product showcase", () => {
     await expect(page.getByRole("heading", { name: /Tu punto de partida está listo/i })).toBeVisible();
     await page.getByRole("button", { name: /Entrar a mi experiencia/i }).click();
     await expect(page).toHaveURL(/\/learn$/);
-    const stored = await page.evaluate(() => window.localStorage.getItem("luma-onboarding"));
+    const stored = await page.evaluate(() => window.localStorage.getItem("luma-guest-onboarding"));
     expect(stored).toContain('"goal":"beliefs"');
   });
 
@@ -120,9 +120,9 @@ test.describe("LUMA product showcase", () => {
     await page.getByRole("button", { name: /Continuar/i }).click();
     await page.getByRole("button", { name: /Esta entrega tuvo dos errores concretos/i }).click();
     await page.getByRole("button", { name: /Registrar evidencia/i }).click();
-    await expect(page.getByRole("heading", { name: /Demostraste transferencia/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Terminaste la práctica de muestra/i })).toBeVisible();
     await expect(page.getByText("SIMULATION_COMPLETED")).toBeVisible();
-    const event = await page.evaluate(() => window.localStorage.getItem("luma-latest-learning-event"));
+    const event = await page.evaluate(() => window.localStorage.getItem("luma-guest-latest-scored-event"));
     expect(event).toContain("SIMULATION_COMPLETED");
   });
 
@@ -175,7 +175,7 @@ test.describe("LUMA product showcase", () => {
     await expect(page.getByText(/Práctica P\.A\.S\. · 3\/3 criterios/i)).toHaveCount(0);
     await expect(page.getByRole("tab")).toHaveCount(0);
 
-    await page.evaluate(() => window.localStorage.setItem("luma-latest-learning-event", JSON.stringify({
+    await page.evaluate(() => window.localStorage.setItem("luma-guest-latest-scored-event", JSON.stringify({
       type: "SIMULATION_COMPLETED",
       conceptId: "pas",
       correctCount: 2,

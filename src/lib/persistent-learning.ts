@@ -21,6 +21,8 @@ export interface PersistedLearnerRecord {
   createdAt: string;
   updatedAt: string;
   lastEventId?: string;
+  /** Authoritative latest graded receipt, independent of the event pagination window. */
+  lastScoredEvidence?: StoredLearningEvent;
 }
 
 const pasAnswerKey = {
@@ -143,6 +145,10 @@ export function applyEventToPersistentLearner(
       version: current.version + 1,
       updatedAt: now,
       lastEventId: eventId,
+      lastScoredEvidence: event.type === "SIMULATION_COMPLETED" &&
+        event.evidenceCategory === "scored" && event.twinAuthority === "eligible"
+        ? { ...event, eventId }
+        : current.lastScoredEvidence,
     },
     plan,
   };

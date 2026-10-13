@@ -1,4 +1,5 @@
 import { firebaseAuth } from "./firebase-client";
+import { pendingLearningKey } from "./learner-client-storage";
 import type {
   AdaptiveLearningPlan,
   StoredLearningEvent,
@@ -19,7 +20,15 @@ async function authHeaders(): Promise<HeadersInit | undefined> {
   };
 }
 
-export async function fetchPersistentLearningPlan(): Promise<AdaptiveLearningPlan | undefined> {
+export interface PersistentLearningSnapshot {
+  plan: AdaptiveLearningPlan;
+  onboarding: StoredOnboardingState;
+  scoredEvidence: StoredLearningEvent | null;
+  program: { tenantId: string; programId: string } | null;
+}
+
+/** Scoped server projection. Never restore an authenticated learner from localStorage. */
+export async function fetchPersistentLearningSnapshot(): Promise<PersistentLearningSnapshot | undefined> {
   const headers = await authHeaders();
   if (!headers) return undefined;
 
@@ -31,9 +40,11 @@ export async function fetchPersistentLearningPlan(): Promise<AdaptiveLearningPla
 
   if (response.status === 404) return undefined;
   if (!response.ok) throw new Error(`PLAN_FETCH_FAILED_${response.status}`);
+  return (await response.json()) as PersistentLearningSnapshot;
+}
 
-  const body = (await response.json()) as { plan: AdaptiveLearningPlan };
-  return body.plan;
+export async function fetchPersistentLearningPlan(): Promise<AdaptiveLearningPlan | undefined> {
+  return (await fetchPersistentLearningSnapshot())?.plan;
 }
 
 export async function bootstrapPersistentLearningPlan(
@@ -73,11 +84,18 @@ export async function appendPersistentLearningEvent(
 
 export async function syncPendingLearningEvent(): Promise<AdaptiveLearningPlan | undefined> {
   if (typeof window === "undefined") return undefined;
-  const raw = window.localStorage.getItem("luma-pending-learning-event");
+  const uid = firebaseAuth.currentUser?.uid;
+  if (!uid) return undefined;
+  const key = pendingLearningKey(uid);
+  const raw = window.localStorage.getItem(key);
   if (!raw) return undefined;
 
-  const pending = JSON.parse(raw) as { eventId: string; event: StoredLearningEvent };
+  const pending = JSON.parse(raw) as { ownerUid: string; eventId: string; event: StoredLearningEvent };
+  if (pending.ownerUid !== uid) {
+    window.localStorage.removeItem(key);
+    return undefined;
+  }
   const plan = await appendPersistentLearningEvent(pending.eventId, pending.event);
-  if (plan) window.localStorage.removeItem("luma-pending-learning-event");
+  if (plan) window.localStorage.removeItem(key);
   return plan;
 }
