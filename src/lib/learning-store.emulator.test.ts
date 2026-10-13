@@ -59,6 +59,7 @@ describe.runIf(emulatorEnabled)("FirestoreLearningStore emulator", () => {
     expect(replay.record.version).toBe(2);
     expect(replay.record.lastEventId).toBe(eventId);
 
+    expect(Object.hasOwn(reloaded?.record ?? {}, "lastScoredEvidence")).toBe(false);
     expect(reloaded?.plan.routeChanged).toBe(true);
     expect(reloaded?.plan.previousAction?.id).toBe(bootstrapped.plan.nextAction.id);
 

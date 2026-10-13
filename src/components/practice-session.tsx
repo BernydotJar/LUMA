@@ -9,13 +9,12 @@ import {
   Check,
   CircleHelp,
   Clock3,
-  ExternalLink,
   Lightbulb,
   RotateCcw,
   Sparkles,
   Target,
 } from "lucide-react";
-import { appendPersistentLearningEvent, hasPersistentLearningSession } from "@/lib/learning-api-client";
+import { appendPersistentLearningEvent, fetchPersistentLearningSnapshot, hasPersistentLearningSession } from "@/lib/learning-api-client";
 import { moduleThreeSource } from "@/lib/luma-data";
 import { firebaseAuth } from "@/lib/firebase-client";
 import { guestLearningKeys, pendingLearningKey } from "@/lib/learner-client-storage";
@@ -97,28 +96,42 @@ export function PracticeSession() {
     };
     const uid = firebaseAuth.currentUser?.uid;
     if (uid && hasPersistentLearningSession()) {
-      const pendingKey = pendingLearningKey(uid);
-      window.localStorage.setItem(
-        pendingKey,
-        JSON.stringify({ ownerUid: uid, eventId, event }),
-      );
       try {
-        const plan = await appendPersistentLearningEvent(eventId, event);
-        if (plan) {
-          window.localStorage.removeItem(pendingKey);
-          setSyncState("synced");
-        }
-      } catch (error) {
-        const message = error instanceof Error ? error.message : "";
-        if (message.includes("403") || message.includes("401")) {
-          window.localStorage.removeItem(pendingKey);
+        // A server-confirmed course is required before queueing any offline
+        // retry. Otherwise a later new purchase could inherit this old grade.
+        const snapshot = await fetchPersistentLearningSnapshot();
+        if (!snapshot || firebaseAuth.currentUser?.uid !== uid) {
           setSyncState("preview");
         } else {
-          setSyncState("pending");
+          const program = snapshot.program;
+          const pendingKey = pendingLearningKey(uid, program);
+          window.localStorage.setItem(
+            pendingKey,
+            JSON.stringify({ ownerUid: uid, program, eventId, event }),
+          );
+          try {
+            const plan = await appendPersistentLearningEvent(
+              eventId, event, { uid, program },
+            );
+            if (plan) {
+              window.localStorage.removeItem(pendingKey);
+              setSyncState("synced");
+            }
+          } catch (error) {
+            const message = error instanceof Error ? error.message : "";
+            if (/401|403|409|LEARNER_IDENTITY_CHANGED/.test(message)) {
+              window.localStorage.removeItem(pendingKey);
+              setSyncState("preview");
+            } else {
+              setSyncState("pending");
+            }
+          }
         }
+      } catch {
+        // No verified scope => no safe pending write, even when offline.
+        setSyncState("preview");
       }
     } else {
-      // Public practice preview has only guest-local results. No owner mixing.
       window.localStorage.setItem(guestLearningKeys.latestScored, JSON.stringify(event));
       setSyncState("preview");
     }
@@ -145,7 +158,9 @@ export function PracticeSession() {
           <div className={styles.completeOrb}><Check size={54} /></div>
           <span className="eyebrow"><span className="eyebrow-dot" /> {syncState === "synced" ? "Evidencia registrada" : "Resultado de la práctica de muestra"}</span>
           <h1>{syncState === "synced" ? "Demostraste transferencia." : "Terminaste la práctica de muestra."}</h1>
-          <p>Separaste acontecimiento, pensamiento y emoción; luego formulaste una alternativa comprobable. LUMA usará esta señal para ajustar tu progreso de aplicación.</p>
+          <p>Separaste acontecimiento, pensamiento y emoción; luego formulaste una alternativa comprobable. {syncState === "synced"
+            ? "Tu expediente incluye esta práctica, con los intentos que necesitaste."
+            : "Este resultado no se presenta como avance acreditado hasta que LUMA confirme una matrícula activa y guarde la evidencia."}</p>
           <div className={styles.evidenceReceipt}>
             <div><span>Evento</span><strong>SIMULATION_COMPLETED</strong></div>
             <div><span>Concepto</span><strong>Pensamientos saboteadores</strong></div>
@@ -223,7 +238,7 @@ export function PracticeSession() {
             <span className="eyebrow"><BookOpenCheck size={14} /> Fuente activa</span>
             <h2>Pensamientos automáticos saboteadores</h2>
             <p>El material los describe como automáticos, rápidos, rígidos y frecuentemente expresados con absolutos como “siempre”, “jamás” o “imposible”.</p>
-            <a href={moduleThreeSource.url} target="_blank" rel="noreferrer">Abrir material original <ExternalLink size={13} /></a>
+            <p>Esta es una síntesis pública de muestra. El material original completo se entrega mediante el acceso autorizado al curso.</p>
           </section>
           <section className={`${styles.twinImpact} content-surface`}>
             <span className="eyebrow"><Sparkles size={14} /> Tu práctica fortalece</span>

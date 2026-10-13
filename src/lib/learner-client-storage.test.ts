@@ -4,6 +4,7 @@ import {
   guestLearningKeys,
   legacyUnscopedLearnerKeys,
   pendingLearningKey,
+  sameLearningScope,
 } from "./learner-client-storage";
 
 describe("Learner browser data isolation", () => {
@@ -26,8 +27,22 @@ describe("Learner browser data isolation", () => {
     expect(entries.has("luma-latest-learning-event")).toBe(false);
   });
 
-  it("partitions offline pending events by UID and rejects invalid keys", () => {
-    expect(pendingLearningKey("jeremy-user")).not.toBe(pendingLearningKey("abigail-user"));
-    expect(() => pendingLearningKey("invalid/user")).toThrow("INVALID_LEARNING_STORAGE_OWNER");
+  it("partitions retries by UID, tenant and program and rejects invalid identifiers", () => {
+    const courseA = { tenantId: "institution-one", programId: "practitioner" };
+    const courseB = { tenantId: "institution-one", programId: "master" };
+    const tenantB = { tenantId: "institution-two", programId: "practitioner" };
+    const jeremy = pendingLearningKey("jeremy-user", courseA);
+    expect(jeremy).not.toBe(pendingLearningKey("abigail-user", courseA));
+    expect(jeremy).not.toBe(pendingLearningKey("jeremy-user", courseB));
+    expect(jeremy).not.toBe(pendingLearningKey("jeremy-user", tenantB));
+    expect(jeremy).not.toBe(pendingLearningKey("jeremy-user", null));
+    expect(sameLearningScope(courseA, courseA)).toBe(true);
+    expect(sameLearningScope(courseA, courseB)).toBe(false);
+    expect(sameLearningScope(courseA, tenantB)).toBe(false);
+    expect(sameLearningScope(null, courseA)).toBe(false);
+    expect(sameLearningScope(null, null)).toBe(true);
+    expect(() => pendingLearningKey("invalid/user", courseA)).toThrow("INVALID_LEARNING_STORAGE_OWNER");
+    expect(() => pendingLearningKey("jeremy-user", { ...courseA, programId: "bad/course" }))
+      .toThrow("INVALID_LEARNING_STORAGE_SCOPE");
   });
 });

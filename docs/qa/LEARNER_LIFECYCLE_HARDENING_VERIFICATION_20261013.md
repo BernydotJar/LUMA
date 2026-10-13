@@ -26,7 +26,7 @@ Producer: feature branch. Critic: adversarial review of client storage, entitlem
 
 ## Critic findings requiring next sprint
 
-- Current offline event queue partitions by Firebase UID, but program switching needs an explicit UID+tenant+program binding before LUMA supports multiple paid courses simultaneously. Do not replay unknown-origin offline events across programs.
+- The offline retry key is now UID + server-confirmed tenant/program scoped and safe against replay into another purchased course. Full multi-program UI selection is still not implemented; an ambiguous enrollment must fail closed, not default to an arbitrary purchase.
 - Unscoped historical browser data is deleted on authentication changes. This is a deliberate privacy-first migration, but previously unsynced anonymous records cannot be reconstructed.
 - Public practice previews contain educational source summaries. Institutional rights and the exclusive lesson-asset security perimeter must be reviewed before uploading private premium content.
 - A tutor recovery link to a scheduled session is not a direct instructor messaging service; owner must publish an authorized human-help route.
@@ -36,3 +36,9 @@ Producer: feature branch. Critic: adversarial review of client storage, entitlem
 ## Release outcome
 
 **Enterprise complete-course release remains NO-GO**. Core P0 fixes passed local verifier; external quality/learning content gates are still blocked. Do not auto-merge or deploy. See `graph-harness.learner-lifecycle.project.json` and the append-only Graph Harness event chain.
+
+## 2026-10-13 — Subsequent adversarial CI repair
+
+First PR #51 workflow **Product quality** (run `38460562978`) found **2 Firestore failures** due to a previously unexercised ledger input: writing an optional `lastScoredEvidence: undefined` to a Firestore document. This disproved the original claim that all stateful Firestore gates were closed. The feature code was repaired to omit optional fields instead of serializing `undefined`, and new regression assertions exercise ungraded and verified scores. Replaying the exact six Firestore suites against a fresh emulator yields **51 passed, 0 failed**. The new synthetic browser run covers **17 passed, 0 failed**, including replay ownership isolation by UID/tenant/program, tutor state reset on account switching and access denials.
+
+Recorded artifacts: `evidence/learner-lifecycle-20261013/firestore-full-postfix.json` and `browser-e2e-postfix.json`. A local PASS does not substitute for the next actual GitHub CI result; the gate must be verified on the new PR SHA. The corresponding failure/repair transition is preserved in the Graph Harness event chain.

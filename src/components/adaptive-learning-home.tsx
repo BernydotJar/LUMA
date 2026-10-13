@@ -24,6 +24,7 @@ import { useLumaAuth } from "@/components/auth-provider";
 import { fetchPersistentLearningSnapshot, syncPendingLearningEvent, type PersistentLearningSnapshot } from "@/lib/learning-api-client";
 import { guestLearningKeys } from "@/lib/learner-client-storage";
 import { claimEntitledPrograms } from "@/lib/commerce-access-client";
+import { firebaseAuth } from "@/lib/firebase-client";
 import { createAdaptiveLearningPlan, parseStoredLearningEvent, parseStoredOnboarding } from "@/lib/learner-projection";
 import { evidenceMayUpdateTwin } from "@/lib/simulation-evidence";
 import styles from "@/app/learn/learn.module.css";
@@ -71,8 +72,18 @@ export function AdaptiveLearningHome() {
       try {
         // Purchase claim precedes entitlement-protected progress fetch.
         await claimEntitledPrograms();
-        await syncPendingLearningEvent();
-        const snapshot = await fetchPersistentLearningSnapshot();
+        const prior = await fetchPersistentLearningSnapshot();
+        // Never replay before the server confirms the current program and UID.
+        if (firebaseAuth.currentUser?.uid !== uid) return;
+        let changed = false;
+        if (prior) {
+          try {
+            changed = Boolean(await syncPendingLearningEvent(prior, uid));
+          } catch {
+            // A transient event retry must not suppress the verified plan.
+          }
+        }
+        const snapshot = changed ? await fetchPersistentLearningSnapshot() : prior;
         if (!cancelled) {
           setRemoteState(snapshot ? { uid, snapshot } : null);
           setAccessStatus(null);
@@ -218,7 +229,7 @@ export function AdaptiveLearningHome() {
               <p>LUMA puede ayudarte a encontrar un concepto, examinar un ejemplo o practicar una idea.</p>
             </div>
           </div>
-          <TutorPanel />
+          <TutorPanel key={user?.uid ?? "guest"} />
         </div>
 
         <footer className={styles.footer}>

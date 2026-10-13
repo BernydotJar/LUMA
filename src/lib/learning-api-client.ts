@@ -1,5 +1,5 @@
 import { firebaseAuth } from "./firebase-client";
-import { pendingLearningKey } from "./learner-client-storage";
+import { pendingLearningKey, sameLearningScope, type PendingLearningScope } from "./learner-client-storage";
 import type {
   AdaptiveLearningPlan,
   StoredLearningEvent,
@@ -10,13 +10,16 @@ export function hasPersistentLearningSession() {
   return Boolean(firebaseAuth.currentUser);
 }
 
-async function authHeaders(): Promise<HeadersInit | undefined> {
+async function authHeaders(expectedUid?: string): Promise<Record<string, string> | undefined> {
   const user = firebaseAuth.currentUser;
   if (!user) return undefined;
-
+  if (expectedUid && user.uid !== expectedUid) throw new Error("LEARNER_IDENTITY_CHANGED");
+  const token = await user.getIdToken();
+  // Account switches during async token retrieval must fail closed.
+  if (firebaseAuth.currentUser?.uid !== user.uid) throw new Error("LEARNER_IDENTITY_CHANGED");
   return {
     "content-type": "application/json",
-    authorization: `Bearer ${await user.getIdToken()}`,
+    authorization: `Bearer ${token}`,
   };
 }
 
@@ -67,9 +70,11 @@ export async function bootstrapPersistentLearningPlan(
 export async function appendPersistentLearningEvent(
   eventId: string,
   event: StoredLearningEvent,
+  ownership: { uid: string; program: PendingLearningScope },
 ): Promise<AdaptiveLearningPlan | undefined> {
-  const headers = await authHeaders();
-  if (!headers) return undefined;
+  const headers = await authHeaders(ownership.uid);
+  if (!headers) throw new Error("LEARNER_IDENTITY_CHANGED");
+  if (ownership.program) headers["x-luma-program-id"] = ownership.program.programId;
 
   const response = await fetch("/api/learning/events", {
     method: "POST",
@@ -82,20 +87,40 @@ export async function appendPersistentLearningEvent(
   return body.plan;
 }
 
-export async function syncPendingLearningEvent(): Promise<AdaptiveLearningPlan | undefined> {
-  if (typeof window === "undefined") return undefined;
-  const uid = firebaseAuth.currentUser?.uid;
-  if (!uid) return undefined;
-  const key = pendingLearningKey(uid);
+export async function syncPendingLearningEvent(
+  snapshot: PersistentLearningSnapshot,
+  expectedUid: string,
+): Promise<AdaptiveLearningPlan | undefined> {
+  if (typeof window === "undefined" || firebaseAuth.currentUser?.uid !== expectedUid) return undefined;
+  // The snapshot was obtained from a server-entitled program, never localStorage.
+  const key = pendingLearningKey(expectedUid, snapshot.program);
   const raw = window.localStorage.getItem(key);
   if (!raw) return undefined;
 
-  const pending = JSON.parse(raw) as { ownerUid: string; eventId: string; event: StoredLearningEvent };
-  if (pending.ownerUid !== uid) {
+  let pending: {
+    ownerUid: string;
+    program: PendingLearningScope;
+    eventId: string;
+    event: StoredLearningEvent;
+  };
+  try {
+    pending = JSON.parse(raw) as typeof pending;
+  } catch {
     window.localStorage.removeItem(key);
     return undefined;
   }
-  const plan = await appendPersistentLearningEvent(pending.eventId, pending.event);
+
+  if (!pending || pending.ownerUid !== expectedUid ||
+      !sameLearningScope(pending.program, snapshot.program) ||
+      typeof pending.eventId !== "string" || !pending.event) {
+    window.localStorage.removeItem(key);
+    return undefined;
+  }
+  if (firebaseAuth.currentUser?.uid !== expectedUid) return undefined;
+  const plan = await appendPersistentLearningEvent(
+    pending.eventId, pending.event,
+    { uid: expectedUid, program: snapshot.program },
+  );
   if (plan) window.localStorage.removeItem(key);
   return plan;
 }

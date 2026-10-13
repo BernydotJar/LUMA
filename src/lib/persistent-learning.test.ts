@@ -51,6 +51,8 @@ describe("persistent learner state", () => {
 
     expect(applied.record.version).toBe(2);
     expect(applied.record.lastEventId).toBe("evt-pas-001");
+    // Firestore transaction.set rejects even a top-level undefined field.
+    expect(Object.hasOwn(applied.record, "lastScoredEvidence")).toBe(false);
     expect(applied.plan.routeChanged).toBe(true);
     expect(applied.plan.previousAction?.id).toBe(initial.plan.nextAction.id);
     expect(applied.record.previousAction?.id).toBe(initial.plan.nextAction.id);
@@ -74,6 +76,10 @@ describe("persistent learner state", () => {
       eventId: "pas-approved", correctCount: 3,
     });
     expect(outcome.record.lastScoredEvidence?.criteria?.[0].attempts).toBe(2);
+    // Persisted grade must be a valid Firestore JSON-like document.
+    expect(JSON.parse(JSON.stringify(outcome.record.lastScoredEvidence))).toEqual(
+      outcome.record.lastScoredEvidence,
+    );
     expect(initial.record.lastScoredEvidence).toBeUndefined();
   });
 
@@ -86,6 +92,9 @@ describe("persistent learner state", () => {
     });
 
     expect(verified?.correctCount).toBe(0);
+    expect(Object.hasOwn(verified ?? {}, "attempts")).toBe(false);
+    expect(Object.hasOwn(verified ?? {}, "completedAt")).toBe(false);
+    expect(Object.hasOwn(verified ?? {}, "sourceId")).toBe(false);
   });
 
   it("sanitizes attempt telemetry before it reaches the ledger", () => {
