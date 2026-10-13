@@ -168,7 +168,7 @@
   white-space: nowrap;
 }
 @media (max-width: 1200px) {
-  .signal { display: none; }
+  .signal { display: block; max-width: 210px; }
   .deck { grid-template-columns: 1fr 1fr; }
   .card:last-child { grid-column: span 2; min-height: 160px; }
 }
@@ -178,6 +178,8 @@
 }
 @media (max-width: 760px) {
   .section { padding: 20px; border-radius: 20px; }
+  .heading { flex-direction: column; gap: 10px; }
+  .signal { max-width: 100%; padding: 0; font-size: .69rem; }
   .heading h2 { font-size: 1.7rem; }
   .emptyState { margin-top: 17px; grid-template-columns: 58px minmax(0, 1fr); padding: 15px; }
   .emptyObject { width: 58px; height: 58px; }

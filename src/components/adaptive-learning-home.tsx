@@ -11,6 +11,7 @@ import {
   Target,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
+import { CourseEnrollmentStatus } from "@/components/course-enrollment-status";
 import { ExperienceShelf } from "@/components/experience-shelf";
 import { LearningJourney } from "@/components/learning-journey";
 import { LearnerGreeting } from "@/components/learner-greeting";
@@ -20,8 +21,11 @@ import { NextActionCard } from "@/components/next-action-card";
 import { ProgressStory } from "@/components/progress-story";
 import { TutorPanel } from "@/components/tutor-panel";
 import { useLumaAuth } from "@/components/auth-provider";
-import { fetchPersistentLearningPlan, syncPendingLearningEvent } from "@/lib/learning-api-client";
-import { createAdaptiveLearningPlan, parseStoredLearningEvent, parseStoredOnboarding, type AdaptiveLearningPlan } from "@/lib/learner-projection";
+import { fetchPersistentLearningSnapshot, syncPendingLearningEvent, type PersistentLearningSnapshot } from "@/lib/learning-api-client";
+import { guestLearningKeys } from "@/lib/learner-client-storage";
+import { claimEntitledPrograms } from "@/lib/commerce-access-client";
+import { firebaseAuth } from "@/lib/firebase-client";
+import { createAdaptiveLearningPlan, parseStoredLearningEvent, parseStoredOnboarding } from "@/lib/learner-projection";
 import { evidenceMayUpdateTwin } from "@/lib/simulation-evidence";
 import styles from "@/app/learn/learn.module.css";
 
@@ -34,8 +38,8 @@ function subscribeToLearningStorage(callback: () => void) {
 
 function getLearningStorageSnapshot() {
   return JSON.stringify([
-    window.localStorage.getItem("luma-onboarding"),
-    window.localStorage.getItem("luma-latest-learning-event"),
+    window.localStorage.getItem(guestLearningKeys.onboarding),
+    window.localStorage.getItem(guestLearningKeys.latestScored),
   ]);
 }
 
@@ -45,7 +49,8 @@ function getServerLearningStorageSnapshot() {
 
 export function AdaptiveLearningHome() {
   const { user, loading } = useLumaAuth();
-  const [remotePlan, setRemotePlan] = useState<{ uid: string; plan: AdaptiveLearningPlan } | null>(null);
+  const [remoteState, setRemoteState] = useState<{ uid: string; snapshot: PersistentLearningSnapshot } | null>(null);
+  const [accessStatus, setAccessStatus] = useState<{ uid: string; error: string } | null>(null);
   const storageSnapshot = useSyncExternalStore(
     subscribeToLearningStorage,
     getLearningStorageSnapshot,
@@ -65,21 +70,46 @@ export function AdaptiveLearningHome() {
     let cancelled = false;
     void (async () => {
       try {
-        const synced = await syncPendingLearningEvent();
-        const persistent = synced ?? await fetchPersistentLearningPlan();
-        if (!cancelled && persistent) setRemotePlan({ uid, plan: persistent });
-      } catch {
-        // An available local practice remains usable while persistence is temporarily offline.
+        // Purchase claim precedes entitlement-protected progress fetch.
+        await claimEntitledPrograms();
+        const prior = await fetchPersistentLearningSnapshot();
+        // Never replay before the server confirms the current program and UID.
+        if (firebaseAuth.currentUser?.uid !== uid) return;
+        let changed = false;
+        if (prior) {
+          try {
+            changed = Boolean(await syncPendingLearningEvent(prior, uid));
+          } catch {
+            // A transient event retry must not suppress the verified plan.
+          }
+        }
+        const snapshot = changed ? await fetchPersistentLearningSnapshot() : prior;
+        if (!cancelled) {
+          setRemoteState(snapshot ? { uid, snapshot } : null);
+          setAccessStatus(null);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          // Never fall back to an unverified previous user's local progress.
+          setRemoteState(null);
+          setAccessStatus({ uid, error: error instanceof Error ? error.message : "PLAN_UNAVAILABLE" });
+        }
       }
     })();
     return () => { cancelled = true; };
   }, [loading, user?.uid]);
 
-  const persistent = remotePlan && remotePlan.uid === user?.uid ? remotePlan.plan : null;
-  const plan = persistent ?? localProjection.plan;
-  const hasProfile = localProjection.hasOnboarding || Boolean(persistent);
-  const evidenceEvent = localProjection.event && evidenceMayUpdateTwin(localProjection.event)
-    ? localProjection.event : undefined;
+  // Authenticated achievements are server-owned. A guest preview is separate.
+  const snapshot = !loading && user && remoteState?.uid === user.uid
+    ? remoteState.snapshot : undefined;
+  const guest = !loading && !user;
+  const plan = snapshot?.plan ?? (guest ? localProjection.plan : createAdaptiveLearningPlan());
+  const hasProfile = Boolean(snapshot || (guest && localProjection.hasOnboarding));
+  const evidenceEvent = snapshot?.scoredEvidence ?? (
+    guest && localProjection.event && evidenceMayUpdateTwin(localProjection.event)
+      ? localProjection.event : undefined
+  );
+  const accessError = user && accessStatus?.uid === user.uid ? accessStatus.error : null;
   const routeChangeCopy = hasProfile && plan.routeChanged && plan.previousAction
     ? plan.previousAction.title + " → " + plan.nextAction.title
     : undefined;
@@ -87,6 +117,7 @@ export function AdaptiveLearningHome() {
   return (
     <AppShell title="Mi aprendizaje" subtitle="Un lugar para aprender, practicar y seguir avanzando.">
       <div className={styles.home}>
+        <CourseEnrollmentStatus />
         <section className={styles.intro} aria-labelledby="learner-home-title">
           <div className={styles.introCopy}>
             <span className={styles.eyebrow}>TU ESPACIO DE APRENDIZAJE <span aria-hidden="true">/</span> LUMA</span>
@@ -110,6 +141,16 @@ export function AdaptiveLearningHome() {
           </div>
           <NextActionCard action={plan.nextAction} personalized={hasProfile} variant="hero" />
         </section>
+
+        {accessError && (
+          <section className={styles.routeChange} role="alert">
+            <Compass size={20} aria-hidden="true" />
+            <div>
+              <strong>{accessError.includes("403") ? "Tu inscripción requiere revisión" : "No pudimos recuperar tu avance"}</strong>
+              <p>Tu información personal no se mostrará sin verificar tu cuenta y tu curso. Revisa el correo de compra o intenta ingresar de nuevo.</p>
+            </div>
+          </section>
+        )}
 
         {routeChangeCopy && (
           <section className={styles.routeChange} data-testid="route-changed" role="status">
@@ -142,7 +183,7 @@ export function AdaptiveLearningHome() {
         <LiveProgramSchedule />
 
         <section className={styles.progressArea} aria-label="Avance y evidencia">
-          <ProgressStory event={evidenceEvent} nextAction={plan.nextAction} />
+          <ProgressStory event={evidenceEvent} nextAction={plan.nextAction} source={snapshot?.scoredEvidence ? "server" : "preview"} />
           <LearningPulse
             dimensions={plan.dimensions}
             personalized={hasProfile}
@@ -188,7 +229,7 @@ export function AdaptiveLearningHome() {
               <p>LUMA puede ayudarte a encontrar un concepto, examinar un ejemplo o practicar una idea.</p>
             </div>
           </div>
-          <TutorPanel />
+          <TutorPanel key={user?.uid ?? "guest"} />
         </div>
 
         <footer className={styles.footer}>

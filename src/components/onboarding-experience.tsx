@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
 import { bootstrapPersistentLearningPlan } from "@/lib/learning-api-client";
+import { guestLearningKeys } from "@/lib/learner-client-storage";
+import { firebaseAuth } from "@/lib/firebase-client";
 import { createAdaptiveLearningPlan } from "@/lib/learner-projection";
 import styles from "./onboarding-experience.module.css";
 
@@ -34,6 +36,7 @@ export function OnboardingExperience() {
   const [confidence, setConfidence] = useState(2);
   const [minutes, setMinutes] = useState(12);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
   const selectedGoal = useMemo(() => goals.find((item) => item.id === goal) ?? goals[1], [goal]);
   const canContinue = step !== 1 || diagnostic !== null;
@@ -51,17 +54,24 @@ export function OnboardingExperience() {
 
   const finish = async () => {
     setSaving(true);
+    setSaveError("");
     const state = { goal, diagnostic, confidence, minutes, createdAt: new Date().toISOString() };
-    window.localStorage.setItem("luma-onboarding", JSON.stringify(state));
-    window.localStorage.removeItem("luma-latest-learning-event");
-    window.localStorage.removeItem("luma-pending-learning-event");
+
+    if (!firebaseAuth.currentUser) {
+      window.localStorage.setItem(guestLearningKeys.onboarding, JSON.stringify(state));
+      window.localStorage.removeItem(guestLearningKeys.latestScored);
+      router.push("/learn");
+      return;
+    }
 
     try {
-      await bootstrapPersistentLearningPlan(state);
-    } catch {
-      // Guest mode and temporary persistence failures continue with the deterministic local projection.
-    } finally {
+      // Authenticated onboarding belongs to the entitled Firestore record only.
+      const saved = await bootstrapPersistentLearningPlan(state);
+      if (!saved) throw new Error("LEARNING_SESSION_UNAVAILABLE");
       router.push("/learn");
+    } catch {
+      setSaveError("No pudimos guardar tu objetivo de forma segura. Reintenta para continuar.");
+      setSaving(false);
     }
   };
 
@@ -177,6 +187,7 @@ export function OnboardingExperience() {
             </div>
           )}
 
+          {saveError && <p role="alert">{saveError}</p>}
           <footer className={styles.formFooter}>
             <button className="button-ghost" type="button" onClick={() => step === 0 ? router.push("/") : setStep((current) => current - 1)}>
               <ArrowLeft size={17} /> {step === 0 ? "Volver" : "Anterior"}

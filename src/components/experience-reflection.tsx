@@ -1,20 +1,50 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, LoaderCircle, RotateCcw, Sparkles, Volume2 } from "lucide-react";
 import { synthesizeReflectionGuide } from "@/app/actions/speech";
 import type { LearningExperience } from "@/lib/learning-content";
+import { useLumaAuth } from "@/components/auth-provider";
+import { loadLearnerReflection, saveLearnerReflection } from "@/lib/learning-reflections-client";
+import type { StoredLearnerReflection } from "@/lib/learning-store";
 import styles from "./experience-reflection.module.css";
 
 const VOICE_ENABLED = process.env.NEXT_PUBLIC_SE_VOICE_ENABLED === "true";
 
 export function ExperienceReflection({ experience }: { experience: LearningExperience }) {
-  const [response, setResponse] = useState("");
-  const [completed, setCompleted] = useState(false);
+  const { user, loading } = useLumaAuth();
+  const [draft, setDraft] = useState<{ uid: string | null; experienceId: string; text: string } | null>(null);
+  const [saved, setSaved] = useState<{ uid: string; reflection: StoredLearnerReflection } | null>(null);
+  const [guestCompleted, setGuestCompleted] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  const response = draft?.uid === (user?.uid ?? null) && draft.experienceId === experience.id
+    ? draft.text : "";
+  const matched = saved?.uid === user?.uid && saved?.reflection.experienceId === experience.id;
+  const completed = !editing && (user ? matched : guestCompleted === experience.id);
   const [audioSrc, setAudioSrc] = useState<string | null>(null);
   const [audioError, setAudioError] = useState("");
   const [isAudioPending, startAudioTransition] = useTransition();
+
+  useEffect(() => {
+    const uid = user?.uid;
+    if (!uid || loading) return;
+    let cancelled = false;
+    void loadLearnerReflection(experience.id).then((reflection) => {
+      if (cancelled) return;
+      if (reflection) {
+        setSaved({ uid, reflection });
+        setDraft({ uid, experienceId: experience.id, text: reflection.response });
+      } else {
+        setSaved(null);
+      }
+    }).catch(() => {
+      // The response remains an unsaved draft until persistence is available.
+    });
+    return () => { cancelled = true; };
+  }, [loading, user?.uid, experience.id]);
 
   const listenToGuide = () => {
     setAudioError("");
@@ -31,21 +61,26 @@ export function ExperienceReflection({ experience }: { experience: LearningExper
   };
 
 
-  const submit = () => {
-    const event = {
-      type: "PRACTICE_REFLECTION_RECORDED",
-      experienceId: experience.id,
-      conceptId: experience.id,
-      sourceId: experience.sourceId,
-      evidenceCategory: "self-reported",
-      responseLength: response.trim().length,
-      completedAt: new Date().toISOString(),
-    };
-
-    window.localStorage.setItem("luma-latest-learning-event", JSON.stringify(event));
-    const previous = JSON.parse(window.localStorage.getItem("luma-learning-events") ?? "[]") as unknown[];
-    window.localStorage.setItem("luma-learning-events", JSON.stringify([...previous, event].slice(-30)));
-    setCompleted(true);
+  const submit = async () => {
+    if (submitting || response.trim().length < 25 || loading) return;
+    setSaveError("");
+    const uid = user?.uid;
+    if (!uid) {
+      // An anonymous preview is deliberately not a personal academic record.
+      setGuestCompleted(experience.id);
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const reflection = await saveLearnerReflection(experience.id, response.trim());
+      if (!reflection) throw new Error("REFLECTION_NOT_SAVED");
+      setSaved({ uid, reflection });
+      setEditing(false);
+    } catch {
+      setSaveError("No pudimos guardar tu reflexión en tu expediente. Reintenta para conservarla.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (completed) {
@@ -62,9 +97,10 @@ export function ExperienceReflection({ experience }: { experience: LearningExper
           <span>Capacidad</span><strong>{experience.shortTitle}</strong>
           <span>Evidencia</span><strong>Auto-reportada</strong>
         </div>
+        <p role="status">{user ? "Reflexión guardada en tu expediente, disponible al volver a iniciar sesión." : "Vista previa registrada en esta sesión, sin expediente personal."}</p>
         <div className={styles.actions}>
           <Link href="/learn/experiences">Explorar otra práctica <ArrowRight size={15} /></Link>
-          <button type="button" onClick={() => setCompleted(false)}><RotateCcw size={14} /> Revisar mi respuesta</button>
+          <button type="button" onClick={() => { setEditing(true); setGuestCompleted(null); }}><RotateCcw size={14} /> Revisar mi respuesta</button>
         </div>
       </section>
     );
@@ -100,15 +136,16 @@ export function ExperienceReflection({ experience }: { experience: LearningExper
       )}
       <textarea
         aria-label="Tu reflexión"
-        onChange={(event) => setResponse(event.target.value)}
+        onChange={(event) => setDraft({ uid: user?.uid ?? null, experienceId: experience.id, text: event.target.value })}
         placeholder="Escribe una respuesta concreta, con una situación real si puedes."
         rows={7}
         value={response}
       />
+      {saveError && <p role="alert">{saveError}</p>}
       <div className={styles.footer}>
         <p>{response.trim().length < 25 ? "Usa al menos 25 caracteres para dejar una señal útil." : "Tu respuesta está lista para registrarse como práctica."}</p>
-        <button className="button-primary" disabled={response.trim().length < 25} onClick={submit} type="button">
-          Registrar práctica <ArrowRight size={15} />
+        <button className="button-primary" disabled={response.trim().length < 25 || submitting || loading} onClick={() => void submit()} type="button">
+          {submitting ? "Guardando reflexión…" : "Registrar práctica"} <ArrowRight size={15} />
         </button>
       </div>
     </section>

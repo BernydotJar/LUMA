@@ -59,6 +59,7 @@ describe.runIf(emulatorEnabled)("FirestoreLearningStore emulator", () => {
     expect(replay.record.version).toBe(2);
     expect(replay.record.lastEventId).toBe(eventId);
 
+    expect(Object.hasOwn(reloaded?.record ?? {}, "lastScoredEvidence")).toBe(false);
     expect(reloaded?.plan.routeChanged).toBe(true);
     expect(reloaded?.plan.previousAction?.id).toBe(bootstrapped.plan.nextAction.id);
 
@@ -184,6 +185,42 @@ describe.runIf(emulatorEnabled)("FirestoreLearningStore emulator", () => {
     expect((await storeB.get(uid))?.record.version).toBe(2);
     expect((await storeA.list(10)).some(({ record }) => record.learnerId === uid)).toBe(true);
     expect((await storeC.list(10)).some(({ record }) => record.learnerId === uid)).toBe(true);
+  });
+
+  it("stores reflections as scoped self-report without incrementing graded mastery", async () => {
+    const learnerA = `reflect-a-${randomUUID()}`;
+    const learnerB = `reflect-b-${randomUUID()}`;
+    const storeA = new FirestoreLearningStore(getFirestore(app!), {
+      tenantId: "reflection-tenant", programId: "course-one",
+    });
+    const storeOther = new FirestoreLearningStore(getFirestore(app!), {
+      tenantId: "other-tenant", programId: "course-one",
+    });
+    const firestore = getFirestore(app!);
+    await firestore.collection("commerceEnrollments").doc(`reflect-${learnerA}`).set({
+      enrollmentId: `reflect-${learnerA}`,
+      entitlementId: `reflect-${learnerA}`,
+      tenantId: "reflection-tenant", programId: "course-one",
+      learnerId: learnerA, status: "active", productId: "product-one",
+      createdAt: "2026-10-13T12:00:00Z", updatedAt: "2026-10-13T12:00:00Z",
+      lastProvider: "hotmart", lastProviderEventId: "test-issue", lastEventAt: "2026-10-13T12:00:00Z",
+    });
+    const onboarding = {
+      goal: "emotions", diagnostic: "b", confidence: 4, minutes: 20,
+      createdAt: "2026-10-13T12:00:00Z",
+    };
+    await storeA.bootstrap(learnerA, onboarding);
+    const reflection = await storeA.saveReflection(
+      learnerA, "calibration", "source-qa", "Identifiqué un hecho observable y una interpretación diferente.",
+    );
+    expect(reflection.evidenceCategory).toBe("self-reported");
+    expect(reflection.twinAuthority).toBe("none");
+    expect((await storeA.get(learnerA))?.record.version).toBe(1);
+    expect((await storeA.getReflection(learnerA, "calibration"))?.response).toContain("hecho observable");
+    expect(await storeA.getReflection(learnerB, "calibration")).toBeNull();
+    expect(await storeOther.getReflection(learnerA, "calibration")).toBeNull();
+    await firestore.collection("commerceEnrollments").doc(`reflect-${learnerA}`).update({ status: "revoked" });
+    await expect(storeA.saveReflection(learnerA, "calibration", "source-qa", "Nuevo texto extenso autorizado de al menos veinticinco letras.")).rejects.toThrow("LEARNING_ACTIVE_ENTITLEMENT_REQUIRED");
   });
 
   it("isolates learners in distinct document trees", async () => {

@@ -1,4 +1,5 @@
 import { AppShell } from "@/components/app-shell";
+import { CourseEnrollmentStatus } from "@/components/course-enrollment-status";
 import { LearningExperienceCard } from "@/components/learning-experience-card";
 import { ModuleCoverFlow } from "@/components/module-cover-flow";
 import { learningExperiences } from "@/lib/learning-content";
@@ -6,7 +7,8 @@ import styles from "./page.module.css";
 
 export default function ExperiencesPage() {
   return (
-    <AppShell title="Práctica" subtitle="Elige una capacidad y llévala a una situación concreta.">
+    <AppShell title="Práctica" subtitle="Explora muestras y las actividades disponibles para tu matrícula.">
+      <CourseEnrollmentStatus />
       <section className={styles.hero}>
         <span className="eyebrow">Experiencias de aprendizaje</span>
         <h2>Tu programa, convertido en práctica.</h2>

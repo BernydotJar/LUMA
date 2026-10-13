@@ -1,0 +1,272 @@
+{
+  "schema_version": "graph-harness.project.v1",
+  "project_id": "luma-learner-lifecycle-20261013",
+  "mode": "SHIP",
+  "gate_definitions": [
+    {
+      "id": "security-review",
+      "required_evidence_kinds": [
+        "test",
+        "security",
+        "critic"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "evidence-review",
+      "required_evidence_kinds": [
+        "test",
+        "critic"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "content-approval",
+      "required_evidence_kinds": [
+        "content",
+        "test",
+        "critic"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "release-gate",
+      "required_evidence_kinds": [
+        "test",
+        "security",
+        "a11y",
+        "performance",
+        "ci",
+        "production",
+        "critic"
+      ],
+      "blocking": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "LUMA-CX-101-identity-isolation",
+      "kind": "product-capability",
+      "title": "Privacy: prevent cross-account client state leakage",
+      "status": "approved",
+      "depends_on": [],
+      "capability": "full-stack-product",
+      "gates": {
+        "done": [
+          "security-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/components/auth-provider.tsx",
+        "src/lib/learner-client-storage.ts",
+        "src/components/adaptive-learning-home.tsx"
+      ],
+      "metadata": {
+        "priority": "P0",
+        "github_issues": [
+          46,
+          47,
+          48,
+          49
+        ],
+        "autonomy": "implementation-only",
+        "release_authority": "human",
+        "approval_scope": "Implementation and verification requested 2026-10-13; NOT permission to release or merge"
+      }
+    },
+    {
+      "id": "LUMA-CX-102-scored-receipts",
+      "kind": "product-capability",
+      "title": "Truthful learner evidence: server-scoped grade across devices",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-CX-101-identity-isolation"
+      ],
+      "capability": "full-stack-product",
+      "gates": {
+        "done": [
+          "evidence-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/api/learning/plan/**",
+        "src/lib/learning-api-client.ts",
+        "src/components/progress-story.tsx",
+        "src/components/practice-session.tsx"
+      ],
+      "metadata": {
+        "priority": "P0",
+        "github_issues": [
+          46,
+          47,
+          48,
+          49
+        ],
+        "autonomy": "implementation-only",
+        "release_authority": "human",
+        "approval_scope": "Implementation and verification requested 2026-10-13; NOT permission to release or merge"
+      }
+    },
+    {
+      "id": "LUMA-CX-103-reflections",
+      "kind": "product-capability",
+      "title": "Persist self-reported reflections separately without grading",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-CX-101-identity-isolation"
+      ],
+      "capability": "full-stack-product",
+      "gates": {
+        "done": [
+          "security-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/api/learning/reflections/**",
+        "src/lib/learning-store.ts",
+        "src/components/experience-reflection.tsx"
+      ],
+      "metadata": {
+        "priority": "P1",
+        "github_issues": [
+          46,
+          47,
+          48,
+          49
+        ],
+        "autonomy": "implementation-only",
+        "release_authority": "human",
+        "approval_scope": "Implementation and verification requested 2026-10-13; NOT permission to release or merge"
+      }
+    },
+    {
+      "id": "LUMA-CX-104-course-access",
+      "kind": "product-capability",
+      "title": "Show commerce ownership and clear preview vs entitlement",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-CX-101-identity-isolation"
+      ],
+      "capability": "full-stack-product",
+      "gates": {
+        "done": [
+          "security-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/components/course-enrollment-status*",
+        "src/app/learn/**"
+      ],
+      "metadata": {
+        "priority": "P0",
+        "github_issues": [
+          46,
+          47,
+          48,
+          49
+        ],
+        "autonomy": "implementation-only",
+        "release_authority": "human",
+        "approval_scope": "Implementation and verification requested 2026-10-13; NOT permission to release or merge"
+      }
+    },
+    {
+      "id": "LUMA-CX-105-tutor-recovery",
+      "kind": "product-capability",
+      "title": "Grounded tutor recovery and human escalation",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-CX-104-course-access"
+      ],
+      "capability": "full-stack-product",
+      "gates": {
+        "done": [
+          "evidence-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/components/tutor-panel.tsx",
+        "src/components/live-program-schedule.tsx"
+      ],
+      "metadata": {
+        "priority": "P1",
+        "github_issues": [
+          46,
+          47,
+          48,
+          49
+        ],
+        "autonomy": "implementation-only",
+        "release_authority": "human",
+        "approval_scope": "Implementation and verification requested 2026-10-13; NOT permission to release or merge"
+      }
+    },
+    {
+      "id": "LUMA-CX-106-course-player",
+      "kind": "product-capability",
+      "title": "Published lesson catalog, authorized media and resume",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-CX-104-course-access"
+      ],
+      "capability": "full-stack-product",
+      "gates": {
+        "done": [
+          "content-approval"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/learn/**",
+        "src/lib/program-**"
+      ],
+      "metadata": {
+        "priority": "P1",
+        "github_issues": [
+          46,
+          47,
+          48,
+          49
+        ],
+        "autonomy": "implementation-only",
+        "release_authority": "human",
+        "approval_scope": "Implementation and verification requested 2026-10-13; NOT permission to release or merge"
+      }
+    },
+    {
+      "id": "LUMA-CX-107-release",
+      "kind": "release",
+      "title": "Independent E2E, privacy, WCAG, performance, Hotmart sandbox and human signoff",
+      "status": "approved",
+      "depends_on": [
+        "LUMA-CX-102-scored-receipts",
+        "LUMA-CX-103-reflections",
+        "LUMA-CX-104-course-access",
+        "LUMA-CX-105-tutor-recovery",
+        "LUMA-CX-106-course-player"
+      ],
+      "capability": "independent-release-qa",
+      "gates": {
+        "done": [
+          "release-gate"
+        ]
+      },
+      "allowed_paths": [
+        "e2e/**",
+        "evidence/**",
+        ".github/**"
+      ],
+      "metadata": {
+        "priority": "RELEASE",
+        "github_issues": [
+          46,
+          47,
+          48,
+          49
+        ],
+        "autonomy": "implementation-only",
+        "release_authority": "human",
+        "approval_scope": "Implementation and verification requested 2026-10-13; NOT permission to release or merge"
+      }
+    }
+  ]
+}
