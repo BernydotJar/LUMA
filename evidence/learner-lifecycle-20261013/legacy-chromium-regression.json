@@ -1,0 +1,11 @@
+{
+  "kind": "existing-browser-regression",
+  "source": "LUMA existing Playwright tests, chromium desktop",
+  "command": "CI= PLAYWRIGHT_PORT=3145 npx playwright test e2e/showcase.spec.ts e2e/adaptive-loop.spec.ts e2e/class-intelligence.spec.ts e2e/content-beta.spec.ts --project=chromium --workers=1 --reporter=line",
+  "passed": 26,
+  "skipped": 1,
+  "failed": 0,
+  "result": "PASS",
+  "localDevServer": true,
+  "productionWrites": false
+}
