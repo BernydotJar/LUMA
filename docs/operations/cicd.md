@@ -83,3 +83,15 @@ The safe refresh workflow is:
 5. Merge and let the `main` push workflow independently verify source, Graph receipt, protected branch, quality jobs, Google WIF, rollout, smoke, rollback-validation and live version SHA. A Graph release gate **does not** certify production success. `cicd-production` remains separate.
 
 This protocol deliberately does not add an automatic exemption for stale reviews. A future CI design may surface review drift earlier, but it must avoid circular dependency between the initial successful code-quality checks and evidence attestation creation.
+
+## Fail-closed pre-merge source attestation (LUMA-069)
+
+The production-only source approval check was too late: a GRUV merge could pass five CI checks yet fail later on an old `sourceDigest` before App Hosting promotion. See `specs/069-cicd-premerge-source-bound-guard.md` and issue #52.
+
+The revised quality pipeline adds `release-readiness` after all five quality jobs and before `deploy`. This job validates the *exact* source tree, critic/verifier SHA-256 receipts and append-only Graph gate with the unchanged fail-closed `verifyReview()` policy. A missing or stale approval must fail the job; it is never an excuse to set `continue-on-error` or silently deploy an old artifact.
+
+An independent `source-attestation` check is also defined in `.github/workflows/source-attestation.yml`. It uses `pull_request_target` with **contents:read** only, checks out the policy from the protected base and the candidate merge into separate directories, and executes *only* the trusted base's `pr-readiness.mjs` against the candidate files. There are no production secrets, no `id-token: write`, no `npm ci`, no execution of PR-supplied scripts and no dynamic shell execution. Require the **source-attestation** status check in GitHub branch protection after the workflow is available on `main` and its first run is verified. Verify the exact app ID and names from GitHub; do not invent passing contexts. A tamper-resistant workflow still does not replace independent human review or cryptographically signed reviewer identity, which are not currently configured for this owner-operated repository.
+
+The bootstrap review protocol preserves independent verification without cyclic approval dependencies. A PR may initially show the five quality jobs PASS and `release-readiness` FAIL; `quality_run.py` allows that exact case to be used as evidence to **begin** source review, but never approves the merge. All unrelated failures, absent checks, wrong SHA, push runs, or failed browser/security/roles/Firestore tests are rejected. After critic/verifier and Graph evidence for that exact digest are committed, all PR status checks must run again and pass; only then may protected merge/deployment proceed.
+
+A failed deployment **before** `PROMOTION_STARTED` must record `RECOVERY_NOT_REQUIRED_NO_PROMOTION`, retain status `FAILED`, and leave live traffic untouched. A legitimate post-promotion failure still takes the guarded recovery path. The offline regression test invokes the real recovery entrypoint without GCP credentials to prove the early-failure path cannot query or mutate Firebase.
