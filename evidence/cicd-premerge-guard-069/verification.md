@@ -27,3 +27,15 @@ Run `38515079248` on code commit `53a56f77ff422aca02fa3498d468690986ba0dd9` gave
 ## Follow-up local browser regression
 
 The first remote run revealed a strict-mode ambiguity in `e2e/coach-source.spec.ts:20`: one copyright copy outside `main` plus one inside. The test now asserts the authoritative main content instead of globally matching duplicate labels. With a dedicated `npm ci` (not a linked node_modules directory), Playwright repeated this exact showcase learner case **16/16 PASS** (8 desktop, 8 mobile, no retries) in `coach-mobile-stress.log`. The isolated Node.js dependencies use the unchanged locked versions. A remote clean CI rerun remains mandatory.
+
+## Second GitHub run — five quality gates PASS, source approval intentionally BLOCKED
+
+On commit `d30ec5d6d921521ab46827b6c8b0efd66155f7a9`, GitHub [run 38516141684](https://github.com/BernydotJar/LUMA/actions/runs/38516141684) completed with `verify`, `security`, `firestore`, `identity-roles` and `browser` each `success`. The new `release-readiness` job failed because its source-bound approval was absent, and `deploy` was skipped. The entire run correctly concluded `failure`. This outcome is **not** a clean release and must not be reported as one.
+
+The standalone source digest for this tested commit is `0ca59632d477e13cc60983848d0fc361d6bf4b05847d8e401b55562e84ad9a99`. Previous approval `7a52d332...` cannot authorize it.
+
+IBM Granite review was attempted on an earlier working revision; the local Ollama service returned HTTP 500 twice, then timed out on a simple prompt. The failed reviews did **not** cover this exact final digest, so their receipts are explicitly classified as reviewer *unavailability*, not adversarial findings or review PASS. Do not use old prompt files to infer an approval.
+
+Graph Harness recorded a legitimate `independent-review` **BLOCKED** gate for `LUMA-069`, independently validating the complete CI job list and recording the reviewer outage. The graph ledger was appended via `GraphRuntime` and rebuilt to **690 events**, with no historical hash edits. The next agent must resume the node only after an actual independent adversarial review of the final source, resolution of high/critical findings, append-only PASS gate, and renewed source-bound release approval for the exact source digest. After that, CI must rerun completely green and this PR can be reviewed for merge. The separately trusted PR policy workflow is not activated in protected `main` yet.
+
+The verified v4 Firebase baseline `6ddcae8ff2464782b7e4001c4cd5d60092dbb099` remains the approved production state. GRUV and this guard have **not** been released to production.
