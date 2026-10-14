@@ -1,0 +1,12 @@
+test_all_green_pr_also_valid (quality_run_test.QualityReviewBootstrapTests.test_all_green_pr_also_valid) ... ok
+test_approval_gate_must_be_the_only_failing_gate (quality_run_test.QualityReviewBootstrapTests.test_approval_gate_must_be_the_only_failing_gate) ... ok
+test_five_green_jobs_and_only_missing_attestation_can_initiate_review (quality_run_test.QualityReviewBootstrapTests.test_five_green_jobs_and_only_missing_attestation_can_initiate_review) ... ok
+test_no_failed_required_check_can_bootstrap (quality_run_test.QualityReviewBootstrapTests.test_no_failed_required_check_can_bootstrap) ... ok
+test_no_unrelated_failure_may_bootstrap (quality_run_test.QualityReviewBootstrapTests.test_no_unrelated_failure_may_bootstrap) ... ok
+test_required_checks_cannot_be_duplicated_or_missing (quality_run_test.QualityReviewBootstrapTests.test_required_checks_cannot_be_duplicated_or_missing) ... ok
+test_strict_commit_and_event_and_completion (quality_run_test.QualityReviewBootstrapTests.test_strict_commit_and_event_and_completion) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.004s
+
+OK

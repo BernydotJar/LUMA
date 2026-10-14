@@ -23,6 +23,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      - name: Check source-review bootstrap invariants
+        run: python3 -m unittest discover -s scripts/release -p quality_run_test.py
       - run: npm run test:run
       - name: Prepare the exact committed release source
         run: node scripts/release/prepare.mjs
@@ -161,8 +163,26 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  deploy:
+  release-readiness:
+    # Fail closed on an unreviewed PR *before* it can be merged. Run on main
+    # too, before WIF credentials or any Firebase promotion are requested.
     needs: [verify, security, firestore, identity-roles, browser]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Enforce the exact-source independent Graph release approval
+        run: node scripts/release/pr-readiness.mjs
+
+  deploy:
+    needs: [verify, security, firestore, identity-roles, browser, release-readiness]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
     runs-on: ubuntu-latest
     timeout-minutes: 45

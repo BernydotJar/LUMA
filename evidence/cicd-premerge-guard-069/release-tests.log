@@ -1,0 +1,13 @@
+
+ RUN  v5.0.3 /workspace/projects/LUMA-release-readiness-20261013
+
+ ✓ scripts/release/review-gate.test.mjs (5 tests) 53ms
+ ✓ scripts/release/recovery-no-promotion.test.mjs (1 test) 206ms
+ ✓ scripts/release/policy.test.mjs (11 tests) 3ms
+ ✓ scripts/release/pr-readiness.test.mjs (6 tests) 3ms
+ ✓ scripts/release/recovery-policy.test.mjs (3 tests) 3ms
+
+ Test Files  5 passed (5)
+      Tests  26 passed (26)
+   Start at  05:07:12
+   Duration  611ms (tests 52%, import 22%, transform 20%, worker 6%)
