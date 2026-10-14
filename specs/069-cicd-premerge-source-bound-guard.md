@@ -51,3 +51,7 @@ As the enterprise release owner, I cannot merge a new LUMA source tree into the 
 - An independent, current digest approval exists for the future release, with no unsupported PASS claims.
 - Five base checks + source readiness PASS on PR; production deploy + version/health checks prove the exact promoted merge commit.
 - Until all apply, state remains **PARTIAL / GRUV HOLD** with Liquid Glass v4 protected.
+
+## Adversarial CI browser feedback (PR #53)
+
+The first remote run `38515079248` passed `verify`, `security`, `firestore` and `identity-roles`, but `browser` reported one flaky mobile assertion in `e2e/coach-source.spec.ts` (124 passed, 7 skipped, 1 flaky). It matched two identical copyright labels, only one located in the accessible `<main>` region. The E2E assertion is now scoped to `getByRole("main")` and still requires the full proprietary-learning-evidence text to be visible. No product auth, learner API, content or route was changed. CI must rerun with no flaky tests; `release-readiness` remaining skipped while browser is red is the expected fail-closed dependency.

@@ -1875,13 +1875,15 @@
         "evidence/cicd-premerge-guard-069/**",
         "evidence/graph-harness-status.json",
         "graph-harness.project.json",
-        "graph-harness.events.jsonl"
+        "graph-harness.events.jsonl",
+        "e2e/coach-source.spec.ts"
       ],
       "metadata": {
         "issue": 52,
         "release_policy": "no-unreviewed-source-can-deploy",
         "production_baseline_sha": "6ddcae8ff2464782b7e4001c4cd5d60092dbb099",
-        "required_status_activation": "after_trusted_workflow_on_main_verified"
+        "required_status_activation": "after_trusted_workflow_on_main_verified",
+        "ci_flaky_regression": "coach-source mobile duplicate copyright outside main"
       }
     }
   ]

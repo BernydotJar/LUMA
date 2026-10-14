@@ -19,3 +19,11 @@ The existing verified Firebase runtime still serves SHA `6ddcae8ff2464782b7e4001
 - Once the source attestation is created and committed, the PR must rerun all required GitHub checks and become green before merge.
 - The separate `pull_request_target` trusted check must exist on `main` and be observed running successfully *before* adding its `source-attestation` check name to branch protection.
 - The newer GRUV source is still HOLD for production pending an exact-source independent approval and rollout verification.
+
+## First GitHub remote run — separate browser blocker
+
+Run `38515079248` on code commit `53a56f77ff422aca02fa3498d468690986ba0dd9` gave PASS for security, verify (including full TypeScript/build), Firestore and identity/roles. `browser` returned FAILURE because Playwright `getByText(/Modelo de gemelo de aprendizaje y marco de evidencia/i)` matched the copyright label twice in mobile. No source attestation was attempted because browser was not green. The scoped follow-up changes only this E2E assertion to the accessible `main` region; repeat and remote CI must now pass before approval.
+
+## Follow-up local browser regression
+
+The first remote run revealed a strict-mode ambiguity in `e2e/coach-source.spec.ts:20`: one copyright copy outside `main` plus one inside. The test now asserts the authoritative main content instead of globally matching duplicate labels. With a dedicated `npm ci` (not a linked node_modules directory), Playwright repeated this exact showcase learner case **16/16 PASS** (8 desktop, 8 mobile, no retries) in `coach-mobile-stress.log`. The isolated Node.js dependencies use the unchanged locked versions. A remote clean CI rerun remains mandatory.
