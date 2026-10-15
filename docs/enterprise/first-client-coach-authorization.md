@@ -59,3 +59,7 @@ Run: `JAVA_HOME=/opt/luma-jre21 firebase emulators:exec --project demo-luma-firs
 - Coach selector refresh after reassignment may be manual until push invalidation exists; server authorization is immediate and authoritative.
 - Showcase mode intentionally preserves its legacy demonstration semantics and must never be marketed as customer-isolated paid training.
 - The institution onboarding (#55), verified tenant-owned published curriculum (#57), provider interoperability and manual WCAG/performance gates remain NO-GO. No release approval, merge or deploy.
+
+## Protected CI gate
+
+The `Product quality` workflow adds a `coach-rbac` job after the exact-release `verify` build. It downloads the preserved build artifact, runs all 16 synthetic first-client Auth/Firestore HTTP scenarios using pinned `firebase-tools@15.30.2` and Java 21, and uploads the sanitized results. The production deploy dependency includes `coach-rbac` alongside browser/identity/security/Firestore. This verifies the exact code that will ship and does not enable production deployment from a pull request.

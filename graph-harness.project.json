@@ -1903,7 +1903,8 @@
         "src/lib/coach-access*",
         "src/lib/learning-server.ts",
         "scripts/qa/first-client*",
-        "evidence/first-client-coach-rbac-2026-10-14/**"
+        "evidence/first-client-coach-rbac-2026-10-14/**",
+        ".github/workflows/quality.yml"
       ],
       "metadata": {
         "release": "NO-GO",
