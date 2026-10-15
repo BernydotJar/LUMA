@@ -5,6 +5,8 @@ export interface LearningCoachAccess {
   institutionalAdmin?: boolean;
   tenantIds: string[];
   learnerIds: string[];
+  /** Populated exclusively by fresh server-side offering authorization. */
+  authorizedOfferingIds?: string[];
 }
 
 function strings(value: unknown): string[] {

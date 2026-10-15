@@ -10,7 +10,7 @@ if(!project.startsWith("demo-")||!authHost.startsWith("127.0.0.1:")||!dbHost.sta
  process.env.LUMA_LEARNING_ACCESS_MODE!=="entitled"||process.env.LUMA_LEARNING_TENANT_ID!==tenant)throw Error("REFUSE_NON_EMULATOR_QA");
 const app=initializeApp({projectId:project},"qa-"+randomUUID());
 const auth=getAuth(app),people=[],pwd="Qa"+randomUUID().replaceAll("-","")+"-9x!";
-const report={project,base:"local Firebase emulators + Next production build",baseSHA:"7ef32ba9ff3c56896da536a86ca14286b99ddfb3",branch:"fix/first-client-multi-course-selection-20261014",checks:[],status:"RUNNING"};
+const report={project,base:"local Firebase emulators + Next production build",baseSHA:"2328a8d147350113ca2ebf51c2bd4398ba0ab46b",branch:"fix/coach-program-rbac-20261014",checks:[],status:"RUNNING"};
 async function actor(label,claims){
  const a=await auth.createUser({email:"qa-"+label+"-"+randomUUID().slice(0,8)+"@example.test",emailVerified:true,password:pwd});
  people.push(a);if(claims)await auth.setCustomUserClaims(a.uid,claims);return a;
@@ -137,15 +137,48 @@ try {
   code(await api("GET","/api/coach/learners"),401);
   return {unselectedStatus:unselected.status,authorizedCoach:true,evidenceCount:view.events.length,foreignDenied:true};
  });
- await check("09b same-tenant coaching grant breadth, assignment policy outstanding",async()=>{
-  // Role semantics uncovered by QA: the program list is offering-assignment
-  // filtered but tenant-wide coach claims permit evidence GET for all programs.
-  // This is a policy inconsistency, not a foreign-tenant bypass.
+ await check("09b same-tenant unassigned coach denied on ALL evidence surfaces",async()=>{
   const choices=code(await api("GET","/api/coach/programs",tct),200);
   assert.equal(choices.courses.length,0);
-  const record=await api("GET","/api/coach/learners/"+learner.uid,tct,undefined,{"x-luma-program-id":liveProgram});
-  code(record,200);
-  return {unassignedCoachVisibleCourses:0,sameTenantEvidenceReadStatus:record.status,policyReviewRequired:true};
+  const scope={"x-luma-program-id":liveProgram};
+  const detail=await api("GET","/api/coach/learners/"+learner.uid,tct,undefined,scope);
+  const roster=await api("GET","/api/coach/learners",tct,undefined,scope);
+  const signals=await api("GET","/api/coach/interventions",tct,undefined,scope);
+  for(const response of [detail,roster,signals])code(response,403);
+  const ownerDetail=code(await api("GET","/api/coach/learners/"+learner.uid,ot,undefined,scope),200);
+  assert.equal(ownerDetail.record.learnerId,learner.uid);
+  return {unassignedVisibleCourses:0,unassignedEvidenceStatus:403,unassignedRosterStatus:403,unassignedSignalsStatus:403,adminAccess:200};
+ });
+ await check("09c live course reassignment and revocation effective without token refresh",async()=>{
+  const scope={"x-luma-program-id":liveProgram};
+  const patch={tenantId:tenant,programId:liveProgram,cohortKey:"live-2026",title:live.title,deliveryMode:"live",timezone:"America/Guatemala",status:"active",coachIds:[tenantCoach.uid]};
+  code(await api("POST","/api/programs/admin/offerings",ot,patch),200);
+  const before=code(await api("GET","/api/coach/programs",ct),200);
+  assert.equal(before.courses.some(x=>x.programId===liveProgram),false);
+  code(await api("GET","/api/coach/learners/"+learner.uid,ct,undefined,scope),403);
+  const current=code(await api("GET","/api/coach/programs",tct),200);
+  assert.equal(current.courses.some(x=>x.programId===liveProgram),true);
+  code(await api("GET","/api/coach/learners/"+learner.uid,tct,undefined,scope),200);
+  // Revoke the temporary role. The original tokens remain unchanged.
+  code(await api("POST","/api/programs/admin/offerings",ot,{...patch,coachIds:[coach.uid]}),200);
+  code(await api("GET","/api/coach/learners/"+learner.uid,tct,undefined,scope),403);
+  code(await api("GET","/api/coach/learners/"+learner.uid,ct,undefined,scope),200);
+  return {oldCoachDeniedAfterReassignment:true,newCoachAllowedWhenAssigned:true,revocationImmediate:true};
+ });
+ await check("09d mixed-cohort course evidence is denied to both partial-cohort coaches",async()=>{
+  const scope={"x-luma-program-id":liveProgram};
+  const second={tenantId:tenant,programId:liveProgram,cohortKey:"second-live-cohort",title:"QA Mary Premium Other Cohort",deliveryMode:"live",timezone:"America/Guatemala",status:"active",coachIds:[tenantCoach.uid]};
+  const result=code(await api("POST","/api/programs/admin/offerings",ot,second),200);
+  const choices=code(await api("GET","/api/coach/programs",ct),200);
+  assert.equal(choices.courses.some(x=>x.programId===liveProgram),false);
+  code(await api("GET","/api/coach/learners/"+learner.uid,ct,undefined,scope),403);
+  code(await api("GET","/api/coach/learners/"+learner.uid,tct,undefined,scope),403);
+  code(await api("GET","/api/coach/learners/"+learner.uid,ot,undefined,scope),200);
+  code(await api("POST","/api/programs/admin/offerings",ot,{...second,status:"archived"}),200);
+  code(await api("GET","/api/coach/learners/"+learner.uid,ct,undefined,scope),403);
+  code(await api("POST","/api/programs/admin/offerings",ot,{...second,status:"archived",coachIds:[coach.uid]}),200);
+  code(await api("GET","/api/coach/learners/"+learner.uid,ct,undefined,scope),200);
+  return {mixedCohortOfferingId:result.offering.offeringId,partialCoachDenied:true,adminAllowed:true,archivingAloneDoesNotExposeEvidence:true,fullHistoricalAssignmentRestores:true};
  });
  await check("10 scoped intervention insight but no outbound notification",async()=>{
   const scope={"x-luma-program-id":liveProgram};
@@ -162,12 +195,30 @@ try {
   assert.equal(remaining.courses.length,0);
   return {revokedLearnerDenied:true,multiLearnerOtherProgramRetained:true,revokedProgramRemovedFromSelector:true};
  });
+ await check("12 101 offerings produce explicit fail-closed capacity response",async()=>{
+  const admin=code(await api("GET","/api/programs/admin/offerings?tenantId="+tenant+"&limit=100",ot),200);
+  assert.equal(admin.nextCursor,null);
+  const count=admin.offerings.length;
+  assert.ok(count>=2 && count<100);
+  const standard={tenantId:tenant,timezone:"America/Guatemala",coachIds:[coach.uid],status:"active",deliveryMode:"asynchronous"};
+  for(let i=count;i<100;i++){
+    code(await api("POST","/api/programs/admin/offerings",ot,{...standard,programId:"qa-capacity-"+i,cohortKey:"capacity-2026",title:"QA Capacity Course "+i}),200);
+  }
+  const before=code(await api("GET","/api/coach/programs",ct),200);
+  assert.ok(before.courses.length>=2);
+  code(await api("POST","/api/programs/admin/offerings",ot,{...standard,programId:"qa-capacity-over-limit",cohortKey:"capacity-2026",title:"QA Capacity Beyond Bound"}),200);
+  const listing=code(await api("GET","/api/coach/programs",ct),409);
+  const evidence=code(await api("GET","/api/coach/learners/"+multi.uid,ct,undefined,{"x-luma-program-id":liveProgram}),409);
+  assert.equal(listing.error,"coach_program_catalog_too_large");
+  assert.equal(evidence.error,"coach_program_catalog_too_large");
+  return {initialOfferingCount:count,withinBoundCourses:before.courses.length,catalogStatus:409,evidenceReadStatus:409,crossTenantDisclosure:false};
+ });
 }catch(e){report.error=String(e.message||e).slice(0,500)}finally{
  report.status=report.error?"FAIL":"PASS";report.summary={passed:report.checks.filter(x=>x.result==="PASS").length,failed:report.checks.filter(x=>x.result==="FAIL").length};
  let errors=0;for(const a of people){try{await auth.deleteUser(a.uid)}catch{errors++}}
  report.cleanup=errors===0?"Deleted all test Firebase Auth users; emulator process discards temporary Firestore records":"Identity cleanup failures "+errors+"; emulator teardown still required";
- mkdirSync("evidence/first-client-course-selection-2026-10-14",{recursive:true});
- writeFileSync("evidence/first-client-course-selection-2026-10-14/api-results.json",JSON.stringify(report,null,2)+"\n");
+ mkdirSync("evidence/first-client-coach-rbac-2026-10-14",{recursive:true});
+ writeFileSync("evidence/first-client-coach-rbac-2026-10-14/api-results.json",JSON.stringify(report,null,2)+"\n");
  await deleteApp(app);
 }
 console.log("FINAL",JSON.stringify({status:report.status,summary:report.summary,cleanup:report.cleanup}));
