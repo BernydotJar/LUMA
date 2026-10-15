@@ -26,7 +26,7 @@ flowchart TD
 |---|---|---|---|
 | LUMA-071 program selector | #56, draft PR #62 | PR #62 CI success and local authenticated Chromium and emulator QA | Review/merge and independent approved staging |
 | LUMA-072 coach course authorization | #61 | Isolated implementation unit + HTTP emulator + build PASS | Stacked PR exact SHA CI and independent acceptance |
-| LUMA-073 first institution onboarding | #55 | Tracked in graph | Institution provisioning, governance and UX E2E |
+| LUMA-073 first institution onboarding | #55 | Verified unprivileged applicant intake: local 13 API + 8 Chromium PASS, 3 themes axe zero automatic violations; full QA CI gates added | Manual operator approval, institution/owner provisioning, abuse limits, invitation recovery and full academy E2E |
 | LUMA-074 curriculum publication | #57 | Tracked in graph | Tenant-owned lessons, practice and rubric provenance |
 | LUMA-075 tickets/automations | #58, #59 | Tracked in graph | Actual request handling and notifications |
 | LUMA-076 final customer gate | #54 | Defined release dependencies | NO-GO pending prerequisites |

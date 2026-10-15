@@ -1938,14 +1938,33 @@
         "src/app/api/institutions/**",
         "src/lib/institutions/**",
         "src/app/studio/**",
-        "evidence/first-client-provisioning/**"
+        "evidence/first-client-provisioning/**",
+        "src/app/academia/solicitud/**",
+        "src/app/api/institutions/applications/**",
+        "src/lib/institutions/application*",
+        "src/app/login/**",
+        "scripts/qa/first-client-institution-*",
+        "evidence/first-client-institution-request-2026-10-14/**",
+        ".github/workflows/quality.yml"
       ],
       "metadata": {
-        "release": "NO-GO",
+        "release": "NO-GO; request intake only, no human operator activation",
         "issues": [
           55
         ],
-        "production_permissions_change": false
+        "production_permissions_change": false,
+        "implementation_boundary": "verified applicant intake only; operator grant not implemented",
+        "activation": "OFF by default",
+        "production_role_changes": false,
+        "api_e2e": "13/13 local synthetic HTTP Firebase emulator PASS",
+        "qa_browser": "8 authenticated synthetic browser checks PASS incl. 3 themes axe automated A/AA",
+        "source_quality": "354 unit PASS / 81 skipped, TS lint build PASS",
+        "browser_e2e": "8/8 isolated Playwright synthetic Firebase auth PASS; 6 screenshots",
+        "a11y_automated": "Seres/Light/Dark zero axe violations post-fix; manual audit pending",
+        "ci_gates": [
+          "institution-intake",
+          "institution-browser"
+        ]
       }
     },
     {
