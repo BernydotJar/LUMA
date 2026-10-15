@@ -1842,6 +1842,33 @@
         "scope": "test-only",
         "production_release_separate": true
       }
+    },
+    {
+      "id": "LUMA-070-first-client-e2e-qa",
+      "kind": "product-verification",
+      "title": "Independent first-academy owner to enrolled learner and coach E2E",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "first-client-journey-quality",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "evidence/first-client-e2e-2026-10-14/**",
+        "scripts/qa/first-client-**",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl"
+      ],
+      "metadata": {
+        "baseline_sha": "7ef32ba9ff3c56896da536a86ca14286b99ddfb3",
+        "product_release": "NO-GO",
+        "no_real_users": true
+      }
     }
   ]
 }
