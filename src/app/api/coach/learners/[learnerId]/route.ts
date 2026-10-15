@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
+import { requireCoachProgramGrant } from "@/lib/coach-program-authority";
 import { commerceEnrollments } from "@/lib/commerce/server";
 import {
   assertScopedCoachLearner,
@@ -16,15 +17,16 @@ export async function GET(
   { params }: { params: Promise<{ learnerId: string }> },
 ) {
   try {
-    const { access } = await requireLearningCoachAccess(request);
+    const { access, decoded } = await requireLearningCoachAccess(request);
     const { learnerId } = await params;
     if (!learnerId || learnerId.includes("/") || learnerId.length > 256) {
       return NextResponse.json({ error: "invalid_learner_id" }, { status: 400 });
     }
 
     const scope = resolveCoachLearningScope(access, request.headers);
+    const permitted = scope ? await requireCoachProgramGrant(access, decoded.uid, scope) : access;
     if (scope) {
-      await assertScopedCoachLearner(access, scope, learnerId, commerceEnrollments);
+      await assertScopedCoachLearner(permitted, scope, learnerId, commerceEnrollments);
     } else if (!access.unrestricted) {
       const explicit = access.learnerIds.includes(learnerId);
       const tenantAccess = explicit ||
@@ -52,6 +54,9 @@ export async function GET(
     if (code === "COACH_REQUIRED" || code === "COACH_SCOPE_REQUIRED" ||
         code === "COACH_LEARNER_SCOPE_FORBIDDEN") {
       return NextResponse.json({ error: "learner_scope_forbidden" }, { status: 403 });
+    }
+    if (code === "COACH_PROGRAM_CATALOG_TOO_LARGE") {
+      return NextResponse.json({ error: "coach_program_catalog_too_large" }, { status: 409 });
     }
     if (code === "LEARNING_PROGRAM_SELECTION_REQUIRED") {
       return NextResponse.json({ error: "program_selection_required" }, { status: 409 });

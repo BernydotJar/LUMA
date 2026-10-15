@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
-import { firebaseAdminFirestore } from "@/lib/firebase-admin";
 import { requireLearningCoachAccess } from "@/lib/learning-server";
 import { resolveLearningAccessPolicy } from "@/lib/learning-entitlement";
 import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
-import { isInstitutionalAdmin, isPlatformSuperuser } from "@/lib/tenant-admin-access";
-import type { ProgramOffering } from "@/lib/program-delivery";
+import { authorizedCoachPrograms, readTenantCoachOfferings } from "@/lib/coach-program-authority";
 
 export const runtime = "nodejs";
 const headers = { "cache-control": "private, no-store" };
@@ -20,39 +18,24 @@ export async function GET(request: Request) {
     if (policy.mode === "showcase") {
       return NextResponse.json({ mode: "showcase", courses: [] }, { headers });
     }
-    const unrestricted = isPlatformSuperuser(decoded as Record<string, unknown>);
-    const admin = isInstitutionalAdmin(decoded as Record<string, unknown>);
-    const allowedTenant = unrestricted || access.tenantIds.includes(policy.tenantId);
-    if (!allowedTenant && !access.learnerIds.length) {
+    if (!access.unrestricted && !access.tenantIds.includes(policy.tenantId)) {
       return NextResponse.json({ error: "coach_scope_required" }, { status: 403, headers });
     }
-
-    // Bounded list, not an organization-wide catalog. A coach without explicit
-    // offering assignment never sees unrelated program titles.
-    const result = await firebaseAdminFirestore.collection("programOfferings")
-      .where("tenantId", "==", policy.tenantId)
-      .limit(101).get();
-    if (result.size > 100) {
-      return NextResponse.json({ error: "coach_program_catalog_too_large" }, { status: 409, headers });
-    }
-    const permitted = result.docs.map((doc) => doc.data() as ProgramOffering)
-      .filter((offering) =>
-        offering.status === "active" && offering.tenantId === policy.tenantId &&
-        (unrestricted || (admin && allowedTenant) || offering.coachIds.includes(decoded.uid)))
-      .sort((a, b) => a.title.localeCompare(b.title));
-    // Coach evidence is program-scoped, not cohort-scoped: one option per
-    // program prevents duplicate keys or falsely suggesting cohort isolation.
-    const byProgram = new Map<string, ProgramOffering>();
-    for (const offering of permitted) {
-      if (!byProgram.has(offering.programId)) byProgram.set(offering.programId, offering);
-    }
-    const courses = [...byProgram.values()].map((offering) => ({
-      tenantId: offering.tenantId,
-      programId: offering.programId,
-      title: offering.title,
-      offeringId: offering.offeringId,
-      deliveryMode: offering.deliveryMode,
-    }));
+    // Discovery and actual evidence reads use the SAME authoritative program
+    // grant policy, including the current program-wide cohort limitation.
+    const offerings = await readTenantCoachOfferings(policy.tenantId);
+    const choices = authorizedCoachPrograms(access, decoded.uid, policy.tenantId, offerings);
+    const courses = choices.map((program) => {
+      const offering = program.offerings.filter((item) => item.status === "active")
+        .sort((a, b) => a.title.localeCompare(b.title))[0];
+      return {
+        tenantId: program.tenantId,
+        programId: program.programId,
+        title: offering.title,
+        offeringId: offering.offeringId,
+        deliveryMode: offering.deliveryMode,
+      };
+    }).sort((a, b) => a.title.localeCompare(b.title));
 
     return NextResponse.json({ mode: "entitled", courses }, { headers });
   } catch (error) {
@@ -62,6 +45,9 @@ export async function GET(request: Request) {
     }
     if (message === "COACH_REQUIRED" || message === "COACH_SCOPE_REQUIRED") {
       return NextResponse.json({ error: "coach_scope_required" }, { status: 403, headers });
+    }
+    if (message === "COACH_PROGRAM_CATALOG_TOO_LARGE") {
+      return NextResponse.json({ error: "coach_program_catalog_too_large" }, { status: 409, headers });
     }
     if (message === "LEARNING_ACCESS_MODE_INVALID" || message === "LEARNING_ACCESS_TENANT_REQUIRED") {
       return NextResponse.json({ error: "learning_access_not_configured" }, { status: 503, headers });
