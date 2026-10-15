@@ -21,10 +21,32 @@ IBM Granite 3.3 2B is available locally. A sanitized recommendation summary is i
 
 ## Remaining release blockers
 
-1. Staging browser session using approved synthetic learner and coach identities to verify first login, picker, keyboard/mobile UI, program change, session restore and content provenance. Static component HTML tests are NOT authenticated browser E2E.
+1. **Local authenticated browser QA PASSED** for the scoped multicourse story (7 scenarios, 0 failures) using disposable Firebase Auth and Firestore emulators and a QA-only development auth shim in a separate checkout. **Approved staging browser and client-owned curriculum provenance remain BLOCKED**; static component tests and local emulator testing do not establish production identity/provider readiness. See `browser/README.md` and `browser/results.json`.
 2. Real tenant academic publishing and enrollment-aware content catalog. Existing lessons/exercises remain showcase data.
 3. Governance for tenant provisioning and coach per-program assignment vs tenant-wide coaching roles.
 4. Real Hotmart entitlement/webhook/refund, live classroom participation and notification delivery, plus WCAG 2.2 AA and field performance acceptance.
 5. Confirmed P0 semantics mismatch: coachTenantIds grants tenant-wide evidence access despite zero matching assigned-offering choices. Reproduced in Auth/Firestore Emulator, GitHub #61. Define and independently test intended role matrix before release.
 
 Release recommendation: NO-GO; prepare a draft implementation PR for independent QA, not merge or deploy.
+
+## Browser journey and responsive geometry (isolated emulator)
+
+The first authenticated Chromium run found a mobile hierarchy regression: the course picker was placed before the hero and pushed the primary practice CTA beneath the fixed bottom navigation at 390×844. Before-fix evidence exists in the QA run screenshots; **a numeric before-fix clearance was not recorded**. The implementation moved the course picker after the practice hero for a learner who has selected a course. For an unselected multi-enrolled learner the picker remains the sole initial step, intentionally requiring a course choice.
+
+The independent second run used temporary, development-only demo Firebase client setup; no auth bypass or emulator-login route is committed to product source. After-fix measured `getBoundingClientRect` and hit-testing:
+
+| Viewport | CTA height | Visible bottom-nav clearance after allowed scrolling | Scroll Y | Horizontal overflow | Result |
+|---|---:|---:|---:|---:|---|
+| 320×568 | 49px | 229.08px | 541px | 0px | PASS |
+| 360×740 | 49px | 22.28px | 26px | 0px | PASS |
+| 390×844 | 49px | 90.75px | 0px | 0px | PASS |
+| 428×926 | 49px | 177.34px | 0px | 0px | PASS |
+| 768×1024 | 50px | 286.55px | 0px | 0px | PASS |
+
+At 768×1024 the mobile bottom navigation is hidden; clearance is measured to the viewport bottom. At 320×568 the CTA requires scrolling to a usable position. No horizontal overflow and interactive hit testing passed for each size.
+
+For **390×844 at the first screen without scrolling**, all three themes (`se`, `light`, `dark`) measured: **49px CTA height, 90.75px clearance above fixed navigation, 0px horizontal overflow, successful hit test, scrollY=0**.
+
+The learner selected Mary premium, saw the relevant live session and verified the scoped learning-plan header; switched to evergreen, confirmed that the unrelated live session disappeared; refreshed and recovered the program. The authorized Mary-like coach selected premium and loaded the scoped roster. A foreign-tenant coach was denied and saw no select. Browser console recorded 2 expected 404s for uninitialized plan and one expected 403 for foreign-tenant access; these statuses are disclosed, not treated as silent success.
+
+**Caveat:** test validates a local Chromium emulator journey and geometry, not manual screen-reader proficiency, field Core Web Vitals, real Google OAuth or multi-tenant production configuration. Release remains NO-GO for issues #55, #57, #61 and independent staging/provider readiness.

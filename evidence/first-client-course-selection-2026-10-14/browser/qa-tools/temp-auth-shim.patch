@@ -1,0 +1,24 @@
+diff --git a/src/lib/firebase-client.ts b/src/lib/firebase-client.ts
+index f51ced6..47af4f1 100644
+--- a/src/lib/firebase-client.ts
++++ b/src/lib/firebase-client.ts
+@@ -2 +2 @@ import { getApps, initializeApp } from "@firebase/app";
+-import { getAuth } from "@firebase/auth";
++import { connectAuthEmulator, getAuth } from "@firebase/auth";
+@@ -4 +4 @@ import { getAuth } from "@firebase/auth";
+-const firebaseConfig = {
++const productionFirebaseConfig = {
+@@ -12,0 +13,9 @@ const firebaseConfig = {
++// TEMPORARY BROWSER QA OVERLAY. NEVER COMMIT OR DEPLOY THIS SHIM.
++const useLocalDemoAuth = process.env.NODE_ENV === "development" &&
++  process.env.NEXT_PUBLIC_LUMA_QA_EMULATOR === "true";
++const firebaseConfig = useLocalDemoAuth ? {
++  apiKey: "demo-only-emulator-api-key",
++  authDomain: "demo-luma-firstclient-20261014.firebaseapp.com",
++  projectId: "demo-luma-firstclient-20261014",
++  appId: "1:123456789:web:synthetic-only",
++} : productionFirebaseConfig;
+@@ -14,0 +24,3 @@ export const firebaseAuth = getAuth(firebaseApp);
++if (useLocalDemoAuth && typeof window !== "undefined") {
++  connectAuthEmulator(firebaseAuth, "http://127.0.0.1:9099", { disableWarnings: true });
++}

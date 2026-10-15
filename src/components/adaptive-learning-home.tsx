@@ -108,10 +108,17 @@ export function AdaptiveLearningHome() {
     );
   }
 
+  // The primary practice action remains above the fold on mobile. New
+  // multicourse learners see ONLY the picker until an authorized course is
+  // chosen; afterwards switching courses is a secondary action below the hero.
+  const chosenCourseTitle = selection.courses.find(
+    (course) => course.programId === programId,
+  )?.title;
   return (
-    <AppShell title="Mi aprendizaje" subtitle="Un lugar para aprender, practicar y seguir avanzando.">
+    <AppShell title="Mi aprendizaje" subtitle={chosenCourseTitle
+      ? `Programa actual: ${chosenCourseTitle}`
+      : "Un lugar para aprender, practicar y seguir avanzando."}>
       <div className={styles.home}>
-        <ProgramPicker audience="learner" selection={selection} />
         <section className={styles.intro} aria-labelledby="learner-home-title">
           <div className={styles.introCopy}>
             <span className={styles.eyebrow}>TU ESPACIO DE APRENDIZAJE <span aria-hidden="true">/</span> LUMA</span>
@@ -135,6 +142,8 @@ export function AdaptiveLearningHome() {
           </div>
           <NextActionCard action={plan.nextAction} personalized={hasProfile} variant="hero" />
         </section>
+
+        <ProgramPicker audience="learner" selection={selection} />
 
         {routeChangeCopy && (
           <section className={styles.routeChange} data-testid="route-changed" role="status">

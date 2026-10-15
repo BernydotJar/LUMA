@@ -92,7 +92,7 @@ export function ProgramPicker({
   const learner = audience === "learner";
   const title = learner ? "Tus cursos" : "Curso que vas a acompañar";
   return (
-    <section className={styles.picker} aria-label={title}>
+    <section id="luma-courses" className={styles.picker} aria-label={title}>
       <div className={styles.heading}>
         <span className="eyebrow">{learner ? "TU MATRÍCULA" : "SEGUIMIENTO ACADÉMICO"}</span>
         <h2>{title}</h2>

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T03:52:48.173466+00:00",
+  "generatedAt": "2026-10-15T04:10:00.172304+00:00",
   "baseSHA": "7ef32ba9ff3c56896da536a86ca14286b99ddfb3",
   "branch": "fix/first-client-multi-course-selection-20261014",
   "environment": {
@@ -29,6 +29,117 @@
       "model": "ibm/granite3.3:2b",
       "result": "completed",
       "note": "suggestions not independently verified vulnerabilities"
+    },
+    "authenticatedBrowser": {
+      "result": "PASS",
+      "scenariosPassed": 7,
+      "scenariosFailed": 0,
+      "source": "browser/results.json",
+      "qaOnlyAuthOverlay": true,
+      "developmentServer": "127.0.0.1:3191",
+      "browser": "Chromium headless",
+      "mobileGeometryThemes": [
+        {
+          "theme": "se",
+          "ctaTop": 622.25,
+          "ctaBottom": 671.25,
+          "ctaHeight": 49,
+          "navTop": 762,
+          "clearance": 90.75,
+          "horizontalOverflow": 0,
+          "hitTest": true,
+          "scrollY": 0
+        },
+        {
+          "theme": "light",
+          "ctaTop": 622.25,
+          "ctaBottom": 671.25,
+          "ctaHeight": 49,
+          "navTop": 762,
+          "clearance": 90.75,
+          "horizontalOverflow": 0,
+          "hitTest": true,
+          "scrollY": 0
+        },
+        {
+          "theme": "dark",
+          "ctaTop": 622.25,
+          "ctaBottom": 671.25,
+          "ctaHeight": 49,
+          "navTop": 762,
+          "clearance": 90.75,
+          "horizontalOverflow": 0,
+          "hitTest": true,
+          "scrollY": 0
+        }
+      ],
+      "responsiveViewportMeasurements": [
+        {
+          "width": 320,
+          "top": 207.921875,
+          "bottom": 256.921875,
+          "navTop": 486,
+          "overflow": 0,
+          "hitTest": true,
+          "scrollY": 541,
+          "minClearance": 229.078125,
+          "viewportHeight": 568,
+          "ctaHeight": 49
+        },
+        {
+          "width": 360,
+          "top": 586.71875,
+          "bottom": 635.71875,
+          "navTop": 658,
+          "overflow": 0,
+          "hitTest": true,
+          "scrollY": 26,
+          "minClearance": 22.28125,
+          "viewportHeight": 740,
+          "ctaHeight": 49
+        },
+        {
+          "width": 390,
+          "top": 622.25,
+          "bottom": 671.25,
+          "navTop": 762,
+          "overflow": 0,
+          "hitTest": true,
+          "scrollY": 0,
+          "minClearance": 90.75,
+          "viewportHeight": 844,
+          "ctaHeight": 49
+        },
+        {
+          "width": 428,
+          "top": 617.65625,
+          "bottom": 666.65625,
+          "navTop": 844,
+          "overflow": 0,
+          "hitTest": true,
+          "scrollY": 0,
+          "minClearance": 177.34375,
+          "viewportHeight": 926,
+          "ctaHeight": 49
+        },
+        {
+          "width": 768,
+          "top": 687.453125,
+          "bottom": 737.453125,
+          "navTop": null,
+          "overflow": 0,
+          "hitTest": true,
+          "scrollY": 0,
+          "minClearance": 286.546875,
+          "viewportHeight": 1024,
+          "ctaHeight": 50
+        }
+      ],
+      "expectedConsoleHttpStatuses": [
+        404,
+        404,
+        403
+      ]
     }
   },
   "release": {
@@ -37,7 +148,7 @@
       "Institution self-service onboarding #55",
       "Tenant-owned published curriculum #57",
       "Coach assignment vs tenant-wide evidence grant #61",
-      "Signed-in staging browser and exact-commit CI"
+      "Approved signed-in staging browser and exact-commit CI (local emulator browser PASS)"
     ],
     "otherOpen": [
       "Support tickets #58",
