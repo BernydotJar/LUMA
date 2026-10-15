@@ -3,6 +3,7 @@
 import { FormEvent, useState, useSyncExternalStore } from "react";
 import { Mic, Search, Sparkles } from "lucide-react";
 import { firebaseAuth } from "@/lib/firebase-client";
+import { readSelectedProgram } from "@/lib/program-selection";
 import { useLumaAuth } from "@/components/auth-provider";
 import styles from "./content-intelligence-search.module.css";
 
@@ -70,6 +71,7 @@ function ContentIntelligenceSearchForm() {
       return;
     }
 
+    const selectedProgram = readSelectedProgram("learner", user.uid);
     setStatus("searching");
     setMessage("");
     try {
@@ -78,6 +80,7 @@ function ContentIntelligenceSearchForm() {
         cache: "no-store",
         headers: {
           "Content-Type": "application/json",
+          ...(selectedProgram ? { "x-luma-program-id": selectedProgram } : {}),
           authorization: `Bearer ${await user.getIdToken()}`,
         },
         body: JSON.stringify({ query: normalized, limit: 5 }),

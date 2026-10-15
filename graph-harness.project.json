@@ -1842,6 +1842,38 @@
         "scope": "test-only",
         "production_release_separate": true
       }
+    },
+    {
+      "id": "LUMA-071-first-client-course-selection",
+      "kind": "product-capability",
+      "title": "Entitlement-aware learner and coach course selection",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "first-client-program-selection",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/api/coach/programs/**",
+        "src/app/api/programs/my-courses/**",
+        "src/components/**",
+        "src/lib/**",
+        "scripts/qa/**",
+        "docs/enterprise/first-client-multicourse.md",
+        "evidence/first-client-course-selection-2026-10-14/**",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "tenant_policy": "pilot deployment-scoped",
+        "source_sha": "7ef32ba9ff3c56896da536a86ca14286b99ddfb3"
+      }
     }
   ]
 }

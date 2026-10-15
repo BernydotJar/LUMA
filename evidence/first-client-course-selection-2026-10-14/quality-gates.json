@@ -1,0 +1,48 @@
+{
+  "generatedAt": "2026-10-15T03:52:48.173466+00:00",
+  "baseSHA": "7ef32ba9ff3c56896da536a86ca14286b99ddfb3",
+  "branch": "fix/first-client-multi-course-selection-20261014",
+  "environment": {
+    "next": "16.3.8",
+    "authFirestore": "demo-luma-firstclient-20261014 emulator",
+    "productionWrites": false
+  },
+  "quality": {
+    "eslint": "PASS",
+    "typescript": "PASS",
+    "vitest": {
+      "pass": 324,
+      "skip": 81,
+      "fail": 0
+    },
+    "nextWebpackBuild": {
+      "result": "PASS",
+      "workers": 1,
+      "run": "CIRCLE_NODE_TOTAL=2 node node_modules/next/dist/bin/next build --webpack"
+    },
+    "emulatorApi": {
+      "pass": 13,
+      "fail": 0,
+      "summaryFile": "api-results.json"
+    },
+    "graniteCritic": {
+      "model": "ibm/granite3.3:2b",
+      "result": "completed",
+      "note": "suggestions not independently verified vulnerabilities"
+    }
+  },
+  "release": {
+    "status": "NO-GO",
+    "unresolvedP0": [
+      "Institution self-service onboarding #55",
+      "Tenant-owned published curriculum #57",
+      "Coach assignment vs tenant-wide evidence grant #61",
+      "Signed-in staging browser and exact-commit CI"
+    ],
+    "otherOpen": [
+      "Support tickets #58",
+      "Followup automation #59",
+      "Real Hotmart/LiveKit/provider verification"
+    ]
+  }
+}

@@ -10,6 +10,7 @@ import {
 } from "@/lib/program-api-client";
 import {
   programScheduleStatus,
+  scheduleForSelectedProgram,
   type ProgramScheduleStatus,
 } from "@/lib/program-schedule-status";
 import styles from "./live-program-schedule.module.css";
@@ -32,7 +33,7 @@ function sessionDate(startsAt: string, timezone: string): string {
   }
 }
 
-export function LiveProgramSchedule() {
+export function LiveProgramSchedule({ activeProgramId }: { activeProgramId?: string | null }) {
   const { user, loading } = useLumaAuth();
   const [snapshot, setSnapshot] = useState<LearnerAgendaSnapshot | null>(null);
   const [retry, setRetry] = useState(0);
@@ -64,7 +65,9 @@ export function LiveProgramSchedule() {
   }, [loading, uid, retry]);
 
   const current = !loading && uid && snapshot?.uid === uid ? snapshot : null;
-  if (!current || current.status === "empty") return null;
+  const visibleSessions = current ? scheduleForSelectedProgram(current.items, activeProgramId) : [];
+  if (!current || current.status === "empty" ||
+      (current.status === "ready" && visibleSessions.length === 0)) return null;
 
   if (current.status === "load_failed" || current.status === "access_unverified") {
     return (
@@ -105,10 +108,10 @@ export function LiveProgramSchedule() {
           <span className="eyebrow"><Radio size={14} /> Próximas sesiones en vivo</span>
           <h2 id="live-program-schedule-title">Tu programa también ocurre en tiempo real.</h2>
         </div>
-        <span>{current.items.length} próximas</span>
+        <span>{visibleSessions.length} próximas</span>
       </div>
       <div className={styles.sessions}>
-        {current.items.slice(0, 4).map((item) => (
+        {visibleSessions.slice(0, 4).map((item) => (
           <article
             className="glass-subtle"
             key={`${item.offeringId}:${item.session.sessionId}`}
