@@ -1,0 +1,85 @@
+.picker {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  margin: 0 0 24px;
+  padding: clamp(18px, 3vw, 28px);
+  border: 1px solid var(--glass-border, rgba(110, 120, 140, 0.24));
+  border-radius: 24px;
+  background: var(--content-surface, rgba(128, 128, 128, 0.07));
+}
+
+.heading {
+  display: grid;
+  gap: 8px;
+}
+
+.heading h2 {
+  margin: 0;
+  font-size: clamp(1.1rem, 2.5vw, 1.55rem);
+  letter-spacing: -0.025em;
+}
+
+.heading p {
+  margin: 0;
+  max-width: 64ch;
+  line-height: 1.5;
+  color: var(--muted-strong, currentColor);
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  max-width: 480px;
+}
+
+.field label {
+  font-weight: 700;
+}
+
+.field select {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid var(--glass-border, rgba(110, 120, 140, 0.35));
+  border-radius: 12px;
+  color: var(--ink, inherit);
+  background: var(--surface, Canvas);
+  font: inherit;
+}
+
+.field select:focus-visible {
+  outline: 3px solid var(--focus-ring, #6186b9);
+  outline-offset: 3px;
+}
+
+.recovery {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}
+
+.recovery p {
+  margin: 0;
+}
+
+.recovery button,
+.refresh {
+  align-self: start;
+  min-height: 44px;
+  width: fit-content;
+  padding: 9px 15px;
+  border: 1px solid var(--glass-border, rgba(110, 120, 140, 0.35));
+  border-radius: 12px;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.recovery button:focus-visible,
+.refresh:focus-visible {
+  outline: 3px solid var(--focus-ring, #6186b9);
+  outline-offset: 3px;
+}

@@ -1,0 +1,42 @@
+"use client";
+
+import { useEffect, useState, type FormEvent } from "react";
+import { signInWithEmailAndPassword } from "@firebase/auth";
+import { firebaseAuth } from "@/lib/firebase-client";
+
+const permitted = process.env.NODE_ENV === "development" &&
+  process.env.NEXT_PUBLIC_LUMA_QA_EMULATOR === "true";
+
+export default function TemporaryQaEmulatorLogin() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  useEffect(() => {
+    document.documentElement.dataset.lumaQaHydrated = "true";
+    return () => { delete document.documentElement.dataset.lumaQaHydrated; };
+  }, []);
+  if (!permitted) return <p>Unavailable</p>;
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      await signInWithEmailAndPassword(firebaseAuth, email, password);
+      window.location.assign("/learn");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Authentication unavailable");
+    }
+  };
+  return (
+    <main>
+      <h1>Isolated synthetic QA login</h1>
+      <form onSubmit={(event) => void submit(event)}>
+        <label htmlFor="qa-email">QA email</label>
+        <input id="qa-email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
+        <label htmlFor="qa-password">QA password</label>
+        <input id="qa-password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+        <button type="submit">Sign in to emulator</button>
+      </form>
+      {error && <p role="alert">{error}</p>}
+    </main>
+  );
+}

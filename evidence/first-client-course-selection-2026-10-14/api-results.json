@@ -1,0 +1,163 @@
+{
+  "project": "demo-luma-firstclient-20261014",
+  "base": "local Firebase emulators + Next production build",
+  "baseSHA": "7ef32ba9ff3c56896da536a86ca14286b99ddfb3",
+  "branch": "fix/first-client-multi-course-selection-20261014",
+  "checks": [
+    {
+      "id": "01 admin permissions and tenant isolation",
+      "result": "PASS",
+      "detail": {
+        "guest": 401,
+        "foreignAdmin": 403,
+        "student": 403
+      }
+    },
+    {
+      "id": "02 Mary live and evergreen academic offerings",
+      "result": "PASS",
+      "detail": {
+        "modes": [
+          "live",
+          "asynchronous"
+        ],
+        "tenantOfferings": 2
+      }
+    },
+    {
+      "id": "03 Mary live classroom scheduled without recording",
+      "result": "PASS",
+      "detail": {
+        "liveSession": "QA Mary - apertura",
+        "evergreenNotSchedulable": true,
+        "foreignTenantDenied": true
+      }
+    },
+    {
+      "id": "04 premium bulk enrollment and idempotency",
+      "result": "PASS",
+      "detail": {
+        "first": {
+          "requested": 4,
+          "granted": 2,
+          "extended": 0,
+          "reactivated": 0,
+          "unchanged": 0,
+          "duplicate_input": 1,
+          "invalid": 1,
+          "rejected": 0
+        },
+        "replay": {
+          "requested": 4,
+          "granted": 0,
+          "extended": 0,
+          "reactivated": 0,
+          "unchanged": 2,
+          "duplicate_input": 1,
+          "invalid": 1,
+          "rejected": 0
+        }
+      }
+    },
+    {
+      "id": "05 evergreen and multiple course enrollment",
+      "result": "PASS",
+      "detail": {
+        "evergreenEnrolled": true,
+        "twoCoursesForSameLearner": true,
+        "enrollmentRecords": 4
+      }
+    },
+    {
+      "id": "06 verified claims and correct live schedule",
+      "result": "PASS",
+      "detail": {
+        "activeEnrollments": [
+          1,
+          1,
+          2
+        ],
+        "sessionCounts": [
+          1,
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "id": "06b entitled course selector returns only assigned programs",
+      "result": "PASS",
+      "detail": {
+        "learnerCourseCounts": [
+          1,
+          1,
+          2,
+          0
+        ],
+        "coachCourseCount": 2,
+        "foreignDenied": 403,
+        "guestDenied": 401
+      }
+    },
+    {
+      "id": "07 multi-course plan demands selection",
+      "result": "PASS",
+      "detail": {
+        "noSelectionStatus": 409,
+        "error": "program_selection_required",
+        "apiProgramScopeRequired": true
+      }
+    },
+    {
+      "id": "08 premium onboarding evidence survives fresh auth",
+      "result": "PASS",
+      "detail": {
+        "serverPersisted": true,
+        "version": 2,
+        "restoreWithNewToken": true
+      }
+    },
+    {
+      "id": "09 coach evidence with scoped course; cross-tenant denial",
+      "result": "PASS",
+      "detail": {
+        "unselectedStatus": 409,
+        "authorizedCoach": true,
+        "evidenceCount": 1,
+        "foreignDenied": true
+      }
+    },
+    {
+      "id": "09b same-tenant coaching grant breadth, assignment policy outstanding",
+      "result": "PASS",
+      "detail": {
+        "unassignedCoachVisibleCourses": 0,
+        "sameTenantEvidenceReadStatus": 200,
+        "policyReviewRequired": true
+      }
+    },
+    {
+      "id": "10 scoped intervention insight but no outbound notification",
+      "result": "PASS",
+      "detail": {
+        "signalCount": 1,
+        "outboundHttp": 405
+      }
+    },
+    {
+      "id": "11 premium access revocation blocks learner",
+      "result": "PASS",
+      "detail": {
+        "revokedLearnerDenied": true,
+        "multiLearnerOtherProgramRetained": true,
+        "revokedProgramRemovedFromSelector": true
+      }
+    }
+  ],
+  "status": "PASS",
+  "summary": {
+    "passed": 13,
+    "failed": 0
+  },
+  "cleanup": "Deleted all test Firebase Auth users; emulator process discards temporary Firestore records"
+}

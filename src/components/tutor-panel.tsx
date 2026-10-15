@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { tutorQuickPrompts } from "@/lib/luma-data";
 import { firebaseAuth } from "@/lib/firebase-client";
+import { readSelectedProgram } from "@/lib/program-selection";
 import styles from "./learner-components.module.css";
 
 type TutorMessage = {
@@ -81,6 +82,8 @@ export function TutorPanel() {
       const signedInUser = firebaseAuth.currentUser;
       const headers: Record<string, string> = { "Content-Type": "application/json" };
       if (signedInUser) {
+        const selectedProgram = readSelectedProgram("learner", signedInUser.uid);
+        if (selectedProgram) headers["x-luma-program-id"] = selectedProgram;
         headers.authorization = `Bearer ${await signedInUser.getIdToken()}`;
       }
       const response = await fetch("/api/tutor", {
