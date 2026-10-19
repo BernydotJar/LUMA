@@ -1,0 +1,372 @@
+{
+  "scenario": "US-LRN-001 | Practitioner PNL purchase-to-learning journey",
+  "qaMode": "FIREBASE_EMULATORS_AND_LOCAL_NEXT_BROWSER",
+  "productionWrites": false,
+  "actualHotmartPurchase": false,
+  "realGoogleOAuth": false,
+  "referenceCommit": "7ef32ba9ff3c56896da536a86ca14286b99ddfb3",
+  "personas": [
+    "Valeria",
+    "Andrés",
+    "Natalia",
+    "Julián",
+    "Sofía",
+    "Coach ajeno"
+  ],
+  "checks": [
+    {
+      "name": "Hotmart compra aprobada Valeria",
+      "status": "PASS"
+    },
+    {
+      "name": "Hotmart compra aprobada Andrés",
+      "status": "PASS"
+    },
+    {
+      "name": "Hotmart compra aprobada Natalia",
+      "status": "PASS"
+    },
+    {
+      "name": "Invitado: entrada y estructura de aprendizaje",
+      "status": "PASS",
+      "detail": {
+        "url": "http://127.0.0.1:3290/learn"
+      }
+    },
+    {
+      "name": "Invitado: localizar curso y prácticas",
+      "status": "PASS",
+      "detail": {
+        "modules": 7,
+        "practices": 7
+      }
+    },
+    {
+      "name": "Invitado: catálogo marca acceso restringido al contenido comprado",
+      "status": "FAIL",
+      "priority": "P1",
+      "reason": "Program previews must explain whether paid content is locked"
+    },
+    {
+      "name": "Valeria: bienvenida usa identidad, no Mariana",
+      "status": "PASS"
+    },
+    {
+      "name": "Valeria: nombre del curso comprado visible al entrar",
+      "status": "FAIL",
+      "priority": "P1",
+      "reason": "Dashboard must show explicit purchased-course identity"
+    },
+    {
+      "name": "Valeria: clase en vivo de su cohorte visible",
+      "status": "PASS",
+      "detail": {
+        "classroomLink": "/classroom/<qa-cohort>/qa-live-1"
+      }
+    },
+    {
+      "name": "Valeria: compra vinculada a identidad Firebase verificada",
+      "status": "PASS"
+    },
+    {
+      "name": "Valeria: onboarding completo por controles reales",
+      "status": "PASS",
+      "detail": {
+        "serverVersion": 1,
+        "minutes": 35
+      }
+    },
+    {
+      "name": "Valeria: explora módulo, lección y práctica",
+      "status": "PASS",
+      "detail": {
+        "modules": 7,
+        "detailRoute": "/learn/experience/pas-detectar-y-reformular"
+      }
+    },
+    {
+      "name": "Valeria: video/lección con posición reproducible",
+      "status": "FAIL",
+      "priority": "P1",
+      "reason": "No lesson player found; descriptive module cards are not playable lessons"
+    },
+    {
+      "name": "Valeria: evaluación PAS 3 criterios en navegador",
+      "status": "PASS",
+      "detail": {
+        "receipt": "3/3",
+        "serverVersion": 2
+      }
+    },
+    {
+      "name": "Valeria: progreso visible al volver a su ruta",
+      "status": "PASS",
+      "detail": {
+        "visibleOnSameDevice": true
+      }
+    },
+    {
+      "name": "Valeria: pregunta contextual al tutor (sin inventar fuente)",
+      "status": "PASS",
+      "detail": {
+        "fallback": "RAG scoped unavailable, explicitly disclosed"
+      }
+    },
+    {
+      "name": "Valeria: tutor ofrece escalamiento cuando RAG no disponible",
+      "status": "FAIL",
+      "priority": "P1",
+      "reason": "No human escalation or actionable recovery alongside unavailable RAG"
+    },
+    {
+      "name": "Valeria: certificados vacíos, sin diploma ficticio",
+      "status": "PASS"
+    },
+    {
+      "name": "Valeria: nueva sesión recupera progreso en API",
+      "status": "PASS",
+      "detail": {
+        "serverVersion": 2,
+        "viewport": "390x844"
+      }
+    },
+    {
+      "name": "Valeria: nueva sesión muestra criterios de práctica en UI",
+      "status": "FAIL",
+      "priority": "P0",
+      "reason": "locator.waitFor: Timeout 10000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /Tu avance se apoya en evidencias concretas/i }) to be visible\n"
+    },
+    {
+      "name": "Andrés: orientación inicial sin logros ajenos",
+      "status": "PASS"
+    },
+    {
+      "name": "Andrés: onboarding de ocho minutos, diagnóstico incorrecto",
+      "status": "PASS",
+      "detail": {
+        "minutes": 8,
+        "initialSignal": "diagnostic a"
+      }
+    },
+    {
+      "name": "Andrés: una respuesta incorrecta ofrece una pista",
+      "status": "PASS",
+      "detail": {
+        "recovery": "Correct choice unlocks next step"
+      }
+    },
+    {
+      "name": "Andrés: retroalimentación sobre errores evita atribuir 3/3 de dominio",
+      "status": "PASS"
+    },
+    {
+      "name": "Natalia: tutor distingue contenido sin RAG",
+      "status": "PASS",
+      "detail": {
+        "behavior": "honest unavailable state"
+      }
+    },
+    {
+      "name": "Natalia: reflexiones indican que son auto-reportadas",
+      "status": "PASS"
+    },
+    {
+      "name": "Natalia: reflexión visible tras iniciar sesión en otro navegador",
+      "status": "FAIL",
+      "priority": "P1",
+      "reason": "Reflection should survive a fresh browser session"
+    },
+    {
+      "name": "Julián: API bloquea aprendizaje sin inscripción",
+      "status": "PASS"
+    },
+    {
+      "name": "Julián: interfaz no ofrece actividades de pago como si estuvieran abiertas",
+      "status": "FAIL",
+      "priority": "P0",
+      "reason": "Unentitled account can enter paid practice from UI\n\n3 !== 0\n"
+    },
+    {
+      "name": "Sofía: navegador autenticado para seguimiento",
+      "status": "PASS"
+    },
+    {
+      "name": "Sofía: panel entrenador carga datos de alumnos del tenant",
+      "status": "FAIL",
+      "priority": "P0",
+      "reason": "Signed-in QA token available"
+    },
+    {
+      "name": "Sofía: detalle del progreso de Valeria autorizado",
+      "status": "FAIL",
+      "priority": "P0",
+      "reason": "Signed-in QA token available"
+    },
+    {
+      "name": "Entrenador ajeno: navegador autenticado",
+      "status": "PASS"
+    },
+    {
+      "name": "Entrenador ajeno: detalle 403 aunque conozca ID",
+      "status": "PASS"
+    },
+    {
+      "name": "Cambio de cuenta en mismo navegador no expone nota de Valeria a Andrés",
+      "status": "PASS"
+    },
+    {
+      "name": "Valeria: viewport móvil sin CTA oculto",
+      "status": "PASS",
+      "detail": {
+        "top": 613.25,
+        "bottom": 662.25,
+        "navTop": 762,
+        "viewHeight": 844,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "No quedan documentos falsos de Mariana en inscripción QA",
+      "status": "PASS",
+      "detail": {
+        "testEnrollments": 3
+      }
+    }
+  ],
+  "defects": [
+    {
+      "id": "CX-JOURNEY-01",
+      "name": "Invitado: catálogo marca acceso restringido al contenido comprado",
+      "priority": "P1",
+      "message": "Program previews must explain whether paid content is locked"
+    },
+    {
+      "id": "CX-JOURNEY-02",
+      "name": "Valeria: nombre del curso comprado visible al entrar",
+      "priority": "P1",
+      "message": "Dashboard must show explicit purchased-course identity"
+    },
+    {
+      "id": "CX-JOURNEY-03",
+      "name": "Valeria: video/lección con posición reproducible",
+      "priority": "P1",
+      "message": "No lesson player found; descriptive module cards are not playable lessons"
+    },
+    {
+      "id": "CX-JOURNEY-04",
+      "name": "Valeria: tutor ofrece escalamiento cuando RAG no disponible",
+      "priority": "P1",
+      "message": "No human escalation or actionable recovery alongside unavailable RAG"
+    },
+    {
+      "id": "CX-JOURNEY-05",
+      "name": "Valeria: nueva sesión muestra criterios de práctica en UI",
+      "priority": "P0",
+      "message": "locator.waitFor: Timeout 10000ms exceeded.\nCall log:\n  - waiting for getByRole('heading', { name: /Tu avance se apoya en evidencias concretas/i }) to be visible\n"
+    },
+    {
+      "id": "CX-JOURNEY-06",
+      "name": "Natalia: reflexión visible tras iniciar sesión en otro navegador",
+      "priority": "P1",
+      "message": "Reflection should survive a fresh browser session"
+    },
+    {
+      "id": "CX-JOURNEY-07",
+      "name": "Julián: interfaz no ofrece actividades de pago como si estuvieran abiertas",
+      "priority": "P0",
+      "message": "Unentitled account can enter paid practice from UI\n\n3 !== 0\n"
+    },
+    {
+      "id": "CX-JOURNEY-08",
+      "name": "Sofía: panel entrenador carga datos de alumnos del tenant",
+      "priority": "P0",
+      "message": "Signed-in QA token available"
+    },
+    {
+      "id": "CX-JOURNEY-09",
+      "name": "Sofía: detalle del progreso de Valeria autorizado",
+      "priority": "P0",
+      "message": "Signed-in QA token available"
+    }
+  ],
+  "screenshots": [
+    {
+      "case": "Invitado: catálogo marca acceso restringido al contenido comprado",
+      "path": "/tmp/luma-course-journey-screens/failure-01.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "valeria-start",
+      "path": "/tmp/luma-course-journey-screens/valeria-start.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Valeria: nombre del curso comprado visible al entrar",
+      "path": "/tmp/luma-course-journey-screens/failure-02.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Valeria: video/lección con posición reproducible",
+      "path": "/tmp/luma-course-journey-screens/failure-03.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "valeria-practice-receipt",
+      "path": "/tmp/luma-course-journey-screens/valeria-practice-receipt.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Valeria: tutor ofrece escalamiento cuando RAG no disponible",
+      "path": "/tmp/luma-course-journey-screens/failure-04.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "valeria-new-device",
+      "path": "/tmp/luma-course-journey-screens/valeria-new-device.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Valeria: nueva sesión muestra criterios de práctica en UI",
+      "path": "/tmp/luma-course-journey-screens/failure-05.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "andres-first-visit",
+      "path": "/tmp/luma-course-journey-screens/andres-first-visit.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Natalia: reflexión visible tras iniciar sesión en otro navegador",
+      "path": "/tmp/luma-course-journey-screens/failure-06.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Julián: interfaz no ofrece actividades de pago como si estuvieran abiertas",
+      "path": "/tmp/luma-course-journey-screens/failure-07.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Sofía: panel entrenador carga datos de alumnos del tenant",
+      "path": "/tmp/luma-course-journey-screens/failure-08.png",
+      "containsSyntheticDataOnly": true
+    },
+    {
+      "case": "Sofía: detalle del progreso de Valeria autorizado",
+      "path": "/tmp/luma-course-journey-screens/failure-09.png",
+      "containsSyntheticDataOnly": true
+    }
+  ],
+  "browser": "Chromium headless Playwright",
+  "environment": {
+    "project": "demo-luma-course-journey-e2e",
+    "tenant": "qa-course-journey",
+    "program": "pnl-practitioner",
+    "base": "http://127.0.0.1:3290",
+    "auth": "emulator",
+    "firestore": "emulator"
+  },
+  "verdict": "FAIL",
+  "passed": 28,
+  "failed": 9,
+  "finishedAt": "2026-10-13T06:09:14.469Z"
+}
