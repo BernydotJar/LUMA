@@ -66,6 +66,14 @@ test("appearance previews keep brands and labels unobstructed", async ({ page })
   await page.goto("/experience", { waitUntil: "domcontentloaded" });
   const cards = page.locator('button[aria-pressed][class*="themeCard"]');
   await expect(cards).toHaveCount(3);
+  // A client-side transition can briefly retain the previous view alongside
+  // the hydrated one. Wait for the *whole document* to settle so duplicate
+  // theme previews are still detected, rather than hiding them with .first().
+  await expect.poll(
+    () => page.locator('[data-theme-preview]').evaluateAll((nodes) =>
+      nodes.map((node) => node.getAttribute('data-theme-preview'))),
+    { timeout: 15000 },
+  ).toEqual(["se", "light", "dark"]);
   const metrics = await page.evaluate(() => {
     const previews = Array.from(document.querySelectorAll<HTMLElement>('[data-theme-preview]'));
     return previews.map((preview) => {
