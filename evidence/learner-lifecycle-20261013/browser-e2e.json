@@ -1,0 +1,99 @@
+{
+  "kind": "LUMA_CX_P0_FIXER_VERIFICATION",
+  "project": "demo-luma-course-journey-e2e",
+  "commit": "UNCOMMITTED_FIXER_WORKTREE",
+  "environment": "LOCAL_NEXT_AUTH_FIRESTORE_EMULATORS_ONLY",
+  "productionWrites": false,
+  "actualHotmartSale": false,
+  "realGoogleOAuth": false,
+  "checks": [
+    {
+      "name": "Hotmart approved Jeremy",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Hotmart approved Abigail",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Hotmart approved Adan",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Jeremy: purchased Practitioner identified on learning home",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Jeremy: secure onboarding writes to Firestore without legacy localStorage",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Jeremy: PAS graded practice 3/3 reaches server ledger",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Jeremy: progress card grounded in server-scoped rubric",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Jeremy: two self-reports do not displace the prior PAS grade",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Jeremy: another browser rebuilds grade and reflection from Firestore",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Jeremy to Abigail: no unscoped local goal or rubric leaks",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Abigail: course entitlement correct but no Jeremy progress",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Adan: tutor unconfigured corpus gives actionable recovery",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Adan: self-report resumes in new browser without grade",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Julian: no paid enrollment, explicitly public preview and API 403",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Julian: preview practice never records a paid receipt",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "Mobile 390px avoids horizontal overflow",
+      "status": "PASS",
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    }
+  ],
+  "evidence": [],
+  "passed": 16,
+  "failed": 0,
+  "verdict": "PASS",
+  "finishedAt": "2026-10-13T18:12:10.976Z"
+}

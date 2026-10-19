@@ -1,0 +1,82 @@
+{
+  "kind": "LUMA_COURSE_DELIVERY_PUBLISHED_LESSON_E2E",
+  "execution": "LOCAL_NEXT_AUTH_FIRESTORE_EMULATOR",
+  "productionWrites": false,
+  "realMediaUsed": false,
+  "actualHotmartSale": false,
+  "checks": [
+    {
+      "name": "Catalog requires Firebase JWT and active verified enrollment",
+      "verdict": "PASS"
+    },
+    {
+      "name": "Only published rights-approved lessons appear, media path never disclosed",
+      "verdict": "PASS"
+    },
+    {
+      "name": "GCS delivery fails closed without approved private bucket, not public Drive",
+      "verdict": "PASS"
+    },
+    {
+      "name": "Checkpoint writes require entitlement and current lesson revision",
+      "verdict": "PASS"
+    },
+    {
+      "name": "Video restart across another browser, no Alice or other program leak",
+      "verdict": "PASS"
+    },
+    {
+      "name": "A document page can resume without pretending academic mastery",
+      "verdict": "PASS"
+    },
+    {
+      "name": "Guest UI does not invent purchased lessons",
+      "verdict": "PASS"
+    },
+    {
+      "name": "Paid course CTA opens the real learner lesson catalog",
+      "verdict": "PASS"
+    },
+    {
+      "name": "Jeremy sees a single next published lesson and precise resume action",
+      "verdict": "PASS"
+    },
+    {
+      "name": "Paid learner course catalog meets automated WCAG 2.1 AA and viewport bounds",
+      "verdict": "PASS"
+    },
+    {
+      "name": "Desktop learner has one primary next action visible above fold",
+      "verdict": "PASS"
+    },
+    {
+      "name": "Jeremy opens course media surface without an unauthorized direct link",
+      "verdict": "PASS"
+    },
+    {
+      "name": "Switching from Jeremy to Abigail in the same mounted player hides old checkpoint",
+      "verdict": "PASS"
+    },
+    {
+      "name": "Abigail's independent browser sees her own unstarted lesson",
+      "verdict": "PASS"
+    },
+    {
+      "name": "Refund/revocation blocks new course reads, media and checkpoint writes",
+      "verdict": "PASS"
+    }
+  ],
+  "passed": 15,
+  "failed": 0,
+  "verdict": "PASS",
+  "qaRunDate": "2026-10-19",
+  "codeScope": "pre-commit feature branch; exact tree will be checked by GitHub CI",
+  "qualityScope": {
+    "mobileNavigation": true,
+    "aboveFoldDesktop": true,
+    "aboveFoldMobile": true,
+    "axeWCAG21AA": true,
+    "unapprovedDocumentsBeforePublished": 55,
+    "realMediaPlayback": false
+  }
+}

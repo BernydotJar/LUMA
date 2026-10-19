@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-13",
+  "project": "LUMA",
+  "source": "Google Drive file metadata; read-only connector inspection",
+  "scope": "Seven source IDs already referenced by src/lib/program-modules.ts",
+  "filesAccessible": 7,
+  "files": [
+    {"module": 1, "name": "material-de-apoyo-modulo-i-practitioner-pnl-online-2022.docx", "type": "DOCX", "status": "metadata_accessible"},
+    {"module": 2, "name": "modulo-2-practitioner.pdf", "type": "PDF", "status": "metadata_accessible"},
+    {"module": 3, "name": "modullo-3-redescubriendo-y-tranformando-tu-poder.pdf", "type": "PDF", "status": "metadata_accessible"},
+    {"module": 4, "name": "ejercicios-modulo-iv.pdf", "type": "PDF", "status": "metadata_accessible"},
+    {"module": 5, "name": "pract-modulo-5-encuentro-contigo-mismo.pdf", "type": "PDF", "status": "metadata_accessible"},
+    {"module": 6, "name": "ejercicios-modulo-vi.pdf", "type": "PDF", "status": "metadata_accessible"},
+    {"module": 7, "name": "modulo-7-ejercicios.pdf", "type": "PDF", "status": "metadata_accessible"}
+  ],
+  "rightsOrPublicationApprovalVerified": false,
+  "actualLessonMediaInventoryVerified": false,
+  "transcriptsApproved": false,
+  "userFacingPublishedLessonCountVerified": 0,
+  "requiredNext": [
+    "Institution confirms material rights and publication permissions",
+    "Editors review titles, pedagogical scope and sensitive claims",
+    "Authorized instructor provides lesson sequence, media and transcripts where applicable",
+    "Server-protected media delivery and durable per-lesson checkpoint implemented",
+    "Emulator and actual provider staging replay of approved lesson with different users"
+  ],
+  "releaseDecision": "NO-GO for full digital-course experience"
+}

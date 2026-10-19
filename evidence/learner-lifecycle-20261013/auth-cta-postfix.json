@@ -1,0 +1,25 @@
+{
+  "kind": "GitHub Actions browser regression repair",
+  "date": "2026-10-13",
+  "originalCI": {
+    "sha": "558b35a6f9969763c5a1ed9ea4541731acd47696",
+    "runId": 38462477308,
+    "job": "browser",
+    "verdict": "FAIL",
+    "passed": 123,
+    "failed": 2,
+    "skipped": 7,
+    "rootCause": "Duplicate accessible link name 'Acceder' from header and public course-preview notice; strict Playwright locator matched two links."
+  },
+  "fix": "Keep the existing account menu 'Acceder' and name the explicit guest preview action 'Iniciar sesión'; add distinct accessible-name regression assertions.",
+  "localRerun": {
+    "command": "CI= PLAYWRIGHT_PORT=3145 npx playwright test e2e/auth.spec.ts --project=chromium --project=mobile --workers=1 --reporter=line",
+    "verdict": "PASS",
+    "passed": 5,
+    "failed": 0,
+    "skipped": 1,
+    "server": "Next.js local webpack, non-production"
+  },
+  "fullCI": "PENDING_ON_NEW_COMMIT",
+  "release": "NO-GO"
+}

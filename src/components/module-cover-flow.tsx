@@ -142,12 +142,12 @@ export function ModuleCoverFlow({ compact = false }: { compact?: boolean }) {
             <p>{active.focus}</p>
           </div>
           <div className={styles.detailMeta}>
-            <span><Check size={14} /> Material del programa disponible</span>
+            <span><Check size={14} /> Vista editorial del módulo</span>
             <strong>{active.practiceSlugs.length} {active.practiceSlugs.length === 1 ? "práctica digital" : "prácticas digitales"}</strong>
           </div>
           {active.practiceSlugs.length > 0 ? (
             <Link href={`/learn/experience/${active.practiceSlugs[0]}`}>
-              Empezar por una práctica <ArrowRight size={15} />
+              Explorar práctica de muestra <ArrowRight size={15} />
             </Link>
           ) : (
             <Link href="/learn/experiences">

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import {
   AlertTriangle,
   ArrowUp,
@@ -53,6 +54,7 @@ type TutorMessage = {
 export function TutorPanel() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [recoveryQuestion, setRecoveryQuestion] = useState("");
   const [messages, setMessages] = useState<TutorMessage[]>([
     {
       role: "tutor",
@@ -74,6 +76,7 @@ export function TutorPanel() {
         content: item.content,
       }));
 
+    setRecoveryQuestion("");
     setMessages((current) => [...current, { role: "learner", content: clean }]);
     setMessage("");
     setLoading(true);
@@ -101,6 +104,9 @@ export function TutorPanel() {
         reflection?: TutorMessage["reflection"];
         trust?: TutorMessage["trust"];
       };
+      if (response.status === 503 || data.trust?.status === "RETRIEVAL_UNAVAILABLE") {
+        setRecoveryQuestion(clean);
+      }
       setMessages((current) => [
         ...current,
         {
@@ -119,6 +125,7 @@ export function TutorPanel() {
         },
       ]);
     } catch {
+      setRecoveryQuestion(clean);
       setMessages((current) => [
         ...current,
         {
@@ -152,7 +159,7 @@ export function TutorPanel() {
           </div>
         </div>
         <span className="status-pill" data-tone="positive">
-          <span className={styles.liveDot} /> Lista
+          <span className={styles.liveDot} /> {recoveryQuestion ? "Material no disponible" : "Lista"}
         </span>
       </div>
       <div className={styles.chat} aria-live="polite">
@@ -224,6 +231,17 @@ export function TutorPanel() {
           </div>
         )}
       </div>
+      {recoveryQuestion && (
+        <div className={styles.trustWarning} role="status">
+          <AlertTriangle size={16} aria-hidden="true" />
+          <div>
+            <strong>Necesitas otra vía para resolver tu pregunta</strong>
+            <p>Tu material autorizado no está disponible ahora. Puedes reintentar o llevar la pregunta a la próxima sesión con tu entrenador.</p>
+            <button type="button" onClick={() => void sendMessage(recoveryQuestion)} disabled={loading}>Reintentar pregunta</button>
+            {" · "}<Link href="/learn#sesiones">Consultar próximas sesiones</Link>
+          </div>
+        </div>
+      )}
       <div className={styles.quickPrompts}>
         {tutorQuickPrompts.map((prompt) => (
           <button

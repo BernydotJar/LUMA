@@ -3,7 +3,7 @@ import { learningStoreForScope, requireLearningUser } from "@/lib/learning-serve
 import { requireLearningEntitlement } from "@/lib/learning-entitlement-server";
 import { learningAccessFailure } from "@/lib/learning-entitlement";
 import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
-import type { StoredOnboardingState } from "@/lib/learner-projection";
+import type { StoredOnboardingState, StoredLearningEvent } from "@/lib/learner-projection";
 
 export const runtime = "nodejs";
 
@@ -42,8 +42,26 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "learner_state_not_found" }, { status: 404 });
     }
 
+    // The graded receipt is selected from this authenticated learner's scoped
+    // server ledger. Self-reported reflections cannot displace scored evidence.
+    const stored = result.record.lastScoredEvidence;
+    // Existing enrollments predate denormalized scored evidence. For those
+    // records, read the scoped ledger without pretending another event is a score.
+    const historical = stored ? [] : await learningStoreForScope(scope).listEvents(user.uid, 50);
+    const scoredEvidence = stored ?? historical
+      .map((row) => row as unknown as StoredLearningEvent)
+      .find((row) =>
+        row.type === "SIMULATION_COMPLETED" &&
+        row.evidenceCategory === "scored" &&
+        row.twinAuthority === "eligible" &&
+        Array.isArray(row.criteria) && row.criteria.length > 0,
+      );
+
     return NextResponse.json({
       plan: result.plan,
+      onboarding: result.record.onboarding,
+      scoredEvidence: scoredEvidence ?? null,
+      program: scope ? { tenantId: scope.tenantId, programId: scope.programId } : null,
       persistence: {
         source: "firestore",
         version: result.record.version,

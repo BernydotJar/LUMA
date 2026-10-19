@@ -29,6 +29,7 @@ const learnerNavigation = [
   { href: "/learn", label: "Hoy", icon: Home },
   { href: "/learn#journey", label: "Ruta", icon: Compass },
   { href: "/learn/experiences", label: "Programa", icon: PlayCircle },
+  { href: "/learn/course", label: "Lecciones", icon: BookOpen },
   { href: "/learn/certificates", label: "Certificados", icon: Award },
   { href: "/learn#luma", label: "LUMA", icon: MessageCircle },
 ];
@@ -75,8 +76,10 @@ export function AppShell({
   // The learner's LUMA assistant must stay visible on mobile.
   // Secondary destinations are accessible via "Más", never silently removed.
   const mobilePrimary = studio
-    ? [studioNavigation[1], studioNavigation[2], studioNavigation[3]]
-    : [learnerNavigation[0], learnerNavigation[1], learnerNavigation[2], learnerNavigation[4]];
+    ? studioNavigation.filter(({ href }) =>
+        ["/studio", "/studio/class-intelligence", "/studio/certificates"].includes(href))
+    : learnerNavigation.filter(({ href }) =>
+        ["/learn", "/learn#journey", "/learn/experiences", "/learn#luma"].includes(href));
   const mobileSecondary = navigation.filter(
     (item) => !mobilePrimary.some((primary) => primary.href === item.href),
   );

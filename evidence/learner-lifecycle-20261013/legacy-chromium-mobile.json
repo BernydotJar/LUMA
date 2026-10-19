@@ -1,0 +1,12 @@
+{
+  "kind": "existing-browser-regression-mobile",
+  "source": "Playwright iPhone 14 viewport Chromium",
+  "date": "2026-10-13",
+  "passed": 26,
+  "skipped": 1,
+  "failed": 0,
+  "result": "PASS",
+  "command": "CI= PLAYWRIGHT_PORT=3145 npx playwright test e2e/showcase.spec.ts e2e/adaptive-loop.spec.ts e2e/class-intelligence.spec.ts e2e/content-beta.spec.ts --project=mobile --workers=1 --reporter=line",
+  "url": "http://127.0.0.1:3145",
+  "productionWrites": false
+}

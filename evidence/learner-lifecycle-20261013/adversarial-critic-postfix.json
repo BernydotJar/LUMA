@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-13",
+  "role": "Automated adversarial QA and architectural critic; not an independent external human assessor",
+  "initialFailure": {
+    "pullRequest": 51,
+    "workflowRunId": 38460562978,
+    "job": "firestore",
+    "status": "FAIL",
+    "casesFailed": 2,
+    "cause": "Firestore rejects optional lastScoredEvidence: undefined on transaction.set",
+    "previousGraphState": "Premature scoped evidence DONE gate invalidated for repair"
+  },
+  "codeChanges": [
+    "Omit absent lastScoredEvidence and absent sanitized event optionals before Firestore writes",
+    "Scope offline pending retries to UID, tenant and program from a verified server projection",
+    "Never replay a stale pending receipt into another program or after a mid-request identity change",
+    "Key TutorPanel by Firebase UID to avoid same-page cross-account chat visibility",
+    "Do not claim unpersisted preview results update accredited progress",
+    "Remove raw premium source Drive link from public practice preview"
+  ],
+  "localRetest": {
+    "firestoreSuites": 6,
+    "firestoreTestsPassed": 51,
+    "firestoreTestsFailed": 0,
+    "syntheticBrowserCasesPassed": 17,
+    "syntheticBrowserCasesFailed": 0,
+    "unitTestsPassed": 317,
+    "unitTestsSkipped": 82,
+    "webpackBuild": "PASS",
+    "lint": "PASS",
+    "typescript": "PASS"
+  },
+  "remainingRisks": [
+    "No learner-facing multi-program selector yet; ambiguous entitlement fails closed",
+    "Offline queue cannot be reconstructed if server scope is unavailable; it is intentionally not queued without entitlement",
+    "Need actual approved lesson catalog and signed media delivery with resume",
+    "Genuine checkout, Google OAuth and LiveKit A/V must run in authorized staging",
+    "Manual WCAG, field CWV, independent human QA and customer signoff remain outstanding"
+  ],
+  "enterpriseRelease": "NO-GO"
+}

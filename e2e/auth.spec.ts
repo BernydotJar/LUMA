@@ -11,6 +11,9 @@ test.describe("Google authentication entry points", () => {
 
   test("guest learner surface offers access without pretending to know the learner name", async ({ page }) => {
     await page.goto("/learn");
+    // The header shortcut and enrollment notice must have distinct names.
+    await expect(page.getByRole("link", { name: "Acceder", exact: true })).toHaveCount(1);
+    await expect(page.getByRole("link", { name: "Iniciar sesión", exact: true })).toHaveCount(1);
     await expect(page.getByRole("link", { name: "Acceder", exact: true })).toBeVisible();
     await expect(page.getByText(/Accede para personalizar tu experiencia/i)).toBeVisible();
     await expect(page.getByText(/Buenas (días|tardes|noches), Mariana/i)).toHaveCount(0);
