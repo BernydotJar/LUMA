@@ -51,6 +51,7 @@ export class FirestoreAcademyApplicationStore {
       }
       const application: AcademyApplicationRecord = {
         ...requested,
+        retentionExpiresAt: new Date(Date.parse(now) + 90 * 86400_000).toISOString(),
         applicationId: ref.id,
         applicantUid: identity.uid,
         applicantEmail: identity.email.toLowerCase(),

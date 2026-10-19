@@ -3,7 +3,7 @@ export type AcademyDeliveryMode = "live" | "evergreen" | "hybrid";
 export type AcademyLearnerRange = "1-50" | "51-200" | "201-1000" | "1000+";
 export type AcademyContactRole = "owner" | "director" | "academic";
 export type AcademyApplicationStatus =
-  | "received" | "in_review" | "invitation_pending" | "activated" | "rejected";
+  | "received" | "in_review" | "invitation_pending" | "invitation_accepted" | "activated" | "rejected";
 
 export interface AcademyApplicationInput {
   organizationName: string;
@@ -21,6 +21,17 @@ export interface AcademyApplicationRecord extends AcademyApplicationInput {
   status: AcademyApplicationStatus;
   createdAt: string;
   updatedAt: string;
+  /** UTC ISO instant, indexable for governed deletion; not a guarantee of automatic TTL. */
+  retentionExpiresAt?: string;
+  tenantId?: string;
+  initialProgramId?: string;
+  firstReviewerUid?: string;
+  firstReviewedAt?: string;
+  secondReviewerUid?: string;
+  invitationIssuedAt?: string;
+  invitationAcceptedAt?: string;
+  activatedAt?: string;
+  activationAuditId?: string;
 }
 
 export function parseAcademyApplication(input: unknown): AcademyApplicationInput {

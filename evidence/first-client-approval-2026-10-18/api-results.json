@@ -1,0 +1,171 @@
+{
+  "environment": "demo Firebase Auth/Firestore Emulators and local Next production build",
+  "sourceSha": "local",
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "01 unauthorized and unverified identities denied",
+      "result": "PASS",
+      "detail": {
+        "guest": 401,
+        "applicant": 403,
+        "unverified": 403
+      }
+    },
+    {
+      "id": "02 submit verified request with no roles",
+      "result": "PASS",
+      "detail": {
+        "state": "received",
+        "noRole": true
+      }
+    },
+    {
+      "id": "03 forged approval or fields denied",
+      "result": "PASS",
+      "detail": {
+        "escalationDenied": true
+      }
+    },
+    {
+      "id": "04 first operator reserves tenant with audit",
+      "result": "PASS",
+      "detail": {
+        "reserved": "qa-academy-one",
+        "screened": true
+      }
+    },
+    {
+      "id": "05 second distinct superuser required to issue invitation",
+      "result": "PASS",
+      "detail": {
+        "secondReviewer": true,
+        "rawTokenNeverStored": true,
+        "expiresInHours": 72
+      }
+    },
+    {
+      "id": "06 foreign user and malformed invitation proof rejected",
+      "result": "PASS",
+      "detail": {
+        "foreign": 403,
+        "unverified": 403,
+        "badProof": 403
+      }
+    },
+    {
+      "id": "07 invited owner accepts once but cannot self-provision",
+      "result": "PASS",
+      "detail": {
+        "oneTime": true,
+        "roleBeforeOperator": null
+      }
+    },
+    {
+      "id": "08 CLI dry run only gives deterministic signed-off plan",
+      "result": "PASS",
+      "detail": {
+        "planHashLength": 64,
+        "noMutations": true
+      }
+    },
+    {
+      "id": "09 operator applies confirmed plan, grants only matching tenant and revokes prior tokens",
+      "result": "PASS",
+      "detail": {
+        "tenant": "qa-academy-one",
+        "oldTokenRevoked": true,
+        "auditApplied": true
+      }
+    },
+    {
+      "id": "10 owner access scoped to academy, never other organization",
+      "result": "PASS",
+      "detail": {
+        "owner": 200,
+        "foreign": 403
+      }
+    },
+    {
+      "id": "11 only operator can bootstrap initial audited institution draft",
+      "result": "PASS",
+      "detail": {
+        "bootstrapped": true,
+        "idempotent": true
+      }
+    },
+    {
+      "id": "12 first course and institutional brand persist as DRAFT only",
+      "result": "PASS",
+      "detail": {
+        "cohort": "draft",
+        "brandVersion": 2,
+        "tenantPublication": false
+      }
+    },
+    {
+      "id": "13 another applicant cannot reserve the same tenant slug",
+      "result": "PASS",
+      "detail": {
+        "collisionDenied": 409
+      }
+    },
+    {
+      "id": "14 reissue destroys old proof; revocation destroys pending invitation",
+      "result": "PASS",
+      "detail": {
+        "oldDenied": true,
+        "revokedDenied": true,
+        "reservationReleased": true
+      }
+    },
+    {
+      "id": "15 expired invitation produces 410 and can recover by reissue",
+      "result": "PASS",
+      "detail": {
+        "expired": 410,
+        "reissue": 200
+      }
+    },
+    {
+      "id": "16 per-identity invitation brute force throttled without recording raw email",
+      "result": "PASS",
+      "detail": {
+        "attempts": 12,
+        "thirteenth": 429
+      }
+    },
+    {
+      "id": "17 review, invitation, acceptance and activation appear in audit with no bearer secret",
+      "result": "PASS",
+      "detail": {
+        "audits": 4,
+        "secretAbsent": true
+      }
+    },
+    {
+      "id": "18 expired unactivated applicant retention is dry-run-first with explicit purge audit",
+      "result": "PASS",
+      "detail": {
+        "readOnlyDryRun": true,
+        "recordDeletedOnlyAfterApply": true,
+        "activatedTenantUnaffected": true,
+        "purgeAudit": true
+      }
+    },
+    {
+      "id": "19 forged operator UID without matching signed session cannot activate or purge",
+      "result": "PASS",
+      "detail": {
+        "operatorUidImpersonationDenied": true,
+        "missingTokenDenied": true,
+        "purgeOperatorBoundToJwt": true
+      }
+    }
+  ],
+  "summary": {
+    "passed": 19,
+    "failed": 0
+  },
+  "cleanup": "All synthetic identities removed; demo emulator records discarded"
+}

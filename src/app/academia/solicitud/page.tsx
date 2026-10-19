@@ -136,10 +136,13 @@ export default function AcademyApplicationPage() {
               <h2>{record.organizationName}</h2>
               <p>La solicitud está guardada en LUMA. La academia todavía no está activada y esta cuenta no ha recibido privilegios institucionales.</p>
               <dl className={styles.summary}>
-                <div><dt>Estado</dt><dd>{record.status === "received" ? "Pendiente de revisión" : record.status === "in_review" ? "En revisión" : record.status === "invitation_pending" ? "Invitación pendiente" : record.status === "activated" ? "Activación confirmada" : "No aprobada"}</dd></div>
+                <div><dt>Estado</dt><dd>{record.status === "received" ? "Pendiente de revisión" : record.status === "in_review" ? "En revisión" : record.status === "invitation_pending" ? "Invitación pendiente" : record.status === "activated" ? "Activación confirmada" : record.status === "invitation_accepted" ? "Invitación aceptada: pendiente de activación" : "No aprobada"}</dd></div>
                 <div><dt>Correo verificado</dt><dd>{record.applicantEmail}</dd></div>
                 <div><dt>Fecha de recepción</dt><dd>{new Date(record.createdAt).toLocaleDateString("es-GT")}</dd></div>
               </dl>
+              {record.status === "activated" && <Link className={styles.primary} href="/academia/primer-curso">
+                Configurar academia y primer curso <ArrowRight size={17} aria-hidden="true" />
+              </Link>}
               <button type="button" className={styles.secondary} onClick={refresh}>Consultar estado</button>
             </div>
           ) : status === "denied" ? (

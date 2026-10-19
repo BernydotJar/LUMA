@@ -13,7 +13,8 @@ import styles from "./login.module.css";
 function postLoginDestination(): string {
   const next = typeof window === "undefined" ? null :
     new URLSearchParams(window.location.search).get("next");
-  return next === "/academia/solicitud" ? next : "/learn";
+  return next === "/academia/solicitud" || next === "/academia/invitacion"
+    ? next : "/learn";
 }
 
 export default function LoginPage() {

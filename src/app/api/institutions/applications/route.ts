@@ -4,6 +4,7 @@ import { requireLearningUser } from "@/lib/learning-server";
 import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
 import { parseAcademyApplication } from "@/lib/institutions/application";
 import { FirestoreAcademyApplicationStore } from "@/lib/institutions/application-store";
+import { academyRequestThrottle } from "@/lib/institutions/request-throttle-server";
 
 export const runtime = "nodejs";
 const MAX_BYTES = 4096;
@@ -29,6 +30,7 @@ function fail(error: unknown) {
   if (code === "APPLICATION_ALREADY_SUBMITTED") return reply({ error: "application_already_submitted" }, 409);
   if (code === "APPLICATION_MEDIA_TYPE_INVALID") return reply({ error: "json_required" }, 415);
   if (code === "APPLICATION_TOO_LARGE") return reply({ error: "request_too_large" }, 413);
+  if (code === "APPLICATION_RATE_LIMITED") return reply({ error: "rate_limited" }, 429);
   return reply({ error: "application_service_unavailable" }, 503);
 }
 
@@ -73,6 +75,7 @@ export async function POST(request: Request) {
   if (!enabled()) return reply({ error: "feature_unavailable" }, 503);
   try {
     const identity = await verifiedApplicant(request);
+    await academyRequestThrottle.consume(identity.uid, "application-submit");
     const input = parseAcademyApplication(await parseBoundedJson(request));
     const { application, duplicate } = await store.submit(identity, input);
     return reply({ application, duplicate }, duplicate ? 200 : 201);
