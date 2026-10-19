@@ -68,7 +68,7 @@
   line-height: 1.48;
 }
 .emptyAction {
-  min-height: 40px;
+  min-height: 44px;
   width: fit-content;
   padding: 0 14px;
   grid-column: 2;
@@ -154,7 +154,7 @@
 .detail small { color: var(--cx-muted); font-size: .64rem; }
 .detail strong { font-size: .78rem; font-weight: 700; }
 .detail a {
-  min-height: 42px;
+  min-height: 44px;
   padding: 0 12px;
   border-radius: 10px;
   display: inline-flex;
