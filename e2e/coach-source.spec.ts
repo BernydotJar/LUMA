@@ -17,6 +17,8 @@ test.describe("Coach authoritative learner source", () => {
   test("existing showcase coach experience remains available", async ({ page }) => {
     await page.goto("/studio/learners/mariana");
     await expect(page.getByRole("heading", { name: /Mariana: estado de aprendizaje/i })).toBeVisible();
-    await expect(page.getByText(/Modelo de gemelo de aprendizaje y marco de evidencia/i)).toBeVisible();
+    // The responsive shell may render an additional copyright copy outside
+    // main. Verify the learner evidence label within authoritative page content.
+    await expect(page.getByRole("main").getByText(/© 2026 LUMA · Modelo de gemelo de aprendizaje y marco de evidencia/i)).toBeVisible();
   });
 });

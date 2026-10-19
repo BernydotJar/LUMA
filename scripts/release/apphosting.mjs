@@ -1,5 +1,6 @@
 import { GoogleAuth } from 'google-auth-library';
 import { verifyReview } from './review-gate.mjs';
+import { promotionStarted } from './recovery-policy.mjs';
 import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -146,6 +147,12 @@ async function rollbackValidate() {
 }
 async function recover() {
   assertDeployContext(process.env, manifest);
+  // No upload/build failure can justify touching live traffic when rollout never
+  // started. Preserve FAILED (not VERIFIED) and record an honest no-op receipt.
+  if (!promotionStarted(ledger)) {
+    record('RECOVERY_NOT_REQUIRED_NO_PROMOTION');
+    return;
+  }
   const current = singleServingBuild(await cloud(`${PARENT}/traffic`));
   if (current === ledger.previous?.buildId) { record('RECOVERY_NOT_NEEDED_PRIOR_BUILD_STILL_SERVING'); return; }
   invariant(current === ledger.buildId, 'Recovery refused: another release changed traffic');

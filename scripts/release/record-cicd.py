@@ -15,6 +15,7 @@ HARNESS = Path(os.environ.get('GRAPH_HARNESS_ROOT', '/workspace/projects/Graph-h
 sys.path.insert(0, str(HARNESS))
 from graph_harness.runtime import GraphRuntime
 from graph_harness.model import GateResult, NodeStatus
+from quality_run import verify_quality_for_review
 
 NODE = 'LUMA-CICD-002-release-pipeline'
 OUT = ROOT / 'evidence/cicd-enterprise'
@@ -84,11 +85,20 @@ def main() -> int:
         base = f'repos/BernydotJar/LUMA/actions/runs/{args.ci_run}'
         run = json.loads(command('gh', 'api', base))
         jobs = json.loads(command('gh', 'api', base + '/jobs?filter=latest&per_page=100'))['jobs']
-        assert run['head_sha'] == commit and run['conclusion'] == 'success', 'CI run does not verify the current commit'
-        for name in CHECKS:
-            matching = [job for job in jobs if job['name'] == name]
-            assert len(matching) == 1 and matching[0]['conclusion'] == 'success', f'Unsuccessful check: {name}'
-        summary = {'runId': args.ci_run, 'gitSha': commit, 'conclusion': run['conclusion'], 'url': run['html_url'], 'jobs': [{'name': job['name'], 'conclusion': job['conclusion'], 'url': job['html_url']} for job in jobs]}
+        if args.phase == 'release':
+            # The source-bound check must fail until this independent review is
+            # published. Do not create a circular review-approval dependency.
+            # Never waive one of the five real quality checks or another failure.
+            quality = verify_quality_for_review(run, jobs, commit)
+        else:
+            assert run['head_sha'] == commit and run['conclusion'] == 'success', 'Production CI run does not verify the current commit'
+            for name in CHECKS:
+                matching = [job for job in jobs if job['name'] == name]
+                assert len(matching) == 1 and matching[0]['conclusion'] == 'success', f'Unsuccessful check: {name}'
+            quality = {'quality': 'PASS', 'releaseReadiness': 'PASS', 'overall': 'success'}
+        summary = {'runId': args.ci_run, 'gitSha': commit, 'conclusion': run['conclusion'],
+                   'qualityEvidence': quality, 'url': run['html_url'],
+                   'jobs': [{'name': job['name'], 'conclusion': job['conclusion'], 'url': job['html_url']} for job in jobs]}
         save(f'evidence/cicd-enterprise/{args.phase}-ci.json', summary)
         if args.phase == 'release':
             digest = command('node', 'scripts/release/review-gate.mjs', '--digest')

@@ -1844,6 +1844,51 @@
       }
     },
     {
+      "id": "LUMA-069-pr-source-readiness",
+      "kind": "release-hardening",
+      "title": "Independently trusted PR source-bound readiness and safe pre-promotion recovery",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-068-studio-ci-strict-locator"
+      ],
+      "capability": "enterprise-source-attestation",
+      "gates": {
+        "review": [
+          "independent-review"
+        ]
+      },
+      "allowed_paths": [
+        ".github/workflows/quality.yml",
+        ".github/workflows/source-attestation.yml",
+        "scripts/release/pr-readiness.mjs",
+        "scripts/release/pr-readiness.test.mjs",
+        "scripts/release/record-cicd.py",
+        "scripts/release/quality_run.py",
+        "scripts/release/quality_run_test.py",
+        "scripts/release/recovery-policy.mjs",
+        "scripts/release/recovery-policy.test.mjs",
+        "scripts/release/recovery-no-promotion.test.mjs",
+        "scripts/release/apphosting.mjs",
+        "scripts/release/finalize_pr_readiness_graph.py",
+        "specs/069-cicd-premerge-source-bound-guard.md",
+        "docs/operations/cicd.md",
+        "evidence/cicd-premerge-guard-069/**",
+        "evidence/graph-harness-status.json",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "e2e/coach-source.spec.ts"
+      ],
+      "metadata": {
+        "issue": 52,
+        "release_policy": "no-unreviewed-source-can-deploy",
+        "production_baseline_sha": "6ddcae8ff2464782b7e4001c4cd5d60092dbb099",
+        "required_status_activation": "after_trusted_workflow_on_main_verified",
+        "ci_flaky_regression": "coach-source mobile duplicate copyright outside main",
+        "aggregate_release": "NO_GO",
+        "source_approval": "REQUIRES_INDEPENDENT_REATTESTATION_FOR_COMBINED_SHA"
+      }
+    },
+    {
       "id": "LUMA-071-first-client-course-selection",
       "kind": "product-capability",
       "title": "Entitlement-aware learner and coach course selection",
