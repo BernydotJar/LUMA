@@ -16,6 +16,8 @@ import {
   Target,
 } from "lucide-react";
 import { appendPersistentLearningEvent, hasPersistentLearningSession } from "@/lib/learning-api-client";
+import { readSelectedProgram } from "@/lib/program-selection";
+import { firebaseAuth } from "@/lib/firebase-client";
 import { moduleThreeSource } from "@/lib/luma-data";
 import { evaluatePasSimulation, type SimulationEvidenceReceipt } from "@/lib/simulation-evidence";
 import styles from "./practice-session.module.css";
@@ -98,7 +100,12 @@ export function PracticeSession() {
     if (hasPersistentLearningSession()) {
       window.localStorage.setItem(
         "luma-pending-learning-event",
-        JSON.stringify({ eventId, event }),
+        JSON.stringify({
+          eventId, event,
+          ...(readSelectedProgram("learner", firebaseAuth.currentUser?.uid ?? "")
+            ? { programId: readSelectedProgram("learner", firebaseAuth.currentUser?.uid ?? "") }
+            : {}),
+        }),
       );
       try {
         const plan = await appendPersistentLearningEvent(eventId, event);

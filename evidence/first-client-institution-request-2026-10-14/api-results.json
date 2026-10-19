@@ -1,0 +1,116 @@
+{
+  "sourceSHA": "uncommitted-qa",
+  "environment": "local demo Firebase Auth Firestore Emulators + Next production build",
+  "project": "demo-luma-firstclient-intake-20261014",
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "01 guests denied even without a client-supplied UID",
+      "status": "PASS",
+      "detail": {
+        "guest": 401
+      }
+    },
+    {
+      "id": "02 non-verified identity cannot submit",
+      "status": "PASS",
+      "detail": {
+        "unverified": 403
+      }
+    },
+    {
+      "id": "03 new verified applicants see an empty own record",
+      "status": "PASS",
+      "detail": {
+        "empty": true
+      }
+    },
+    {
+      "id": "04 privilege and tenant claims in request body rejected",
+      "status": "PASS",
+      "detail": {
+        "forgedFieldsRejected": 6
+      }
+    },
+    {
+      "id": "05 invalid timezone and code rejected",
+      "status": "PASS",
+      "detail": {
+        "badInputs": 2
+      }
+    },
+    {
+      "id": "06 content type and bounded body enforced",
+      "status": "PASS",
+      "detail": {
+        "mediaType": 415,
+        "tooLarge": 413
+      }
+    },
+    {
+      "id": "07 applicant request persisted with submitted state and trusted email",
+      "status": "PASS",
+      "detail": {
+        "status": "received",
+        "applicationId": "b88b7dd6591ca82fe8c65c9be14676deb65b39cd80d015108ea8123ead65cb26",
+        "hasServerIdentity": true
+      }
+    },
+    {
+      "id": "08 duplicate request does not create second record",
+      "status": "PASS",
+      "detail": {
+        "duplicate": true,
+        "unchangedCreation": true
+      }
+    },
+    {
+      "id": "09 applicant cannot overwrite an existing application by changed payload",
+      "status": "PASS",
+      "detail": {
+        "conflict": 409
+      }
+    },
+    {
+      "id": "10 another applicant cannot query the first applicant or spoof query uid",
+      "status": "PASS",
+      "detail": {
+        "foreignRecordsVisible": 0
+      }
+    },
+    {
+      "id": "11 own GET restores server record after a fresh Firebase token",
+      "status": "PASS",
+      "detail": {
+        "persisted": true,
+        "serverIdentity": true
+      }
+    },
+    {
+      "id": "12 concurrent submissions remain one application",
+      "status": "PASS",
+      "detail": {
+        "statusCodes": [
+          201,
+          200
+        ],
+        "sameRecord": true
+      }
+    },
+    {
+      "id": "13 Firestore has records but no self-provisioned institution or role",
+      "status": "PASS",
+      "detail": {
+        "applicationCount": 2,
+        "status": "received",
+        "tenantCreated": false,
+        "adminGranted": false
+      }
+    }
+  ],
+  "summary": {
+    "passed": 13,
+    "failed": 0
+  },
+  "cleanup": "Deleted all synthetic users; Firestore Emulator discarded records"
+}

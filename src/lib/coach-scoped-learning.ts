@@ -44,9 +44,15 @@ export function coachCanReadEnrollment(
   learnerId: string,
   now = new Date().toISOString(),
 ): boolean {
-  return (access.unrestricted ||
-    access.tenantIds.includes(scope.tenantId) ||
-    access.learnerIds.includes(learnerId)) &&
+  // Tenant membership alone is NOT a course grant. Coaches require a
+  // fresh, server-derived matching offering assignment; admins are scoped to
+  // their authorized organization and platform superusers are unrestricted.
+  const privileged = access.unrestricted ||
+    (access.institutionalAdmin === true && access.tenantIds.includes(scope.tenantId));
+  const assigned = access.tenantIds.includes(scope.tenantId) &&
+    Boolean(enrollment.offeringId &&
+      access.authorizedOfferingIds?.includes(enrollment.offeringId));
+  return (privileged || assigned) &&
     enrollment.tenantId === scope.tenantId &&
     enrollment.programId === scope.programId &&
     enrollment.learnerId === learnerId &&

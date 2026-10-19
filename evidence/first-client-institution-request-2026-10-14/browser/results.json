@@ -1,0 +1,88 @@
+{
+  "project": "demo-luma-firstclient-intake-20261014",
+  "source": "isolated Git checkout with uncommitted academy intake files + QA-only Firebase Auth emulator client",
+  "checks": [
+    {
+      "name": "01 unauthenticated visitor sees safe sign-in CTA",
+      "status": "PASS",
+      "detail": {
+        "verifiedLoginRequired": true,
+        "unsafeApplicantFormNotShown": true
+      }
+    },
+    {
+      "name": "02 verified applicant sees the form and accessible 44px controls",
+      "status": "PASS",
+      "detail": {
+        "inputHeight": 50,
+        "buttonHeight": 51,
+        "overflow": 0
+      }
+    },
+    {
+      "name": "03 automated WCAG 2 A/AA audit on the applicant form",
+      "status": "PASS",
+      "detail": {
+        "violations": 0
+      }
+    },
+    {
+      "name": "03b WCAG 2.2 automated contrast across Seres, Light and Dark",
+      "status": "PASS",
+      "detail": [
+        {
+          "theme": "se",
+          "violations": 0
+        },
+        {
+          "theme": "light",
+          "violations": 0
+        },
+        {
+          "theme": "dark",
+          "violations": 0
+        }
+      ]
+    },
+    {
+      "name": "04 applicant submits actual form and receives pending receipt",
+      "status": "PASS",
+      "detail": {
+        "received": true,
+        "organisation": "Academia Modelo Autónoma",
+        "adminPrivilegesShown": false
+      }
+    },
+    {
+      "name": "05 submission restores after reload and retained Firestore status",
+      "status": "PASS",
+      "detail": {
+        "reloadRestored": true,
+        "stage": "received"
+      }
+    },
+    {
+      "name": "06 different academy applicant cannot read previous user's request",
+      "status": "PASS",
+      "detail": {
+        "isolated": true,
+        "desktop": 1440
+      }
+    },
+    {
+      "name": "07 allowlisted login redirect cannot leave LUMA",
+      "status": "PASS",
+      "detail": {
+        "externalRedirect": false
+      }
+    }
+  ],
+  "screenshots": [],
+  "status": "PASS",
+  "consoleErrors": [],
+  "summary": {
+    "passed": 8,
+    "failed": 0
+  },
+  "cleanup": "Synthetic Auth users deleted; demo Firestore discarded"
+}

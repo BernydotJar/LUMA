@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseLearnerScheduleResponse, programScheduleStatus } from "./program-schedule-status";
+import { parseLearnerScheduleResponse, programScheduleStatus, scheduleForSelectedProgram } from "./program-schedule-status";
 
 describe("learner live program agenda status", () => {
   it("does not equate an HTTP failure with no scheduled live sessions", () => {
@@ -71,5 +71,22 @@ describe("learner schedule API response contract", () => {
     expect(() => parseLearnerScheduleResponse({
       schedule: [{ ...validSession, session: { ...validSession.session, joinUrl: "javascript:alert(1)" } }],
     })).toThrow("PROGRAM_SCHEDULE_INVALID_RESPONSE");
+  });
+});
+
+
+describe("selected learning program agenda", () => {
+  it("shows only the active course sessions when learner has two enrollments", () => {
+    const all = [
+      { programId: "mary-live", session: { title: "Entrenamiento en vivo" } },
+      { programId: "other-live", session: { title: "Clase de otro programa" } },
+    ];
+    const active = scheduleForSelectedProgram(
+      all, "mary-live",
+    );
+    expect(active).toHaveLength(1);
+    expect(active[0].programId).toBe("mary-live");
+    expect(scheduleForSelectedProgram(all, "mary-evergreen")).toHaveLength(0);
+    expect(scheduleForSelectedProgram(all, undefined)).toHaveLength(2);
   });
 });

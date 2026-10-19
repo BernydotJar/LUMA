@@ -1,4 +1,5 @@
 import { firebaseAuth } from "./firebase-client";
+import { readSelectedProgram } from "./program-selection";
 import type { AdaptiveLearningPlan } from "./learner-projection";
 import type { PersistedLearnerRecord } from "./persistent-learning";
 
@@ -33,7 +34,10 @@ export interface CoachLearnerDetail {
 async function coachHeaders(): Promise<HeadersInit | undefined> {
   const user = firebaseAuth.currentUser;
   if (!user) return undefined;
-  return { authorization: `Bearer ${await user.getIdToken()}` };
+  const selectedProgram = readSelectedProgram("coach", user.uid);
+  return {
+    ...(selectedProgram ? { "x-luma-program-id": selectedProgram } : {}),
+    authorization: `Bearer ${await user.getIdToken()}` };
 }
 
 export async function fetchCoachLearners(): Promise<CoachLearnerSummary[] | undefined> {

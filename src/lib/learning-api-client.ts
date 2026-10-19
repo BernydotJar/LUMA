@@ -1,4 +1,5 @@
 import { firebaseAuth } from "./firebase-client";
+import { readSelectedProgram } from "./program-selection";
 import type {
   AdaptiveLearningPlan,
   StoredLearningEvent,
@@ -13,8 +14,10 @@ async function authHeaders(): Promise<HeadersInit | undefined> {
   const user = firebaseAuth.currentUser;
   if (!user) return undefined;
 
+  const selectedProgram = readSelectedProgram("learner", user.uid);
   return {
     "content-type": "application/json",
+    ...(selectedProgram ? { "x-luma-program-id": selectedProgram } : {}),
     authorization: `Bearer ${await user.getIdToken()}`,
   };
 }
@@ -76,7 +79,13 @@ export async function syncPendingLearningEvent(): Promise<AdaptiveLearningPlan |
   const raw = window.localStorage.getItem("luma-pending-learning-event");
   if (!raw) return undefined;
 
-  const pending = JSON.parse(raw) as { eventId: string; event: StoredLearningEvent };
+  const pending = JSON.parse(raw) as { eventId: string; event: StoredLearningEvent; programId?: string };
+  const uid = firebaseAuth.currentUser?.uid ?? "";
+  const selectedProgram = readSelectedProgram("learner", uid);
+  // A queued practice cannot migrate across purchased courses. Unscoped
+  // historical guest events are never uploaded under a scoped course.
+  if (selectedProgram && pending.programId !== selectedProgram) return undefined;
+  if (!selectedProgram && pending.programId) return undefined;
   const plan = await appendPersistentLearningEvent(pending.eventId, pending.event);
   if (plan) window.localStorage.removeItem("luma-pending-learning-event");
   return plan;

@@ -1842,6 +1842,563 @@
         "scope": "test-only",
         "production_release_separate": true
       }
+    },
+    {
+      "id": "LUMA-071-first-client-course-selection",
+      "kind": "product-capability",
+      "title": "Entitlement-aware learner and coach course selection",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "first-client-program-selection",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/api/coach/programs/**",
+        "src/app/api/programs/my-courses/**",
+        "src/components/**",
+        "src/lib/**",
+        "scripts/qa/**",
+        "docs/enterprise/first-client-multicourse.md",
+        "evidence/first-client-course-selection-2026-10-14/**",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "tenant_policy": "pilot deployment-scoped",
+        "source_sha": "7ef32ba9ff3c56896da536a86ca14286b99ddfb3"
+      }
+    },
+    {
+      "id": "LUMA-072-first-client-coach-rbac",
+      "kind": "security-hardening",
+      "title": "One authoritative institution-admin / assigned-course-coach policy enforced at every evidence read",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-071-first-client-course-selection",
+        "LUMA-063-tenant-program-twin-rag-isolation"
+      ],
+      "capability": "072_first_client_coach_rbac",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "docs/enterprise/**",
+        "src/lib/coach-program-authority*",
+        "src/lib/coach-scoped-learning*",
+        "src/app/api/coach/**",
+        "src/lib/coach-access*",
+        "src/lib/learning-server.ts",
+        "scripts/qa/first-client*",
+        "evidence/first-client-coach-rbac-2026-10-14/**",
+        ".github/workflows/quality.yml"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "issues": [
+          61
+        ],
+        "production_permissions_change": false
+      }
+    },
+    {
+      "id": "LUMA-073-first-client-institution-provisioning",
+      "kind": "product-capability",
+      "title": "Secure self-service first institution setup, staff invitation and governable tenant creation",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-057-commerce-enrollment-activation"
+      ],
+      "capability": "073_first_client_institution_provisioning",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "docs/enterprise/**",
+        "src/app/api/institutions/**",
+        "src/lib/institutions/**",
+        "src/app/studio/**",
+        "evidence/first-client-provisioning/**",
+        "src/app/academia/solicitud/**",
+        "src/app/api/institutions/applications/**",
+        "src/lib/institutions/application*",
+        "src/app/login/**",
+        "scripts/qa/first-client-institution-*",
+        "evidence/first-client-institution-request-2026-10-14/**",
+        ".github/workflows/quality.yml",
+        "src/lib/institutions/approval-*",
+        "src/lib/institutions/request-throttle*",
+        "src/app/api/platform/institution-applications/**",
+        "src/app/plataforma/solicitudes/**",
+        "src/app/academia/invitacion/**",
+        "src/app/academia/primer-curso/**",
+        "scripts/activate-first-academy.mjs",
+        "scripts/purge-academy-requests.mjs",
+        "scripts/qa/first-client-approval-*",
+        "evidence/first-client-approval-2026-10-18/**"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "issues": [
+          55
+        ],
+        "production_permissions_change": false,
+        "implementation_boundary": "verified applicant intake only; operator grant not implemented",
+        "activation": "OFF by default",
+        "production_role_changes": false,
+        "api_e2e": "13/13 local synthetic HTTP Firebase emulator PASS",
+        "qa_browser": "8 authenticated synthetic browser checks PASS incl. 3 themes axe automated A/AA",
+        "source_quality": "354 unit PASS / 81 skipped, TS lint build PASS",
+        "browser_e2e": "8/8 isolated Playwright synthetic Firebase auth PASS; 6 screenshots",
+        "a11y_automated": "Seres/Light/Dark zero axe violations post-fix; manual audit pending",
+        "ci_gates": [
+          "institution-intake",
+          "institution-browser"
+        ],
+        "operator_review": "two-superuser screening/invitation tested only on emulators",
+        "admin_activation": "manual plan-verified CLI only",
+        "first_course": "draft only; no learner curriculum published",
+        "abuse_protection": "identity throttle, edge WAF/App Check outstanding",
+        "retention": "manual purge available; automatic schedule and policy signoff pending"
+      }
+    },
+    {
+      "id": "LUMA-074-first-client-curriculum-publication",
+      "kind": "product-capability",
+      "title": "Tenant-owned course authoring and publication with content/rubric provenance",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-073-first-client-institution-provisioning",
+        "LUMA-071-first-client-course-selection"
+      ],
+      "capability": "074_first_client_curriculum_publication",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "docs/enterprise/**",
+        "src/lib/institutions/**",
+        "src/app/studio/**",
+        "src/lib/content-intelligence*",
+        "evidence/first-client-curriculum/**"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "issues": [
+          57
+        ],
+        "production_permissions_change": false
+      }
+    },
+    {
+      "id": "LUMA-075-first-client-support-automation",
+      "kind": "operational-capability",
+      "title": "Customer/learner request ticketing and explicit follow-up workflow delivery",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-073-first-client-institution-provisioning",
+        "LUMA-074-first-client-curriculum-publication"
+      ],
+      "capability": "075_first_client_support_automation",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "docs/enterprise/**",
+        "src/app/api/**",
+        "src/app/studio/**",
+        "src/lib/**",
+        "evidence/first-client-support/**"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "issues": [
+          58,
+          59
+        ],
+        "production_permissions_change": false
+      }
+    },
+    {
+      "id": "LUMA-076-first-client-enterprise-release-gate",
+      "kind": "release-engineering",
+      "title": "Independent full academy-to-learner-to-coach E2E production readiness and authorization release gate",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-071-first-client-course-selection",
+        "LUMA-072-first-client-coach-rbac",
+        "LUMA-073-first-client-institution-provisioning",
+        "LUMA-074-first-client-curriculum-publication",
+        "LUMA-077-first-client-cohort-evidence-isolation",
+        "LUMA-078-coach-authorization-catalog-scale",
+        "LUMA-079-institutional-operator-review",
+        "LUMA-080-secure-onboarding-invitation",
+        "LUMA-081-authorized-first-admin-activation",
+        "LUMA-082-application-abuse-and-retention",
+        "LUMA-083-guided-first-course-draft",
+        "LUMA-084-first-curriculum-publication-gate"
+      ],
+      "capability": "076_first_client_enterprise_release_gate",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "docs/enterprise/**",
+        "e2e/**",
+        "docs/enterprise/**",
+        "evidence/first-client-enterprise-gate/**"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "issues": [
+          54
+        ],
+        "production_permissions_change": false
+      }
+    },
+    {
+      "id": "LUMA-077-first-client-cohort-evidence-isolation",
+      "kind": "security-hardening",
+      "title": "Cohort/offering-scoped practice evidence and coach data provenance with legacy migration rules",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-072-first-client-coach-rbac",
+        "LUMA-074-first-client-curriculum-publication"
+      ],
+      "capability": "first-client-cohort-evidence-isolation",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/learning-store*",
+        "src/lib/coach-program-authority*",
+        "src/lib/coach-scoped-learning*",
+        "src/app/api/coach/**",
+        "src/app/api/learning/**",
+        "src/lib/commerce/**",
+        "docs/enterprise/**",
+        "evidence/first-client-cohort-isolation/**",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "issues": [
+          63
+        ],
+        "security_policy": "fail-closed until cohort provenance is verified",
+        "production_permissions_change": false
+      }
+    },
+    {
+      "id": "LUMA-078-coach-authorization-catalog-scale",
+      "kind": "architecture",
+      "title": "Indexed and paginated coach offering authorization beyond 100 tenant offerings",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-072-first-client-coach-rbac"
+      ],
+      "capability": "enterprise-coach-authorization-scale",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/coach-program-authority*",
+        "src/lib/program-delivery*",
+        "src/app/api/coach/**",
+        "firestore.indexes.json",
+        "docs/enterprise/**",
+        "evidence/first-client-coach-scale/**",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl"
+      ],
+      "metadata": {
+        "release": "NO-GO for large tenants",
+        "issues": [
+          64
+        ],
+        "interim_limit": 100,
+        "production_permissions_change": false
+      }
+    },
+    {
+      "id": "LUMA-079-institutional-operator-review",
+      "kind": "product-capability",
+      "title": "Platform-only first academy review inbox, immutable two-person screening and tenant reservations",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-073-first-client-institution-provisioning"
+      ],
+      "capability": "luma_079_institutional_operator_review",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "docs/enterprise/**",
+        "evidence/first-client-approval-2026-10-18/**",
+        "src/app/plataforma/solicitudes/**",
+        "src/lib/institutions/approval-*",
+        "src/app/api/platform/institution-applications/**",
+        "scripts/qa/first-client-approval-*",
+        ".github/workflows/quality.yml"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "issues": [
+          55
+        ],
+        "customer_data_used": false,
+        "production_permissions_change": false
+      }
+    },
+    {
+      "id": "LUMA-080-secure-onboarding-invitation",
+      "kind": "security-hardening",
+      "title": "Expiring one-use invitation, verified applicant acceptance, revocation and recovery",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-079-institutional-operator-review"
+      ],
+      "capability": "luma_080_secure_onboarding_invitation",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "docs/enterprise/**",
+        "evidence/first-client-approval-2026-10-18/**",
+        "src/app/academia/invitacion/**",
+        "src/app/api/institutions/invitations/**",
+        "src/lib/institutions/approval-*",
+        "scripts/qa/first-client-approval-*",
+        ".github/workflows/quality.yml"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "issues": [
+          55
+        ],
+        "customer_data_used": false,
+        "production_permissions_change": false
+      }
+    },
+    {
+      "id": "LUMA-081-authorized-first-admin-activation",
+      "kind": "security-hardening",
+      "title": "Confirmed and auditable first tenant admin role activation, no applicant self-service grant",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-080-secure-onboarding-invitation"
+      ],
+      "capability": "luma_081_authorized_first_admin_activation",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "docs/enterprise/**",
+        "evidence/first-client-approval-2026-10-18/**",
+        "scripts/activate-first-academy.mjs",
+        "src/app/api/platform/institution-applications/**",
+        "src/lib/tenant-admin-*",
+        "scripts/qa/first-client-approval-*",
+        ".github/workflows/quality.yml"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "issues": [
+          55,
+          61
+        ],
+        "customer_data_used": false,
+        "production_permissions_change": false
+      }
+    },
+    {
+      "id": "LUMA-082-application-abuse-and-retention",
+      "kind": "security-hardening",
+      "title": "Identity throttling, retention expiry, explicit operator purge and production WAF gating",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-073-first-client-institution-provisioning"
+      ],
+      "capability": "luma_082_application_abuse_and_retention",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "docs/enterprise/**",
+        "evidence/first-client-approval-2026-10-18/**",
+        "src/lib/institutions/request-throttle*",
+        "scripts/purge-academy-requests.mjs",
+        "src/app/api/institutions/**",
+        "scripts/qa/first-client-approval-*",
+        ".github/workflows/quality.yml"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "issues": [
+          55
+        ],
+        "customer_data_used": false,
+        "production_permissions_change": false
+      }
+    },
+    {
+      "id": "LUMA-083-guided-first-course-draft",
+      "kind": "product-capability",
+      "title": "Approved first owner configures tenant brand and creates first course cohort in draft, with authorization",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-081-authorized-first-admin-activation"
+      ],
+      "capability": "luma_083_guided_first_course_draft",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "docs/enterprise/**",
+        "evidence/first-client-approval-2026-10-18/**",
+        "src/app/academia/primer-curso/**",
+        "src/app/api/platform/institution-applications/**",
+        "src/app/api/programs/admin/**",
+        "scripts/qa/first-client-approval-*",
+        ".github/workflows/quality.yml"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "issues": [
+          55,
+          57
+        ],
+        "customer_data_used": false,
+        "production_permissions_change": false
+      }
+    },
+    {
+      "id": "LUMA-084-first-curriculum-publication-gate",
+      "kind": "release-engineering",
+      "title": "Independently verified first course educational content publish, rubric provenance and learner retrieval",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-083-guided-first-course-draft",
+        "LUMA-074-first-client-curriculum-publication",
+        "LUMA-077-first-client-cohort-evidence-isolation"
+      ],
+      "capability": "luma_084_first_curriculum_publication_gate",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "docs/enterprise/**",
+        "evidence/first-client-approval-2026-10-18/**",
+        "src/lib/institutions/**",
+        "src/app/api/learning/**",
+        "src/app/studio/**",
+        "e2e/**",
+        "scripts/qa/first-client-approval-*",
+        ".github/workflows/quality.yml"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "issues": [
+          57,
+          63
+        ],
+        "customer_data_used": false,
+        "production_permissions_change": false
+      }
     }
   ]
 }

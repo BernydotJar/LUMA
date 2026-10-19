@@ -129,6 +129,241 @@ jobs:
           src/lib/institutions/publication-plan-route.emulator.test.ts
           --maxWorkers=1"
 
+  coach-rbac:
+    needs: [verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: "21"
+      - run: npm ci
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: production-build-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verified-build
+      - name: Unpack exact verified production build
+        run: tar -xzf "$RUNNER_TEMP/verified-build/production-build.tgz"
+      - name: Require freshly generated emulator evidence (never reuse committed PASS)
+        run: rm -f evidence/first-client-coach-rbac-2026-10-14/api-results.json
+      - name: Verify first-client coach RBAC on disposable Auth and Firestore emulators
+        run: >-
+          npx --yes firebase-tools@15.30.2
+          emulators:exec
+          --project demo-luma-firstclient-20261014
+          --only auth,firestore
+          "bash scripts/qa/first-client-emulator-gate.sh"
+        env:
+          CI: "true"
+          NEXT_TELEMETRY_DISABLED: "1"
+      - name: Validate the freshly generated security receipt
+        run: |
+          node - <<'NODE'
+          const fs = require("node:fs");
+          const file = "evidence/first-client-coach-rbac-2026-10-14/api-results.json";
+          const report = JSON.parse(fs.readFileSync(file, "utf8"));
+          if (report.status !== "PASS" || report.summary.passed !== 16 || report.summary.failed !== 0) {
+            process.exitCode = 1;
+          }
+          NODE
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: first-client-coach-rbac-${{ github.run_attempt }}
+          path: evidence/first-client-coach-rbac-2026-10-14/api-results.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  institution-intake:
+    needs: [verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: "21"
+      - run: npm ci
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: production-build-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verified-build
+      - name: Unpack exact verified build for applicant-intake test
+        run: tar -xzf "$RUNNER_TEMP/verified-build/production-build.tgz"
+      - name: Reject stale committed intake evidence
+        run: rm -f evidence/first-client-institution-request-2026-10-14/api-results.json
+      - name: Test unprivileged academy applicant and Firestore transaction boundaries
+        run: >-
+          npx --yes firebase-tools@15.30.2
+          emulators:exec
+          --project demo-luma-firstclient-intake-20261014
+          --only auth,firestore
+          "bash scripts/qa/first-client-institution-gate.sh"
+        env:
+          CI: "true"
+          NEXT_TELEMETRY_DISABLED: "1"
+          LUMA_INTAKE_SOURCE_SHA: ${{ github.sha }}
+      - name: Require freshly generated applicant authorization receipt
+        run: |
+          node - <<'NODE'
+          const fs = require("node:fs");
+          const path = "evidence/first-client-institution-request-2026-10-14/api-results.json";
+          const x = JSON.parse(fs.readFileSync(path, "utf8"));
+          if (x.status !== "PASS" || x.summary.passed !== 13 || x.summary.failed !== 0 ||
+              x.sourceSHA !== process.env.GITHUB_SHA) {
+            process.exitCode = 1;
+          }
+          NODE
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: first-client-intake-${{ github.run_attempt }}
+          path: evidence/first-client-institution-request-2026-10-14/api-results.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  institution-approval:
+    needs: [verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: "21"
+      - run: npm ci
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: production-build-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verified-build
+      - name: Unpack exactly verified production build
+        run: tar -xzf "$RUNNER_TEMP/verified-build/production-build.tgz"
+      - name: Remove committed local QA evidence before execution
+        run: rm -f evidence/first-client-approval-2026-10-18/api-results.json
+      - name: Verify independent two-person approval, invitation, claims, tenant and privacy boundaries
+        run: >-
+          npx --yes firebase-tools@15.30.2
+          emulators:exec
+          --project demo-luma-firstclient-approval-20261018
+          --only auth,firestore
+          "bash scripts/qa/first-client-approval-gate.sh"
+        env:
+          CI: "true"
+          NEXT_TELEMETRY_DISABLED: "1"
+          LUMA_QA_COMMIT: ${{ github.sha }}
+      - name: Validate exact-current-SHA sanitized approval receipt
+        run: |
+          node - <<'NODE'
+          const fs = require("node:fs");
+          const report = JSON.parse(fs.readFileSync("evidence/first-client-approval-2026-10-18/api-results.json", "utf8"));
+          const observed = new Set(report.checks?.filter(x => x.result === "PASS").map(x => x.id) || []);
+          if (report.status !== "PASS" || report.summary?.passed !== 20 ||
+              report.summary?.failed !== 0 || report.sourceSha !== process.env.GITHUB_SHA ||
+              !["05", "09", "11", "12", "14", "15", "16", "18", "19", "20"].every(n =>
+                [...observed].some(x => x.startsWith(n + " ")))) {
+            process.exitCode = 1;
+          }
+          NODE
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: first-client-approval-${{ github.run_attempt }}
+          path: evidence/first-client-approval-2026-10-18/api-results.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  institution-browser:
+    needs: [verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: "21"
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Prepare QA-only browser checkout (never part of release source)
+        shell: bash
+        run: |
+          set -euo pipefail
+          qa="$RUNNER_TEMP/LUMA-firstclient-intake-uiqa-20261014"
+          git worktree add --detach "$qa" HEAD
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$qa/node_modules"
+          cd "$qa"
+          source_dir="$GITHUB_WORKSPACE/evidence/first-client-institution-request-2026-10-14/browser/qa-tools"
+          git apply --unidiff-zero --check "$source_dir/emulator-auth-overlay.patch"
+          git apply --unidiff-zero "$source_dir/emulator-auth-overlay.patch"
+          mkdir -p src/app/qa-emulator-login scripts/qa
+          cp "$source_dir/emulator-login.tsx.txt" src/app/qa-emulator-login/page.tsx
+          cp "$source_dir/browser.mjs" scripts/qa/first-client-institution-browser.mjs
+          cp "$source_dir/browser-gate.sh" scripts/qa/first-client-institution-browser-gate.sh
+          chmod +x scripts/qa/first-client-institution-browser-gate.sh
+          test -L node_modules
+          test "$(git status --porcelain | wc -l)" -ge 2
+          rm -rf evidence/first-client-institution-browser-2026-10-14
+      - name: Run actual authenticated Chromium E2E with synthetic Firebase identity
+        working-directory: ${{ runner.temp }}/LUMA-firstclient-intake-uiqa-20261014
+        run: >-
+          npx --yes firebase-tools@15.30.2
+          emulators:exec
+          --project demo-luma-firstclient-intake-20261014
+          --only auth,firestore
+          "bash scripts/qa/first-client-institution-browser-gate.sh"
+        env:
+          CI: "true"
+          NEXT_TELEMETRY_DISABLED: "1"
+      - name: Enforce current-run WCAG multi-theme and applicant-isolation results
+        working-directory: ${{ runner.temp }}/LUMA-firstclient-intake-uiqa-20261014
+        run: |
+          node - <<'NODE'
+          const fs = require("node:fs");
+          const report = JSON.parse(fs.readFileSync("evidence/first-client-institution-browser-2026-10-14/results.json", "utf8"));
+          const checks = report.checks || [];
+          if (report.status !== "PASS" || report.summary?.passed !== 8 || report.summary?.failed !== 0 ||
+              report.consoleErrors?.length !== 0 ||
+              !checks.some(x => x.name.includes("WCAG 2.2") && x.status === "PASS") ||
+              !checks.some(x => x.name.includes("different academy applicant") && x.status === "PASS")) {
+            process.exitCode = 1;
+          }
+          NODE
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: first-client-intake-browser-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/LUMA-firstclient-intake-uiqa-20261014/evidence/first-client-institution-browser-2026-10-14/
+          if-no-files-found: warn
+          retention-days: 14
+
   browser:
     needs: [verify]
     runs-on: ubuntu-latest
@@ -162,7 +397,7 @@ jobs:
           retention-days: 14
 
   deploy:
-    needs: [verify, security, firestore, identity-roles, browser]
+    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
     runs-on: ubuntu-latest
     timeout-minutes: 45

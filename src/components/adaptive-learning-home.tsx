@@ -20,6 +20,7 @@ import { NextActionCard } from "@/components/next-action-card";
 import { ProgressStory } from "@/components/progress-story";
 import { TutorPanel } from "@/components/tutor-panel";
 import { useLumaAuth } from "@/components/auth-provider";
+import { ProgramPicker, useProgramSelection } from "@/components/program-picker";
 import { fetchPersistentLearningPlan, syncPendingLearningEvent } from "@/lib/learning-api-client";
 import { createAdaptiveLearningPlan, parseStoredLearningEvent, parseStoredOnboarding, type AdaptiveLearningPlan } from "@/lib/learner-projection";
 import { evidenceMayUpdateTwin } from "@/lib/simulation-evidence";
@@ -45,7 +46,11 @@ function getServerLearningStorageSnapshot() {
 
 export function AdaptiveLearningHome() {
   const { user, loading } = useLumaAuth();
-  const [remotePlan, setRemotePlan] = useState<{ uid: string; plan: AdaptiveLearningPlan } | null>(null);
+  const selection = useProgramSelection("learner");
+  const programId = selection.status === "entitled" ? selection.programId : null;
+  const [remotePlan, setRemotePlan] = useState<{
+    uid: string; programId: string | null; plan: AdaptiveLearningPlan;
+  } | null>(null);
   const storageSnapshot = useSyncExternalStore(
     subscribeToLearningStorage,
     getLearningStorageSnapshot,
@@ -61,31 +66,58 @@ export function AdaptiveLearningHome() {
 
   useEffect(() => {
     const uid = user?.uid;
-    if (loading || !uid) return;
+    if (loading || !uid ||
+        (selection.status !== "showcase" && !programId)) return;
     let cancelled = false;
     void (async () => {
       try {
         const synced = await syncPendingLearningEvent();
         const persistent = synced ?? await fetchPersistentLearningPlan();
-        if (!cancelled && persistent) setRemotePlan({ uid, plan: persistent });
+        if (!cancelled && persistent) setRemotePlan({ uid, programId, plan: persistent });
       } catch {
         // An available local practice remains usable while persistence is temporarily offline.
       }
     })();
     return () => { cancelled = true; };
-  }, [loading, user?.uid]);
+  }, [loading, user?.uid, programId, selection.status]);
 
-  const persistent = remotePlan && remotePlan.uid === user?.uid ? remotePlan.plan : null;
-  const plan = persistent ?? localProjection.plan;
-  const hasProfile = localProjection.hasOnboarding || Boolean(persistent);
-  const evidenceEvent = localProjection.event && evidenceMayUpdateTwin(localProjection.event)
-    ? localProjection.event : undefined;
+  const persistent = remotePlan && remotePlan.uid === user?.uid &&
+    remotePlan.programId === programId ? remotePlan.plan : null;
+  // Browser-only guest evidence cannot become a paid program's verified state.
+  const entitled = selection.status === "entitled";
+  const plan = persistent ?? (entitled
+    ? createAdaptiveLearningPlan(undefined, undefined)
+    : localProjection.plan);
+  const hasProfile = entitled
+    ? Boolean(persistent)
+    : localProjection.hasOnboarding || Boolean(persistent);
+  const evidenceEvent = !entitled && localProjection.event &&
+    evidenceMayUpdateTwin(localProjection.event) ? localProjection.event : undefined;
   const routeChangeCopy = hasProfile && plan.routeChanged && plan.previousAction
     ? plan.previousAction.title + " → " + plan.nextAction.title
     : undefined;
 
+  if (user && selection.status !== "showcase" &&
+      (selection.status !== "entitled" || !selection.programId)) {
+    return (
+      <AppShell title="Mi aprendizaje" subtitle="Elige el programa para continuar.">
+        <div className={styles.home}>
+          <ProgramPicker audience="learner" selection={selection} />
+        </div>
+      </AppShell>
+    );
+  }
+
+  // The primary practice action remains above the fold on mobile. New
+  // multicourse learners see ONLY the picker until an authorized course is
+  // chosen; afterwards switching courses is a secondary action below the hero.
+  const chosenCourseTitle = selection.courses.find(
+    (course) => course.programId === programId,
+  )?.title;
   return (
-    <AppShell title="Mi aprendizaje" subtitle="Un lugar para aprender, practicar y seguir avanzando.">
+    <AppShell title="Mi aprendizaje" subtitle={chosenCourseTitle
+      ? `Programa actual: ${chosenCourseTitle}`
+      : "Un lugar para aprender, practicar y seguir avanzando."}>
       <div className={styles.home}>
         <section className={styles.intro} aria-labelledby="learner-home-title">
           <div className={styles.introCopy}>
@@ -110,6 +142,8 @@ export function AdaptiveLearningHome() {
           </div>
           <NextActionCard action={plan.nextAction} personalized={hasProfile} variant="hero" />
         </section>
+
+        <ProgramPicker audience="learner" selection={selection} />
 
         {routeChangeCopy && (
           <section className={styles.routeChange} data-testid="route-changed" role="status">
@@ -139,7 +173,7 @@ export function AdaptiveLearningHome() {
           </Link>
         </nav>
 
-        <LiveProgramSchedule />
+        <LiveProgramSchedule activeProgramId={entitled ? programId : undefined} />
 
         <section className={styles.progressArea} aria-label="Avance y evidencia">
           <ProgressStory event={evidenceEvent} nextAction={plan.nextAction} />
@@ -188,7 +222,7 @@ export function AdaptiveLearningHome() {
               <p>LUMA puede ayudarte a encontrar un concepto, examinar un ejemplo o practicar una idea.</p>
             </div>
           </div>
-          <TutorPanel />
+          <TutorPanel key={programId ?? "showcase"} />
         </div>
 
         <footer className={styles.footer}>

@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-10-15T04:55:22.158052+00:00",
+  "sourceBaseSHA": "2328a8d147350113ca2ebf51c2bd4398ba0ab46b",
+  "branch": "fix/coach-program-rbac-20261014",
+  "environment": "sandbox Next.js 16.3.8 webpack production build + demo Firebase Auth/Firestore emulators",
+  "quality": {
+    "eslint": "PASS",
+    "typescript": "PASS",
+    "vitestPassed": 331,
+    "vitestSkipped": 81,
+    "vitestFailed": 0,
+    "build": "PASS",
+    "emulatorChecksPassed": 16,
+    "emulatorChecksFailed": 0,
+    "emulatorProof": "api-results.json",
+    "granite": "PARTIAL_TIMEOUT_120_SECONDS"
+  },
+  "security": {
+    "sameTenantUnassigned": 403,
+    "foreignTenant": 403,
+    "assignedCoach": 200,
+    "tenantAdmin": 200,
+    "reassignmentImmediate": true,
+    "historicalCohortFailClosed": true,
+    "tenantOfferingsAt101": 409
+  },
+  "release": {
+    "status": "NO-GO",
+    "pendingIssues": [
+      55,
+      57,
+      63,
+      64
+    ],
+    "noProductionChanges": true,
+    "noMergeOrDeploy": true
+  }
+}
