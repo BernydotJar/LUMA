@@ -4,10 +4,18 @@ case "${GCLOUD_PROJECT:-}" in demo-*) ;; *) echo REFUSE_NON_DEMO >&2;exit 2;;esa
 case "${FIREBASE_AUTH_EMULATOR_HOST:-}" in 127.0.0.1:*) ;; *) echo REFUSE_NONLOCAL_AUTH >&2;exit 2;;esac
 case "${FIRESTORE_EMULATOR_HOST:-}" in 127.0.0.1:*) ;; *) echo REFUSE_NONLOCAL_DB >&2;exit 2;;esac
 case "$PWD" in */LUMA-firstclient-intake-uiqa-20261014) ;; *) echo REFUSE_NOT_QA_COPY >&2;exit 2;;esac
-if ! grep -q 'QA-only Firebase Auth emulator\|INERT LOCAL TEST OVERLAY' src/lib/firebase-client.ts;then echo REFUSE_UNPATCHED_AUTH >&2;exit 2;fi
+# Verify the actual consolidated dev-only Firebase adapter, not a historic
+# QA patch. Reject any untrusted project or non-loopback auth configuration.
+if ! grep -q 'localQaAuthEnabled' src/lib/firebase-client.ts ||
+   ! grep -q 'NEXT_PUBLIC_LUMA_QA_FIREBASE_PROJECT' src/lib/firebase-client.ts ||
+   ! grep -q 'NEXT_PUBLIC_LUMA_QA_AUTH_EMULATOR_URL' src/lib/firebase-client.ts;then
+  echo REFUSE_UNGUARDED_AUTH >&2;exit 2
+fi
 export GOOGLE_CLOUD_PROJECT="$GCLOUD_PROJECT"
 export LUMA_INSTITUTION_REQUESTS_ENABLED=true
 export NEXT_PUBLIC_LUMA_QA_EMULATOR=true
+export NEXT_PUBLIC_LUMA_QA_FIREBASE_PROJECT="$GCLOUD_PROJECT"
+export NEXT_PUBLIC_LUMA_QA_AUTH_EMULATOR_URL=http://127.0.0.1:9099
 export NODE_ENV=development
 export NEXT_TELEMETRY_DISABLED=1
 if curl -fsS -m 1 -o /dev/null http://127.0.0.1:3194/academia/solicitud 2>/dev/null;then echo QA_PORT_IN_USE >&2;exit 2;fi

@@ -57,3 +57,11 @@
 - Secure independent source review + Graph Harness SHA-bound approval covering **the aggregate changes and all CI/release tooling**. Only after those gates are satisfied and merge-to-main deployment is separately authorized, set GitHub branch protection required checks. Do **not** bypass failing readiness or claim #70 is a Zoom replacement.
 
 The source PRs deliberately remain Draft/NO-GO, and release flags remain disabled. Avoid closing or merging those PRs until a source-bound reviewed integration path is available.
+
+## CI integration repair (follow-up, 2026-10-19)
+
+The first consolidated PR #71 GitHub Action [run 39317435039](https://github.com/BernydotJar/LUMA/actions/runs/39317435039) failed exclusively at `institution-browser` preparation: the historic #66 `emulator-auth-overlay.patch` no longer applied to `src/lib/firebase-client.ts` after #50 introduced guarded local emulator support. The old patch was a development-only fixture from another source snapshot, not product code.
+
+The browser job now checks that the consolidated Firebase adapter and app layout retain their **development-only** and **demo-project-only** guards, then creates the temporary QA login and scripts inside the isolated worktree **without overwriting product code**. The browser gate configures `NEXT_PUBLIC_LUMA_QA_FIREBASE_PROJECT=demo-*` and `NEXT_PUBLIC_LUMA_QA_AUTH_EMULATOR_URL=http://127.0.0.1:9099`, and the test login rejects contexts not satisfying `localQaAuthEnabled`. The runner also checks that its environment matches the demo project and loopback emulator endpoint. No source-approval, production-secret or deployment gate is bypassed.
+
+An independently reattested source revision and all customer product-acceptance gates remain mandatory.
