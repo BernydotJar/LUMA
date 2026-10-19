@@ -1,0 +1,215 @@
+{
+  "checkedAt": "2026-10-14T07:02:12.170Z",
+  "sourceCommit": "7ef32ba9ff3c56896da536a86ca14286b99ddfb3",
+  "baseUrl": "http://127.0.0.1:3184",
+  "mode": "synthetic guest browser, production Next build on loopback; no real customer identity",
+  "tests": [
+    {
+      "id": "CLIENT-001 first contact and clear destination",
+      "status": "PASS",
+      "durationMs": 1836,
+      "expectedOutcome": "guest can reach learning home and practice",
+      "http": 200,
+      "landed": "/learn",
+      "primaryPracticeLinks": 1,
+      "links": [
+        {
+          "label": "Accede para personalizar tu experiencia",
+          "href": "/login"
+        },
+        {
+          "label": "Elige lo que quieres desarrollar",
+          "href": "/onboarding"
+        },
+        {
+          "label": "Empezar práctica · 12 min",
+          "href": "/learn/session/pas"
+        },
+        {
+          "label": "Explora tu programaExperiencias y prácticas",
+          "href": "/learn/experiences"
+        },
+        {
+          "label": "Consulta tu rutaObjetivo y próximos pasos",
+          "href": "/learn#journey"
+        },
+        {
+          "label": "Pregunta a LUMAOrientación sobre el material",
+          "href": "/learn#luma"
+        },
+        {
+          "label": "Iniciar práctica",
+          "href": "/learn/session/pas"
+        },
+        {
+          "label": "Ver todas",
+          "href": "/learn/experiences"
+        },
+        {
+          "label": "Abrir práctica",
+          "href": "/learn/experience/congruencia-tres-canales"
+        },
+        {
+          "label": "Abrir práctica",
+          "href": "/learn/experience/calibracion-observar-antes-de-interpretar"
+        },
+        {
+          "label": "Abrir práctica",
+          "href": "/learn/experience/niveles-logicos-donde-intervenir"
+        },
+        {
+          "label": "Ver programa",
+          "href": "/learn/experiences"
+        },
+        {
+          "label": "Definir mi objetivo",
+          "href": "/onboarding"
+        },
+        {
+          "label": "Mis certificados",
+          "href": "/learn/certificates"
+        }
+      ]
+    },
+    {
+      "id": "CLIENT-002 identity first-time and institution sign-up",
+      "status": "PASS",
+      "durationMs": 365,
+      "expectedOutcome": "new admin understands entry point and registration",
+      "googleButton": 1,
+      "institutionRegistrationActions": 0,
+      "createOrganizationForm": 0
+    },
+    {
+      "id": "LEARNER-001 initial goal onboarding",
+      "status": "PASS",
+      "durationMs": 2640,
+      "expectedOutcome": "new learner can choose goal, diagnostic, time and start",
+      "url": "/learn",
+      "goalPersistedInBrowser": "emotions",
+      "backendProof": false,
+      "localStorageKeys": [
+        "luma-onboarding"
+      ]
+    },
+    {
+      "id": "LEARNER-002 catalog discovery",
+      "status": "PASS",
+      "durationMs": 767,
+      "expectedOutcome": "learner can find practices and course catalog",
+      "titles": [
+        "Congruencia: tres canales, un mensaje",
+        "Calibración: observar antes de interpretar",
+        "Rapport: crear sintonía con respeto",
+        "P.A.S.: detectar y reformular",
+        "Niveles lógicos: elegir dónde intervenir",
+        "Creencias: separar evidencia e interpretación",
+        "Valores e identidad: alinear lo que importa con cómo actúas"
+      ],
+      "linkCount": 7,
+      "links": [
+        "/learn/experience/congruencia-tres-canales",
+        "/learn/experience/calibracion-observar-antes-de-interpretar",
+        "/learn/experience/rapport-sintonia-con-respeto",
+        "/learn/experience/pas-detectar-y-reformular",
+        "/learn/experience/niveles-logicos-donde-intervenir",
+        "/learn/experience/creencias-evidencia-e-interpretacion",
+        "/learn/experience/valores-identidad-y-eleccion"
+      ],
+      "tenantProgramSelector": 0
+    },
+    {
+      "id": "LEARNER-003 practice evidence and within-session restore",
+      "status": "PASS",
+      "durationMs": 1760,
+      "expectedOutcome": "practice works, receipt exists, local persistence survives reload",
+      "eventType": "SIMULATION_COMPLETED",
+      "sameBrowserPersists": true,
+      "anonymousServerPlanStatus": 401,
+      "backendEvidenceNotProven": true
+    },
+    {
+      "id": "LEARNER-004 ask LUMA a question",
+      "status": "PASS",
+      "durationMs": 2232,
+      "expectedOutcome": "learner receives evidence-based response or explicit fallback",
+      "containsRelevantTerms": true,
+      "lastText": "te?\n\nMódulo 3 · sección Comunicación emocional / P.A.S. · 92%\nConexión curricular aprobada\nP.A.S. vuelve observable la cadena pensamiento–emoción–acción y permite convertirla en práctica de transferencia.\n2 fuentes · reflection-pas-loop\nAyúdame a identificar un P.A.S.\n¿Por qué me recomiendas esta práctica?\nDame un ejemplo de niveles lógicos\nPregunta a LUMA\n\nLas respuestas importantes muestran su fuente. Tu progreso cambia sólo cuando aparece evidencia.\n\nLUMA · Aprendizaje con propósito y evidencia.\nMis certificados",
+      "inputRemains": 1
+    },
+    {
+      "id": "OWNER-001 admin programs access control",
+      "status": "PASS",
+      "durationMs": 1806,
+      "expectedOutcome": "program creation must require authorized organization admin",
+      "guestGateVisible": true,
+      "technicalInputsVisible": 0
+    },
+    {
+      "id": "OWNER-002 enrollments and bulk imports access control",
+      "status": "PASS",
+      "durationMs": 2026,
+      "expectedOutcome": "admissions and bulk import require authorized tenant operator",
+      "guestGateText": "OPERACIÓN INSTITUCIONAL\nGestiona la admisión con identidad, vigencia y evidencia.\n\nPara invitaciones, becas o acuerdos externos. Las compras por Hotmart y Stripe conservan su flujo independiente; aquí no se crea una venta ficticia.\n\nInicia sesión como administrador autorizado para inscribir participantes.",
+      "bulkImportVisible": 0
+    },
+    {
+      "id": "COACH-001 follow-up entry and boundaries",
+      "status": "PASS",
+      "durationMs": 846,
+      "expectedOutcome": "coach view shows authorized access requirement, no fabricated learner data",
+      "requiresLogin": true,
+      "signInCTA": 1
+    },
+    {
+      "id": "SUPPORT-001 support case surface",
+      "status": "PASS",
+      "durationMs": 362,
+      "expectedOutcome": "identify genuine ticketing availability",
+      "urlSupportStatus": 404,
+      "urlTicketsStatus": 404,
+      "helpLinkCount": 0,
+      "capability": "NOT_FOUND_IN_CURRENT_PRODUCT"
+    },
+    {
+      "id": "AUTOMATION-001 follow-up automation surface",
+      "status": "PASS",
+      "durationMs": 349,
+      "expectedOutcome": "identify real scheduling/notification workflow availability",
+      "automationUIStatus": 404,
+      "automationAPIStatus": 404,
+      "userCanScheduleFollowup": false,
+      "capability": "NOT_FOUND_IN_CURRENT_PRODUCT"
+    },
+    {
+      "id": "INSTITUTION-001 organization onboarding API feature gate",
+      "status": "PASS",
+      "durationMs": 21,
+      "expectedOutcome": "institution provisioning is consciously disabled, not self-serve",
+      "http": 503,
+      "error": "feature_unavailable",
+      "disabledByDefault": true
+    },
+    {
+      "id": "MOBILE-001 first-time learner entry",
+      "status": "PASS",
+      "durationMs": 1308,
+      "expectedOutcome": "mobile CTA and navigation reachable",
+      "ctaHeightPx": 49,
+      "clearancePx": 64.25,
+      "overflowPx": 0,
+      "ctaLabel": "Empezar práctica · 12 min"
+    }
+  ],
+  "summary": {
+    "pass": 13,
+    "fail": 0,
+    "blockedClientCapabilities": [
+      "self_serve_institution_setup",
+      "end_user_ticketing",
+      "outbound_followup_automation",
+      "authenticated_admin_and_coach_browser_without_approved_qa_identities"
+    ],
+    "pageErrors": []
+  }
+}
