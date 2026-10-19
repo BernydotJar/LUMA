@@ -1,0 +1,45 @@
+{
+  "kind": "LUMA_COURSE_DELIVERY_TECHNICAL_QUALITY",
+  "date": "2026-10-19",
+  "codeBranch": "feat/learner-lifecycle-p0-20261013",
+  "commit": null,
+  "local": {
+    "lint": "PASS",
+    "typescript": "PASS",
+    "vitestPassed": 320,
+    "vitestSkipped": 85,
+    "vitestFailed": 0,
+    "firestoreEmulatorPassed": 54,
+    "firestoreEmulatorFailed": 0,
+    "courseLifecycleEmulatorPassed": 3,
+    "syntheticCourseE2EPassed": 15,
+    "syntheticCourseE2EFailed": 0,
+    "automatedWcag21AaViolations": 0,
+    "desktopMobileGuestPassed": 7,
+    "desktopMobileGuestSkipped": 1,
+    "optimizedWebpackBuild": "PASS",
+    "mobileAndDesktopPrimaryAboveFold": true,
+    "horizontalOverflow": false,
+    "adversarialDraftsBeforeApproved": 55
+  },
+  "evidence": {
+    "localTestLog": "/tmp/luma-course-quality-20261019.log",
+    "syntheticBrowser": "evidence/learner-lifecycle-20261013/course-delivery-synthetic-e2e-20261019.json",
+    "critic": "evidence/learner-lifecycle-20261013/course-delivery-critic-20261019.json",
+    "mobileScreenshot": "evidence/learner-lifecycle-20261013/course-delivery-mobile-20261019.jpg",
+    "desktopScreenshot": "evidence/learner-lifecycle-20261013/course-delivery-desktop-20261019.jpg"
+  },
+  "assurance": {
+    "mediaBucketConfigured": false,
+    "realVideoPlaybackVerified": false,
+    "publicationRightsVerified": false,
+    "videoCaptionsVerified": false,
+    "manualA11yVerified": false,
+    "fieldCWVVerified": false,
+    "realHotmartCheckoutVerified": false,
+    "authorizationAndCheckpointEmulatorVerified": true,
+    "CIAtNewSha": "PENDING"
+  },
+  "release": "NO-GO",
+  "codeScope": "lesson catalog, scoped media lease, authorized UID checkpoint, natural learner UI and regression tests; no publisher implementation or customer media"
+}

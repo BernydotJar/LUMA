@@ -217,7 +217,14 @@
       },
       "allowed_paths": [
         "src/app/learn/**",
-        "src/lib/program-**"
+        "src/lib/program-**",
+        "src/lib/course-**",
+        "src/app/api/learning/course/**",
+        "src/components/course-lesson-**",
+        "e2e/course-delivery.spec.ts",
+        ".github/workflows/quality.yml",
+        "docs/product-experience-hardening/COURSE_DELIVERY_KERNEL_20261013.md",
+        "evidence/learner-lifecycle-20261013/course-delivery-*"
       ],
       "metadata": {
         "priority": "P1",

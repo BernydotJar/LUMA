@@ -66,7 +66,7 @@ export function CourseEnrollmentStatus() {
 
   return <div className={styles.notice} data-status="active" data-testid="active-course-access">
     <BookOpenCheck size={19} aria-hidden="true" />
-    <span><strong>Tu curso · {access.names[0]}</strong> <small>Matrícula activa{access.names.length > 1 ? ` · ${access.names.length} programas` : ""}. Puedes continuar con tus prácticas.</small></span>
-    <Link href="/learn/experiences">Ir al programa <ArrowRight size={15} /></Link>
+    <span><strong>Tu curso · {access.names[0]}</strong> <small>Matrícula activa{access.names.length > 1 ? ` · ${access.names.length} programas` : ""}. Tus lecciones y prácticas disponibles están aquí.</small></span>
+    <Link href="/learn/course">Mis lecciones <ArrowRight size={15} /></Link>
   </div>;
 }
