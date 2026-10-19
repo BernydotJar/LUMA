@@ -95,7 +95,8 @@ jobs:
           src/lib/commerce/institutional-grant.emulator.test.ts
           src/lib/program-delivery.emulator.test.ts
           src/lib/learning-store.emulator.test.ts
-          src/lib/live-classroom-attendance.emulator.test.ts"
+          src/lib/live-classroom-attendance.emulator.test.ts
+          src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.emulator.test.ts"
 
   identity-roles:
     runs-on: ubuntu-latest

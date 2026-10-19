@@ -23,6 +23,8 @@ export async function signClassroomJoinToken(input: {
     roomAdmin: false,
     roomRecord: false,
     canPublishData: true,
+    // Hand gestures go through authenticated LUMA APIs; prevent client role/attribute spoofing.
+    canUpdateOwnMetadata: false,
     canSubscribe: true,
     canPublishSources: input.role === "instructor"
       ? [

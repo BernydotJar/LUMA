@@ -20,6 +20,7 @@ describe("LUMA media token permissions", () => {
     expect(claim.video?.roomCreate).toBe(false);
     expect(claim.video?.roomAdmin).toBe(false);
     expect(claim.video?.roomRecord).toBe(false);
+    expect(claim.video?.canUpdateOwnMetadata).toBe(false);
     expect(claim.video?.canPublishSources).toContain("camera");
     expect(claim.video?.canPublishSources).toContain("microphone");
     expect(claim.video?.canPublishSources).not.toContain("screen_share");
@@ -36,6 +37,7 @@ describe("LUMA media token permissions", () => {
     expect(claim.video?.canPublishSources).toContain("screen_share_audio");
     expect(claim.video?.roomRecord).toBe(false);
     expect(claim.video?.roomAdmin).toBe(false);
+    expect(claim.video?.canUpdateOwnMetadata).toBe(false);
   });
 });
 

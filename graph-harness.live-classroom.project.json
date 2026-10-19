@@ -48,6 +48,25 @@
         "production"
       ],
       "blocking": true
+    },
+    {
+      "id": "edu-controls-contract",
+      "required_evidence_kinds": [
+        "api-contract",
+        "security",
+        "unit",
+        "a11y"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "edu-controls-live-provider",
+      "required_evidence_kinds": [
+        "livekit",
+        "browser",
+        "production"
+      ],
+      "blocking": true
     }
   ],
   "nodes": [
@@ -178,6 +197,59 @@
       "metadata": {
         "scope": "Seres de Excelencia Live Classroom",
         "required": "evidence per customer action and runtime SHA before release"
+      }
+    },
+    {
+      "id": "LIVE-AC-006",
+      "kind": "live-teaching-ui",
+      "title": "Teacher hand acknowledgement, learner hand toggle, mute-all actual UI and SDK actions",
+      "status": "ready",
+      "depends_on": [
+        "LIVE-AC-002"
+      ],
+      "capability": "product+security+browser",
+      "gates": {
+        "done": [
+          "edu-controls-contract"
+        ]
+      },
+      "allowed_paths": [
+        "src/components/live-classroom.*",
+        "src/app/api/live/classrooms/**",
+        "src/lib/live-classroom*",
+        "docs/enterprise/**",
+        "e2e/**",
+        "evidence/live-classroom-acceptance/**"
+      ],
+      "metadata": {
+        "quality": "NO_GO until real provider and runtime deployment proof"
+      }
+    },
+    {
+      "id": "LIVE-AC-007",
+      "kind": "live-teaching-e2e",
+      "title": "Multi-user teacher and learner LiveKit controls, permission/revocation, connection recovery",
+      "status": "blocked",
+      "depends_on": [
+        "LIVE-AC-006",
+        "LIVE-AC-003"
+      ],
+      "capability": "product+security+browser",
+      "gates": {
+        "done": [
+          "edu-controls-live-provider"
+        ]
+      },
+      "allowed_paths": [
+        "src/components/live-classroom.*",
+        "src/app/api/live/classrooms/**",
+        "src/lib/live-classroom*",
+        "docs/enterprise/**",
+        "e2e/**",
+        "evidence/live-classroom-acceptance/**"
+      ],
+      "metadata": {
+        "quality": "NO_GO until real provider and runtime deployment proof"
       }
     }
   ]

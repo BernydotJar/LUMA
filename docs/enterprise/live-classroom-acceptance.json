@@ -224,6 +224,30 @@
         "journey": "operations:incident-rollback:journey",
         "production": "operations:incident-rollback:production"
       }
+    },
+    {
+      "id": "learner:raise-hand",
+      "persona": "learner",
+      "outcome": "Raise and lower a hand during a real connected class; instructor observes state and learner can reverse it",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "learner:raise-hand:implementation",
+        "ui": "learner:raise-hand:ui",
+        "journey": "learner:raise-hand:journey",
+        "production": "learner:raise-hand:production"
+      }
+    },
+    {
+      "id": "instructor:acknowledge-hand",
+      "persona": "instructor",
+      "outcome": "Identify learners with raised hands and acknowledge them with server-side role and identity authorization",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "instructor:acknowledge-hand:implementation",
+        "ui": "instructor:acknowledge-hand:ui",
+        "journey": "instructor:acknowledge-hand:journey",
+        "production": "instructor:acknowledge-hand:production"
+      }
     }
   ],
   "workflows": [
@@ -246,7 +270,8 @@
         "instructor:share-screen",
         "instructor:moderate-class",
         "instructor:teaching-controls",
-        "instructor:end-for-everyone"
+        "instructor:end-for-everyone",
+        "instructor:acknowledge-hand"
       ]
     },
     {
@@ -257,7 +282,8 @@
         "learner:device-preflight",
         "learner:join-live-media",
         "learner:bottom-controls",
-        "learner:reconnect"
+        "learner:reconnect",
+        "learner:raise-hand"
       ]
     },
     {

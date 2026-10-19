@@ -5,6 +5,7 @@ import { commerceEnrollments } from "./commerce/server";
 import { programDeliveryStore } from "./program-delivery-server";
 import {
   classroomAdmission,
+  classroomControlAdmission,
   classroomCapacity,
   classroomDisplayName,
   classroomParticipantId,
@@ -75,6 +76,7 @@ export async function authorizeClassroom(
   offeringId: string,
   sessionId: string,
   now = new Date(),
+  options: { allowOvertime?: boolean } = {},
 ): Promise<AuthorizedClassroom> {
   const data = await programDeliveryStore.getClassroomSession(offeringId, sessionId);
   if (!data) throw new ClassroomError("classroom_not_found", 404);
@@ -94,7 +96,9 @@ export async function authorizeClassroom(
   }
   if (!role) throw new ClassroomError("classroom_access_denied", 403);
 
-  const admission = classroomAdmission(offering, session, now.getTime());
+  const admission = options.allowOvertime
+    ? classroomControlAdmission(offering, session, now.getTime())
+    : classroomAdmission(offering, session, now.getTime());
   if (admission === "closed") throw new ClassroomError("classroom_closed", 409);
   if (admission === "not_open") throw new ClassroomError("classroom_not_open", 409);
 
