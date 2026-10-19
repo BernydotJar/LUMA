@@ -1,0 +1,95 @@
+{
+  "kind": "CSS-only visual fixture; NOT live-provider E2E",
+  "cases": [
+    {
+      "within": true,
+      "tilesClear": true,
+      "minHitTarget": true,
+      "pageOverflow": false,
+      "blur": "blur(24px) saturate(1.35)",
+      "background": "rgba(24, 25, 36, 0.87)",
+      "buttons": [
+        {
+          "label": "Activar micrófono",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Activar cámara",
+          "width": 69,
+          "height": 44
+        },
+        {
+          "label": "Compartir pantalla",
+          "width": 84,
+          "height": 44
+        },
+        {
+          "label": "Abrir chat",
+          "width": 47,
+          "height": 44
+        },
+        {
+          "label": "Configurar dispositivos",
+          "width": 65,
+          "height": 44
+        },
+        {
+          "label": "Salir de la clase",
+          "width": 45,
+          "height": 44
+        }
+      ],
+      "barBottom": 18,
+      "barTop": 675,
+      "stageBottom": 759,
+      "name": "desktop",
+      "pass": true
+    },
+    {
+      "within": true,
+      "tilesClear": true,
+      "minHitTarget": true,
+      "pageOverflow": false,
+      "blur": "blur(24px) saturate(1.35)",
+      "background": "rgba(24, 25, 36, 0.87)",
+      "buttons": [
+        {
+          "label": "Activar micrófono",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Activar cámara",
+          "width": 69,
+          "height": 44
+        },
+        {
+          "label": "Compartir pantalla",
+          "width": 84,
+          "height": 44
+        },
+        {
+          "label": "Abrir chat",
+          "width": 47,
+          "height": 44
+        },
+        {
+          "label": "Configurar dispositivos",
+          "width": 65,
+          "height": 44
+        },
+        {
+          "label": "Salir de la clase",
+          "width": 45,
+          "height": 44
+        }
+      ],
+      "barBottom": 10,
+      "barTop": 523,
+      "stageBottom": 644,
+      "name": "mobile",
+      "pass": true
+    }
+  ]
+}
