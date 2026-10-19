@@ -32,6 +32,7 @@ const adminAuth = getAuth(app);
 const runId = randomUUID().slice(0, 12);
 const buyerEmail = "qa-hotmart-" + runId + "@example.test";
 const productExternalId = "hotmart-pnl-" + runId;
+const offeringId = "qa-hotmart-cohort-" + runId;
 const transaction = "QA-HP-" + runId;
 const beforePurchase = Date.now() - 10000;
 const report = {
@@ -157,6 +158,18 @@ try {
   const foreignCoach = await createQaAccount("foreign-coach", {
     coach: true, coachTenantIds: ["qa-other-tenant"],
   });
+  const unassignedCoach = await createQaAccount("unassigned-coach", {
+    coach: true, coachTenantIds: [tenant],
+  });
+  // A tenant-level coach role is not sufficient for access to student evidence.
+  // Seed an active, explicitly assigned QA offering before the Hotmart purchase.
+  const now = new Date().toISOString();
+  await firestore.collection("programOfferings").doc(offeringId).set({
+    offeringId, tenantId: tenant, programId: program,
+    cohortKey: "qa-hotmart-cohort", title: "Practitioner PNL (QA simulated)",
+    deliveryMode: "asynchronous", timezone: "America/Guatemala",
+    status: "active", coachIds: [coach.uid], createdAt: now, updatedAt: now,
+  });
   console.log("QA_FIXTURES_CREATED (emulator only, no user identifiers logged)");
 
   const noAuth = await http("/api/learning/plan");
@@ -173,6 +186,7 @@ try {
     tenantId: tenant,
     productId: program,
     programId: program,
+    offeringId,
     active: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -288,7 +302,13 @@ try {
   const coachList = await http("/api/coach/learners", { token: coach.token });
   check(coachList.status === 200 &&
     coachList.body.learners?.some((row) => row.learnerId === buyer.uid),
-    "tenant-scoped coach can find enrolled learner");
+    "offering-assigned coach can find enrolled learner");
+  const unassigned = await http("/api/coach/learners/" + encodeURIComponent(buyer.uid), {
+    token: unassignedCoach.token, headers: { "x-luma-program-id": program },
+  });
+  check(unassigned.status === 403,
+    "same-tenant coach without offering assignment cannot see paid learner");
+  report.security.unassignedCoachDenied = unassigned.status;
   const coachDetail = await http("/api/coach/learners/" + encodeURIComponent(buyer.uid), {
     token: coach.token,
   });
