@@ -88,6 +88,13 @@ export class FirestoreAcademyApprovalStore {
       }
       let reservation;
       let existingInvite;
+      if (decision.action === "reject" || decision.action === "revoke_invitation") {
+        // Activation and rejection must contend on the same document. Otherwise
+        // rejection could race AFTER Auth claims were granted but BEFORE the
+        // activation finalization transaction, leaving an active rejected tenant.
+        const activation = await tx.get(this.db.collection("institutionActivationIntents").doc(applicationId));
+        if (activation.exists) throw new Error("REVIEW_ACTIVATION_IN_PROGRESS");
+      }
       if (decision.action === "screen") {
         const target = decision.tenantId;
         reservation = this.reserveRef(target);

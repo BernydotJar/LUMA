@@ -10,7 +10,7 @@
 
 | Gate | Result | Evidence |
 |---|---|---|
-| HTTP Auth + Firestore E2E | **19 PASS / 0 fail / 0 skip** | [`api-results.json`](./api-results.json); `scripts/qa/first-client-approval-gate.sh`, actual local Next production build |
+| HTTP Auth + Firestore E2E | **20 PASS / 0 fail / 0 skip** | [`api-results.json`](./api-results.json); `scripts/qa/first-client-approval-gate.sh`, actual local Next production build |
 | Chromium authenticated journey | **13 PASS / 0 fail / 0 skip** | [`browser/results.json`](./browser/results.json) and [`browser/screenshots/`](./browser/screenshots/); QA-only local Auth overlay, never part of main source |
 | Responsive matrix | **36 observations PASS** across 320×568, 360×740, 390×844, 428×926, 768×1024, 1440×900, three themes, owner and operator | Chromium scenario 13: no horizontal overflow; visible interactive targets meet 44×44 px geometry |
 | axe automated accessibility | **0 detected violations** across Seres de Excelencia, Light, Dark on operator desktop/mobile and owner first-course mobile | Chromium scenarios 4, 6, 11; WCAG 2.2 A/AA tagged rules |
@@ -33,6 +33,7 @@
 9. Attempted second applicant reservation of same tenant → **409**. Invitation renewal invalidates former proof, explicit revocation releases slug. Thirteenth invalid invitation acceptance attempt by same actor within 15 minutes → **429**.
 10. Retention purge defaults read-only; an expired, unactivated synthetic request is only deleted after explicit confirmation and leaves an audit receipt. Active tenant remains present.
 11. **Forged operator UID is rejected:** the operator-admin tools now require a signed, unrevoked Firebase ID token matching the exact declared operator identity, verified email and superuser role. Missing token, foreign signed token and spoofed operator identity fail before any privileged mutation (HTTP emulator E2E scenario 19).
+12. **Activation-vs-rejection race guarded:** once a durable activation intent is present, even an authorized reviewer cannot reject or revoke the accepted invitation until the activation is manually reconciled. Both writes return **409** (emulator E2E scenario 20).
 
 ## Visual evidence / screenshots
 

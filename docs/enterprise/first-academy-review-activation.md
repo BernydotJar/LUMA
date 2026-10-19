@@ -52,6 +52,8 @@ node scripts/activate-first-academy.mjs \
   --plan-sha REVIEWED_64_HEX_HASH
 ```
 
+A reviewer attempting to reject or revoke an invitation after any durable activation intent is created receives a transactional **409 conflict**. The review action reads the intent in the same Firestore transaction so it races safely against intent creation; an operator must reconcile any partially failed role grant manually before reversing an accepted application.
+
 Once the role is applied, the owner must re-authenticate for a fresh Firebase ID token. Another authorized platform operator initializes the first draft with POST `/api/platform/institution-applications/{id}/bootstrap`; this uses the existing `FirestoreInstitutionDraftStore` and the previously reviewed `initialProgramId`. The new owner can edit draft brand/timezone-independent metadata and create the first course cohort through `/academia/primer-curso` without typing technical tenant IDs. **A cohort in status `draft` is not published learning content.** This deliberately does not bypass #57 authoring and publication review or #63 cohort evidence provenance.
 
 ## Security, abuse prevention, privacy retention
@@ -64,6 +66,6 @@ Once the role is applied, the owner must re-authenticate for a fresh Firebase ID
 
 ## Independent QA
 
-Automated Next production-build HTTP suite `scripts/qa/first-client-approval-journey.mjs` (19 scenarios, including forged/missing operator token denials) exercises actual Firebase Auth/Firestore Emulator identities and role lifecycle. `evidence/first-client-approval-2026-10-18/api-results.json` contains the sanitized scenario receipt (no raw invitation token, password or Auth ID token). Admin role grant occurs only against the `demo-` emulator project; test users are removed and Firestore data discarded. Browser screenshots and axe/manual audit are separate gates.
+Automated Next production-build HTTP suite `scripts/qa/first-client-approval-journey.mjs` (20 scenarios, including signed operator impersonation and revocation/activation race denials) exercises actual Firebase Auth/Firestore Emulator identities and role lifecycle. `evidence/first-client-approval-2026-10-18/api-results.json` contains the sanitized scenario receipt (no raw invitation token, password or Auth ID token). Admin role grant occurs only against the `demo-` emulator project; test users are removed and Firestore data discarded. Browser screenshots and axe/manual audit are separate gates.
 
 **Release NO-GO:** despite proving the first admin can enter and prepare a cohort, publishing actual lessons, practices, questions and validated evidence is still blocked by #57 and #63. Do not merge, deploy, enable institutional flags or contact real applicants without explicit release approval and an independently reviewed production-like tenant test.

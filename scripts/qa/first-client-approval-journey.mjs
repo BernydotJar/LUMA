@@ -70,6 +70,22 @@ try{
     /PLATFORM_OPERATOR_TOKEN_IDENTITY_MISMATCH/);
   return {operatorUidImpersonationDenied:true,missingTokenDenied:true,purgeOperatorBoundToJwt:true};
  });
+ await check('20 activation intent blocks concurrent rejection or invitation revocation',async()=>{
+  const target=await actor('activation-race');const jwt=await token(target);
+  const pending=status(await req('POST','/api/institutions/applications',jwt,{...form,organizationName:'Race Test Academy'}),201);
+  const id=pending.application.applicationId;
+  status(await req('POST',path(id),ta,decision('screen','received',{tenantId:'qa-activation-race',initialProgramId:'race-intro'})),200);
+  const invitation=status(await req('POST',path(id),tb,decision('invite','in_review')),201);
+  status(await accept(id,invitation.oneTimeToken,jwt),200);
+  await db.collection('institutionActivationIntents').doc(id).create({state:'intent',operatorUid:A.uid,
+    applicationId:id,createdAt:new Date().toISOString()});
+  status(await req('POST',path(id),ta,decision('reject','invitation_accepted')),409);
+  status(await req('POST',path(id),tb,decision('revoke_invitation','invitation_accepted')),409);
+  const saved=(await db.collection('institutionApplications').doc(id).get()).data();
+  assert.equal(saved.status,'invitation_accepted');
+  assert.equal((await db.collection('institutionOnboardingInvitations').doc(id).get()).data().status,'accepted');
+  return {rejectionAfterActivationIntent:409,revocationAfterActivationIntent:409,noPartialRejection:true};
+ });
 }catch(e){report.error=String(e.stack||e).slice(0,2000)}finally{
  report.status=report.error?'FAIL':'PASS';report.summary={passed:report.checks.filter(x=>x.result==='PASS').length,failed:report.checks.filter(x=>x.result==='FAIL').length};
  let cleanupFailures=0;for(const user of users){try{await auth.deleteUser(user.uid)}catch{cleanupFailures++;}}

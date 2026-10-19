@@ -60,7 +60,8 @@ export function approvalError(error: unknown) {
   if (code === "INVITATION_EXPIRED") return reply({ error: "invitation_expired" }, 410);
   if (code === "INVITATION_INVALID") return reply({ error: "invalid_invitation" }, 403);
   if (["REVIEW_STATE_CONFLICT", "REVIEW_TENANT_TAKEN", "REVIEW_INVITATION_CONFLICT",
-       "REVIEW_RESERVATION_INVALID", "REVIEW_RECORD_INVALID"].includes(code)) {
+       "REVIEW_RESERVATION_INVALID", "REVIEW_RECORD_INVALID",
+       "REVIEW_ACTIVATION_IN_PROGRESS"].includes(code)) {
     return reply({ error: "review_conflict" }, 409);
   }
   if (code === "REVIEW_PAGE_INVALID" || code === "REVIEW_ID_INVALID" ||

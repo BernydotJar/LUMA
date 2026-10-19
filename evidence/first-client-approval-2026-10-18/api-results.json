@@ -161,10 +161,19 @@
         "missingTokenDenied": true,
         "purgeOperatorBoundToJwt": true
       }
+    },
+    {
+      "id": "20 activation intent blocks concurrent rejection or invitation revocation",
+      "result": "PASS",
+      "detail": {
+        "rejectionAfterActivationIntent": 409,
+        "revocationAfterActivationIntent": 409,
+        "noPartialRejection": true
+      }
     }
   ],
   "summary": {
-    "passed": 19,
+    "passed": 20,
     "failed": 0
   },
   "cleanup": "All synthetic identities removed; demo emulator records discarded"

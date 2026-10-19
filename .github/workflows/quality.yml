@@ -279,9 +279,9 @@ jobs:
           const fs = require("node:fs");
           const report = JSON.parse(fs.readFileSync("evidence/first-client-approval-2026-10-18/api-results.json", "utf8"));
           const observed = new Set(report.checks?.filter(x => x.result === "PASS").map(x => x.id) || []);
-          if (report.status !== "PASS" || report.summary?.passed !== 19 ||
+          if (report.status !== "PASS" || report.summary?.passed !== 20 ||
               report.summary?.failed !== 0 || report.sourceSha !== process.env.GITHUB_SHA ||
-              !["05", "09", "11", "12", "14", "15", "16", "18", "19"].every(n =>
+              !["05", "09", "11", "12", "14", "15", "16", "18", "19", "20"].every(n =>
                 [...observed].some(x => x.startsWith(n + " ")))) {
             process.exitCode = 1;
           }
