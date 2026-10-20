@@ -25,7 +25,11 @@ describe("LUMA media token permissions", () => {
     expect(claim.video?.canPublishSources).toContain("microphone");
     expect(claim.video?.canPublishSources).not.toContain("screen_share");
     const jwtTime = JSON.parse(Buffer.from(signed.split(".")[1], "base64url").toString("utf8")) as { exp: number; nbf: number };
-    expect(jwtTime.exp - jwtTime.nbf).toBe(90);
+    // SDK JWT nbf/exp may round on different second boundaries in CI.
+    // Prove a bounded short-lived token, not an exact integer delta of 90.
+    const lifetime = jwtTime.exp - jwtTime.nbf;
+    expect(lifetime).toBeGreaterThanOrEqual(88);
+    expect(lifetime).toBeLessThanOrEqual(90);
     await expect(new TokenVerifier("WRONG_KEY", apiSecret).verify(signed)).rejects.toThrow();
   });
   it("permits an assigned instructor to share screen but never administer or record a room", async () => {
