@@ -2,10 +2,13 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "efc1c6b8-4813-4537-8b26-38413b308a44",
-  "event_count": 685,
+  "last_event_id": "6fd7480e-3270-444e-a8fc-82b6eaa26481",
+  "event_count": 692,
   "ready_nodes": [
-    "LUMA-036-liquid-glass-refraction-v2"
+    "LUMA-036-liquid-glass-refraction-v2",
+    "LUMA-070-program-entry-assessment",
+    "LUMA-071-contextual-learning-assistant",
+    "LUMA-075-cohort-peer-learning-evaluation"
   ],
   "nodes": [
     {
@@ -1507,6 +1510,128 @@
         "a08497d8-eb0c-44df-b809-946d8d2f3b30",
         "c6d9f7d4-b40b-42ec-b86e-ea03a68d2759"
       ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-069-learning-surface-inventory",
+      "kind": "product-research",
+      "title": "Role-separated UI surface inventory and Platzi learning-pattern gap map",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-049-class-intelligence-release"
+      ],
+      "capability": "learning-ui-information-architecture",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "3eba0b14-ddac-46a2-8303-19f16ba04e6e",
+        "efd917be-e0bf-425b-a789-e25a6243a782"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-070-program-entry-assessment",
+      "kind": "product-surface",
+      "title": "Program-level capability assessment and adaptive starting point",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-069-learning-surface-inventory"
+      ],
+      "capability": "program-adaptive-entry",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-071-contextual-learning-assistant",
+      "kind": "ai-learning-capability",
+      "title": "Contextual learning assistant scoped by class objective, capability, learner state and sources",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-069-learning-surface-inventory"
+      ],
+      "capability": "contextual-learning-assistant",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-072-generalized-simulation-runtime",
+      "kind": "ai-learning-capability",
+      "title": "Generalized real-world simulation, criterion feedback, remediation and replay beyond P.A.S.",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-070-program-entry-assessment",
+        "LUMA-071-contextual-learning-assistant"
+      ],
+      "capability": "scenario-practice-runtime",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-073-class-runtime-ui",
+      "kind": "product-surface",
+      "title": "Unified adult class runtime from objective to diagnostic, practice, evidence, transfer and recheck",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-070-program-entry-assessment",
+        "LUMA-072-generalized-simulation-runtime"
+      ],
+      "capability": "class-runtime-experience",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-074-organizational-learning-map",
+      "kind": "product-surface",
+      "title": "Coach and superuser organizational learning map from source to class to evidence to intervention to reflection",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-071-contextual-learning-assistant",
+        "LUMA-072-generalized-simulation-runtime"
+      ],
+      "capability": "organizational-learning-memory",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-075-cohort-peer-learning-evaluation",
+      "kind": "product-research",
+      "title": "Evaluate cohort and peer-learning patterns without copying open community mechanics",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-069-learning-surface-inventory"
+      ],
+      "capability": "cohort-peer-learning",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-076-learning-system-release",
+      "kind": "release",
+      "title": "Platzi-informed learning system UX and adaptive class release gate",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-073-class-runtime-ui",
+        "LUMA-074-organizational-learning-map",
+        "LUMA-075-cohort-peer-learning-evaluation"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {},
+      "active_evidence_ids": [],
       "approval_count": 0
     },
     {
