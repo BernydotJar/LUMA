@@ -66,8 +66,12 @@ def main() -> int:
         status = rt.state().nodes[node].status
         if status is NodeStatus.RUNNING:
             continue
+        if status is NodeStatus.APPROVED:
+            rt.transition(node, actor="graph-scheduler", target=NodeStatus.READY,
+                          reason="Inventory node LUMA-069 is done; implementation can begin.")
+            status = NodeStatus.READY
         if status is not NodeStatus.READY:
-            raise RuntimeError(f"{node}: expected ready, got {status.value}")
+            raise RuntimeError(f"{node}: expected approved/ready, got {status.value}")
         rt.transition(node, actor="implementation-engineer", target=NodeStatus.RUNNING,
                       reason="Feature implementation and authenticated-scope controls started from the approved graph specification.")
         add(rt, node, "implementation", implementation, "inspect implemented product capability and executable contracts",

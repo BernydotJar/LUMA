@@ -2,12 +2,10 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "6fd7480e-3270-444e-a8fc-82b6eaa26481",
-  "event_count": 692,
+  "last_event_id": "7aed88ef-ee36-476d-84c9-a548ccaf5501",
+  "event_count": 706,
   "ready_nodes": [
     "LUMA-036-liquid-glass-refraction-v2",
-    "LUMA-070-program-entry-assessment",
-    "LUMA-071-contextual-learning-assistant",
     "LUMA-075-cohort-peer-learning-evaluation"
   ],
   "nodes": [
@@ -1535,28 +1533,40 @@
       "id": "LUMA-070-program-entry-assessment",
       "kind": "product-surface",
       "title": "Program-level capability assessment and adaptive starting point",
-      "status": "approved",
+      "status": "running",
       "revision": 0,
       "depends_on": [
         "LUMA-069-learning-surface-inventory"
       ],
       "capability": "program-adaptive-entry",
       "active_gates": {},
-      "active_evidence_ids": [],
+      "active_evidence_ids": [
+        "18d901dd-e794-40f8-8f12-736ab3dc5ba6",
+        "4a30cbeb-174a-4e1d-a211-d01e3613c123",
+        "a7ebe278-5b96-4d8f-8b35-03f75347e6b0",
+        "d88ef7b8-5aab-4769-9908-5169a0316e7c",
+        "f61c76b8-8e2a-43be-8369-4e5e023d89a8"
+      ],
       "approval_count": 0
     },
     {
       "id": "LUMA-071-contextual-learning-assistant",
       "kind": "ai-learning-capability",
       "title": "Contextual learning assistant scoped by class objective, capability, learner state and sources",
-      "status": "approved",
+      "status": "running",
       "revision": 0,
       "depends_on": [
         "LUMA-069-learning-surface-inventory"
       ],
       "capability": "contextual-learning-assistant",
       "active_gates": {},
-      "active_evidence_ids": [],
+      "active_evidence_ids": [
+        "6e24e4f9-54cf-4450-9ea1-bb6eb4168fcf",
+        "7aed88ef-ee36-476d-84c9-a548ccaf5501",
+        "98f1c07a-5d3f-41c7-ab8a-844b05431ead",
+        "a73af686-7f3e-496b-9874-bfffa85c6f3e",
+        "cfcc892a-d262-4bd3-a3ba-58b8e61d9bf4"
+      ],
       "approval_count": 0
     },
     {
