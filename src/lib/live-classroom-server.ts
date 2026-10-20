@@ -1,4 +1,7 @@
 import { RoomServiceClient } from "livekit-server-sdk";
+import { FieldValue } from "firebase-admin/firestore";
+import { isActiveCommerceEnrollment } from "./commerce/enrollment";
+import { mayRestoreRevokedLearnerAccess } from "./live-classroom-revocation-queue";
 import type { DecodedIdToken } from "firebase-admin/auth";
 import { firebaseAdminFirestore } from "./firebase-admin";
 import { commerceEnrollments } from "./commerce/server";
@@ -147,10 +150,26 @@ export async function createClassroomToken(
   await registerRoom(classroom);
   const rosterRef = roomReference(classroom.roomName)
     .collection("authorized").doc(classroom.identity);
+  // Prevent a refund race between the first authorization read and token issuance.
+  // Alternative, still-active grants are legitimate for the same tenant + cohort.
+  const verifyCurrentGrant = async () => {
+    if (classroom.role !== "learner") return [] as string[];
+    const records = await commerceEnrollments.listByLearner(classroom.uid);
+    const valid = records.filter((record) => record.tenantId === classroom.offering.tenantId &&
+      record.offeringId === classroom.offering.offeringId &&
+      isActiveCommerceEnrollment(record));
+    if (!valid.length) throw new ClassroomError("classroom_access_revoked", 403);
+    return valid.map((record) => record.updatedAt);
+  };
+  const activeGrantTimes = await verifyCurrentGrant();
   // Atomic and tenant-scoped. No client can bypass this distributed issuance budget.
   await firebaseAdminFirestore.runTransaction(async (transaction) => {
     const current = await transaction.get(rosterRef);
-    if (current.get("bannedAt")) {
+    const bannedAt = current.get("bannedAt");
+    const canRestore = bannedAt && mayRestoreRevokedLearnerAccess({
+      bannedAt, banReason: current.get("banReason"),
+    }, activeGrantTimes);
+    if (bannedAt && !canRestore) {
       throw new ClassroomError("classroom_access_revoked", 403);
     }
     const quota = reserveClassroomTokenQuota(current.exists ? current.data() : undefined);
@@ -161,6 +180,10 @@ export async function createClassroomToken(
       displayName: classroom.displayName,
       ...quota,
       issuedAt: quota.lastIssuedAt,
+      ...(canRestore ? {
+        bannedAt: FieldValue.delete(), banReason: FieldValue.delete(),
+        revocationJobId: FieldValue.delete(),
+      } : {}),
     }, { merge: true });
   });
   const service = roomService(configuration);
@@ -188,6 +211,7 @@ export async function createClassroomToken(
   if (latestRoster.get("bannedAt")) {
     throw new ClassroomError("classroom_access_revoked", 403);
   }
+  await verifyCurrentGrant();
 
   const token = await signClassroomJoinToken({
     apiKey: configuration.apiKey,
@@ -200,5 +224,6 @@ export async function createClassroomToken(
   if ((await rosterRef.get()).get("bannedAt")) {
     throw new ClassroomError("classroom_access_revoked", 403);
   }
+  await verifyCurrentGrant();
   return { serverUrl: configuration.serverUrl, token, role: classroom.role };
 }

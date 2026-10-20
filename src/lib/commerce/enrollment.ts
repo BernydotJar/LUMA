@@ -1,4 +1,5 @@
 import { FieldPath, type Firestore } from "firebase-admin/firestore";
+import { enqueueClassroomRevocation } from "@/lib/live-classroom-revocation-queue";
 import {
   compareCommerceEventTimes,
   type CommerceProviderId,
@@ -128,9 +129,12 @@ export class FirestoreCommerceEnrollmentStore {
         programId: input.mapping.programId,
         productId: input.mapping.productId,
         ...(input.entitlement.purchaseKey ? { purchaseKey: input.entitlement.purchaseKey } : {}),
-        // The resolved mapping is authoritative: omitted offeringId means async.
-        // Do not revive an obsolete live cohort from the previous enrollment.
-        ...(input.mapping.offeringId ? { offeringId: input.mapping.offeringId } : {}),
+        // A refund must target the cohort where the original entitlement
+        // admitted this learner, even when merchant mapping has since changed.
+        // A new active sale continues to use the current authoritative mapping.
+        ...(input.entitlement.status === "revoked" && current?.offeringId
+          ? { offeringId: current.offeringId }
+          : input.mapping.offeringId ? { offeringId: input.mapping.offeringId } : {}),
         customerId: input.entitlement.customerId,
         ...(email
           ? { email }
@@ -153,6 +157,16 @@ export class FirestoreCommerceEnrollmentStore {
       };
 
       transaction.set(ref, record);
+      // An authenticated media session may already be connected. Queue a
+      // deterministic provider disconnect atomically with this state change.
+      if (record.status === "revoked" && record.offeringId && record.learnerId &&
+          (!current || current.lastProviderEventId !== record.lastProviderEventId)) {
+        enqueueClassroomRevocation(this.firestore, transaction, {
+          enrollmentId: record.enrollmentId, tenantId: record.tenantId,
+          offeringId: record.offeringId, learnerId: record.learnerId,
+          sourceEventId: record.lastProviderEventId, createdAt: appliedAt,
+        });
+      }
       return {
         record,
         duplicate: false,

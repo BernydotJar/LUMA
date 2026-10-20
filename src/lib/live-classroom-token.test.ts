@@ -9,7 +9,7 @@ const roomName = "luma_" + "a".repeat(64);
 const identity = "p_" + "b".repeat(64);
 
 describe("LUMA media token permissions", () => {
-  it("issues a 10-minute learner token for only its authorized room, without admin/record/screen grants", async () => {
+  it("issues a 90-second learner token for only its authorized room, without admin/record/screen grants", async () => {
     const signed = await signClassroomJoinToken({
       apiKey, apiSecret, roomName, identity, displayName: "Participante", role: "learner",
     });
@@ -25,7 +25,7 @@ describe("LUMA media token permissions", () => {
     expect(claim.video?.canPublishSources).toContain("microphone");
     expect(claim.video?.canPublishSources).not.toContain("screen_share");
     const jwtTime = JSON.parse(Buffer.from(signed.split(".")[1], "base64url").toString("utf8")) as { exp: number; nbf: number };
-    expect(jwtTime.exp - jwtTime.nbf).toBe(600);
+    expect(jwtTime.exp - jwtTime.nbf).toBe(90);
     await expect(new TokenVerifier("WRONG_KEY", apiSecret).verify(signed)).rejects.toThrow();
   });
   it("permits an assigned instructor to share screen but never administer or record a room", async () => {

@@ -192,14 +192,24 @@
     {
       "id": "operations:refund-revoke-live",
       "persona": "operations",
-      "outcome": "Revoke entitlement and disconnect an already connected refunded learner",
+      "outcome": "Immediately revoke the only valid institutional/paid cohort entitlement, disconnect the already connected learner using LiveKit Cloud, reject the prior JWT on reconnect, persist an independently verified audit and preserve other eligible learners",
       "mutates_state": true,
       "proofs": {
         "implementation": "operations:refund-revoke-live:implementation",
         "ui": "operations:refund-revoke-live:ui",
         "journey": "operations:refund-revoke-live:journey",
         "production": "operations:refund-revoke-live:production"
-      }
+      },
+      "negative_cases": [
+        "refund duplicate/retry",
+        "provider outage after datastore revocation",
+        "prior JWT replay",
+        "incorrect tenant/cohort",
+        "other active enrollment remains valid",
+        "reactivated enrollment supersedes older revocation",
+        "client may not alter roster ban",
+        "scheduled expiration at exact cutoff"
+      ]
     },
     {
       "id": "operations:attendance-ledger",

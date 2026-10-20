@@ -13,7 +13,9 @@ export async function signClassroomJoinToken(input: {
   const token = new AccessToken(input.apiKey, input.apiSecret, {
     identity: input.identity,
     name: input.displayName,
-    ttl: "10m",
+    // A participant already in a call remains connected; TTL only limits the
+    // window for first joining/replaying an earlier signed credential.
+    ttl: "90s",
   });
   token.metadata = JSON.stringify({ role: input.role });
   token.addGrant({

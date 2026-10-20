@@ -67,6 +67,27 @@
         "production"
       ],
       "blocking": true
+    },
+    {
+      "id": "revoked-learner-provider",
+      "required_evidence_kinds": [
+        "firestore-transaction",
+        "backend-contract",
+        "provider-token-replay",
+        "signed-livekit-webhook"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "real-multiuser-hosted",
+      "required_evidence_kinds": [
+        "livekit-cloud",
+        "firebase-auth",
+        "browser",
+        "recorded-rollback",
+        "deployed-revision"
+      ],
+      "blocking": true
     }
   ],
   "nodes": [
@@ -250,6 +271,57 @@
       ],
       "metadata": {
         "quality": "NO_GO until real provider and runtime deployment proof"
+      }
+    },
+    {
+      "id": "LIVE-AC-008",
+      "kind": "revocation-control",
+      "title": "Refund and institutional access revocation with connected participant removal and prior JWT invalidation",
+      "status": "ready",
+      "depends_on": [
+        "LIVE-AC-007"
+      ],
+      "capability": "commerce+security+livekit",
+      "gates": {
+        "done": [
+          "revoked-learner-provider"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/live-classroom*",
+        "src/lib/commerce/**",
+        "src/app/api/live/**",
+        "src/app/api/commerce/**",
+        "src/app/api/enrollments/**",
+        "docs/enterprise/**",
+        "evidence/live-classroom-acceptance/**"
+      ],
+      "metadata": {
+        "remaining": "LiveKit Cloud must reject earlier JWT; local OSS v1.13.10 did not reject replay"
+      }
+    },
+    {
+      "id": "LIVE-AC-009",
+      "kind": "release-e2e",
+      "title": "Production LiveKit Cloud instructor and two learners with commerce revocation, prior token replay attempt, attendance and UX",
+      "status": "blocked",
+      "depends_on": [
+        "LIVE-AC-008",
+        "LIVE-AC-004"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "done": [
+          "real-multiuser-hosted"
+        ]
+      },
+      "allowed_paths": [
+        "docs/**",
+        "evidence/**",
+        "scripts/qa/**"
+      ],
+      "metadata": {
+        "decision": "NO_GO pending customer connected WebRTC E2E"
       }
     }
   ]
