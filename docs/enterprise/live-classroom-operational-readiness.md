@@ -78,3 +78,14 @@ LUMA stores pseudonymous provider identities but an authorized attendance roster
 - [ ] Google Scheduler identity, Firestore indexes READY, durable backlog metrics and repeatable incident runbook operational in authorized environment.
 - [ ] Capacity load at 20/50/100 with real track subscriptions, constrained device matrix, accessibility and support escalation.
 - [ ] Independent reviewer attests source SHA, browser UI, real business journeys and the published deployment SHA. No fictitious attestation.
+
+
+## Firestore test isolation
+
+The reconciler intentionally processes globally pending work. The ordinary commerce
+emulator suites produce historical refunded and pending fixtures. A shared emulator
+makes a successful maintenance run correctly return `partial_failure` when unrelated
+fixtures cannot be reconciled. CI therefore starts a **new, isolated Firebase
+emulator instance** for maintenance integration tests after the main suite. Do not
+weaken the production job by ignoring partial failures or changing asserted
+postconditions. The new job still checks that a bad vendor response is retryable.
