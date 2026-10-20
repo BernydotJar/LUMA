@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "recordedOn": "2026-10-20",
   "releaseDecision": "BLOCKED_EXTERNAL_REVIEW_AND_PROTECTED_KEY_CUSTODY",
-  "sourceDigestAfterLocalPatch": "188f0b7e0980c92ca5047f5998eb594e4b76d23124952e0a8ea77b55399d6e67",
+  "sourceDigestAfterLocalPatch": "59e95d178b8e844a0de1def51e161f1566546a4ca521193acbb7f707312cd030",
   "scope": "PR71 independent human fallback, Ed25519 signed reviewer provenance, hydration rendered UI QA",
   "executedChecks": {
     "npm run lint": "PASS",
@@ -30,5 +30,24 @@
   ],
   "mergeAuthorized": false,
   "productionDeployAuthorized": false,
-  "independentSignatureIssued": false
+  "independentSignatureIssued": false,
+  "postSignatureReviewHardening": {
+    "provider": "GitHub signed reviewer identity via protected-main source-attestation",
+    "revalidation": "Re-read PR, original signed review ID, current reviewer status, contributors and event SHA from GitHub after cryptographic check",
+    "revocationEvents": [
+      "pull_request_review.submitted",
+      "pull_request_review.edited",
+      "pull_request_review.dismissed"
+    ],
+    "localSecurityTests": "30 PASS across signature/reviewer/bootstrap/readiness groups at first run",
+    "localCatalogStress": "60 PASS across Chromium desktop/mobile",
+    "remoteBrowserRun271": "FLAKY: 153 PASS; 22 SKIP; one mobile strict locator duplicate; remediation staged but not yet retested remotely",
+    "result": "SOURCE_CONTROL_FIXED_LOCALLY_RELEASE_STILL_BLOCKED",
+    "criticalHumanVeto": "Codex approval never overrides a current trusted human CHANGES_REQUESTED on the same source SHA",
+    "localSecurityRegression": "Protected issuance, current approval revocation and exact source tests PASS",
+    "newFullBrowserRun": "154 PASS; 22 SKIP; 0 FAILED / 0 FLAKY; full Chromium desktop/mobile suite",
+    "protectedReviewerVeto": "A trusted human CHANGES_REQUESTED on exact SHA vetoes both Codex and human approvals",
+    "liveReviewTests": "30 targeted passing tests across source signing, reviewer revocation and protected readiness",
+    "currentStatus": "CODE_QUALITY_PASS_RELEASE_EXTERNAL_ATTESTATION_BLOCKED"
+  }
 }

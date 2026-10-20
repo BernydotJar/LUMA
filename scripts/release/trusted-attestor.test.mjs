@@ -111,6 +111,10 @@ test('verified independent Codex success works without human review, but unresol
   const findings={...clean,body:clean.body.replace('"has_unresolved_findings":false','"has_unresolved_findings":true')};
   expect(()=>authenticateIndependentSourceReview([findings],[external],SHA,
     'BernydotJar','external-auditor')).toThrow(/findings/);
+  const veto={id:1950,user:{login:'human-auditor',type:'User'},commit_id:SHA,
+    state:'CHANGES_REQUESTED',submitted_at:'2026-10-20T19:00:00Z'};
+  expect(()=>authenticateIndependentSourceReview([clean],[veto],SHA,
+    'BernydotJar','human-auditor')).toThrow(/Codex cannot override/);
   const running={...clean,body:clean.body.replace('"status":"completed"','"status":"running"')};
   expect(()=>authenticateIndependentSourceReview([running],[external],SHA,
     'BernydotJar','external-auditor')).toThrow(/running/);

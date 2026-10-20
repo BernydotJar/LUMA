@@ -97,6 +97,26 @@ export function authenticateTrustedHumanReview(reviews, sourceCommit, prAuthor, 
  */
 export function authenticateIndependentSourceReview(comments, reviews, sourceCommit, prAuthor,
     reviewerAllowlist, candidateContributors = []) {
+  // Even a clean Codex result must not override outstanding change requests
+  // from an independently authorized human on the same exact source SHA.
+  const trusted = new Set(String(reviewerAllowlist ?? '').split(/[\n,]/)
+    .map(login => login.trim().toLowerCase()).filter(Boolean));
+  const contributors = new Set([prAuthor, ...candidateContributors]
+    .filter(Boolean).map(value => value.toLowerCase()));
+  const decisive = new Map();
+  for (const review of reviews) {
+    const login = review.user?.login?.toLowerCase();
+    if (!trusted.has(login) || contributors.has(login) || review.user?.type !== 'User' ||
+        review.commit_id !== sourceCommit ||
+        !['APPROVED','CHANGES_REQUESTED','DISMISSED'].includes(review.state)) continue;
+    const previous = decisive.get(login);
+    const at = review.submitted_at ?? '';
+    if (!previous || at > previous.at || at === previous.at && review.id > previous.id) {
+      decisive.set(login, { state: review.state, at, id: review.id });
+    }
+  }
+  invariant(![...decisive.values()].some(review => review.state === 'CHANGES_REQUESTED'),
+    'Independent human requested changes on reviewed source SHA; Codex cannot override');
   const latest = comments.filter(comment => comment.user?.login === 'chatgpt-codex-connector[bot]')
     .flatMap(comment => {
       const match = comment.body?.match(/<!-- codex-review-state:v1 (\{[^\n]*\}) -->/);

@@ -2,7 +2,7 @@ import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { evaluateReleaseReadiness } from './pr-readiness.mjs';
+import { evaluateReleaseReadiness, evaluateProtectedSourceReadiness } from './pr-readiness.mjs';
 
 const sourceDigest = 'a'.repeat(64);
 const approval = { status: 'PASS', sourceDigest, graphEventId: 'verified-graph-event' };
@@ -54,4 +54,25 @@ test('trusted check evaluates untrusted PR only as data with read-only permissio
   assert.match(workflow, /ref: refs\/pull\/\$\{\{ github\.event\.pull_request\.number \}\}\/merge/);
   assert.match(workflow, /node protected-policy\/scripts\/release\/pr-readiness\.mjs --candidate/);
   assert.doesNotMatch(workflow, /run:\s*npm (ci|install)|id-token:\s*write|run:\s*node candidate-data\//);
+});
+
+
+test('protected-base gate rechecks live authenticated reviewer after signature verification', () => {
+  const opts={digest,verify:()=>approval,
+    liveReview:()=>({method:'github-human-approval',reviewer:'external-auditor',reviewId:901})};
+  const accepted=evaluateProtectedSourceReadiness('/candidate',71,'b'.repeat(40),opts);
+  assert.equal(accepted.status,'PASS');
+  assert.ok(accepted.verified.includes('current-github-review'));
+  const denied=evaluateProtectedSourceReadiness('/candidate',71,'b'.repeat(40),{
+    ...opts, liveReview:()=>{throw new Error('GitHub approval dismissed');},
+  });
+  assert.equal(denied.status,'BLOCKED');
+  assert.match(denied.reason,/dismissed/);
+});
+
+test('trusted source-attestation workflow is also triggered when a review is dismissed', () => {
+  const workflow=readFileSync(resolve(import.meta.dirname,'../../.github/workflows/source-attestation.yml'),'utf8');
+  assert.match(workflow,/pull_request_review:\n    types: \[submitted, edited, dismissed\]/);
+  assert.match(workflow,/GH_TOKEN: \$\{\{ github\.token \}\}/);
+  assert.match(workflow,/--pr "\$PR_NUMBER" --head "\$EXPECTED_PR_HEAD"/);
 });

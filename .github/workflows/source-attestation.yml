@@ -3,11 +3,16 @@ name: Independent source attestation
 on:
   pull_request_target:
     types: [opened, synchronize, reopened, ready_for_review]
+  # Revoking an approval must re-run this required protected-base check.
+  pull_request_review:
+    types: [submitted, edited, dismissed]
 
 # Run trusted, protected-base code only. Never execute checked-out PR scripts,
 # install PR dependencies, or expose deployment credentials to PR contents.
 permissions:
   contents: read
+  issues: read
+  pull-requests: read
 
 jobs:
   source-attestation:
@@ -32,5 +37,9 @@ jobs:
           node-version: 22
       - name: Verify exact-source evidence, protected signature and Graph gate
         env:
+          GH_TOKEN: ${{ github.token }}
           LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
-        run: node protected-policy/scripts/release/pr-readiness.mjs --candidate "$GITHUB_WORKSPACE/candidate-data"
+          LUMA_RELEASE_TRUSTED_REVIEWERS: ${{ vars.LUMA_RELEASE_TRUSTED_REVIEWERS }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          EXPECTED_PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: node protected-policy/scripts/release/pr-readiness.mjs --candidate "$GITHUB_WORKSPACE/candidate-data" --pr "$PR_NUMBER" --head "$EXPECTED_PR_HEAD"

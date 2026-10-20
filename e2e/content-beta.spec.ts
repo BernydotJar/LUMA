@@ -3,10 +3,17 @@ import { expect, test } from "@playwright/test";
 test("beta content catalog is available to the learner", async ({ page }) => {
   await page.goto("/learn/experiences");
   await expect(page.getByRole("heading", { name: /Tu programa, convertido en práctica/i })).toBeVisible();
-  await expect(page.getByText("Congruencia: tres canales, un mensaje")).toBeVisible();
-  await expect(page.getByText("Calibración: observar antes de interpretar")).toBeVisible();
-  await expect(page.getByText("Rapport: crear sintonía con respeto")).toBeVisible();
-  await expect(page.getByText("P.A.S.: detectar y reformular")).toBeVisible();
+  // Next's App Router can stage a hidden copy during hydration. Require one
+  // *visible* catalog card per title; genuinely duplicated visible cards fail.
+  const titles = page.locator('section[aria-label="Experiencias disponibles"] h3:visible');
+  for (const title of [
+    "Congruencia: tres canales, un mensaje",
+    "Calibración: observar antes de interpretar",
+    "Rapport: crear sintonía con respeto",
+    "P.A.S.: detectar y reformular",
+  ]) {
+    await expect(titles.filter({ hasText: title }), `Only one visible card may show ${title}`).toHaveCount(1);
+  }
 });
 
 test("a reflection creates a practice receipt", async ({ page }) => {

@@ -42,3 +42,17 @@ An authorized GitHub repository administrator and independent key custodian must
 5. Import the signed artifact as an evidence-only change; rerun CI and verify both `release-readiness` and protected `source-attestation` genuinely succeed for the unchanged source digest. Verify the signed reviewer ID, all Graph hashes and SHA before the merge decision. Never use `continue-on-error`, bypass required checks or fabricate model verdicts.
 
 **Current gates remain separate:** Ed25519 GO is source/CI security only. LiveKit's 18 customer actions, real two-party WebRTC, revocation and deployment observation are still independent product/UAT conditions.
+
+## Post-signature reviewer revocation (protected-main enforcement)
+
+A valid historical Ed25519 signature is **not** a perpetual approval. The protected `source-attestation` workflow now also listens to official GitHub `pull_request_review` events (`submitted`, `edited`, `dismissed`) and uses a GitHub read-only token to revalidate the actual review state **after** cryptographic verification. The signed reviewed SHA must still be present in the PR commit history and the **current merge source digest must still equal** the signed digest. The current PR HEAD is compared to the signed webhook SHA, so advancing the PR during review fails closed.
+
+For human reviewers, the original signed review ID must still be the latest effective `APPROVED` review from the same vetted, allowlisted noncontributing reviewer, with no other authorized `CHANGES_REQUESTED` veto. For Codex, the bot's signed summary ID must still be the authenticated, current clean review of the same source SHA. A dismissal, code-review finding, reviewer replacement, loss of allowlist trust, or source drift changes the protected status to **BLOCKED**, even if the previously issued signature verifies mathematically. A reviewer who withdraws an approval must never be counted after withdrawal.
+
+**Important:** This live recheck is meaningful as a GitHub required status only **after** the workflow is installed on protected `main` and its true check context is added to branch protection. Candidate CI cannot provide the protected-base check. GitHub's documented event triggers for approval dismissal are the `pull_request_review` `dismissed` and `edited` activity types.
+
+### Reviewer conflict veto
+
+Regardless of whether the signed provenance uses Codex or a human, an authorized noncontributing human reviewer with a current `CHANGES_REQUESTED` on that exact source SHA **vetoes** the release. A clean automated model review never overrides an unresolved human safety objection. The signer and the protected-base live verifier enforce the same veto.
+
+GitHub's documented review event contract is available at [Events that trigger workflows — pull_request_review](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#pull_request_review). This event re-evaluates on approval submission, edit or dismissal; the change to protected `source-attestation` is not active in `main` until separately bootstrapped.
