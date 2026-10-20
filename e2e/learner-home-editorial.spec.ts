@@ -40,7 +40,7 @@ test.describe("learner-first editorial CX", () => {
 
   test("the full learning path is available without filling the default screen", async ({ page }) => {
     await page.goto("/learn");
-    const disclosure = page.locator("#journey details");
+    const disclosure = page.getByRole("region", { name: /El camino también es tuyo/i }).locator("details");
     await expect(disclosure).not.toHaveAttribute("open", "");
     await disclosure.locator("summary").click();
     await expect(disclosure).toHaveAttribute("open", "");
