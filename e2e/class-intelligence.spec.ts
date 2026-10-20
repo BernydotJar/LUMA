@@ -112,7 +112,7 @@ test.describe("AI-native class entry", () => {
   test("coach can inspect learning objectives and their evidence", async ({ page }) => {
     await page.goto("/studio/class-intelligence");
     await expect(page.getByRole("heading", { name: /Cada experiencia tiene un objetivo concreto/i })).toBeVisible();
-    await expect(page.getByText(/Los cambios se revisan antes de actualizar la experiencia/i)).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Los cambios se revisan antes de actualizar la experiencia/i }).first()).toBeVisible();
     await expect(page.getByText(/Cambios de contenido/i)).toBeVisible();
 
     const geometry = await page.evaluate(() => ({
