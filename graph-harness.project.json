@@ -1878,8 +1878,13 @@
       },
       "allowed_paths": [
         "src/app/learn/**",
+        "src/app/api/learning/entry-assessment/**",
         "src/components/**assessment*",
+        "src/components/adaptive-learning-home.tsx",
         "src/lib/**assessment*",
+        "src/lib/learner-projection.ts",
+        "src/lib/persistent-learning.ts",
+        "src/lib/learning-store.ts",
         "e2e/**",
         "evidence/learning-ui/**"
       ]
@@ -1900,7 +1905,9 @@
       },
       "allowed_paths": [
         "src/app/api/tutor/**",
+        "src/app/learn/experience/[slug]/page.tsx",
         "src/components/tutor-panel.tsx",
+        "src/components/learner-components.module.css",
         "src/lib/**",
         "e2e/**",
         "evidence/learning-ui/**"

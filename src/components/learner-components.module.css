@@ -1402,3 +1402,26 @@
   :global(html[data-theme]) .nextAction[data-variant="hero"] .actionDescription { font-size: .76rem; }
   :global(html[data-theme]) .nextAction[data-variant="hero"] .nextActionFooter :global(.button-primary) { min-height: 49px; }
 }
+
+
+/* Contextual class tutor: keep the first interaction near the lesson instead
+ * of reserving a large empty chat area before the learner has asked a question. */
+.tutorPanel[data-context="class"] {
+  min-height: 0;
+}
+.tutorPanel[data-context="class"] .chat {
+  min-height: 0;
+  max-height: min(45vh, 330px);
+  margin-top: 16px;
+}
+.tutorPanel[data-context="class"] .quickPrompts {
+  margin-top: 14px;
+}
+.tutorPanel[data-context="class"] .quickPrompts button {
+  min-height: 44px;
+  font-size: 0.72rem;
+}
+.tutorPanel[data-context="class"] .tutorComposer input,
+.tutorPanel[data-context="class"] .message p {
+  font-size: 0.8rem;
+}

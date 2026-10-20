@@ -85,6 +85,8 @@ export class FirestoreLearningStore {
         record.state,
         record.onboarding,
         record.previousAction ?? undefined,
+        record.entryAssessment,
+        record.entryAssessmentActive,
       ),
     };
   }
@@ -202,6 +204,15 @@ export class FirestoreLearningStore {
       const current = learnerSnapshot.data() as PersistedLearnerRecord;
       if (eventSnapshot.exists) {
         return this.resultForRecord(current, true);
+      }
+
+      // This check is in the same Firestore transaction as the event append:
+      // concurrent submissions with distinct event IDs must not evade the API cooldown.
+      if (event.type === "PROGRAM_ENTRY_ASSESSMENT_COMPLETED" && current.entryAssessment) {
+        const elapsed = Date.now() - Date.parse(current.entryAssessment.completedAt);
+        if (Number.isFinite(elapsed) && elapsed >= 0 && elapsed < 60_000) {
+          throw new Error("ENTRY_ASSESSMENT_RECENTLY_COMPLETED");
+        }
       }
 
       const applied = applyEventToPersistentLearner(current, eventId, event);

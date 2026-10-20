@@ -17,6 +17,7 @@ import { LearnerGreeting } from "@/components/learner-greeting";
 import { LearningPulse } from "@/components/learning-pulse";
 import { LiveProgramSchedule } from "@/components/live-program-schedule";
 import { NextActionCard } from "@/components/next-action-card";
+import { ProgramEntryAssessment } from "@/components/program-entry-assessment";
 import { ProgressStory } from "@/components/progress-story";
 import { TutorPanel } from "@/components/tutor-panel";
 import { useLumaAuth } from "@/components/auth-provider";
@@ -138,6 +139,15 @@ export function AdaptiveLearningHome() {
             <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </nav>
+
+        <ProgramEntryAssessment
+          summary={plan.entryAssessment}
+          hasProfile={hasProfile}
+          userId={user?.uid}
+          onPlanUpdate={(updated) => {
+            if (user) setRemotePlan({ uid: user.uid, plan: updated });
+          }}
+        />
 
         <LiveProgramSchedule />
 
