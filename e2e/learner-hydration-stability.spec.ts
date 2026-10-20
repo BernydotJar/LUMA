@@ -35,9 +35,12 @@ for (const timezoneId of clientZones) {
       expect(html).toMatch(/learner-greeting_greeting[^"]*">Hola/);
 
       await page.goto("/learn", { waitUntil: "domcontentloaded" });
-      await expect(page.locator('[class*="learner-greeting_greeting"]')).toContainText(
-        /Buenos días|Buenas tardes|Buenas noches/,
-      );
+      // The app-router may stage an inert copy while hydrating. Assert the
+      // ONE visible learner greeting, not every transient streaming node.
+      // The mutation observer still rejects any duplicate practice CTA/route.
+      const visibleGreeting = page.locator('[class*="learner-greeting_greeting"]:visible');
+      await expect(visibleGreeting, "Exactly one greeting may be user-visible").toHaveCount(1);
+      await expect(visibleGreeting).toContainText(/Buenos días|Buenas tardes|Buenas noches/);
       await expect(page.locator('section[data-variant="hero"] a.button-primary')).toHaveCount(1);
       await expect(page.locator("#journey summary")).toHaveCount(1);
       await page.waitForTimeout(600);
