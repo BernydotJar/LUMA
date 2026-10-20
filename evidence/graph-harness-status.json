@@ -2,8 +2,8 @@
   "schema_version": "graph-harness.state.v1",
   "project_id": "luma-product-showcase-0.1.0",
   "mode": "SHIP",
-  "last_event_id": "efc1c6b8-4813-4537-8b26-38413b308a44",
-  "event_count": 685,
+  "last_event_id": "f67ae6e8-6707-4dfb-b5d8-d4c2cdf2e529",
+  "event_count": 690,
   "ready_nodes": [
     "LUMA-036-liquid-glass-refraction-v2"
   ],
@@ -1510,6 +1510,25 @@
       "approval_count": 0
     },
     {
+      "id": "LUMA-069-pr-source-readiness",
+      "kind": "release-hardening",
+      "title": "Independently trusted PR source-bound readiness and safe pre-promotion recovery",
+      "status": "blocked",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-068-studio-ci-strict-locator"
+      ],
+      "capability": "enterprise-source-attestation",
+      "active_gates": {
+        "independent-review": "BLOCKED"
+      },
+      "active_evidence_ids": [
+        "42b30f3a-39cd-41d9-a0dd-3ee486a62611",
+        "4b792aa1-e263-438a-bed6-9fa4a19d4d16"
+      ],
+      "approval_count": 0
+    },
+    {
       "id": "LUMA-CICD-002-release-pipeline",
       "kind": "release-engineering",
       "title": "Protected CI, keyless release and exact production verification",
@@ -1534,6 +1553,6 @@
       "approval_count": 0
     }
   ],
-  "checkpoint_count": 25,
+  "checkpoint_count": 26,
   "repair_plan_count": 0
 }

@@ -53,6 +53,10 @@ next-env.d.ts
 /evidence/visual/*-console.txt
 /evidence/visual/*-errors.txt
 
+# Python verification bytecode is generated at runtime, never reviewed source
+__pycache__/
+*.py[cod]
+
 # local Graph Harness control-plane projections
 /.graph-harness/
 

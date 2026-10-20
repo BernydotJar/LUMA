@@ -21,6 +21,8 @@ export interface PersistedLearnerRecord {
   createdAt: string;
   updatedAt: string;
   lastEventId?: string;
+  /** Authoritative latest graded receipt, independent of the event pagination window. */
+  lastScoredEvidence?: StoredLearningEvent;
 }
 
 const pasAnswerKey = {
@@ -72,9 +74,9 @@ export function verifyLearningEvent(value: unknown): StoredLearningEvent | undef
     conceptId: "pas",
     answers: normalizedAnswers,
     correctCount,
-    attempts: normalizedAttempts,
-    completedAt,
-    sourceId,
+    ...(normalizedAttempts ? { attempts: normalizedAttempts } : {}),
+    ...(completedAt ? { completedAt } : {}),
+    ...(sourceId ? { sourceId } : {}),
     evidenceCategory: evidence.evidenceCategory,
     twinAuthority: evidence.twinAuthority,
     rubricId: evidence.rubricId,
@@ -143,6 +145,14 @@ export function applyEventToPersistentLearner(
       version: current.version + 1,
       updatedAt: now,
       lastEventId: eventId,
+      // Firestore rejects undefined, including on optional nested fields.
+      // Never materialize an ungraded or absent receipt as an undefined field.
+      ...(event.type === "SIMULATION_COMPLETED" &&
+      event.evidenceCategory === "scored" && event.twinAuthority === "eligible"
+        ? { lastScoredEvidence: { ...event, eventId } }
+        : current.lastScoredEvidence
+          ? { lastScoredEvidence: current.lastScoredEvidence }
+          : {}),
     },
     plan,
   };

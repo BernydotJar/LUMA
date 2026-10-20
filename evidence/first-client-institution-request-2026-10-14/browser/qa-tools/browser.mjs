@@ -9,13 +9,13 @@ import { chromium } from "playwright";
 const require=createRequire(import.meta.url);
 const axe=require("axe-core");
 const project=process.env.GCLOUD_PROJECT||"",a=process.env.FIREBASE_AUTH_EMULATOR_HOST||"",b=process.env.FIRESTORE_EMULATOR_HOST||"";
-if(!project.startsWith("demo-")||!a.startsWith("127.0.0.1:")||!b.startsWith("127.0.0.1:")||process.env.NEXT_PUBLIC_LUMA_QA_EMULATOR!=="true"||process.env.LUMA_INSTITUTION_REQUESTS_ENABLED!=="true")throw Error("REFUSE_NON_DEMO_QA_BROWSER");
+if(!project.startsWith("demo-")||!a.startsWith("127.0.0.1:")||!b.startsWith("127.0.0.1:")||process.env.NEXT_PUBLIC_LUMA_QA_EMULATOR!=="true"||process.env.NEXT_PUBLIC_LUMA_QA_FIREBASE_PROJECT!==project||process.env.NEXT_PUBLIC_LUMA_QA_AUTH_EMULATOR_URL!=="http://127.0.0.1:9099"||process.env.LUMA_INSTITUTION_REQUESTS_ENABLED!=="true")throw Error("REFUSE_NON_DEMO_QA_BROWSER");
 const base="http://127.0.0.1:3194";
 const out="evidence/first-client-institution-browser-2026-10-14";
 mkdirSync(out+"/screenshots",{recursive:true});
 const app=initializeApp({projectId:project},"academy-browser-"+randomUUID());
 const auth=getAuth(app),actors=[],password="Qa"+randomUUID().replaceAll("-","")+"9!Z";
-const report={project,source:"isolated Git checkout with uncommitted academy intake files + QA-only Firebase Auth emulator client",checks:[],screenshots:[],status:"RUNNING",consoleErrors:[]};
+const report={project,source:"isolated Git worktree with a development-only, demo-scoped Firebase Auth emulator and temporary QA login; never production",checks:[],screenshots:[],status:"RUNNING",consoleErrors:[]};
 async function actor(label){const x=await auth.createUser({email:`qa-${label}-${randomUUID().slice(0,7)}@example.test`,password,emailVerified:true});actors.push(x);return x;}
 async function check(name,fn){try{const detail=await fn();report.checks.push({name,status:"PASS",detail});console.log("PASS",name,JSON.stringify(detail).slice(0,260));}catch(e){report.checks.push({name,status:"FAIL",error:String(e.stack||e).slice(0,600)});throw e;}}
 async function login(page,user){

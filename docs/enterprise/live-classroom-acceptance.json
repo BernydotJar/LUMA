@@ -1,0 +1,274 @@
+{
+  "schema_version": "graph-harness.product-acceptance.v1",
+  "product": "LUMA",
+  "capability": "Seres de Excelencia / enterprise live classroom",
+  "required_personas": [
+    "tenant-admin",
+    "instructor",
+    "learner",
+    "operations"
+  ],
+  "critical_actions": [
+    {
+      "id": "tenant-admin:create-cohort",
+      "persona": "tenant-admin",
+      "outcome": "Create a tenant-scoped cohort through Studio and verify saved offering",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "tenant-admin:create-cohort:implementation",
+        "ui": "tenant-admin:create-cohort:ui",
+        "journey": "tenant-admin:create-cohort:journey",
+        "production": "tenant-admin:create-cohort:production"
+      }
+    },
+    {
+      "id": "tenant-admin:assign-coach",
+      "persona": "tenant-admin",
+      "outcome": "Assign an instructor authorized for this specific cohort",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "tenant-admin:assign-coach:implementation",
+        "ui": "tenant-admin:assign-coach:ui",
+        "journey": "tenant-admin:assign-coach:journey",
+        "production": "tenant-admin:assign-coach:production"
+      }
+    },
+    {
+      "id": "tenant-admin:schedule-live",
+      "persona": "tenant-admin",
+      "outcome": "Schedule a correctly timed LiveKit session with capacity and no recording",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "tenant-admin:schedule-live:implementation",
+        "ui": "tenant-admin:schedule-live:ui",
+        "journey": "tenant-admin:schedule-live:journey",
+        "production": "tenant-admin:schedule-live:production"
+      }
+    },
+    {
+      "id": "tenant-admin:admit-learner",
+      "persona": "tenant-admin",
+      "outcome": "Grant or invite an eligible learner and verify cohort entitlement",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "tenant-admin:admit-learner:implementation",
+        "ui": "tenant-admin:admit-learner:ui",
+        "journey": "tenant-admin:admit-learner:journey",
+        "production": "tenant-admin:admit-learner:production"
+      }
+    },
+    {
+      "id": "tenant-admin:change-schedule",
+      "persona": "tenant-admin",
+      "outcome": "Reschedule or cancel a class without leaking stale admission",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "tenant-admin:change-schedule:implementation",
+        "ui": "tenant-admin:change-schedule:ui",
+        "journey": "tenant-admin:change-schedule:journey",
+        "production": "tenant-admin:change-schedule:production"
+      }
+    },
+    {
+      "id": "instructor:open-class",
+      "persona": "instructor",
+      "outcome": "Find scheduled session and enter as assigned instructor",
+      "mutates_state": false,
+      "proofs": {
+        "implementation": "instructor:open-class:implementation",
+        "ui": "instructor:open-class:ui",
+        "journey": "instructor:open-class:journey",
+        "production": "instructor:open-class:production"
+      }
+    },
+    {
+      "id": "instructor:share-screen",
+      "persona": "instructor",
+      "outcome": "Present screen without enabling unauthorized learners to moderate",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "instructor:share-screen:implementation",
+        "ui": "instructor:share-screen:ui",
+        "journey": "instructor:share-screen:journey",
+        "production": "instructor:share-screen:production"
+      }
+    },
+    {
+      "id": "instructor:moderate-class",
+      "persona": "instructor",
+      "outcome": "Remove and deny reentry to a participant",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "instructor:moderate-class:implementation",
+        "ui": "instructor:moderate-class:ui",
+        "journey": "instructor:moderate-class:journey",
+        "production": "instructor:moderate-class:production"
+      }
+    },
+    {
+      "id": "instructor:teaching-controls",
+      "persona": "instructor",
+      "outcome": "Moderate speaking and hand-raise without obscured controls",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "instructor:teaching-controls:implementation",
+        "ui": "instructor:teaching-controls:ui",
+        "journey": "instructor:teaching-controls:journey",
+        "production": "instructor:teaching-controls:production"
+      }
+    },
+    {
+      "id": "instructor:end-for-everyone",
+      "persona": "instructor",
+      "outcome": "Close class for all and prevent token replay room recreation",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "instructor:end-for-everyone:implementation",
+        "ui": "instructor:end-for-everyone:ui",
+        "journey": "instructor:end-for-everyone:journey",
+        "production": "instructor:end-for-everyone:production"
+      }
+    },
+    {
+      "id": "learner:find-schedule",
+      "persona": "learner",
+      "outcome": "Find the correct purchased/enrolled program and its class",
+      "mutates_state": false,
+      "proofs": {
+        "implementation": "learner:find-schedule:implementation",
+        "ui": "learner:find-schedule:ui",
+        "journey": "learner:find-schedule:journey",
+        "production": "learner:find-schedule:production"
+      }
+    },
+    {
+      "id": "learner:device-preflight",
+      "persona": "learner",
+      "outcome": "Inspect camera/microphone defaults and enter using verified identity",
+      "mutates_state": false,
+      "proofs": {
+        "implementation": "learner:device-preflight:implementation",
+        "ui": "learner:device-preflight:ui",
+        "journey": "learner:device-preflight:journey",
+        "production": "learner:device-preflight:production"
+      }
+    },
+    {
+      "id": "learner:join-live-media",
+      "persona": "learner",
+      "outcome": "Join actual WebRTC room and see other authorized participants",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "learner:join-live-media:implementation",
+        "ui": "learner:join-live-media:ui",
+        "journey": "learner:join-live-media:journey",
+        "production": "learner:join-live-media:production"
+      }
+    },
+    {
+      "id": "learner:bottom-controls",
+      "persona": "learner",
+      "outcome": "Toggle camera, microphone, chat and leave via accessible bottom dock",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "learner:bottom-controls:implementation",
+        "ui": "learner:bottom-controls:ui",
+        "journey": "learner:bottom-controls:journey",
+        "production": "learner:bottom-controls:production"
+      }
+    },
+    {
+      "id": "learner:reconnect",
+      "persona": "learner",
+      "outcome": "Recover a dropped connection without duplicating attendance",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "learner:reconnect:implementation",
+        "ui": "learner:reconnect:ui",
+        "journey": "learner:reconnect:journey",
+        "production": "learner:reconnect:production"
+      }
+    },
+    {
+      "id": "operations:refund-revoke-live",
+      "persona": "operations",
+      "outcome": "Revoke entitlement and disconnect an already connected refunded learner",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "operations:refund-revoke-live:implementation",
+        "ui": "operations:refund-revoke-live:ui",
+        "journey": "operations:refund-revoke-live:journey",
+        "production": "operations:refund-revoke-live:production"
+      }
+    },
+    {
+      "id": "operations:attendance-ledger",
+      "persona": "operations",
+      "outcome": "Reconcile signed provider presence as provisional attendance, never mastery",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "operations:attendance-ledger:implementation",
+        "ui": "operations:attendance-ledger:ui",
+        "journey": "operations:attendance-ledger:journey",
+        "production": "operations:attendance-ledger:production"
+      }
+    },
+    {
+      "id": "operations:incident-rollback",
+      "persona": "operations",
+      "outcome": "Roll back unavailable live provider without revoking paid course access",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "operations:incident-rollback:implementation",
+        "ui": "operations:incident-rollback:ui",
+        "journey": "operations:incident-rollback:journey",
+        "production": "operations:incident-rollback:production"
+      }
+    }
+  ],
+  "workflows": [
+    {
+      "id": "tenant-admin-journey",
+      "persona": "tenant-admin",
+      "actions": [
+        "tenant-admin:create-cohort",
+        "tenant-admin:assign-coach",
+        "tenant-admin:schedule-live",
+        "tenant-admin:admit-learner",
+        "tenant-admin:change-schedule"
+      ]
+    },
+    {
+      "id": "instructor-journey",
+      "persona": "instructor",
+      "actions": [
+        "instructor:open-class",
+        "instructor:share-screen",
+        "instructor:moderate-class",
+        "instructor:teaching-controls",
+        "instructor:end-for-everyone"
+      ]
+    },
+    {
+      "id": "learner-journey",
+      "persona": "learner",
+      "actions": [
+        "learner:find-schedule",
+        "learner:device-preflight",
+        "learner:join-live-media",
+        "learner:bottom-controls",
+        "learner:reconnect"
+      ]
+    },
+    {
+      "id": "operations-journey",
+      "persona": "operations",
+      "actions": [
+        "operations:refund-revoke-live",
+        "operations:attendance-ledger",
+        "operations:incident-rollback"
+      ]
+    }
+  ],
+  "coverage_approval": "LUMA-LIVE-SCOPE-REVIEW"
+}

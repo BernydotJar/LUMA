@@ -210,7 +210,7 @@ export function LiveClassroom({
               onError={() => setError("Se perdió la conexión audiovisual. Puedes volver a ingresar.")}
               className={styles.media}
             >
-              <div className={styles.video}><VideoConference /></div>
+              <div className={styles.video} data-testid="live-classroom-media" aria-label="Videoconferencia con controles inferiores"><VideoConference /></div>
               {current.credentials.role === "instructor" && (
                 <InstructorModeration offeringId={offeringId} sessionId={sessionId}
                   onSessionClosed={() => { setJoined(null); setClosed(true); }} />

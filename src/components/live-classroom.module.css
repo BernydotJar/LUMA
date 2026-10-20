@@ -26,10 +26,58 @@
 .roomTitle h1{font-size:clamp(22px,2.5vw,34px);margin:6px 0;font-weight:700;letter-spacing:-.025em}
 .policy{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(125,70,83,.26);border-radius:999px;padding:9px 13px;font-size:12px;white-space:nowrap}
 .media{display:flex;flex:1;min-height:520px;gap:15px;background:#1d1b21;border-radius:24px;overflow:hidden;padding:15px;color:#fff}
-.video{flex:1;min-width:0;display:flex}
-.video :global(.lk-video-conference){height:100%;width:100%;background:#17161c;border-radius:15px;overflow:hidden}
-.video :global(.lk-video-conference-inner){height:100%}
-.video :global(.lk-control-bar){border-top:1px solid rgba(255,255,255,.12)}
+/* Classroom media is always dark, independent of the selected application theme.
+   LiveKit owns all control behavior; only its presentation and placement change. */
+.video{flex:1;min-width:0;min-height:0;display:flex;position:relative;isolation:isolate}
+.video :global(.lk-video-conference){
+  --control-bar-height:0px;
+  --lk-bg:#191923;
+  --lk-fg:#faf8ff;
+  position:relative;min-width:0;height:100%;width:100%;
+  background:radial-gradient(ellipse at 40% -20%,rgba(172,113,176,.12),transparent 58%),#17161c;
+  color:#faf8ff;border-radius:18px;overflow:hidden
+}
+.video :global(.lk-video-conference-inner){position:relative;height:100%;min-width:0;min-height:0}
+.video :global(.lk-focus-layout-wrapper),
+.video :global(.lk-grid-layout-wrapper){height:100%;min-height:0;box-sizing:border-box;padding:12px 12px 111px}
+.video :global(.lk-control-bar){
+  position:absolute;z-index:20;bottom:18px;left:50%;transform:translateX(-50%);
+  width:max-content;max-width:calc(100% - 30px);max-height:none;
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;
+  gap:7px;padding:10px 13px;
+  color:#faf8ff;
+  border:1px solid rgba(246,224,255,.29);border-radius:22px;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(225,137,196,.18),transparent 57%),
+    radial-gradient(ellipse at 92% 100%,rgba(128,199,231,.15),transparent 52%),
+    linear-gradient(120deg,rgba(255,255,255,.14),rgba(255,255,255,.025) 48%,rgba(211,178,252,.09)),
+    rgba(24,25,36,.87);
+  -webkit-backdrop-filter:blur(24px) saturate(1.35);
+  backdrop-filter:blur(24px) saturate(1.35);
+  box-shadow:0 15px 46px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.22);
+}
+.video :global(.lk-control-bar button){
+  flex-shrink:0;min-width:44px;min-height:44px;
+  border-radius:13px;border:1px solid rgba(250,247,255,.12);
+  color:#fbf8ff;background:rgba(255,255,255,.085);
+  transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease
+}
+.video :global(.lk-control-bar button:hover:not(:disabled)){
+  background:rgba(255,255,255,.19);border-color:rgba(255,255,255,.27)
+}
+.video :global(.lk-control-bar button:focus-visible){outline:3px solid #d3e9ff;outline-offset:2px}
+.video :global(.lk-control-bar button:disabled){opacity:.48;cursor:not-allowed}
+.video :global(.lk-control-bar .lk-disconnect-button){
+  border-color:rgba(255,171,191,.39);background:rgba(171,47,82,.55);color:#fff
+}
+.video :global(.lk-control-bar .lk-disconnect-button:hover:not(:disabled)){
+  background:rgba(193,55,88,.83);border-color:rgba(255,191,208,.65)
+}
+/* Keep the instructor's sidebar and chat above the media; never cover the dock. */
+.video :global(.lk-chat){min-width:0;background:#22202a}
+@supports not (backdrop-filter:blur(1px)){
+  .video :global(.lk-control-bar){background:#272534}
+}
 .roster{flex:0 0 238px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);border-radius:15px;padding:15px;max-height:70vh;overflow:auto}
 .roster h2{display:flex;align-items:center;gap:7px;font-size:14px;margin:0 0 10px}
 .roster h2 span{margin-left:auto;opacity:.65}
@@ -46,4 +94,25 @@
 .error button{color:inherit;background:none;border:1px solid currentColor;border-radius:8px;padding:6px}
 .footer{margin-top:auto;text-align:center;font-size:11px;opacity:.6;padding:15px}
 @media(max-width:1024px){.lobby{grid-template-columns:1fr;max-width:730px}.intro{padding:20px 0}.media{flex-direction:column}.roster{flex:auto;max-height:260px;min-width:0}}
-@media(max-width:640px){.page{padding:14px;gap:16px}.secure{display:none}.prejoin{padding:12px}.media{padding:8px;min-height:510px}.policy{white-space:normal}.roomTitle{align-items:flex-start}}
+@media(max-width:640px){
+  .page{padding:14px;gap:16px}
+  .secure{display:none}
+  .prejoin{padding:12px}
+  .media{padding:8px;min-height:550px}
+  .policy{white-space:normal}
+  .roomTitle{align-items:flex-start}
+  .video :global(.lk-focus-layout-wrapper),
+  .video :global(.lk-grid-layout-wrapper){padding:7px 7px 146px}
+  .video :global(.lk-control-bar){
+    bottom:max(10px,env(safe-area-inset-bottom));width:calc(100% - 16px);
+    max-width:none;gap:5px;padding:8px;border-radius:19px
+  }
+  .video :global(.lk-control-bar button){min-width:44px;min-height:44px;border-radius:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  .video :global(.lk-control-bar button){transition:none}
+}
+@media(forced-colors:active){
+  .video :global(.lk-control-bar){border:2px solid ButtonText;background:Canvas;color:CanvasText}
+  .video :global(.lk-control-bar button){border:1px solid ButtonText;background:ButtonFace;color:ButtonText}
+}

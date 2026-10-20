@@ -1,0 +1,8 @@
+{
+  "kind": "FirestoreLearningStore emulator",
+  "status": "PASS",
+  "tests": 5,
+  "command": "firebase emulators:exec --project demo-luma-learner-p0-20261013 --only firestore \"npx vitest run src/lib/learning-store.emulator.test.ts --maxWorkers=1 --no-file-parallelism\"",
+  "environment": "demo-project-only",
+  "productionWrites": false
+}

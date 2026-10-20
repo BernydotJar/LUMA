@@ -1,0 +1,36 @@
+name: Independent source attestation
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+# Run trusted, protected-base code only. Never execute checked-out PR scripts,
+# install PR dependencies, or expose deployment credentials to PR contents.
+permissions:
+  contents: read
+
+jobs:
+  source-attestation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout protected review policy (base branch)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: protected-policy
+          persist-credentials: false
+      - name: Checkout candidate merge as untrusted data only
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+          path: candidate-data
+          persist-credentials: false
+      - name: Set up Node.js (no npm install, no PR code execution)
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Verify exact-source evidence, protected signature and Graph gate
+        env:
+          LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
+        run: node protected-policy/scripts/release/pr-readiness.mjs --candidate "$GITHUB_WORKSPACE/candidate-data"

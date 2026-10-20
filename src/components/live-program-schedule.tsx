@@ -73,7 +73,8 @@ export function LiveProgramSchedule({ activeProgramId }: { activeProgramId?: str
     return (
       <section
         className={`${styles.schedule} glass`}
-        aria-labelledby="live-program-schedule-title"
+        id="sesiones"
+      aria-labelledby="live-program-schedule-title"
         role="alert"
       >
         <div className={styles.heading}>
@@ -101,6 +102,7 @@ export function LiveProgramSchedule({ activeProgramId }: { activeProgramId?: str
   return (
     <section
       className={`${styles.schedule} glass`}
+      id="sesiones"
       aria-labelledby="live-program-schedule-title"
     >
       <div className={styles.heading}>

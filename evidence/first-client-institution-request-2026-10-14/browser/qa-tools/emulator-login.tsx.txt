@@ -2,9 +2,9 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { signInWithEmailAndPassword } from "@firebase/auth";
-import { firebaseAuth } from "@/lib/firebase-client";
+import { firebaseAuth, localQaAuthEnabled } from "@/lib/firebase-client";
 
-const permitted = process.env.NODE_ENV === "development" &&
+const permitted = localQaAuthEnabled &&
   process.env.NEXT_PUBLIC_LUMA_QA_EMULATOR === "true";
 
 export default function TemporaryQaEmulatorLogin() {

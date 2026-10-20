@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-19",
+  "scope": "Automated adversarial reviewer, not independent human QA",
+  "before": [
+    {
+      "type": "browser-reproducibility",
+      "previousCheck": "QA run on cold Next.js route with shared workspace under memory pressure",
+      "observed": "10 PASS, 2 FAIL: route waited 66 seconds for compilation; Chromium renderer crashed during account change",
+      "decision": "No silent PASS; prewarm dynamic routes and repeat all assertions in isolated QA workspace",
+      "verification": "15/15 PASS including same mounted player UID switch, separate browser and revocation"
+    },
+    {
+      "type": "mobile-navigation-regression",
+      "observed": "After adding Lecciones, hard-coded mobile array index prioritized Certificados and hid LUMA",
+      "decision": "Use stable route-based mobile primary selection and Playwright assertion",
+      "verification": "Mobile LUMA and Programa visible, Certificados under Más; no horizontal overflow"
+    },
+    {
+      "type": "catalog-starvation",
+      "observed": "A page of unapproved draft records could hide later truly published lessons",
+      "decision": "Bounded scanning across pages; no draft or revoked exposure",
+      "verification": "55 invalid drafts sorted before 2 published QA lessons; both visible"
+    },
+    {
+      "type": "CI-acceptance-coverage",
+      "observed": "GitHub Product quality 39217566027: all 4 non-browser jobs PASS, but browser 1 FAIL/131 PASS/8 skipped because responsive-mobile.spec.ts required exactly 5 links. Adding Lecciones made 6 valid destinations, including original LUMA and Certificados.",
+      "decision": "Do not delete the product link or relax visibility. Assert all 6 required destinations, uniqueness and tap width; future destinations should not fail an arbitrary tab-count contract.",
+      "verification": "Targeted optimized-build Playwright Chromium mobile: 8/8 PASS (responsive-mobile plus course-delivery), pending new full CI SHA."
+    }
+  ],
+  "validated": {
+    "syntheticBrowser": 15,
+    "syntheticBrowserFailed": 0,
+    "sourceRightsApproved": false,
+    "mediaBucketConfigured": false,
+    "actualHotmartCheckout": false
+  },
+  "unresolved": [
+    "Human content/copyright approval",
+    "Real private GCS bucket playback signing with range/refresh",
+    "Captions/transcripts",
+    "Multiple concurrent programme selector",
+    "Instructor publication workflow",
+    "Live provider staging and manual human release acceptance"
+  ],
+  "enterpriseVerdict": "NO-GO"
+}

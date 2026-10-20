@@ -1,0 +1,56 @@
+name: Protected independent release signature
+
+# Available only after this workflow has been separately reviewed and installed
+# on the protected main branch. Never run release signing from pull_request.
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Reviewed LUMA pull request number'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  independent-attestation:
+    if: github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: independent-attestation
+    steps:
+      - name: Checkout protected main policy (trusted code only)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          path: protected-policy
+          persist-credentials: false
+      - name: Checkout PR as untrusted data only
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: refs/pull/${{ inputs.pr_number }}/head
+          fetch-depth: 0
+          path: candidate-data
+          persist-credentials: false
+      - name: Use Node 22 (no candidate npm install or execution)
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Inspect real Codex review, CI, source, Graph and sign exact approval
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          LUMA_RELEASE_ATTESTATION_PRIVATE_KEY_B64: ${{ secrets.LUMA_RELEASE_ATTESTATION_PRIVATE_KEY_B64 }}
+          LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
+        run: node protected-policy/scripts/release/trusted-attestor.mjs "$GITHUB_WORKSPACE/candidate-data" "$PR_NUMBER"
+      - name: Export signed approval without any private key material
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: luma-release-approval-${{ inputs.pr_number }}-${{ github.run_id }}
+          path: protected-policy/release-approval-signed.json
+          if-no-files-found: error
+          retention-days: 30

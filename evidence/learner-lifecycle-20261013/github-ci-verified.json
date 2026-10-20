@@ -1,0 +1,22 @@
+{
+  "repo": "BernydotJar/LUMA",
+  "pullRequest": 51,
+  "runId": 38463504207,
+  "runUrl": "https://github.com/BernydotJar/LUMA/actions/runs/38463504207",
+  "commitSha": "6c77cb6059653f614391f9a07211553b6cf9e73d",
+  "sourceTreeSha": "462fb37737c635b3e0125f6fadbc7de251c42ef7",
+  "workflow": "Product quality",
+  "result": "PASS",
+  "jobs": [
+    {"name": "firestore", "result": "success"},
+    {"name": "identity-roles", "result": "success"},
+    {"name": "security", "result": "success"},
+    {"name": "verify", "result": "success"},
+    {"name": "browser", "result": "success", "playwrightPassed": 125, "playwrightSkipped": 7, "playwrightFailed": 0},
+    {"name": "deploy", "result": "skipped", "reason": "Pull request; production only on successful main push"}
+  ],
+  "scope": "PR head CI only: verified integration quality, not an approved enterprise release",
+  "fullProgramApproved": false,
+  "deployed": false,
+  "releaseVerdict": "NO-GO"
+}

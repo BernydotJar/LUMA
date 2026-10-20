@@ -23,6 +23,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      - name: Check source-review bootstrap invariants
+        run: python3 -m unittest discover -s scripts/release -p quality_run_test.py
       - run: npm run test:run
       - name: Prepare the exact committed release source
         run: node scripts/release/prepare.mjs
@@ -170,6 +172,7 @@ jobs:
           src/lib/commerce/institutional-grant.emulator.test.ts
           src/lib/program-delivery.emulator.test.ts
           src/lib/learning-store.emulator.test.ts
+          src/lib/course-delivery.emulator.test.ts
           src/lib/live-classroom-attendance.emulator.test.ts"
 
   identity-roles:
@@ -396,8 +399,20 @@ jobs:
           ln -s "$GITHUB_WORKSPACE/node_modules" "$qa/node_modules"
           cd "$qa"
           source_dir="$GITHUB_WORKSPACE/evidence/first-client-institution-request-2026-10-14/browser/qa-tools"
-          git apply --unidiff-zero --check "$source_dir/emulator-auth-overlay.patch"
-          git apply --unidiff-zero "$source_dir/emulator-auth-overlay.patch"
+          # #50 already provides a development-only Firebase Auth emulator
+          # client guarded by a demo-* project and loopback URL. Never overlay
+          # its source with an obsolete patch from #66 or change release code.
+          node - <<'NODE'
+          const fs = require("node:fs");
+          const assert = require("node:assert/strict");
+          const client = fs.readFileSync("src/lib/firebase-client.ts", "utf8");
+          const layout = fs.readFileSync("src/app/layout.tsx", "utf8");
+          for (const proof of ["localQaAuthEnabled", "NEXT_PUBLIC_LUMA_QA_FIREBASE_PROJECT", "NEXT_PUBLIC_LUMA_QA_AUTH_EMULATOR_URL", 'process.env.NODE_ENV === "development"']) {
+            assert.ok(client.includes(proof), `Missing guarded emulator client: ${proof}`);
+          }
+          assert.ok(layout.includes('process.env.NODE_ENV === "development"'), "QA auth bridge must be dev-only");
+          assert.ok(layout.includes("NEXT_PUBLIC_LUMA_QA_FIREBASE_PROJECT"), "QA auth must be demo-project-scoped");
+          NODE
           mkdir -p src/app/qa-emulator-login scripts/qa
           cp "$source_dir/emulator-login.tsx.txt" src/app/qa-emulator-login/page.tsx
           cp "$source_dir/browser.mjs" scripts/qa/first-client-institution-browser.mjs
@@ -471,11 +486,33 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  release-readiness:
+    # Independent source signature is separate from operational customer UAT.
+    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Enforce the exact-source independent Graph release approval
+        env:
+          LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
+        run: node scripts/release/pr-readiness.mjs
+
   deploy:
-    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval, product-acceptance-contract, product-acceptance-predeploy]
+    # BOTH gates are required; never silently drop either source attestation or customer UAT.
+    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval, product-acceptance-contract, product-acceptance-predeploy, release-readiness]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
     environment:
       name: production
       url: https://luma--luma-learning-intelligence.us-central1.hosted.app

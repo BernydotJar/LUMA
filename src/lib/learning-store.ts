@@ -13,6 +13,16 @@ import {
   type StoredOnboardingState,
 } from "./learner-projection";
 
+/** Personal reflection: saved, but never an assessed Learning Twin update. */
+export interface StoredLearnerReflection {
+  experienceId: string;
+  sourceId: string;
+  response: string;
+  evidenceCategory: "self-reported";
+  twinAuthority: "none";
+  updatedAt: string;
+}
+
 export interface LearningStoreResult {
   record: PersistedLearnerRecord;
   duplicate: boolean;
@@ -152,6 +162,33 @@ export class FirestoreLearningStore {
       .get();
 
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async getReflection(learnerId: string, experienceId: string): Promise<StoredLearnerReflection | null> {
+    const snapshot = await this.learnerRef(learnerId).collection("reflections").doc(experienceId).get();
+    return snapshot.exists ? snapshot.data() as StoredLearnerReflection : null;
+  }
+
+  async saveReflection(
+    learnerId: string,
+    experienceId: string,
+    sourceId: string,
+    response: string,
+  ): Promise<StoredLearnerReflection> {
+    const record: StoredLearnerReflection = {
+      experienceId,
+      sourceId,
+      response,
+      evidenceCategory: "self-reported",
+      twinAuthority: "none",
+      updatedAt: new Date().toISOString(),
+    };
+    const ref = this.learnerRef(learnerId).collection("reflections").doc(experienceId);
+    await this.firestore.runTransaction(async (transaction) => {
+      await this.assertScopedEntitlementForWrite(transaction, learnerId);
+      transaction.set(ref, record);
+    });
+    return record;
   }
 
   async bootstrap(

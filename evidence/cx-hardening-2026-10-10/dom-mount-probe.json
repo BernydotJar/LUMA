@@ -1,0 +1,338 @@
+{
+  "source": "fixer local Next16 production build",
+  "testedAt": "2026-10-11T00:08:29.883Z",
+  "runsWithDuplicates": 0,
+  "numberOfRuns": 30,
+  "all": [
+    {
+      "trial": 1,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 2,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 3,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 4,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 5,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 6,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 7,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 8,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 9,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 10,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 11,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 12,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 13,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 14,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 15,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 16,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 17,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 18,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 19,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 20,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 21,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 22,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 23,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 24,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 25,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 26,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 27,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 28,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 29,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "trial": 30,
+      "events": [],
+      "at360": {
+        "cta": 1,
+        "summary": 1
+      },
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    }
+  ]
+}

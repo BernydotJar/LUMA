@@ -1,0 +1,61 @@
+{
+  "geometryPass": 18,
+  "geometryTotal": 18,
+  "axeTotal": 18,
+  "axeViolations": 0,
+  "stressTrials": 15,
+  "transientDuplicates": [
+    {
+      "trial": 1,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 2,
+          "journey": 2
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ]
+    }
+  ],
+  "mobileClearances": [
+    {
+      "id": "320x568-se",
+      "clearancePx": 242.078125,
+      "afterScroll": true
+    },
+    {
+      "id": "360x740-se",
+      "clearancePx": 328.015625,
+      "afterScroll": true
+    },
+    {
+      "id": "390x844-se",
+      "clearancePx": 124.234375,
+      "afterScroll": false
+    },
+    {
+      "id": "428x926-se",
+      "clearancePx": 211.828125,
+      "afterScroll": false
+    }
+  ]
+}

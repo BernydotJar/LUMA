@@ -1,18 +1,21 @@
 .greeting {
+  min-width: 0;
   color: var(--muted-strong);
   font-size: .72rem;
   font-weight: 760;
+  overflow-wrap: anywhere;
 }
 
 .guestGreeting {
+  min-height: 44px;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
 }
 
 .guestGreeting a {
-  min-height: 40px;
+  min-width: 0;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   color: var(--cx-ink, var(--ink));
@@ -20,8 +23,4 @@
   text-underline-offset: .2em;
   font-size: .58rem;
   font-weight: 820;
-}
-
-.guestGreeting a {
-  min-height: 44px;
 }

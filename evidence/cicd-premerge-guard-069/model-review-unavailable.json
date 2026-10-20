@@ -1,0 +1,21 @@
+{
+  "status": "BLOCKED",
+  "sourceReviewed": false,
+  "candidateCommit": "d30ec5d6d921521ab46827b6c8b0efd66155f7a9",
+  "reason": "IBM Granite local Ollama returned HTTP 500 for guard/GRUV review attempts and then timed out on a minimal prompt; no completed independent review was obtained. Earlier attempts used an older digest and must not count as current-source verification.",
+  "attempts": [
+    {
+      "file": "granite-gruv-error.json",
+      "status": "BLOCKED",
+      "reason": "Granite HTTP 500",
+      "attemptedDigest": "06a439fed8998c63702b73fe5a2e387eeb085c49f57d9c896763d04e38815219"
+    },
+    {
+      "file": "granite-guard-error.json",
+      "status": "BLOCKED",
+      "reason": "Granite HTTP 500",
+      "attemptedDigest": "06a439fed8998c63702b73fe5a2e387eeb085c49f57d9c896763d04e38815219"
+    }
+  ],
+  "releaseGate": "NOT_APPROVED"
+}
