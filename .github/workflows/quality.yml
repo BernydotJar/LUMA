@@ -97,6 +97,7 @@ jobs:
           src/lib/learning-store.emulator.test.ts
           src/lib/live-classroom-attendance.emulator.test.ts
           src/lib/live-classroom-revocation.emulator.test.ts
+          src/lib/live-classroom-maintenance.emulator.test.ts
           src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.emulator.test.ts"
 
   identity-roles:

@@ -30,13 +30,14 @@ function supportsActiveAccess(enrollment: CommerceEnrollmentRecord, job: Revocat
  */
 export async function dispatchClassroomRevocation(
   enrollment: CommerceEnrollmentRecord | undefined,
+  sourceEventId?: string,
 ): Promise<{ state: "completed" | "not_applicable" | "superseded"; evicted: number }> {
   if (!enrollment || enrollment.status !== "revoked" ||
       !enrollment.learnerId || !enrollment.offeringId) {
     return { state: "not_applicable", evicted: 0 };
   }
   const id = revocationJobId({ enrollmentId: enrollment.enrollmentId,
-    sourceEventId: enrollment.lastProviderEventId });
+    sourceEventId: sourceEventId ?? enrollment.lastProviderEventId });
   const jobRef = firebaseAdminFirestore.collection("liveClassroomRevocations").doc(id);
   const claimed = await firebaseAdminFirestore.runTransaction(async (tx) => {
     const doc = await tx.get(jobRef);
