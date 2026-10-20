@@ -1,0 +1,9 @@
+
+Running 4 tests using 2 workers
+
+  ✓  2 [chromium] › e2e/live-classroom-auth.spec.ts:40:1 › an anonymous browser cannot perform educational classroom actions (6.7s)
+  ✓  1 [chromium] › e2e/live-classroom-auth.spec.ts:7:1 › the branded classroom never issues media credentials to a guest (12.3s)
+  ✓  3 [mobile] › e2e/live-classroom-auth.spec.ts:7:1 › the branded classroom never issues media credentials to a guest (4.9s)
+  ✓  4 [mobile] › e2e/live-classroom-auth.spec.ts:40:1 › an anonymous browser cannot perform educational classroom actions (542ms)
+
+  4 passed (17.6s)
