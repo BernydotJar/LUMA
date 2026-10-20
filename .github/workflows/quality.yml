@@ -52,6 +52,81 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  product-acceptance-contract:
+    # PASS here verifies the fail-closed RULES, not business/product readiness.
+    name: Operational acceptance contract self-test (not a release approval)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - name: Adversarial product acceptance contract tests
+        run: node --test scripts/qa/product-acceptance-contract-checks.mjs
+      - name: Report operational readiness without allowing an E2E count to certify a product
+        run: node scripts/qa/product-acceptance-gate.mjs --phase inventory
+      - name: Make the acceptance BLOCKED verdict explicit
+        run: |
+          node - <<'NODE'
+          const fs = require("node:fs");
+          const report = JSON.parse(fs.readFileSync("evidence/product-acceptance-2026-10-19/operational-readiness.json", "utf8"));
+          if(report.phase !== "inventory" || report.verdict !== "BLOCKED" || report.releaseAllowed !== false ||
+             report.modules.length !== 9 || report.journeys.length !== 5 ||
+             report.modules.flatMap(m=>m.actions).length !== 27)process.exit(1);
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            `## Operational product readiness — ${report.verdict} (NOT an approval)\n`+
+            `Required modules: ${report.modules.length}; actions: 27; complete customer journeys: ${report.journeys.length}.\n`+
+            `Source commit: ${report.candidateSha}; observed published commit: ${report.observedProductionSha ?? "unknown"}.\n`+
+            `A successful CI test here attests only the **evaluator logic**, not the product.\n`);
+          NODE
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: operational-acceptance-inventory-${{ github.run_attempt }}
+          path: evidence/product-acceptance-2026-10-19/operational-readiness.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  product-acceptance-predeploy:
+    # Real production promotion HALTS until the customer, SDET and human owners
+    # have independently signed every full business action. No auto approval.
+    needs: [verify, product-acceptance-contract]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: enterprise-product-acceptance
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - name: Verify and materialize environment-protected evidence (no repo-supplied keys)
+        env:
+          LUMA_ACCEPTANCE_TRUST_STORE_B64: ${{ secrets.LUMA_ACCEPTANCE_TRUST_STORE_B64 }}
+          LUMA_ACCEPTANCE_SIGNED_RECEIPTS_B64: ${{ secrets.LUMA_ACCEPTANCE_SIGNED_RECEIPTS_B64 }}
+        run: node scripts/qa/protected-acceptance-inputs.mjs
+      - name: Enforce candidate completeness and protected source/signature approvals
+        run: >-
+          node scripts/qa/product-acceptance-gate.mjs
+          --phase predeploy
+          --receipts "$LUMA_ACCEPTANCE_RECEIPTS"
+      - name: Record strictly non-release candidate verdict
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: enterprise-predeploy-acceptance-${{ github.run_attempt }}
+          path: evidence/product-acceptance-2026-10-19/operational-readiness.json
+          if-no-files-found: warn
+          retention-days: 30
+
   security:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -397,7 +472,7 @@ jobs:
           retention-days: 14
 
   deploy:
-    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval]
+    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval, product-acceptance-contract, product-acceptance-predeploy]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
     runs-on: ubuntu-latest
     timeout-minutes: 45
