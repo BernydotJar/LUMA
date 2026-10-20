@@ -50,12 +50,17 @@
     "real LiveKit Cloud hosted multiuser JWT replay, per-enrollment instant disconnect and true UI acceptance",
     "production deployment attestation and independent customer review"
   ],
-  "interpretation": "Local browser WebRTC testing confirmed live provider eviction but disclosed a SECURITY FAIL on old JWT replay; the added LUMA signed-webhook compensating check has only unit/emulator validation. Product must remain off.",
+  "interpretation": "The observed local old-JWT replay is expected on LiveKit OSS self-hosted and does not establish a vulnerability in LiveKit Cloud. Cloud credential revocation must be verified with an actual Cloud session and refreshed JWT. The customer release decision remains NO_GO until independently verified.",
   "source_notes": [
     "Refund preserves the originally purchased offering despite mutable merchant product mapping",
     "Distinct refunded provider events enqueue distinct deterministic revocation outbox entries",
     "Missing outbox is a retryable source consistency error rather than successful media attestation",
     "Before each provider removal, enrollment and alternative grants are refreshed to reduce concurrent reactivation races",
     "Token issuance checks valid cohort membership before and after signing; join webhooks perform compensating provider eviction"
+  ],
+  "provider_compatibility": "LiveKit OSS self-hosted does not support RemoveParticipant token revocation; Cloud-specific revocation requires a new test",
+  "provider_documentation": [
+    "https://docs.livekit.io/frontends/reference/tokens-grants/",
+    "https://docs.livekit.io/intro/basics/rooms-participants-tracks/participants/"
   ]
 }

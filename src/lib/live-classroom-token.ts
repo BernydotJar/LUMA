@@ -14,7 +14,9 @@ export async function signClassroomJoinToken(input: {
     identity: input.identity,
     name: input.displayName,
     // A participant already in a call remains connected; TTL only limits the
-    // window for first joining/replaying an earlier signed credential.
+    // window for first joining/replaying an earlier signed credential. During
+    // a call the media provider may issue refreshed tokens; on LiveKit Cloud,
+    // RemoveParticipant plus revokeTokenTs must fence those credentials.
     ttl: "90s",
   });
   token.metadata = JSON.stringify({ role: input.role });

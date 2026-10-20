@@ -12,11 +12,15 @@
 
 No artificial state or non-verified screenshot is used as acceptance evidence.
 
-## Real LiveKit OSS WebRTC test: security finding
+## LiveKit provider compatibility: local OSS replay is expected; Cloud must be verified
 
-At 2026-10-20, an isolated Linux ARM64 LiveKit **1.13.10** server was used with three real Chromium WebRTC clients (one instructor, two learners) publishing fake-device microphone tracks. All connected, instructor and second learner stayed connected after the first learner's `RoomServiceClient.removeParticipant()` command, and the first learner disconnected. **However, the evicted client successfully reconnected with its earlier unexpired JWT.** Exact local evidence is in `evidence/live-classroom-acceptance/livekit-local-provider-result.json`.
+At 2026-10-20, an isolated Linux ARM64 LiveKit **1.13.10** server was used with three real Chromium WebRTC clients (one instructor, two learners) publishing fake-device microphone tracks. All connected, instructor and second learner stayed connected after the first learner's `RoomServiceClient.removeParticipant()` command, and the first learner disconnected. **However, the evicted client successfully reconnected with its earlier unexpired JWT.** That outcome is expected in self-hosted LiveKit: according to the official token lifecycle documentation, provider-enforced revocation on `RemoveParticipant` is **Cloud-only**, and self-hosted instances cannot invalidate previously issued JWTs through this API. It is a verified limitation of the local test environment, not evidence that LiveKit Cloud has the same behavior. Exact local evidence is in `evidence/live-classroom-acceptance/livekit-local-provider-result.json`.
 
-That local test is not an authenticated LUMA UI E2E, not Firebase-backed LiveKit Cloud, and **not a product acceptance PASS**. It proves removal works but reveals token replay behavior on the tested self-hosted provider. Therefore, Cloud-specific revocation semantics, signed webhook reaction time, simultaneous refund/reconnect races and JWT replay denial need direct validation **on the intended LiveKit Cloud instance** before enabling the feature.
+Provider references: https://docs.livekit.io/frontends/reference/tokens-grants/ and https://docs.livekit.io/intro/basics/rooms-participants-tracks/participants/. Cloud `revoke_token_ts` is an explicit Unix **seconds** cutoff (within 60 seconds of the server clock), intended to reject JWTs whose `nbf` precedes it. Our backend uses an explicit cutoff to avoid the default one-minute buffer; actual Cloud behavior is still unverified.
+
+Also note that media SDKs may refresh in-session tokens with a longer expiration; shortening the original join JWT to 90 seconds alone is **not** sufficient to guarantee that a connected student cannot reconnect after refund.
+
+That local test is not an authenticated LUMA UI E2E, not Firebase-backed LiveKit Cloud, and **not a product acceptance PASS**. It proves removal works on self-hosted LiveKit and confirms documented token replay behavior where no provider-side revocation exists. Therefore, Cloud-specific revocation semantics, signed webhook reaction time, simultaneous refund/reconnect races and JWT replay denial need direct validation **on the intended LiveKit Cloud instance** before enabling the feature.
 
 ## Mandatory release tests
 
