@@ -69,6 +69,34 @@ Suggested dashboard query views: `liveClassroomRevocations` where `state in [pen
 
 LUMA stores pseudonymous provider identities but an authorized attendance roster also maps them to Firebase UIDs. These are personal data; access must remain tenant- and coach-scoped. Before enterprise enablement establish a **written data-retention policy** for raw join/leave events, roster records and individual attendance, including retention by tenant, lawful deletion/export, legal hold and a verified purge job. Do not silently choose or apply an irreversible retention period. Set `recordingPolicy=none` for Seres classes that prohibit institution-managed recording; the policy cannot prevent a participant's local screen recording.
 
+## Manual Cloud workflow bootstrap and least privilege
+
+**GitHub Actions `workflow_dispatch` is not actionable from a newly added
+workflow file until that workflow exists on the repository's default branch.**
+This feature remains draft and is stacked on #73, so the workflow file here is
+currently a **reviewable design**, not an executed Cloud verification. A safe
+pre-merge alternative is running `node scripts/qa/livekit-cloud-enterprise-gate.mjs`
+on a short-lived, trusted runner from an independently reviewed exact source SHA,
+with Cloud credentials injected directly as secret environment variables.
+Do not attach LiveKit Cloud credentials to an untrusted pull-request job, run
+on arbitrary unreviewed refs, or publish JWTs in artifacts.
+
+Before using the GitHub-dispatched workflow, land its CI-only definition on the
+default branch through a separately reviewed, non-runtime change. Configure the
+`livekit-acceptance` GitHub Environment with explicit required reviewers and
+allowed branches. **Do not set secrets** before those protections are verified.
+After a successful protected run, retain the evidence artifact and attach its
+SHA to the release review. Reference: GitHub Actions `workflow_dispatch`
+documentation.
+
+**Graph Harness limitation:** the currently installed and current upstream
+`graph_harness` CLI validates the typed event chain, but does not expose the
+`product-acceptance` subcommand referenced by the existing
+`scripts/check-live-classroom-acceptance.sh` helper. That helper therefore
+cannot be counted as a passing independent four-axis product acceptance check.
+The 20 customer actions still need a supported verifier, evidence on the
+published SHA and a genuine independent signoff. Maintain NO-GO until repaired.
+
 ## Non-negotiable acceptance remaining
 
 - [ ] Dedicated LiveKit Cloud project and verified disabled automatic room creation.
