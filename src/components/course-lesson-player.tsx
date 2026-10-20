@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, BookOpen, Clock3, LockKeyhole, PlayCircle, RefreshCw, Save } from "lucide-react";
 import { useLumaAuth } from "@/components/auth-provider";
-import { firebaseAuth } from "@/lib/firebase-client";
+import { captureLearnerRequestScope, learnerProgramHeaders, assertLearnerRequestScope } from "@/lib/learner-program-request";
+import { useProgramSelection } from "@/components/program-picker";
 import type { CourseLessonSummary, LessonCheckpoint } from "@/lib/course-delivery";
 import styles from "@/app/learn/course/player.module.css";
 
@@ -23,14 +24,19 @@ function description(state: PlayerState): [string, string] {
 /** Keys prevent a video URL, transcript or checkpoint crossing an account switch. */
 export function CourseLessonPlayer({ lessonId }: { lessonId: string }) {
   const { user, loading } = useLumaAuth();
-  return <CourseLessonPlayerForIdentity key={`${user?.uid ?? "guest"}:${lessonId}`}
-    lessonId={lessonId} user={user} loading={loading} />;
+  const selection = useProgramSelection("learner");
+  const selected = selection.status === "showcase" || (selection.status === "entitled" && Boolean(selection.programId));
+  return <CourseLessonPlayerForIdentity key={`${user?.uid ?? "guest"}:${lessonId}:${selection.status}:${selection.programId ?? "none"}`}
+    lessonId={lessonId} user={user} loading={loading || (Boolean(user) && selection.status === "loading")}
+    programId={selection.status === "entitled" ? selection.programId : null} selected={selected} />;
 }
 
-function CourseLessonPlayerForIdentity({ lessonId, user, loading }: {
+function CourseLessonPlayerForIdentity({ lessonId, user, loading, programId, selected }: {
   lessonId: string;
   user: ReturnType<typeof useLumaAuth>["user"];
   loading: boolean;
+  programId: string | null;
+  selected: boolean;
 }) {
   const [state, setState] = useState<PlayerState>("loading");
   const [lesson, setLesson] = useState<CourseLessonSummary | null>(null);
@@ -45,15 +51,14 @@ function CourseLessonPlayerForIdentity({ lessonId, user, loading }: {
   useEffect(() => {
     const uid = user?.uid;
     if (loading || !uid) return;
+    if (!selected) return;
     let cancelled = false;
     void (async () => {
       try {
-        const authUser = firebaseAuth.currentUser;
-        if (!authUser || authUser.uid !== uid) return;
-        const token = await authUser.getIdToken();
-        if (firebaseAuth.currentUser?.uid !== uid) return;
+        const scope = captureLearnerRequestScope(uid, programId);
+        const headers = await learnerProgramHeaders(scope);
         const response = await fetch(`/api/learning/course/${encodeURIComponent(lessonId)}`, {
-          cache: "no-store", headers: { authorization: `Bearer ${token}` },
+          cache: "no-store", headers,
         });
         if (cancelled) return;
         if (response.status === 404) return setState("not_available");
@@ -61,7 +66,8 @@ function CourseLessonPlayerForIdentity({ lessonId, user, loading }: {
         if (response.status === 503) return setState("unavailable");
         if (!response.ok) return setState("error");
         const data = await response.json() as { lesson: CourseLessonSummary; checkpoint: LessonCheckpoint | null };
-        if (cancelled || firebaseAuth.currentUser?.uid !== uid) return;
+        if (cancelled) return;
+        assertLearnerRequestScope(scope);
         setLesson(data.lesson);
         const validCheckpoint = data.checkpoint?.lessonRevision === data.lesson.revision ? data.checkpoint : null;
         setCheckpoint(validCheckpoint);
@@ -70,23 +76,22 @@ function CourseLessonPlayerForIdentity({ lessonId, user, loading }: {
       } catch { if (!cancelled) setState("error"); }
     })();
     return () => { cancelled = true; };
-  }, [lessonId, loading, user?.uid]);
+  }, [lessonId, loading, user?.uid, programId, selected]);
 
   async function requestMedia() {
     const uid = user?.uid;
-    const current = firebaseAuth.currentUser;
-    if (!uid || !current || current.uid !== uid || !lesson) return;
+    if (!uid || !lesson || !selected) return;
     setMediaState("loading");
     setMedia(null);
     try {
-      const token = await current.getIdToken();
-      if (firebaseAuth.currentUser?.uid !== uid) return;
+      const scope = captureLearnerRequestScope(uid, programId);
+      const headers = await learnerProgramHeaders(scope);
       const response = await fetch(`/api/learning/course/${encodeURIComponent(lessonId)}/asset`, {
-        cache: "no-store", headers: { authorization: `Bearer ${token}` },
+        cache: "no-store", headers,
       });
       if (!response.ok) throw new Error("MEDIA_NOT_AVAILABLE");
       const asset = await response.json() as MediaResponse;
-      if (firebaseAuth.currentUser?.uid !== uid) return;
+      assertLearnerRequestScope(scope);
       setMedia(asset);
       setMediaState("idle");
     } catch { setMediaState("unavailable"); }
@@ -94,21 +99,19 @@ function CourseLessonPlayerForIdentity({ lessonId, user, loading }: {
 
   async function save(unit: number) {
     const uid = user?.uid;
-    const current = firebaseAuth.currentUser;
-    if (!lesson || !uid || !current || current.uid !== uid) return;
+    if (!lesson || !uid || !selected) return;
     setCheckpointStatus("saving");
     try {
-      const token = await current.getIdToken();
-      if (firebaseAuth.currentUser?.uid !== uid) return;
+      const scope = captureLearnerRequestScope(uid, programId);
+      const headers = await learnerProgramHeaders(scope, true);
       const response = await fetch(`/api/learning/course/${encodeURIComponent(lessonId)}/checkpoint`, {
-        method: "POST", cache: "no-store",
-        headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+        method: "POST", cache: "no-store", headers,
         body: JSON.stringify({ lessonRevision: lesson.revision,
           positionUnit: Math.max(0, Math.min(lesson.totalUnits, Math.floor(unit))), writeId: crypto.randomUUID() }),
       });
       if (!response.ok) throw new Error("CHECKPOINT_NOT_SAVED");
       const result = await response.json() as { checkpoint: LessonCheckpoint };
-      if (firebaseAuth.currentUser?.uid !== uid) return;
+      assertLearnerRequestScope(scope);
       setCheckpoint(result.checkpoint);
       setCheckpointStatus("saved");
     } catch { setCheckpointStatus("failed"); }
@@ -120,15 +123,16 @@ function CourseLessonPlayerForIdentity({ lessonId, user, loading }: {
     void save(position);
   };
 
-  if (loading || (user && state === "loading")) {
+  const viewState: PlayerState = selected ? state : "needs_access";
+  if (loading || (user && viewState === "loading")) {
     return <section className={styles.message} role="status">Verificando la matrícula y la disponibilidad del recurso…</section>;
   }
   if (!user) return <section className={styles.message}><LockKeyhole size={24} aria-hidden="true" />
     <h2>Accede para abrir tu lección</h2><p>Utiliza la cuenta vinculada a tu compra.</p>
     <Link href="/login" className="button-primary">Iniciar sesión <ArrowRight size={16} /></Link>
   </section>;
-  if (state !== "ready" || !lesson) {
-    const [title, body] = description(state);
+  if (viewState !== "ready" || !lesson) {
+    const [title, body] = description(viewState);
     return <section className={styles.message} role="status"><LockKeyhole size={24} aria-hidden="true" />
       <h2>{title}</h2><p>{body}</p>
       <Link href="/learn/course" className="button-secondary">Ver mis lecciones <ArrowRight size={16} /></Link>

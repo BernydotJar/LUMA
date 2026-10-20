@@ -4,6 +4,7 @@ import { lstatSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { invariant } from './policy.mjs';
+import { verifyApprovalSignature } from './approval-signature.mjs';
 const root = resolve(import.meta.dirname, '../..');
 export const hash = value => createHash('sha256').update(value).digest('hex');
 export function reviewedSourceDigest(directory = root) {
@@ -30,6 +31,9 @@ export function assertReviewAttestation(attestation, digest) {
 export function verifyReview(directory = root) {
   const attestation = JSON.parse(readFileSync(resolve(directory, 'evidence/cicd-enterprise/release-approval.json'), 'utf8'));
   assertReviewAttestation(attestation, reviewedSourceDigest(directory));
+  // PR-owned files and Graph hashes are NOT authoritative by themselves.
+  // A protected signer must attest the exact source, GitHub run, reviews, and gate.
+  verifyApprovalSignature(attestation, process.env.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64);
   for (const [kind, path] of Object.entries({ critic: 'evidence/cicd-enterprise/granite-review.json', verifier: 'evidence/cicd-enterprise/independent-review.json' })) {
     invariant(hash(readFileSync(resolve(directory, path))) === attestation[kind].sha256, `${kind} evidence changed after approval`);
     const evidence = JSON.parse(readFileSync(resolve(directory, path), 'utf8'));

@@ -427,6 +427,8 @@ jobs:
         with:
           node-version: 22
       - name: Enforce the exact-source independent Graph release approval
+        env:
+          LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
         run: node scripts/release/pr-readiness.mjs
 
   deploy:
@@ -434,6 +436,8 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
     environment:
       name: production
       url: https://luma--luma-learning-intelligence.us-central1.hosted.app

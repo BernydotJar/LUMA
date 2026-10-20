@@ -54,3 +54,37 @@ test('release digest ignores untracked Python bytecode while rejecting changed s
     assert.notEqual(reviewedSourceDigest(root), first, 'Changing an actual source file must still invalidate the approval');
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
+
+import { generateKeyPairSync } from 'node:crypto';
+import { signApproval, verifyApprovalSignature } from './approval-signature.mjs';
+
+test('only an external Ed25519 private key can authorize the exact source and Graph receipt', () => {
+  const { privateKey, publicKey } = generateKeyPairSync('ed25519');
+  const privateB64 = Buffer.from(privateKey.export({ format: 'pem', type: 'pkcs8' })).toString('base64');
+  const publicB64 = Buffer.from(publicKey.export({ format: 'pem', type: 'spki' })).toString('base64');
+  const unsigned = { ...approval, testedCommit: 'e'.repeat(40), ciRunId: '39342438406' };
+  const signed = signApproval(unsigned, privateB64);
+  assert.equal(verifyApprovalSignature(signed, publicB64), true);
+  for (const patch of [
+    { sourceDigest: 'f'.repeat(64) },
+    { testedCommit: 'f'.repeat(40) },
+    { graphEventHash: 'f'.repeat(64) },
+    { ciRunId: '39342438407' },
+    { critic: { sha256: 'f'.repeat(64) } },
+    { signature: { ...signed.signature, value: 'A'.repeat(86) + '==' } },
+  ]) {
+    assert.throws(() => verifyApprovalSignature({ ...signed, ...patch }, publicB64), /signature|Signature/i);
+  }
+  assert.throws(() => verifyApprovalSignature(signed, ''), /Trusted CI/);
+  assert.throws(() => verifyApprovalSignature(unsigned, publicB64), /signature/i);
+});
+
+test('a PR-generated self-signature fails against the protected CI trust root', () => {
+  const trusted = generateKeyPairSync('ed25519');
+  const attacker = generateKeyPairSync('ed25519');
+  const unsigned = { ...approval, testedCommit: 'e'.repeat(40), ciRunId: '39342438406' };
+  const attackerSigned = signApproval(unsigned,
+    Buffer.from(attacker.privateKey.export({ format: 'pem', type: 'pkcs8' })).toString('base64'));
+  const protectedPublic = Buffer.from(trusted.publicKey.export({ format: 'pem', type: 'spki' })).toString('base64');
+  assert.throws(() => verifyApprovalSignature(attackerSigned, protectedPublic), /signature/i);
+});

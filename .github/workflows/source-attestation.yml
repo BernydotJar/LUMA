@@ -30,5 +30,7 @@ jobs:
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
-      - name: Verify exact-source evidence and append-only Graph gate
+      - name: Verify exact-source evidence, protected signature and Graph gate
+        env:
+          LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
         run: node protected-policy/scripts/release/pr-readiness.mjs --candidate "$GITHUB_WORKSPACE/candidate-data"

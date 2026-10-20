@@ -6,6 +6,8 @@ import { ArrowRight, Check, LoaderCircle, RotateCcw, Sparkles, Volume2 } from "l
 import { synthesizeReflectionGuide } from "@/app/actions/speech";
 import type { LearningExperience } from "@/lib/learning-content";
 import { useLumaAuth } from "@/components/auth-provider";
+import { ProgramPicker, useProgramSelection } from "@/components/program-picker";
+import { firebaseAuth } from "@/lib/firebase-client";
 import { loadLearnerReflection, saveLearnerReflection } from "@/lib/learning-reflections-client";
 import type { StoredLearnerReflection } from "@/lib/learning-store";
 import styles from "./experience-reflection.module.css";
@@ -14,15 +16,19 @@ const VOICE_ENABLED = process.env.NEXT_PUBLIC_SE_VOICE_ENABLED === "true";
 
 export function ExperienceReflection({ experience }: { experience: LearningExperience }) {
   const { user, loading } = useLumaAuth();
-  const [draft, setDraft] = useState<{ uid: string | null; experienceId: string; text: string } | null>(null);
-  const [saved, setSaved] = useState<{ uid: string; reflection: StoredLearnerReflection } | null>(null);
+  const selection = useProgramSelection("learner");
+  const programId = selection.status === "entitled" ? selection.programId : null;
+  const selectionReady = selection.status === "showcase" || (selection.status === "entitled" && Boolean(programId));
+  const [draft, setDraft] = useState<{ uid: string | null; programId: string | null; experienceId: string; text: string } | null>(null);
+  const [saved, setSaved] = useState<{ uid: string; programId: string | null; reflection: StoredLearnerReflection } | null>(null);
   const [guestCompleted, setGuestCompleted] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [saveError, setSaveError] = useState("");
-  const response = draft?.uid === (user?.uid ?? null) && draft.experienceId === experience.id
-    ? draft.text : "";
-  const matched = saved?.uid === user?.uid && saved?.reflection.experienceId === experience.id;
+  const response = draft?.uid === (user?.uid ?? null) && draft.programId === programId &&
+    draft.experienceId === experience.id ? draft.text : "";
+  const matched = saved?.uid === user?.uid && saved?.programId === programId &&
+    saved?.reflection.experienceId === experience.id;
   const completed = !editing && (user ? matched : guestCompleted === experience.id);
   const [audioSrc, setAudioSrc] = useState<string | null>(null);
   const [audioError, setAudioError] = useState("");
@@ -30,13 +36,13 @@ export function ExperienceReflection({ experience }: { experience: LearningExper
 
   useEffect(() => {
     const uid = user?.uid;
-    if (!uid || loading) return;
+    if (!uid || loading || !selectionReady) return;
     let cancelled = false;
-    void loadLearnerReflection(experience.id).then((reflection) => {
-      if (cancelled) return;
+    void loadLearnerReflection(experience.id, { uid, programId }).then((reflection) => {
+      if (cancelled || firebaseAuth.currentUser?.uid !== uid) return;
       if (reflection) {
-        setSaved({ uid, reflection });
-        setDraft({ uid, experienceId: experience.id, text: reflection.response });
+        setSaved({ uid, programId, reflection });
+        setDraft({ uid, programId, experienceId: experience.id, text: reflection.response });
       } else {
         setSaved(null);
       }
@@ -44,7 +50,7 @@ export function ExperienceReflection({ experience }: { experience: LearningExper
       // The response remains an unsaved draft until persistence is available.
     });
     return () => { cancelled = true; };
-  }, [loading, user?.uid, experience.id]);
+  }, [loading, user?.uid, experience.id, programId, selectionReady]);
 
   const listenToGuide = () => {
     setAudioError("");
@@ -62,7 +68,7 @@ export function ExperienceReflection({ experience }: { experience: LearningExper
 
 
   const submit = async () => {
-    if (submitting || response.trim().length < 25 || loading) return;
+    if (submitting || response.trim().length < 25 || loading || (user && !selectionReady)) return;
     setSaveError("");
     const uid = user?.uid;
     if (!uid) {
@@ -72,9 +78,10 @@ export function ExperienceReflection({ experience }: { experience: LearningExper
     }
     setSubmitting(true);
     try {
-      const reflection = await saveLearnerReflection(experience.id, response.trim());
+      const reflection = await saveLearnerReflection(experience.id, response.trim(), { uid, programId });
       if (!reflection) throw new Error("REFLECTION_NOT_SAVED");
-      setSaved({ uid, reflection });
+      if (firebaseAuth.currentUser?.uid !== uid) throw new Error("LEARNER_IDENTITY_CHANGED");
+      setSaved({ uid, programId, reflection });
       setEditing(false);
     } catch {
       setSaveError("No pudimos guardar tu reflexión en tu expediente. Reintenta para conservarla.");
@@ -82,6 +89,13 @@ export function ExperienceReflection({ experience }: { experience: LearningExper
       setSubmitting(false);
     }
   };
+
+  if (user && !loading && !selectionReady) return (
+    <section className={styles.reflection} aria-label="Seleccionar curso para guardar la reflexión">
+      <ProgramPicker audience="learner" selection={selection} />
+      <p role="status">Selecciona el programa donde deseas conservar esta reflexión antes de continuar.</p>
+    </section>
+  );
 
   if (completed) {
     return (
@@ -136,7 +150,7 @@ export function ExperienceReflection({ experience }: { experience: LearningExper
       )}
       <textarea
         aria-label="Tu reflexión"
-        onChange={(event) => setDraft({ uid: user?.uid ?? null, experienceId: experience.id, text: event.target.value })}
+        onChange={(event) => setDraft({ uid: user?.uid ?? null, programId, experienceId: experience.id, text: event.target.value })}
         placeholder="Escribe una respuesta concreta, con una situación real si puedes."
         rows={7}
         value={response}

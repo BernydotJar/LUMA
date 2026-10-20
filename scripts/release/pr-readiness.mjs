@@ -19,7 +19,7 @@ export function evaluateReleaseReadiness(directory = root, options = {}) {
     return {
       status: 'PASS', sourceDigest,
       graphEventId: approval.graphEventId,
-      verified: ['exact-source', 'critic-digest', 'verifier-digest', 'append-only-graph-gate'],
+      verified: ['exact-source', 'external-ed25519-signature', 'critic-digest', 'verifier-digest', 'append-only-graph-gate'],
     };
   } catch (error) {
     return {

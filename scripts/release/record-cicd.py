@@ -117,14 +117,17 @@ def main() -> int:
             material = [p for p in changed if p.startswith(('src/', 'public/', 'scripts/', '.github/', 'e2e/')) and p != 'src/generated/release-manifest.json']
             assert not material, 'Code changed after the tested commit'
             metadata = {'source_digest': digest}
-            evidence(critic_path, 'adversarial-raw', critic['evaluation']['verdict'], 'ibm-granite-critic', metadata)
+            evidence(critic_path, 'adversarial-raw', critic['evaluation']['verdict'], 'github-codex-critic' if critic.get('model') == 'github-codex-review' else 'ibm-granite-critic', metadata)
             critic_id = evidence(verifier_path, 'critic', 'PASS', 'independent-verifier', {**metadata, 'meaning': 'Granite finding dispositions, not a rewritten model verdict', 'raw_critic_sha256': sha(critic_path)})
             verifier_id = evidence(verifier_path, 'verification', 'PASS', 'independent-verifier', metadata)
             ci_id = evidence('evidence/cicd-enterprise/release-ci.json', 'ci', 'PASS', 'github-actions-verifier', metadata)
             gate = runtime.evaluate_gate(NODE, actor='independent-verifier', gate_id=gate_id, result=GateResult.PASS, evidence_ids=[critic_id, verifier_id, ci_id], note=f'Code review and all five checks passed for source digest {digest}; production remains separately gated.')
             transition(NodeStatus.REVIEW, 'Candidate approved for the independently verified main deployment workflow')
-            save('evidence/cicd-enterprise/release-approval.json', {'schemaVersion': 1, 'status': 'PASS', 'sourceDigest': digest, 'testedCommit': commit, 'unresolvedCritical': 0, 'unresolvedHigh': 0, 'graphEventId': gate.event_id, 'graphEventHash': gate.event_hash, 'critic': {'sha256': sha(critic_path)}, 'verifier': {'sha256': sha(verifier_path)}})
-            command('node', 'scripts/release/review-gate.mjs')
+            save('evidence/cicd-enterprise/release-approval.json', {'schemaVersion': 1, 'status': 'PASS', 'sourceDigest': digest, 'testedCommit': commit, 'ciRunId': args.ci_run, 'unresolvedCritical': 0, 'unresolvedHigh': 0, 'graphEventId': gate.event_id, 'graphEventHash': gate.event_hash, 'critic': {'sha256': sha(critic_path)}, 'verifier': {'sha256': sha(verifier_path)}})
+            # The local process cannot mint independent authorization. The
+            # protected-main attestor signs only after external review/CI.
+            # Verifying now must fail until that CI-sourced signature arrives.
+            print('PENDING_EXTERNAL_ED25519_SIGNATURE: Graph gate recorded, protected signer still required')
         else:
             result = load('evidence/cicd-enterprise/production/release-result.json')
             smoke = load('evidence/cicd-enterprise/production/smoke.json')

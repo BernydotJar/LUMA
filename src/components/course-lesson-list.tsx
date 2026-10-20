@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowRight, BookOpen, Check, Clock3, LockKeyhole, PlayCircle, RefreshCw } from "lucide-react";
 import { useLumaAuth } from "@/components/auth-provider";
-import { firebaseAuth } from "@/lib/firebase-client";
+import { captureLearnerRequestScope, learnerProgramHeaders, assertLearnerRequestScope } from "@/lib/learner-program-request";
+import { ProgramPicker, useProgramSelection } from "@/components/program-picker";
 import type { CourseLessonSummary, LessonCheckpoint } from "@/lib/course-delivery";
 import styles from "@/app/learn/course/course.module.css";
 
@@ -24,12 +25,23 @@ function learningPosition(lesson: ListedLesson) {
 /** Remount on Firebase identity change so no prior learner's course or media flashes. */
 export function CourseLessonList() {
   const { user, loading } = useLumaAuth();
-  return <CourseLessonListForIdentity key={user?.uid ?? "guest"} user={user} loading={loading} />;
+  const selection = useProgramSelection("learner");
+  return <>
+    {user && <ProgramPicker audience="learner" selection={selection} />}
+    <CourseLessonListForIdentity key={`${user?.uid ?? "guest"}:${selection.status}:${selection.programId ?? "none"}`}
+      user={user} loading={loading || (Boolean(user) && selection.status === "loading")}
+      programId={selection.status === "entitled" ? selection.programId : null}
+      selected={selection.status === "showcase" || (selection.status === "entitled" && Boolean(selection.programId))}
+      selectionError={selection.status === "denied" || selection.status === "error"} />
+  </>;
 }
 
-function CourseLessonListForIdentity({ user, loading }: {
+function CourseLessonListForIdentity({ user, loading, programId, selected, selectionError }: {
   user: ReturnType<typeof useLumaAuth>["user"];
   loading: boolean;
+  programId: string | null;
+  selected: boolean;
+  selectionError: boolean;
 }) {
   const [state, setState] = useState<ListingState>("idle");
   const [items, setItems] = useState<ListedLesson[]>([]);
@@ -39,53 +51,51 @@ function CourseLessonListForIdentity({ user, loading }: {
   useEffect(() => {
     const uid = user?.uid;
     if (loading || !uid) return;
+    if (selectionError || !selected) return;
     let cancelled = false;
     void (async () => {
       setState("loading");
       try {
-        const current = firebaseAuth.currentUser;
-        if (!current || current.uid !== uid) return;
-        const token = await current.getIdToken();
-        if (firebaseAuth.currentUser?.uid !== uid) return;
-        const response = await fetch("/api/learning/course", {
-          cache: "no-store", headers: { authorization: `Bearer ${token}` },
-        });
+        const scope = captureLearnerRequestScope(uid, programId);
+        const headers = await learnerProgramHeaders(scope);
+        const response = await fetch("/api/learning/course", { cache: "no-store", headers });
         if (cancelled) return;
         if (response.status === 403) return setState("needs_access");
         if (response.status === 409) return setState("selection");
         if (response.status === 503) return setState("unavailable");
         if (!response.ok) return setState("error");
         const data = await response.json() as LessonResponse;
-        if (cancelled || firebaseAuth.currentUser?.uid !== uid) return;
+        if (cancelled) return;
+        assertLearnerRequestScope(scope);
         setItems(data.lessons);
         setCursor(data.nextCursor);
         setState("ready");
       } catch { if (!cancelled) setState("error"); }
     })();
     return () => { cancelled = true; };
-  }, [loading, user?.uid]);
+  }, [loading, user?.uid, programId, selected, selectionError]);
 
   async function loadMore() {
     const uid = user?.uid;
-    const current = firebaseAuth.currentUser;
-    if (!uid || !cursor || !current || current.uid !== uid || busy) return;
+    if (!uid || !cursor || busy || !selected) return;
     setBusy(true);
     try {
-      const token = await current.getIdToken();
-      if (firebaseAuth.currentUser?.uid !== uid) return;
+      const scope = captureLearnerRequestScope(uid, programId);
+      const headers = await learnerProgramHeaders(scope);
       const response = await fetch(`/api/learning/course?cursor=${encodeURIComponent(cursor)}`, {
-        cache: "no-store", headers: { authorization: `Bearer ${token}` },
+        cache: "no-store", headers,
       });
       if (!response.ok) throw new Error("COURSE_PAGE_FAILED");
       const page = await response.json() as LessonResponse;
-      if (firebaseAuth.currentUser?.uid !== uid) return;
+      assertLearnerRequestScope(scope);
       setItems((previous) => [...previous, ...page.lessons]);
       setCursor(page.nextCursor);
     } catch { setState("error"); }
     finally { setBusy(false); }
   }
 
-  if (loading || (user && ["idle", "loading"].includes(state))) {
+  const viewState: ListingState = selectionError ? "error" : !selected ? "selection" : state;
+  if (loading || (user && ["idle", "loading"].includes(viewState))) {
     return <section className={styles.empty} role="status">Comprobando tu programa y las lecciones publicadas…</section>;
   }
   if (!user) return (
@@ -96,12 +106,12 @@ function CourseLessonListForIdentity({ user, loading }: {
       <Link className="button-primary" href="/login">Iniciar sesión <ArrowRight size={16} /></Link>
     </section>
   );
-  if (state !== "ready") {
-    const message = state === "needs_access"
+  if (viewState !== "ready") {
+    const message = viewState === "needs_access"
       ? ["Aún no encontramos una matrícula activa", "Comprueba el correo de tu compra o solicita ayuda a tu institución."]
-      : state === "selection"
+      : viewState === "selection"
         ? ["Tienes varios programas", "La selección de programa se habilitará con una vista de matrículas verificada."]
-        : state === "unavailable"
+        : viewState === "unavailable"
           ? ["Las lecciones todavía no están habilitadas aquí", "Puedes seguir con las prácticas disponibles mientras la institución prepara la publicación."]
           : ["No pudimos cargar las lecciones", "Tu avance no se ha perdido. Vuelve a intentarlo cuando la conexión esté disponible."];
     return <section className={styles.empty} role="status"><LockKeyhole size={24} aria-hidden="true" />
