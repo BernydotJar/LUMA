@@ -97,6 +97,37 @@ describe.runIf(emulator)("OIDC-maintained classroom expiry / disconnect worker",
     );
   });
 
+  it("does not start a parallel sweep while another Scheduler lease is active", async () => {
+    const lease = firebaseAdminFirestore.collection("liveClassroomMaintenance").doc("reconciler");
+    await lease.set({
+      leaseId: "other-worker",
+      leaseUntil: new Date(startTime.getTime() + 65_000).toISOString(),
+    });
+    const result = await runClassroomMaintenance(startTime);
+    expect(result.state).toBe("already_running");
+    expect(result.expiredEnrollments).toBe(0);
+    expect(provider.removeParticipant).not.toHaveBeenCalled();
+    expect((await firebaseAdminFirestore.collection("commerceEnrollments")
+      .doc(enrollment.enrollmentId).get()).get("status")).toBe("active");
+    await lease.delete();
+  });
+
+  it("returns partial_failure when an unrelated damaged outbox needs repair", async () => {
+    const queue = firebaseAdminFirestore.collection("liveClassroomRevocations");
+    const invalidRef = queue.doc(createHash("sha256").update(randomUUID()).digest("hex"));
+    await invalidRef.set({
+      enrollmentId: "malformed",
+      sourceEventId: "bad",
+      state: "pending",
+      updatedAt: new Date(startTime.getTime() - 10_000).toISOString(),
+    });
+    const result = await runClassroomMaintenance(startTime);
+    expect(result.state).toBe("partial_failure");
+    expect(result.retryableFailures).toBeGreaterThan(0);
+    expect((await invalidRef.get()).get("state")).toBe("pending");
+    await invalidRef.delete();
+  });
+
   it("never expires a future entitlement, even when processing other due records", async () => {
     await firebaseAdminFirestore.collection("commerceEnrollments")
       .doc(enrollment.enrollmentId)

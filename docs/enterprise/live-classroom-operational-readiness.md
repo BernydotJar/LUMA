@@ -89,3 +89,14 @@ fixtures cannot be reconciled. CI therefore starts a **new, isolated Firebase
 emulator instance** for maintenance integration tests after the main suite. Do not
 weaken the production job by ignoring partial failures or changing asserted
 postconditions. The new job still checks that a bad vendor response is retryable.
+
+
+## Runtime deadline and non-overlapping sweeps
+
+The worker issues a **120-second Firestore lease**, intentionally longer than the
+documented Cloud Scheduler **90-second request deadline**. It checks a
+**75-second cooperative execution budget** before starting each enrollment and
+pending media removal; remaining work stays persisted and surfaces as a
+retryable `partial_failure`, not a false success. External provider requests
+can themselves still run longer than this cooperative budget: a separate
+provider timeout and long-running load test remain mandatory before activation.

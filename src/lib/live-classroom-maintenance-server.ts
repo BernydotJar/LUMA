@@ -7,7 +7,10 @@ import type { CommerceEnrollmentRecord } from "./commerce/enrollment";
 const MAX_DUE_ENROLLMENTS = 25;
 const MAX_DUE_JOBS = 25;
 const MAX_JOB_SCAN = 100;
-const LEASE_MILLISECONDS = 55_000;
+// Longer than the 90-second Scheduler request deadline to avoid overlapping runs
+// when Cloud Run is still processing after a caller has timed out.
+const LEASE_MILLISECONDS = 120_000;
+const RUN_TIME_BUDGET_MS = 75_000;
 
 export type ClassroomMaintenanceResult = {
   state: "completed" | "partial_failure" | "already_running";
@@ -85,6 +88,8 @@ export async function runClassroomMaintenance(
 ): Promise<ClassroomMaintenanceResult> {
   if (!Number.isFinite(now.getTime())) throw new Error("CLASSROOM_MAINTENANCE_TIME_INVALID");
   const nowISO = now.toISOString();
+  const startedMonotonicAt = performance.now();
+  const withinBudget = () => performance.now() - startedMonotonicAt < RUN_TIME_BUDGET_MS;
   const leaseRef = firebaseAdminFirestore.collection("liveClassroomMaintenance").doc("reconciler");
   const leaseId = randomUUID();
   const acquired = await firebaseAdminFirestore.runTransaction(async (tx) => {
@@ -118,6 +123,7 @@ export async function runClassroomMaintenance(
       .limit(MAX_DUE_ENROLLMENTS + 1).get();
     totals.limitReached ||= due.size > MAX_DUE_ENROLLMENTS;
     for (const doc of due.docs.slice(0, MAX_DUE_ENROLLMENTS)) {
+      if (!withinBudget()) { totals.limitReached = true; break; }
       try {
         const { expired, queued } = await expireOneEnrollment(doc.id, nowISO);
         if (expired) totals.expiredEnrollments += 1;
@@ -142,6 +148,7 @@ export async function runClassroomMaintenance(
       pending.size >= MAX_JOB_SCAN || stalled.size >= MAX_JOB_SCAN;
 
     for (const doc of available.slice(0, MAX_DUE_JOBS)) {
+      if (!withinBudget()) { totals.limitReached = true; break; }
       const job = doc.data() as StoredRevocationJob;
       if (!/^[a-f0-9]{64}$/.test(job.enrollmentId) ||
           typeof job.sourceEventId !== "string" || !job.sourceEventId ||
