@@ -40,9 +40,21 @@ export function authenticateExternalCodexReview(comments,sourceCommit) {
   return true;
 }
 
-export function validateQualityRun(run,jobs,commit) {
-  invariant(run.head_sha === commit && run.event === 'pull_request' &&
-    ['failure','success'].includes(run.conclusion), 'CI did not test the signed commit');
+/** Never sign a newer PR head using an ancestor's CI or review. */
+export function requireExactReviewedHead(testedCommit, candidateHead, prHead) {
+  invariant(/^[a-f0-9]{40}$/.test(testedCommit) && /^[a-f0-9]{40}$/.test(candidateHead) &&
+    testedCommit === candidateHead && candidateHead === prHead,
+    'Independent approval requires exact matching PR HEAD, tested commit and reviewed source');
+  return true;
+}
+
+export function validateQualityRun(run,jobs,commit,registeredWorkflowId) {
+  invariant(Number.isSafeInteger(registeredWorkflowId) && registeredWorkflowId > 0 &&
+    run.workflow_id === registeredWorkflowId && run.path === '.github/workflows/quality.yml' &&
+    run.repository?.full_name === REPO && run.head_repository?.full_name === REPO &&
+    run.head_sha === commit && run.event === 'pull_request' &&
+    ['failure','success'].includes(run.conclusion),
+    'CI must use the registered Product quality workflow on the exact reviewed PR HEAD');
   for (const name of REQUIRED) {
     const found = jobs.filter(job => job.name === name);
     invariant(found.length === 1 && found[0].conclusion === 'success', `Quality job not approved: ${name}`);
@@ -70,15 +82,16 @@ async function main() {
   const head=git(directory,'rev-parse','HEAD');
   invariant(/^[a-f0-9]{40}$/.test(head) && /^[a-f0-9]{40}$/.test(approval.testedCommit),
     'Missing verified source commit');
-  git(directory,'merge-base','--is-ancestor',approval.testedCommit,head);
   const pr=gh(`repos/${REPO}/pulls/${prArg}`);
-  invariant(pr.head.sha === head && pr.base.ref === 'main' && pr.state === 'open' && pr.merged === false,
+  requireExactReviewedHead(approval.testedCommit,head,pr.head.sha);
+  invariant(pr.base.ref === 'main' && pr.state === 'open' && pr.merged === false,
     'PR changed since checkout or no longer open');
   const source=reviewedSourceDigest(directory);
   invariant(source === approval.sourceDigest,'Source digest differs from independently reviewed code');
   const run=gh(`repos/${REPO}/actions/runs/${approval.ciRunId}`);
   const jobs=gh(`repos/${REPO}/actions/runs/${approval.ciRunId}/jobs?filter=latest&per_page=100`).jobs;
-  validateQualityRun(run,jobs,approval.testedCommit);
+  const workflow=gh(`repos/${REPO}/actions/workflows/quality.yml`);
+  validateQualityRun(run,jobs,approval.testedCommit,workflow.id);
   const comments=gh(`repos/${REPO}/issues/${prArg}/comments?per_page=100`);
   authenticateExternalCodexReview(comments,approval.testedCommit);
   const criticPath=resolve(directory,'evidence/cicd-enterprise/granite-review.json');

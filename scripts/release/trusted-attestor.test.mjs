@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { authenticateExternalCodexReview, validateQualityRun } from './trusted-attestor.mjs';
+import { authenticateExternalCodexReview, validateQualityRun, requireExactReviewedHead } from './trusted-attestor.mjs';
 const SHA='a'.repeat(40);
 const good = {user:{login:'chatgpt-codex-connector[bot]'},body:'<!-- codex-review-state:v1 '+
   JSON.stringify({code_review:{commit_sha:SHA,status:'completed',has_any_findings:false,has_unresolved_findings:false}})+' -->'};
@@ -25,12 +25,31 @@ test('PR-authored self-reviews, stale SHAs, and unresolved findings cannot autho
   expect(()=>authenticateExternalCodexReview([],SHA)).toThrow();
 });
 
-test('protected attestor requires nine verified checks on the reviewed head SHA', () => {
-  const run={head_sha:SHA,event:'pull_request',conclusion:'failure'};
-  expect(validateQualityRun(run,jobs,SHA)).toBe(true);
-  expect(()=>validateQualityRun({...run,head_sha:'b'.repeat(40)},jobs,SHA)).toThrow();
-  expect(()=>validateQualityRun(run,jobs.map(j=>j.name==='coach-rbac'?{...j,conclusion:'failure'}:j),SHA)).toThrow();
-  expect(()=>validateQualityRun(run,[...jobs,{name:'unknown-check',conclusion:'failure'}],SHA)).toThrow();
+test('protected attestor requires nine verified checks from the registered GitHub quality workflow', () => {
+  const workflowId=375119015;
+  const run={head_sha:SHA,event:'pull_request',conclusion:'failure',workflow_id:workflowId,
+    path:'.github/workflows/quality.yml',repository:{full_name:'BernydotJar/LUMA'},
+    head_repository:{full_name:'BernydotJar/LUMA'}};
+  expect(validateQualityRun(run,jobs,SHA,workflowId)).toBe(true);
+  expect(()=>validateQualityRun({...run,head_sha:'b'.repeat(40)},jobs,SHA,workflowId)).toThrow();
+  expect(()=>validateQualityRun({...run,workflow_id:workflowId+1},jobs,SHA,workflowId)).toThrow();
+  expect(()=>validateQualityRun({...run,path:'.github/workflows/fake-quality.yml'},jobs,SHA,workflowId)).toThrow();
+  expect(()=>validateQualityRun({...run,repository:{full_name:'other/repo'}},jobs,SHA,workflowId)).toThrow();
+  expect(()=>validateQualityRun(run,jobs,SHA,undefined)).toThrow();
+  expect(()=>validateQualityRun(run,jobs.map(j=>j.name==='coach-rbac'?{...j,conclusion:'failure'}:j),SHA,workflowId)).toThrow();
+  expect(()=>validateQualityRun(run,[...jobs,{name:'unknown-check',conclusion:'failure'}],SHA,workflowId)).toThrow();
+});
+
+test('rejects ancestor CI and stale independent review on an advanced PR head', () => {
+  const reviewed='a'.repeat(40);
+  const newHead='b'.repeat(40);
+  expect(requireExactReviewedHead(reviewed,reviewed,reviewed)).toBe(true);
+  // The previous ancestor-only policy would have accepted this PR advance,
+  // allowing a protected signer to attest UNTESTED changed source bytes.
+  expect(()=>requireExactReviewedHead(reviewed,newHead,newHead)).toThrow(/exact matching/);
+  expect(()=>requireExactReviewedHead(reviewed,reviewed,newHead)).toThrow(/exact matching/);
+  expect(()=>requireExactReviewedHead(newHead,newHead,reviewed)).toThrow(/exact matching/);
+  expect(()=>requireExactReviewedHead('invalid',newHead,newHead)).toThrow(/exact matching/);
 });
 
 import { readFileSync } from 'node:fs';
