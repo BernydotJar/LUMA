@@ -46,6 +46,7 @@ jobs:
           PR_NUMBER: ${{ inputs.pr_number }}
           LUMA_RELEASE_ATTESTATION_PRIVATE_KEY_B64: ${{ secrets.LUMA_RELEASE_ATTESTATION_PRIVATE_KEY_B64 }}
           LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
+          LUMA_RELEASE_TRUSTED_REVIEWERS: ${{ vars.LUMA_RELEASE_TRUSTED_REVIEWERS }}
         run: node protected-policy/scripts/release/trusted-attestor.mjs "$GITHUB_WORKSPACE/candidate-data" "$PR_NUMBER"
       - name: Export signed approval without any private key material
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

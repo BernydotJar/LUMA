@@ -22,9 +22,12 @@ export function reviewedSourceDigest(directory = root) {
   return digest.digest('hex');
 }
 export function assertReviewAttestation(attestation, digest) {
-  invariant(attestation?.schemaVersion === 1 && attestation.status === 'PASS', 'Independent Graph release approval is absent or blocked');
+  invariant(attestation?.schemaVersion === 2 && attestation.status === 'PASS', 'Independent Graph release approval is absent or blocked');
   invariant(/^[a-f0-9]{64}$/.test(digest) && attestation.sourceDigest === digest, 'Source changed since independent review');
   invariant(attestation.unresolvedCritical === 0 && attestation.unresolvedHigh === 0, 'Blocking adversarial findings remain');
+  invariant(attestation.review?.commitSha === attestation.testedCommit &&
+    Number.isSafeInteger(attestation.review?.reviewId) && attestation.review.reviewId > 0,
+    'External review provenance is missing or signed for another source SHA');
   invariant(typeof attestation.graphEventId === 'string' && /^[a-f0-9]{64}$/.test(attestation.graphEventHash ?? ''), 'Missing Graph gate receipt');
   for (const item of ['critic', 'verifier']) invariant(/^[a-f0-9]{64}$/.test(attestation[item]?.sha256 ?? ''), `Missing ${item} evidence digest`);
 }

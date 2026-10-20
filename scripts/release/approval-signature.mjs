@@ -3,22 +3,30 @@
 import { createPublicKey, createPrivateKey, sign, verify } from 'node:crypto';
 import { invariant } from './policy.mjs';
 
-export const RELEASE_SIGNER_ID = 'luma-independent-attestor-v1';
+export const RELEASE_SIGNER_ID = 'luma-independent-attestor-v2';
 const SHA256 = /^[a-f0-9]{64}$/;
 const COMMIT = /^[a-f0-9]{40}$/;
 const DETAILED_KEYS = ['schemaVersion','status','sourceDigest','testedCommit','ciRunId',
-  'graphEventId','graphEventHash','criticSha256','verifierSha256'];
+  'graphEventId','graphEventHash','criticSha256','verifierSha256',
+  'reviewMethod','reviewer','reviewId','reviewCommit'];
 
 /** Fixed-order, length-delimited values to avoid ambiguous JSON serialization. */
 export function approvalSigningBytes(approval) {
-  invariant(approval?.schemaVersion === 1 && approval.status === 'PASS', 'Unsigned release approval is invalid');
+  invariant(approval?.schemaVersion === 2 && approval.status === 'PASS', 'Unsigned release approval is invalid');
   invariant(SHA256.test(approval.sourceDigest) && COMMIT.test(approval.testedCommit), 'Signature requires exact source/commit');
   invariant(/^\d+$/.test(String(approval.ciRunId ?? '')) && Number(approval.ciRunId) > 0, 'Signature requires a concrete successful QA run');
   invariant(approval.graphEventId && SHA256.test(approval.graphEventHash), 'Signature requires the Graph receipt');
   invariant(SHA256.test(approval.critic?.sha256) && SHA256.test(approval.verifier?.sha256), 'Signature requires critic and verifier receipts');
-  const values = [1,'PASS',approval.sourceDigest,approval.testedCommit,String(approval.ciRunId),
-    approval.graphEventId,approval.graphEventHash,approval.critic.sha256,approval.verifier.sha256];
-  return Buffer.from('LUMA\0SOURCE-RELEASE-ATTESTATION\0v1\0'+
+  const review = approval.review;
+  invariant(['github-codex-clean-review','github-human-approval'].includes(review?.method) &&
+    typeof review.reviewer === 'string' && review.reviewer.length > 0 &&
+    Number.isSafeInteger(review.reviewId) && review.reviewId > 0 &&
+    review.commitSha === approval.testedCommit,
+    'Signature requires exact-SHA authenticated external reviewer provenance');
+  const values = [2,'PASS',approval.sourceDigest,approval.testedCommit,String(approval.ciRunId),
+    approval.graphEventId,approval.graphEventHash,approval.critic.sha256,approval.verifier.sha256,
+    review.method,review.reviewer,String(review.reviewId),review.commitSha];
+  return Buffer.from('LUMA\0SOURCE-RELEASE-ATTESTATION\0v2\0'+
     DETAILED_KEYS.map((key,index)=>`${key}:${Buffer.byteLength(String(values[index]))}:${values[index]}`).join('\n')+'\n');
 }
 

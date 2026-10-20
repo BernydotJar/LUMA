@@ -6,10 +6,16 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { assertReviewAttestation, reviewedSourceDigest, verifyReview } from './review-gate.mjs';
 const digest = 'a'.repeat(64);
-const approval = { schemaVersion: 1, status: 'PASS', sourceDigest: digest, unresolvedCritical: 0, unresolvedHigh: 0, graphEventId: 'event-1', graphEventHash: 'b'.repeat(64), critic: { sha256: 'c'.repeat(64) }, verifier: { sha256: 'd'.repeat(64) } };
+const approval = { schemaVersion: 2, status: 'PASS', sourceDigest: digest,
+  testedCommit: 'e'.repeat(40), ciRunId: '39342438406',
+  unresolvedCritical: 0, unresolvedHigh: 0, graphEventId: 'event-1', graphEventHash: 'b'.repeat(64),
+  critic: { sha256: 'c'.repeat(64) }, verifier: { sha256: 'd'.repeat(64) },
+  review: { method:'github-codex-clean-review', reviewer:'chatgpt-codex-connector[bot]',
+    reviewId: 12345678, commitSha:'e'.repeat(40) } };
 test('accepts a complete source-bound independent approval', () => assert.doesNotThrow(() => assertReviewAttestation(approval, digest)));
 test('rejects missing, blocked, stale, or incomplete approvals', () => {
-  for (const value of [null, { ...approval, status: 'BLOCKED' }, { ...approval, sourceDigest: 'e'.repeat(64) }, { ...approval, graphEventHash: null }, { ...approval, critic: null }, { ...approval, verifier: null }]) assert.throws(() => assertReviewAttestation(value, digest));
+  for (const value of [null, { ...approval, status: 'BLOCKED' }, { ...approval, sourceDigest: 'e'.repeat(64) }, { ...approval, graphEventHash: null }, { ...approval, critic: null }, { ...approval, verifier: null }, { ...approval, schemaVersion: 1 },
+    { ...approval, review: null }, { ...approval, review: { ...approval.review, commitSha:'f'.repeat(40) } }]) assert.throws(() => assertReviewAttestation(value, digest));
 });
 test('never approves unresolved critical or high findings', () => {
   assert.throws(() => assertReviewAttestation({ ...approval, unresolvedCritical: 1 }, digest));
@@ -71,6 +77,8 @@ test('only an external Ed25519 private key can authorize the exact source and Gr
     { graphEventHash: 'f'.repeat(64) },
     { ciRunId: '39342438407' },
     { critic: { sha256: 'f'.repeat(64) } },
+    { review: { ...signed.review, reviewer:'BernydotJar' } },
+    { review: { ...signed.review, reviewId: signed.review.reviewId + 1 } },
     { signature: { ...signed.signature, value: 'A'.repeat(86) + '==' } },
   ]) {
     assert.throws(() => verifyApprovalSignature({ ...signed, ...patch }, publicB64), /signature|Signature/i);

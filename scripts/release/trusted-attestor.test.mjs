@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
-import { authenticateExternalCodexReview, validateQualityRun, requireExactReviewedHead } from './trusted-attestor.mjs';
+import { authenticateExternalCodexReview, authenticateTrustedHumanReview,
+  authenticateIndependentSourceReview, validateQualityRun, requireExactReviewedHead } from './trusted-attestor.mjs';
 const SHA='a'.repeat(40);
 const good = {user:{login:'chatgpt-codex-connector[bot]'},body:'<!-- codex-review-state:v1 '+
   JSON.stringify({code_review:{commit_sha:SHA,status:'completed',has_any_findings:false,has_unresolved_findings:false}})+' -->'};
@@ -62,4 +63,55 @@ test('protected signer cannot be triggered by candidate PR and never executes ca
   expect(workflow).not.toMatch(/pull_request_target:|\n  pull_request:/);
   expect(workflow).not.toMatch(/run:\s*(npm|bash|node) candidate-data\//);
   expect(workflow).toContain('node protected-policy/scripts/release/trusted-attestor.mjs');
+});
+
+
+const external = { id: 901, user: { login: 'external-auditor', type: 'User' },
+  state: 'APPROVED', commit_id: SHA, submitted_at: '2026-10-20T18:00:00Z' };
+
+test('an external approved GitHub reviewer may replace a rate-limited Codex verdict', () => {
+  const failedCodex = { ...good, id: 765,
+    body: good.body.replace('"status":"completed"','"status":"failed"') };
+  const receipt = authenticateIndependentSourceReview([failedCodex], [external], SHA,
+    'BernydotJar', 'external-auditor');
+  expect(receipt).toEqual({ method:'github-human-approval', reviewer:'external-auditor', reviewId:901 });
+});
+
+test('human self-approval and untrusted identities never authorize protected signing', () => {
+  const author = { ...external, user: { login:'BernydotJar',type:'User' } };
+  for(const [reviews,allowlist] of [
+    [[author],'BernydotJar'], [[external],'BernydotJar'],
+    [[{...external, user:{login:'external-auditor',type:'Bot'}}],'external-auditor'],
+    [[{...external, user:{login:'external-auditor',type:'User'},state:'COMMENTED'}],'external-auditor'],
+    [[external],''],
+  ]) {
+    expect(()=>authenticateTrustedHumanReview(reviews,SHA,'BernydotJar',allowlist)).toThrow();
+  }
+});
+
+test('a stale, superseded, dismissed or changed-source approval is rejected', () => {
+  expect(()=>authenticateTrustedHumanReview([{...external,commit_id:'b'.repeat(40)}],SHA,
+    'BernydotJar','external-auditor')).toThrow();
+  expect(()=>authenticateTrustedHumanReview([external,{...external,id:902,state:'CHANGES_REQUESTED',
+    submitted_at:'2026-10-20T18:01:00Z'}],SHA,'BernydotJar','external-auditor')).toThrow();
+  expect(()=>authenticateTrustedHumanReview([external,{...external,id:902,state:'DISMISSED',
+    submitted_at:'2026-10-20T18:01:00Z'}],SHA,'BernydotJar','external-auditor')).toThrow();
+  expect(()=>authenticateTrustedHumanReview([external],SHA,'BernydotJar','external-auditor',
+    ['external-auditor'])).toThrow();
+  const veto={...external,id:903,user:{login:'other-auditor',type:'User'},state:'CHANGES_REQUESTED'};
+  expect(()=>authenticateTrustedHumanReview([external,veto],SHA,
+    'BernydotJar','external-auditor,other-auditor')).toThrow();
+});
+
+test('verified independent Codex success works without human review, but unresolved findings never bypass', () => {
+  const clean={...good,id:804};
+  expect(authenticateIndependentSourceReview([clean],[],SHA,'BernydotJar','')).toEqual({
+    method:'github-codex-clean-review', reviewer:'chatgpt-codex-connector[bot]',reviewId:804,
+  });
+  const findings={...clean,body:clean.body.replace('"has_unresolved_findings":false','"has_unresolved_findings":true')};
+  expect(()=>authenticateIndependentSourceReview([findings],[external],SHA,
+    'BernydotJar','external-auditor')).toThrow(/findings/);
+  const running={...clean,body:clean.body.replace('"status":"completed"','"status":"running"')};
+  expect(()=>authenticateIndependentSourceReview([running],[external],SHA,
+    'BernydotJar','external-auditor')).toThrow(/running/);
 });

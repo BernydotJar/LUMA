@@ -16,14 +16,29 @@ for (const timezoneId of clientZones) {
     const errors: string[] = [];
     page.on("pageerror", error => errors.push(error.message));
 
-    // Catch even short-lived duplicate subtrees during asynchronous hydration.
+    // Next's App Router can stage inert/hidden streaming nodes in the DOM.
+    // Report only duplicate *paintable* learner controls that survive a paint,
+    // rather than treating an inaccessible, unpainted staging node as a UI bug.
     await page.addInitScript(() => {
       const qaWindow = window as typeof window & { __learnerDuplicates?: number[] };
       qaWindow.__learnerDuplicates = [];
+      let scheduled = false;
+      const painted = (selector: string) => [...document.querySelectorAll(selector)].filter((node) => {
+        if (!node.isConnected || node.closest('[hidden], [inert], [aria-hidden="true"]')) return false;
+        const bounds = node.getBoundingClientRect();
+        const style = getComputedStyle(node);
+        return bounds.width > 0 && bounds.height > 0 &&
+          style.display !== 'none' && style.visibility === 'visible';
+      }).length;
+      const hasDuplicate = () => painted('section[data-variant="hero"] a.button-primary') > 1 ||
+        painted('#journey summary') > 1;
       new MutationObserver(() => {
-        const ctas = document.querySelectorAll('section[data-variant="hero"] a.button-primary').length;
-        const journeys = document.querySelectorAll("#journey summary").length;
-        if (ctas > 1 || journeys > 1) qaWindow.__learnerDuplicates?.push(performance.now());
+        if (scheduled || !hasDuplicate()) return;
+        scheduled = true;
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          if (hasDuplicate()) qaWindow.__learnerDuplicates?.push(performance.now());
+          scheduled = false;
+        }));
       }).observe(document, { childList: true, subtree: true });
     });
 

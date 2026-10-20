@@ -123,7 +123,7 @@ def main() -> int:
             ci_id = evidence('evidence/cicd-enterprise/release-ci.json', 'ci', 'PASS', 'github-actions-verifier', metadata)
             gate = runtime.evaluate_gate(NODE, actor='independent-verifier', gate_id=gate_id, result=GateResult.PASS, evidence_ids=[critic_id, verifier_id, ci_id], note=f'Code review and all five checks passed for source digest {digest}; production remains separately gated.')
             transition(NodeStatus.REVIEW, 'Candidate approved for the independently verified main deployment workflow')
-            save('evidence/cicd-enterprise/release-approval.json', {'schemaVersion': 1, 'status': 'PASS', 'sourceDigest': digest, 'testedCommit': commit, 'ciRunId': args.ci_run, 'unresolvedCritical': 0, 'unresolvedHigh': 0, 'graphEventId': gate.event_id, 'graphEventHash': gate.event_hash, 'critic': {'sha256': sha(critic_path)}, 'verifier': {'sha256': sha(verifier_path)}})
+            save('evidence/cicd-enterprise/release-approval.json', {'schemaVersion': 2, 'status': 'PASS', 'sourceDigest': digest, 'testedCommit': commit, 'ciRunId': args.ci_run, 'unresolvedCritical': 0, 'unresolvedHigh': 0, 'graphEventId': gate.event_id, 'graphEventHash': gate.event_hash, 'critic': {'sha256': sha(critic_path)}, 'verifier': {'sha256': sha(verifier_path)}})
             # The local process cannot mint independent authorization. The
             # protected-main attestor signs only after external review/CI.
             # Verifying now must fail until that CI-sourced signature arrives.

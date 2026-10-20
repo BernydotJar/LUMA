@@ -16,6 +16,19 @@ const REQUIRED = ['verify','security','firestore','identity-roles','browser',
 function gh(path) {
   return JSON.parse(execFileSync('gh', ['api',path], { encoding:'utf8',timeout:20000,maxBuffer:8*1024*1024 }));
 }
+export function ghPages(path) {
+  // GitHub CLI versions that do not implement `--slurp` still expose a stable
+  // JSON array for each explicit page. Never silently truncate review history.
+  const all = [];
+  for (let page = 1; page <= 50; page++) {
+    const suffix = path.includes('?') ? '&' : '?';
+    const rows = gh(`${path}${suffix}page=${page}`);
+    invariant(Array.isArray(rows), 'GitHub review pagination returned a non-array response');
+    all.push(...rows);
+    if (rows.length < 100) return all;
+  }
+  throw new Error('GitHub reviewer history exceeds safe pagination limit');
+}
 const git = (directory,...args) => execFileSync('git',args,{cwd:directory,encoding:'utf8',timeout:15000}).trim();
 const sha = path => createHash('sha256').update(readFileSync(path)).digest('hex');
 
@@ -38,6 +51,75 @@ export function authenticateExternalCodexReview(comments,sourceCommit) {
     latest.has_unresolved_findings === false,
     'Latest independent Codex review for exact source commit is missing or has findings');
   return true;
+}
+
+/** Alternate independent reviewer when the GitHub Codex integration is rate-limited.
+ * Only GitHub's authenticated review API and an administrator-maintained
+ * allowlist can authorize this path. Candidate-authored approval JSON cannot.
+ */
+export function authenticateTrustedHumanReview(reviews, sourceCommit, prAuthor, reviewerAllowlist,
+    candidateContributors = []) {
+  invariant(/^[a-f0-9]{40}$/.test(sourceCommit), 'Human approval requires exact full source SHA');
+  invariant(typeof prAuthor === 'string' && prAuthor.length > 0, 'PR author must be known');
+  const trusted = new Set(String(reviewerAllowlist ?? '').split(/[\n,]/)
+    .map(login => login.trim().toLowerCase())
+    .filter(login => /^[a-z0-9](?:[a-z0-9-]{0,37})$/.test(login)));
+  invariant(trusted.size > 0, 'No independently authorized reviewer logins configured');
+  const contributors = new Set([prAuthor, ...candidateContributors]
+    .filter(value => typeof value === 'string').map(value => value.toLowerCase()));
+  const reviewers = new Map();
+  for (const review of reviews) {
+    const login = review.user?.login?.toLowerCase();
+    if (!login || contributors.has(login) || !trusted.has(login) ||
+      review.user?.type !== 'User' || !Number.isSafeInteger(review.id) || review.id <= 0 ||
+      !['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED'].includes(review.state)) continue;
+    const existing = reviewers.get(login);
+    const stamp = typeof review.submitted_at === 'string' ? review.submitted_at : '';
+    if (!existing || stamp > existing.stamp || stamp === existing.stamp && review.id > existing.id) {
+      reviewers.set(login, { ...review, stamp });
+    }
+  }
+  // A second allowlisted reviewer requesting changes at this SHA must veto
+  // an approval from another person until the concern is addressed.
+  invariant(![...reviewers.values()].some(review =>
+    review.state === 'CHANGES_REQUESTED' && review.commit_id === sourceCommit),
+    'An independent authorized reviewer has outstanding requested changes');
+  const approved = [...reviewers.values()].find(review =>
+    review.state === 'APPROVED' && review.commit_id === sourceCommit &&
+    Boolean(review.submitted_at));
+  invariant(approved, 'An allowlisted independent human must approve the exact source SHA in GitHub');
+  return { method: 'github-human-approval', reviewer: approved.user.login, reviewId: approved.id };
+}
+
+/** A completed Codex review with findings is a hard stop, never a human override.
+ * If Codex fails due to quota/unavailability, a trusted external reviewer can
+ * supply an actual GitHub APPROVED review on the final source commit instead.
+ */
+export function authenticateIndependentSourceReview(comments, reviews, sourceCommit, prAuthor,
+    reviewerAllowlist, candidateContributors = []) {
+  const latest = comments.filter(comment => comment.user?.login === 'chatgpt-codex-connector[bot]')
+    .flatMap(comment => {
+      const match = comment.body?.match(/<!-- codex-review-state:v1 (\{[^\n]*\}) -->/);
+      if (!match) return [];
+      try {
+        const state = JSON.parse(match[1]).code_review;
+        return state?.commit_sha === sourceCommit
+          ? [{ ...state, postedAt: comment.updated_at ?? comment.created_at ?? '',
+              reviewId: comment.id }] : [];
+      } catch { return []; }
+    }).sort((a, b) => a.postedAt.localeCompare(b.postedAt)).at(-1);
+  if (latest?.status === 'completed') {
+    invariant(latest.has_any_findings === false && latest.has_unresolved_findings === false,
+      'Completed independent Codex review has unresolved or undisposed findings');
+    invariant(Number.isSafeInteger(latest.reviewId) && latest.reviewId > 0,
+      'GitHub Codex receipt is missing its authenticated issue-comment ID');
+    return { method: 'github-codex-clean-review', reviewer: 'chatgpt-codex-connector[bot]',
+      reviewId: latest.reviewId };
+  }
+  invariant(!latest || latest.status === 'failed',
+    'Independent Codex review is still running; wait for a final result');
+  return authenticateTrustedHumanReview(reviews, sourceCommit, prAuthor, reviewerAllowlist,
+    candidateContributors);
 }
 
 /** Never sign a newer PR head using an ancestor's CI or review. */
@@ -92,8 +174,15 @@ async function main() {
   const jobs=gh(`repos/${REPO}/actions/runs/${approval.ciRunId}/jobs?filter=latest&per_page=100`).jobs;
   const workflow=gh(`repos/${REPO}/actions/workflows/quality.yml`);
   validateQualityRun(run,jobs,approval.testedCommit,workflow.id);
-  const comments=gh(`repos/${REPO}/issues/${prArg}/comments?per_page=100`);
-  authenticateExternalCodexReview(comments,approval.testedCommit);
+  const comments=ghPages(`repos/${REPO}/issues/${prArg}/comments?per_page=100`);
+  const reviews=ghPages(`repos/${REPO}/pulls/${prArg}/reviews?per_page=100`);
+  const commits=ghPages(`repos/${REPO}/pulls/${prArg}/commits?per_page=100`);
+  const contributors=commits.flatMap(commit =>
+    [commit.author?.login,commit.committer?.login].filter(Boolean));
+  const independent=authenticateIndependentSourceReview(comments,reviews,
+    approval.testedCommit,pr.user.login,process.env.LUMA_RELEASE_TRUSTED_REVIEWERS,
+    contributors);
+  console.log('EXTERNAL_REVIEW_VERIFIED',JSON.stringify(independent));
   const criticPath=resolve(directory,'evidence/cicd-enterprise/granite-review.json');
   const verifierPath=resolve(directory,'evidence/cicd-enterprise/independent-review.json');
   invariant(sha(criticPath) === approval.critic?.sha256 && sha(verifierPath) === approval.verifier?.sha256,
@@ -116,7 +205,9 @@ async function main() {
   }
   // PR-owned critic text cannot grant permission; the Codex app's real review
   // identity/status was independently authenticated from GitHub above.
-  const signed=signApproval(approval,process.env.LUMA_RELEASE_ATTESTATION_PRIVATE_KEY_B64);
+  const signed=signApproval({ ...approval,
+    review: { ...independent, commitSha: approval.testedCommit },
+  },process.env.LUMA_RELEASE_ATTESTATION_PRIVATE_KEY_B64);
   verifyApprovalSignature(signed,process.env.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64);
   writeFileSync(approvalPath,JSON.stringify(signed,null,2)+'\n');
   // Reuse the protected-base source/Graph verifier over the inert candidate.
