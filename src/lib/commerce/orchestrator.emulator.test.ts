@@ -305,7 +305,7 @@ describe.runIf(emulatorEnabled)(
         customerExternalId: undefined,
         productExternalId: undefined,
         transactionExternalId: subscriptionId,
-        metadata: { accessEndsAt: "2026-10-20T12:00:00Z" },
+        metadata: { accessEndsAt: "2026-10-20T12:00:00-06:00" },
       });
       const result = await orchestrator!.handle(
         cancellation,
@@ -317,7 +317,7 @@ describe.runIf(emulatorEnabled)(
         outcome: "no_entitlement_change",
         enrollment: {
           status: "active",
-          accessEndsAt: "2026-10-20T12:00:00Z",
+          accessEndsAt: "2026-10-20T18:00:00.000Z",
         },
       });
       expect(
@@ -355,7 +355,7 @@ describe.runIf(emulatorEnabled)(
       const scheduled = await orchestrator!.handle(cancelled, `corr-cancel-${suffix}`);
       expect(scheduled.outcome).toBe("no_entitlement_change");
       expect(scheduled.enrollment?.status).toBe("active");
-      expect(scheduled.enrollment?.accessEndsAt).toBe("2026-10-10T12:10:00Z");
+      expect(scheduled.enrollment?.accessEndsAt).toBe("2026-10-10T12:10:00.000Z");
       expect(isActiveCommerceEnrollment(scheduled.enrollment!, "2026-10-09T00:00:00Z")).toBe(true);
       expect(isActiveCommerceEnrollment(scheduled.enrollment!, "2026-10-11T00:00:00Z")).toBe(false);
 

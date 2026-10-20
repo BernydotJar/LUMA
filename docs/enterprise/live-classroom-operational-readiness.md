@@ -100,3 +100,28 @@ pending media removal; remaining work stays persisted and surfaces as a
 retryable `partial_failure`, not a false success. External provider requests
 can themselves still run longer than this cooperative budget: a separate
 provider timeout and long-running load test remain mandatory before activation.
+
+
+### Dedicated Cloud WebRTC test fixture
+
+The Cloud-only workflow creates an ephemeral local loopback HTTPS-equivalent
+secure browser origin on a random localhost port to allow fake camera and mic
+permissions. It does **not** load or scrape the provider API as a webpage.
+Each Chromium peer uses a separate incognito context. Synthetic chat and
+participants are discarded with the Cloud room at the end; no customer media
+or tokens are persisted in the evidence JSON.
+
+
+### Timestamp correctness and legacy records
+
+Every new commerce cancellation scheduling an access cutoff now stores
+`accessEndsAt` in normalized UTC `YYYY-MM-DDTHH:mm:ss.sssZ` form.
+Institutional grants already normalize their expiry in the request contract.
+This is required because Firestore range queries over ISO **strings** compare
+lexicographically, and an incoming merchant timestamp with an offset such as
+`2026-10-20T12:00:00-06:00` is not ordered by its UTC instant until
+normalized. A stateful test verifies its persistence as
+`2026-10-20T18:00:00.000Z`.
+**Legacy non-normalized records** must be audited/migrated with appropriate
+dry-run and transaction-safe backfill before the scheduler is enabled;
+the new writer does not retroactively repair historical records.

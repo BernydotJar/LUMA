@@ -180,9 +180,13 @@ export class FirestoreCommerceEnrollmentStore {
     event: NormalizedCommerceEvent;
     accessEndsAt: string;
   }): Promise<CommerceEnrollmentRecord> {
-    if (!Number.isFinite(Date.parse(input.accessEndsAt))) {
+    const accessEndTime = Date.parse(input.accessEndsAt);
+    if (!Number.isFinite(accessEndTime)) {
       throw new Error("COMMERCE_ACCESS_END_INVALID");
     }
+    // Firestore's indexed string ordering only matches chronological ordering
+    // for canonical UTC ISO timestamps. Merchant webhooks may carry offsets.
+    const normalizedAccessEndsAt = new Date(accessEndTime).toISOString();
     const ref = this.ref(input.entitlementId);
     return this.firestore.runTransaction(async (transaction) => {
       const snapshot = await transaction.get(ref);
@@ -195,7 +199,7 @@ export class FirestoreCommerceEnrollmentStore {
       }
       const updated: CommerceEnrollmentRecord = {
         ...current,
-        accessEndsAt: input.accessEndsAt,
+        accessEndsAt: normalizedAccessEndsAt,
         updatedAt: new Date().toISOString(),
         lastProvider: input.event.provider,
         lastProviderEventId: input.event.externalEventId,

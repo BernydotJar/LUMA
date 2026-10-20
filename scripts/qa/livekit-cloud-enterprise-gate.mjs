@@ -6,6 +6,7 @@
 import { chromium } from '@playwright/test';
 import { AccessToken, RoomServiceClient } from 'livekit-server-sdk';
 import { randomUUID } from 'node:crypto';
+import { createServer } from 'node:http';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
 const target = process.env.LIVEKIT_CLOUD_TEST_URL || '';
@@ -24,6 +25,24 @@ endpoint.protocol = 'https:';
 const api = new RoomServiceClient(endpoint.toString(), apiKey, apiSecret);
 const room = 'luma_enterprise_gate_' + randomUUID().replaceAll('-', '');
 const roomNotCreated = 'luma_auto_create_guard_' + randomUUID().replaceAll('-', '');
+// A loopback HTML document provides a deterministic, browser-secure context for
+// camera/mic permissions. LiveKit Cloud's API endpoint is not a user-facing webpage.
+const fixtureServer = createServer((_request, response) => {
+  response.writeHead(200, {
+    'Content-Type': 'text/html; charset=utf-8',
+    'Cache-Control': 'no-store',
+  });
+  response.end('<!doctype html><html><head><title>LUMA Media Acceptance</title></head><body></body></html>');
+});
+await new Promise((resolve, reject) => {
+  fixtureServer.once('error', reject);
+  fixtureServer.listen(0, '127.0.0.1', resolve);
+});
+const address = fixtureServer.address();
+if (!address || typeof address === 'string') {
+  throw new Error('Cannot start isolated loopback media test fixture');
+}
+const fixtureOrigin = 'http://127.0.0.1:' + address.port;
 const browser = await chromium.launch({
   headless: true,
   args: ['--no-sandbox', '--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'],
@@ -46,7 +65,7 @@ async function createBrowser(identity, roomName = room) {
   const context = await browser.newContext({ permissions: ['microphone', 'camera'] });
   contexts.push(context);
   const page = await context.newPage();
-  await page.goto(endpoint.toString(), { waitUntil: 'domcontentloaded' });
+  await page.goto(fixtureOrigin, { waitUntil: 'domcontentloaded' });
   await page.addScriptTag({ path: 'node_modules/livekit-client/dist/livekit-client.umd.js' });
   const credential = await token(identity, roomName);
   return { page, identity, credential };
@@ -134,6 +153,22 @@ try {
   await second.page.waitForFunction(() => window.__room?.state === 'disconnected', undefined, {
     timeout: 15_000,
   });
+  // End-for-everyone must also fence a previously joined instructor's cached
+  // roomJoin JWT, not merely a JWT for a room that never existed.
+  const closedRoomReplay = await instructor.page.evaluate(async ({ ws, jwt }) => {
+    const test = new LivekitClient.Room();
+    try {
+      await test.connect(ws, jwt, { maxRetries: 0 });
+      await test.disconnect();
+      return { incorrectlyRecreated: true };
+    } catch {
+      return { rejected: true };
+    }
+  }, { ws: target, jwt: instructor.credential });
+  if (!closedRoomReplay.rejected) {
+    throw new Error('NO-GO: instructor cached JWT recreated a completed Cloud room');
+  }
+  checks.push({ action: 'closed_room_cached_token_denied', passed: true });
   const orphan = await createBrowser('orphan-learner', roomNotCreated);
   const autoCreate = await orphan.page.evaluate(async ({ ws, jwt }) => {
     const room = new LivekitClient.Room();
@@ -158,6 +193,7 @@ try {
 } finally {
   await Promise.allSettled(contexts.map((c) => c.close()));
   await browser.close();
+  await new Promise((resolve) => fixtureServer.close(resolve));
   await api.deleteRoom(room).catch(() => undefined);
   await api.deleteRoom(roomNotCreated).catch(() => undefined);
 }
