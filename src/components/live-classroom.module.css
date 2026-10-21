@@ -99,6 +99,10 @@
   .secure{display:none}
   .prejoin{padding:12px}
   .media{padding:8px;min-height:550px}
+  /* In a column flex layout, min-height on .media does not establish a definite
+     height for its percentage-height LiveKit descendant. Reserve a real stage
+     height so the Liquid Glass dock stays at the bottom on mobile. */
+  .video{height:max(534px,65dvh);min-height:max(534px,65dvh);flex:0 0 auto}
   .policy{white-space:normal}
   .roomTitle{align-items:flex-start}
   .video :global(.lk-focus-layout-wrapper),

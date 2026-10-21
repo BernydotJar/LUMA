@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "@firebase/auth";
 import Link from "next/link";
 import {
-  LiveKitRoom, PreJoin, VideoConference, useParticipants, useRoomContext,
+  LiveKitRoom, PreJoin, VideoConference, useConnectionState, useParticipants, useRoomContext,
 } from "@livekit/components-react";
 import { ArrowLeft, Hand, MicOff, Radio, ShieldCheck, Users, VideoOff } from "lucide-react";
 import { ConnectionState, DisconnectReason, RoomEvent } from "livekit-client";
@@ -73,6 +73,9 @@ async function postClassroomControl(
 function ClassroomHandControl({ offeringId, sessionId }: { offeringId: string; sessionId: string }) {
   const { user } = useLumaAuth();
   const room = useRoomContext();
+  // Room.state is mutable; subscribing to connection transitions forces a React
+  // update so a newly connected learner can actually raise a hand.
+  const connectionState = useConnectionState();
   const [raised, setRaised] = useState(() => isRaised(room.localParticipant.attributes));
   const [pending, setPending] = useState(false);
   const [notice, setNotice] = useState("");
@@ -88,7 +91,7 @@ function ClassroomHandControl({ offeringId, sessionId }: { offeringId: string; s
   }, [room]);
 
   async function toggleHand() {
-    if (!user || pending || room.state !== ConnectionState.Connected) return;
+    if (!user || pending || connectionState !== ConnectionState.Connected) return;
     setPending(true);
     setNotice("");
     try {
@@ -107,7 +110,7 @@ function ClassroomHandControl({ offeringId, sessionId }: { offeringId: string; s
   return <div className={styles.handDock}>
     <button type="button" className={styles.handButton} aria-pressed={raised}
       aria-label={raised ? "Bajar la mano" : "Levantar la mano"}
-      disabled={pending || room.state !== ConnectionState.Connected}
+      disabled={pending || connectionState !== ConnectionState.Connected}
       onClick={() => void toggleHand()}>
       <Hand size={18} aria-hidden="true" />
       {pending ? "Actualizando…" : raised ? "Bajar la mano" : "Levantar la mano"}
