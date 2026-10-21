@@ -1,0 +1,49 @@
+i  emulators: Starting emulators: auth, firestore
+i  emulators: Detected demo project ID "demo-luma-live-uat", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+i  firestore: Firestore Emulator logging to firestore-debug.log
+✔  firestore: Firestore Emulator was started in standard edition.
+✔  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: node scripts/qa/live-two-students-cloud-e2e.mjs
+QA_CASE isolated-dev-and-emulator-provider PASS
+QA_CASE cold-interaction-route-prewarmed-anonymously PASS
+QA_CASE created-five-synthetic-firebase-auth-users PASS
+QA_CASE admin-created-live-offering-api PASS
+QA_CASE admin-scheduled-90-minute-no-recording PASS
+QA_CASE admin-granted-two-institutional-enrollments PASS
+QA_CASE unauthorized-emulated-user-classroom-denied PASS
+QA_CASE learner-admin-api-access-denied PASS
+QA_CASE browser-login-instructor PASS
+QA_CASE branded-luma-ui-join-instructor PASS
+QA_CASE browser-login-learner-a PASS
+QA_CASE branded-luma-ui-join-learner-a PASS
+QA_CASE browser-login-learner-b PASS
+QA_CASE branded-luma-ui-join-learner-b PASS
+QA_CASE cached-livekit-cloud-tokens-from-luma-api PASS
+QA_CASE three-provider-participants-connected PASS
+QA_CASE real-luma-toolbar-camera-microphone-on-instructor PASS
+QA_CASE real-luma-toolbar-camera-microphone-on-learner-a PASS
+QA_CASE real-luma-toolbar-camera-microphone-on-learner-b PASS
+QA_CASE three-provider-real-audio-and-video-publishers PASS
+QA_CASE real-browser-decodes-media-instructor PASS
+QA_CASE real-browser-decodes-media-learner-a PASS
+QA_CASE real-browser-decodes-media-learner-b PASS
+QA_CASE learner-a-raises-hand-through-real-branded-ui PASS
+QA_CASE instructor-acknowledges-hand-through-real-ui PASS
+QA_CASE instructor-real-ui-mutes-both-students PASS
+QA_CASE learner-b-restores-own-microphone-after-instructor-mute PASS
+QA_CASE learner-instructor-only-action-denied PASS
+QA_CASE authenticated-mobile-375x812-controls PASS
+QA_CASE institutional-revocation-evicts-connected-learner-a PASS
+QA_CASE firestore-entitlement-and-roster-ban-persisted PASS
+QA_CASE cloud-stale-learner-jwt-replay PASS
+QA_CASE instructor-and-second-learner-preserved-after-revocation PASS
+QA_CASE instructor-closes-class-for-everyone PASS
+QA_CASE no-new-admission-after-close PASS
+QA_CASE cloud-closed-class-instructor-cached-jwt-replay PASS
+QA_FINAL {"overall":"PASS_AUTHENTICATED_LUMA_CLOUD_E2E","pass":36,"fail":0,"blocked":0,"error":null}
+✔  Script exited successfully (code 0)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+i  auth: Stopping Authentication Emulator
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator

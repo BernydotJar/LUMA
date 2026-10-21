@@ -1,0 +1,11 @@
+{
+  "projectId": "p_5650huuc5om",
+  "kind": "CLOUD_APP_E2E_WITH_FIREBASE_AUTH_AND_FIRESTORE_EMULATORS",
+  "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+  "overall": "PASS_AUTHENTICATED_LUMA_CLOUD_E2E",
+  "pass": 36,
+  "fail": 0,
+  "blocked": 0,
+  "failures": [],
+  "exitCode": 0
+}

@@ -1,0 +1,142 @@
+{
+  "schema": "luma.cloud-e2e.evidence-sha256.v1",
+  "createdAt": "2026-10-21T03:24:09.180954+00:00",
+  "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+  "cloudProjectId": "p_5650huuc5om",
+  "localAuthenticatedCloudTests": {
+    "passed": 36,
+    "failed": 0
+  },
+  "cloudProjectPolicy": "NO_GO_AUTO_ROOM_CREATION",
+  "graphHarness": {
+    "decision": "NO_GO",
+    "blockers": 82
+  },
+  "files": [
+    {
+      "path": "evidence/live-classroom-acceptance/cloud-enterprise-verification.json",
+      "bytes": 937,
+      "sha256": "3c2429523b4afec6246e129fa9d9d111296fabd7c7610b3551f0713d98f6f098"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/cloud-revoke-before-close-verification.json",
+      "bytes": 1135,
+      "sha256": "c55d7636e36de18d639e3b6f962d81e068d90476f321048f4487823eda54f4cd"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/cloud-provider-qa-20261020/cloud-provider-result.json",
+      "bytes": 937,
+      "sha256": "3c2429523b4afec6246e129fa9d9d111296fabd7c7610b3551f0713d98f6f098"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/cloud-provider-qa-20261020/execution.log",
+      "bytes": 691,
+      "sha256": "39738f239f4c42e6a850bf53e37f3dabc8bd5376ebb6aee86986bbae977ca7dc"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/cloud-provider-qa-20261020/status.json",
+      "bytes": 876,
+      "sha256": "0f2ba887b09dc1a6e11edd9ef8d25cc5b2265c3f25e9128ac0080ce355a8f35f"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/cloud-revoke-before-close-qa-20261020/cloud-provider-result.json",
+      "bytes": 1135,
+      "sha256": "c55d7636e36de18d639e3b6f962d81e068d90476f321048f4487823eda54f4cd"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/cloud-revoke-before-close-qa-20261020/execution.log",
+      "bytes": 837,
+      "sha256": "b0a5c4602b13360eca1338b334d20dc6addfa3d2ef8df377e355c24edcd8925a"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/cloud-revoke-before-close-qa-20261020/status.json",
+      "bytes": 1083,
+      "sha256": "cb11f905da3abc8ec5f09b84e185403d87bffacbfaa9ca8e9d5244bfb4e0d066"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/authenticated-e2e-result.json",
+      "bytes": 6819,
+      "sha256": "50a19f228b2905946536f7cc0c10766c6736e0e8fa6dd951babf26f003388e90"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/cloud-go-no-go.md",
+      "bytes": 880,
+      "sha256": "b03630deba4d3ebc054f347d1fc03f40c744354c6cd41efcc60fa533dfb0ad47"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/cloud-security-findings.md",
+      "bytes": 1716,
+      "sha256": "8ddedb18ccbbdcf9e10ca369bb2a7c3edf6d9dd9fb11b11513c6c59860dc9c39"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/cloud-uat-executive.md",
+      "bytes": 5630,
+      "sha256": "888a943b761e53bb374904e1030f0a2d8bcd750ad95f57cfc217101368f88a67"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/cloud-uat-matrix.json",
+      "bytes": 17850,
+      "sha256": "b87c43d3e23e7233bd84b7996bdd09750e034c088088b54a8485c902c3a0d549"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/full-firestore-emulator.log",
+      "bytes": 3700,
+      "sha256": "4f672b39e9ca7754be33c8d0e91aea77df97756b091681eaefc1810a498001ed"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/full-source-verify.log",
+      "bytes": 15147,
+      "sha256": "7b66d355dabcbc2f1d78eda41dcab15f369e4a0048f3c7dedc2aff530252627a"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/graph-harness-product-acceptance.json",
+      "bytes": 9380,
+      "sha256": "f21c8cfdf3a2bd73e9a0e952b6da4a8b93990218de63bc75385d8801f791f493"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/instructor-after-hand.png",
+      "bytes": 228134,
+      "sha256": "7dab6da94bf91859dfc878a9971626dbb20cbb288556d1f08d5f8227c7c7b1a1"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/instructor-luma-connected.png",
+      "bytes": 228607,
+      "sha256": "580d13aea1a40d7d490477888f38e02124d9637f0b78d1df37432f1a4809354c"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/learner-a-after-revocation.png",
+      "bytes": 230184,
+      "sha256": "52cdca343b3313b5041bf2d8a14f5e2b81003fd83a1c1ef1e14e1d685a994b97"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/learner-a-luma-connected.png",
+      "bytes": 220894,
+      "sha256": "bf9f71ee704745a456c3d41e98c63b4594d78ef93e0854c0bd8d9013a86a5b44"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/learner-b-375x812-live.png",
+      "bytes": 102319,
+      "sha256": "db5e55426009eac75ac90307aa628461fa164d203a6388fb16f43ec8d9341979"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/learner-b-luma-connected.png",
+      "bytes": 227114,
+      "sha256": "e4d1d299e361a8e77b3c3f3db243e46f675bc19d04a4f784e3d4e4b375e5227d"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/next-dev-local.log",
+      "bytes": 12193,
+      "sha256": "44ace74abd7cba15b6ba111ace276a306cf539f7a654fbeef2dd447589c083d0"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/run-status.json",
+      "bytes": 292,
+      "sha256": "63cbf89ffb5906e74c6507697a8e30ef5f7d173e0dac2ccb743086cfef677a08"
+    },
+    {
+      "path": "evidence/live-classroom-acceptance/two-students-cloud-app-20261020/runner.log",
+      "bytes": 2731,
+      "sha256": "2a4e99d12a19d2724afe4a972f09ae7af106408d4c0878d4fc30be5223f0afc8"
+    }
+  ]
+}

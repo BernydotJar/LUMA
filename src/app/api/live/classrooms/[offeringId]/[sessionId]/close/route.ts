@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
 import { requireLearningUser } from "@/lib/learning-server";
 import { classroomCloseAvailable, classroomRoomName, resolveClassroomRole, type ClassroomClaims } from "@/lib/live-classroom";
-import { ClassroomError, liveKitConfiguration, roomService } from "@/lib/live-classroom-server";
+import { ClassroomError, liveKitConfiguration, roomService, roomReference } from "@/lib/live-classroom-server";
+import {
+  closeRevocationTargets, MAX_CLOSE_CREDENTIALS, revokeClassroomJoinTokens,
+} from "@/lib/live-classroom-close";
 import { programDeliveryStore } from "@/lib/program-delivery-server";
 
 export const runtime = "nodejs";
@@ -29,14 +32,60 @@ export async function POST(
     }
     // Fail before persisting completion when the media service is not configured.
     const configuration = liveKitConfiguration();
+    // Complete the business session before provider calls so LUMA denies all
+    // *new* roomJoin tokens during closure/retry, even if Cloud is slow.
     await programDeliveryStore.completeClassroomSession(offeringId, sessionId);
     const roomName = classroomRoomName(data.offering.tenantId, offeringId, sessionId);
+    const service = roomService(configuration);
+    const roomRef = roomReference(roomName);
     try {
-      await roomService(configuration).deleteRoom(roomName);
+      const localRoom = await roomRef.get();
+      if (!localRoom.get("closeTokensRevokedAt")) {
+        // A disconnected participant can retain a previously issued JWT.
+        // The Firestore roster is authoritative for every token issuance,
+        // and the connected provider roster covers legacy/migrated records.
+        const issued = await roomRef.collection("authorized")
+          .limit(MAX_CLOSE_CREDENTIALS + 1).get();
+        if (issued.size > MAX_CLOSE_CREDENTIALS) {
+          throw new Error("CLASSROOM_CLOSE_IDENTITY_LIMIT");
+        }
+        let connected: Array<{ identity: string }> = [];
+        try {
+          connected = await service.listParticipants(roomName);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          if (!/room.*not found|requested room does not exist|404/i.test(message)) {
+            throw error;
+          }
+        }
+        const identities = closeRevocationTargets(
+          issued.docs.map((document) => document.id),
+          connected.map((participant) => participant.identity),
+        );
+        if (identities.length > 0) {
+          await revokeClassroomJoinTokens(service, roomName, identities);
+        }
+        // This fence is persisted only after every provider revocation passed.
+        // Retried close requests may proceed directly to DeleteRoom.
+        await roomRef.set({
+          tenantId: data.offering.tenantId,
+          programId: data.offering.programId,
+          offeringId, sessionId,
+          recordingPolicy: data.session.recordingPolicy,
+          closeTokensRevokedAt: new Date().toISOString(),
+          closeTokensRevokedCount: identities.length,
+        }, { merge: true });
+      }
+      await service.deleteRoom(roomName);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      // A room may already be empty/deleted; the domain transition is idempotent.
-      if (!/not found|does not exist|404/i.test(message)) {
+      // Room deletion is idempotent after the credential fence, but any
+      // unknown service failure is retryable, never a fictitious success.
+      if (!/room.*not found|requested room does not exist|404/i.test(message)) {
+        throw new ClassroomError("classroom_close_retryable", 503);
+      }
+      const fence = await roomRef.get();
+      if (!fence.get("closeTokensRevokedAt")) {
         throw new ClassroomError("classroom_close_retryable", 503);
       }
     }
