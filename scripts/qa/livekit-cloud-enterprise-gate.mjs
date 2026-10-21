@@ -4,7 +4,7 @@
  * Refuses self-hosted servers so Cloud-only JWT revocation cannot be falsely certified.
  */
 import { chromium } from '@playwright/test';
-import { AccessToken, RoomServiceClient } from 'livekit-server-sdk';
+import { AccessToken, RoomServiceClient, TrackSource } from 'livekit-server-sdk';
 import { randomUUID } from 'node:crypto';
 import { createServer } from 'node:http';
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -56,7 +56,8 @@ async function token(identity, roomName) {
   t.addGrant({
     room: roomName, roomJoin: true, roomCreate: false, roomAdmin: false, roomRecord: false,
     canPublishData: true, canSubscribe: true,
-    canPublishSources: ['camera', 'microphone', ...(identity === 'instructor' ? ['screen_share'] : [])],
+    canPublishSources: [TrackSource.CAMERA, TrackSource.MICROPHONE,
+      ...(identity === 'instructor' ? [TrackSource.SCREEN_SHARE] : [])],
   });
   return t.toJwt();
 }
@@ -106,9 +107,17 @@ try {
     }
     checks.push({ action: 'webrtc_publish', role: user.identity, passed: true });
   }
-  const participants = await api.listParticipants(room);
+  // Cloud publisher snapshots are eventually consistent; poll instead of a single read.
+  let participants = [];
+  const publicationDeadline = Date.now() + 20000;
+  while (Date.now() < publicationDeadline) {
+    participants = await api.listParticipants(room);
+    if (participants.length === 3 && participants.every((p) => p.tracks.length >= 2)) break;
+    await new Promise((resolve) => setTimeout(resolve, 350));
+  }
   if (participants.length !== 3 || participants.some((p) => p.tracks.length < 2)) {
-    throw new Error('Cloud room did not expose three independent real media publishers');
+    throw new Error('Cloud media tracks missing after 20s: roles=' +
+      participants.length + ' counts=' + participants.map((p) => p.tracks.length).join(','));
   }
   await instructor.page.evaluate(async () => {
     const payload = new TextEncoder().encode('luma-acceptance-synthetic-chat');
