@@ -30,6 +30,12 @@ function errorText(error: unknown) {
     certificate_configuration_required: "Faltan configuraciones de firma o almacenamiento en el entorno.",
     certificate_completion_required: "Primero registra y aprueba la finalización académica.",
     certificate_completion_already_approved: "Esta evaluación ya fue aprobada y conserva su evidencia original.",
+    certificate_assessment_policy_not_approved: "Esta cohorte todavía no tiene una política de evaluación aprobada por una persona independiente.",
+    certificate_published_curriculum_required: "La versión académica aprobada no está publicada o ya cambió.",
+    certificate_assessment_policy_stale: "Los criterios de certificación no coinciden con las evaluaciones del curso publicado.",
+    certificate_evaluation_not_passed: "Faltan respuestas o ejercicios aprobados conforme a la rúbrica de esta cohorte.",
+    certificate_assessment_changed: "La versión o aprobación académica cambió. Consulta de nuevo la evaluación.",
+    certificate_untrusted_evidence_reference: "Las evidencias académicas se seleccionan desde el expediente del servidor, no manualmente.",
   };
   return translation[code] ?? code ?? "No fue posible completar esta operación.";
 }
@@ -51,6 +57,10 @@ export function CertificateConsole() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [confirmIssue, setConfirmIssue] = useState(false);
+  const [assessment, setAssessment] = useState<{
+    state: "checking" | "eligible" | "blocked";
+    detail: string;
+  }>({ state: "blocked", detail: "Selecciona una persona para comprobar su evaluación." });
   const [certificateStatus, setCertificateStatus] = useState<null | {
     status: "preparing" | "pending_signature" | "signed" | "failed" | "revoked";
     signedAt: string | null; verificationUrl: string | null;
@@ -105,6 +115,19 @@ export function CertificateConsole() {
   }, [accountUid, offeringId, revision]);
 
   const selected = learners.find(row => row.learnerId === selectedId);
+  useEffect(() => {
+    if (!selectedId || !offeringId || !accountUid || selected?.approvedAt) return;
+    let cancelled = false;
+    void certificateApi<{ eligible: boolean; assessmentCount: number; minimumScore: number }>(
+      `/api/certificates/eligibility?offeringId=${encodeURIComponent(offeringId)}&learnerId=${encodeURIComponent(selectedId)}`,
+    ).then(data => {
+      if (!cancelled) setAssessment({ state: data.eligible ? "eligible" : "blocked",
+        detail: `${data.assessmentCount} evaluaciones validadas (mínimo ${data.minimumScore}/100 cada una).` });
+    }).catch(error => {
+      if (!cancelled) setAssessment({ state: "blocked", detail: errorText(error) });
+    });
+    return () => { cancelled = true; };
+  }, [selectedId, offeringId, accountUid, revision, selected?.approvedAt]);
   useEffect(() => {
     if (!selected?.certificateId || !accountUid) return;
     let cancelled = false;
@@ -212,7 +235,7 @@ export function CertificateConsole() {
             <div className={styles.learnerList}>
               {learners.map(learner => <button type="button" key={learner.learnerId}
                 className={styles.learner} data-selected={selectedId === learner.learnerId}
-                onClick={() => { setSelectedId(learner.learnerId); setRationale(""); setLegalName(""); setIdentityConfirmed(false); setConfirmIssue(false); setCertificateStatus(null); setMessage(""); }}>
+                onClick={() => { setAssessment({ state: "checking", detail: "Comprobando rúbricas y entregas calificadas…" }); setSelectedId(learner.learnerId); setRationale(""); setLegalName(""); setIdentityConfirmed(false); setConfirmIssue(false); setCertificateStatus(null); setMessage(""); }}>
                 <span><strong>{learner.name}</strong>
                   <small>{learner.certificateId ? "Certificación iniciada" :
                     learner.approvedAt ? "Finalización aprobada" :
@@ -233,6 +256,9 @@ export function CertificateConsole() {
               {selected.approvedAt ? <div className={styles.approved}><CheckCircle2 size={17} />
                 Finalización aprobada el {new Date(selected.approvedAt).toLocaleDateString("es")}</div> :
                 <>
+                  <div role="status" className={assessment.state === "eligible" ? styles.approved : styles.warning}>
+                    <strong>Elegibilidad académica:</strong> {assessment.detail}
+                  </div>
                   <label htmlFor="cert-legal-name">Nombre legal confirmado con los registros institucionales</label>
                   <input id="cert-legal-name" type="text" maxLength={120}
                     autoComplete="off" value={legalName}
@@ -249,7 +275,7 @@ export function CertificateConsole() {
                     placeholder="Describe competencias demostradas, actividades revisadas y criterio aplicado. Mínimo 40 caracteres."
                     onChange={event => setRationale(event.target.value)} />
                   <button type="button" className="button-primary"
-                    disabled={busy || rationale.trim().length < 40 || legalName.trim().length < 4 || !identityConfirmed}
+                    disabled={busy || assessment.state !== "eligible" || rationale.trim().length < 40 || legalName.trim().length < 4 || !identityConfirmed}
                     onClick={() => void advance("approve")}>Aprobar finalización</button>
                 </>}
               {selected.approvedAt && !selected.certificateId && selected.identityReady &&
