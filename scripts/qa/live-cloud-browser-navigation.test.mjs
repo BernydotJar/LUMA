@@ -25,3 +25,15 @@ test('unavailable app hook or a failed browser navigation is never ignored', asy
     async waitForFunction() { throw new Error('should_not_run'); } };
   await assert.rejects(navigateToAuthenticatedQaClassroom(navigationFailed, URL), /NETWORK_FAILURE/);
 });
+
+test('waits for the real logged-out AuthProvider UI before synthetic sign-in', async () => {
+  const { awaitLoggedOutQaLobby } = await import('./live-cloud-browser-navigation.mjs');
+  const seen=[];
+  const page={getByRole(role,opts){seen.push([role,opts]);return {waitFor:async args=>{seen.push(args);}};}};
+  await awaitLoggedOutQaLobby(page);
+  assert.deepEqual(seen, [
+    ['heading',{name:'Tu aula te espera',exact:true}],
+    {state:'visible',timeout:45000},
+  ]);
+  await assert.rejects(awaitLoggedOutQaLobby({getByRole:()=>({waitFor:()=>{throw Error('NO_AUTH_PROVIDER');}})}),/NO_AUTH_PROVIDER/);
+});

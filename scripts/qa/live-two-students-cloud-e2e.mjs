@@ -7,7 +7,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { execFileSync, spawn } from 'node:child_process';
 import { mkdirSync, writeFileSync, createWriteStream } from 'node:fs';
 import { chromium } from '@playwright/test';
-import { navigateToAuthenticatedQaClassroom } from './live-cloud-browser-navigation.mjs';
+import { navigateToAuthenticatedQaClassroom, awaitLoggedOutQaLobby } from './live-cloud-browser-navigation.mjs';
 import { initializeApp, deleteApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
@@ -132,11 +132,31 @@ async function loginBrowser(role,url) {
   // Cold Next dev DOMContentLoaded can stall while media routes compile.
   // The QA hook and subsequent authenticated UI checks remain mandatory.
   await navigateToAuthenticatedQaClassroom(page,url);
+  // The hook can appear before AuthProvider has initialized its persistence
+  // and onAuthStateChanged subscription, creating an intermittent lost login.
+  await awaitLoggedOutQaLobby(page);
+  const loginStarted = Date.now();
   await page.evaluate(async ({email,password})=>{
     await window.__lumaQaEmailSignIn(email,password);
   },{email:accounts[role].email,password:accounts[role].password});
-  await page.getByRole('heading',{name:/Prepárate para una experiencia en vivo/i})
-    .waitFor({timeout:25000});
+  try {
+    await page.getByRole('heading',{name:/Prepárate para una experiencia en vivo/i})
+      .waitFor({state:'visible',timeout:35000});
+  } catch (error) {
+    // A release-blocking failure remains a failure. Capture only bounded,
+    // non-secret UI state; never include Firebase bearer tokens or secrets.
+    const diag = await page.evaluate(() => ({
+      title: document.title,
+      headings: [...document.querySelectorAll('h1,h2,h3')]
+        .map(el => (el.textContent ?? '').slice(0,90)).slice(0,12),
+      statuses: [...document.querySelectorAll('[role=status],[role=alert]')]
+        .map(el => (el.textContent ?? '').slice(0,100)).slice(0,9),
+    })).catch(() => ({ browserUnresponsive: true }));
+    process.stdout.write('QA_AUTH_STATE_DIAGNOSTIC '+role+' '+JSON.stringify({
+      elapsedMs: Date.now()-loginStarted, ...diag,
+    })+'\n');
+    throw error;
+  }
   record('browser-login-'+role,'PASS',{authenticatedVia:'Firebase Auth Emulator'});
   return page;
 }

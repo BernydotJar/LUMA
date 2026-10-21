@@ -11,3 +11,13 @@ export async function navigateToAuthenticatedQaClassroom(page, url) {
     null, { timeout: 45000 },
   );
 }
+
+
+/** Match a real first-time participant: wait for AuthProvider to settle before
+ * emulator sign-in. The QA hook is initialized at module load, which alone
+ * does NOT prove the React auth observer has subscribed or completed hydration.
+ */
+export async function awaitLoggedOutQaLobby(page) {
+  await page.getByRole('heading', { name: 'Tu aula te espera', exact: true })
+    .waitFor({ state: 'visible', timeout: 45000 });
+}
