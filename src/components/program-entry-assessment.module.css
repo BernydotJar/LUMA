@@ -32,8 +32,9 @@
   padding: 0.68rem 1.05rem;
   border-radius: 0.85rem;
   border: 1px solid transparent;
-  background: var(--accent, #425f9c);
-  color: white;
+  /* Stable AA contrast in light, dark and SE themes; the theme accent can be #00a2f1 (2.82:1). */
+  background: #075a96;
+  color: #fff;
   text-decoration: none;
   font-weight: 650;
   font-size: 0.94rem;
