@@ -1,0 +1,90 @@
+{
+  "schema_version": "luma.livekit.cloud.qa-summary.v1",
+  "scope": "staging/provider-only, no production operations",
+  "livekit_project_id": "p_5650huuc5om",
+  "tested_local_source_sha": "09a5bb2061d1e622cbf3a7365c521b4c1dba20d1",
+  "pr86_remote_sha": "eb86f876992d113802ba615745246e03873ccfd6",
+  "verified_identical_git_tree": "defafc3d333ff8ff348eb106c77fe0f236e557d3",
+  "gate": {
+    "decision": "NO_GO",
+    "source_revision": "09a5bb2061d1e622cbf3a7365c521b4c1dba20d1",
+    "production_revision": null,
+    "required_business_actions": 20,
+    "unresolved_proof_blockers": 82,
+    "independent_approval": false
+  },
+  "test_runs": [
+    {
+      "id": "provider-cloud-strict-post-config",
+      "environment": "real LiveKit Cloud existing QA project, 3 isolated Chromium peers",
+      "observed_at": "2026-10-21T04:59:58.818Z",
+      "status": "PASS",
+      "passed": 9,
+      "failed": 0,
+      "check_ids": [
+        "webrtc_publish",
+        "webrtc_publish",
+        "webrtc_publish",
+        "instructor_data_chat_to_learner",
+        "connected_learner_removed",
+        "old_token_replay_denied",
+        "closed_room_cached_token_denied",
+        "automatic_room_creation_disabled",
+        "finish_for_everyone_disconnects_all"
+      ],
+      "artifact": "provider-pass.json"
+    },
+    {
+      "id": "authenticated-luma-cloud-historical",
+      "environment": "real LiveKit Cloud + Firebase Auth/Firestore Emulator + branded LUMA browser",
+      "source_sha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "source_code_delta_to_current": "evidence-only files; verified with git diff",
+      "status": "PASS",
+      "passed": 36,
+      "failed": 0,
+      "artifact": "../two-students-cloud-app-20261020/authenticated-e2e-result.json"
+    },
+    {
+      "id": "authenticated-luma-cloud-post-config-rerun",
+      "environment": "same QA project and emulated Firebase, concurrent sandbox load",
+      "source_sha": "09a5bb2061d1e622cbf3a7365c521b4c1dba20d1",
+      "status": "FAIL",
+      "passed": 4,
+      "failed": 1,
+      "failure_point": "backend API response during initial offering/session setup, before full media UAT",
+      "raw_failure": "The operation was aborted due to timeout",
+      "artifact": "app-recheck-result.json"
+    },
+    {
+      "id": "github-pr86-quality",
+      "environment": "GitHub Actions source tree=defafc3d333ff8ff348eb106c77fe0f236e557d3",
+      "status": "PASS",
+      "passed": 5,
+      "failed": 0,
+      "jobs": [
+        "verify",
+        "identity-roles",
+        "firestore",
+        "security",
+        "browser"
+      ],
+      "deployment": "skipped",
+      "run_id": 39539116644
+    },
+    {
+      "id": "graph-harness-business-acceptance",
+      "environment": "Graph Harness commit b3e991e",
+      "source_sha": "09a5bb2061d1e622cbf3a7365c521b4c1dba20d1",
+      "status": "NO_GO",
+      "critical_actions": 20,
+      "blockers": 82,
+      "artifact": "product-acceptance.json"
+    }
+  ],
+  "non_inferences": [
+    "provider Cloud PASS != product GO",
+    "previous 36/36 PASS != current full app E2E PASS",
+    "CI green != deployed runtime attestation",
+    "Graph Harness graph valid != independent product acceptance"
+  ]
+}

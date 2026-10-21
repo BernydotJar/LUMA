@@ -36,3 +36,21 @@ test("the branded classroom never issues media credentials to a guest", async ({
   expect(attendance.status()).toBe(401);
   expect(await attendance.json()).toMatchObject({ error: "authentication_required" });
 });
+
+test("an anonymous browser cannot perform educational classroom actions", async ({ page }) => {
+  await page.goto(classroom);
+  await expect(page.getByRole("button", { name: "Levantar la mano" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Silenciar micrófonos" })).toHaveCount(0);
+
+  for (const body of [
+    { action: "set_hand", raised: true },
+    { action: "acknowledge_hand", identity: "p_" + "b".repeat(64) },
+    { action: "mute_all" },
+  ]) {
+    const response = await page.request.post(
+      `/api/live/classrooms/${offeringId}/${sessionId}/interaction`, { data: body },
+    );
+    expect(response.status()).toBe(401);
+    expect(await response.json()).toMatchObject({ error: "authentication_required" });
+  }
+});

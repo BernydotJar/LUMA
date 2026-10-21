@@ -98,7 +98,22 @@ jobs:
           src/lib/program-delivery.emulator.test.ts
           src/lib/learning-store.emulator.test.ts
           src/lib/course-delivery.emulator.test.ts
-          src/lib/live-classroom-attendance.emulator.test.ts"
+          src/lib/live-classroom-attendance.emulator.test.ts
+          src/lib/live-classroom-revocation.emulator.test.ts
+          src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.emulator.test.ts"
+
+      # Operational reconciler processes ALL due enrollments and pending jobs.
+      # Other suites intentionally leave pending/refunded fixtures; run its
+      # stateful assertions on a fresh isolated Firestore emulator database.
+      - name: Run isolated live classroom expiry and revocation recovery gates
+        run: >-
+          npx --yes firebase-tools@15.30.2
+          emulators:exec
+          --project demo-luma-live-maintenance
+          --only firestore
+          "npm run test:run --
+          src/lib/live-classroom-maintenance.emulator.test.ts
+          --maxWorkers=1"
 
   identity-roles:
     runs-on: ubuntu-latest

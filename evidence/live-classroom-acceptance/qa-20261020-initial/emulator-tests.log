@@ -1,0 +1,29 @@
+i  emulators: Starting emulators: firestore
+i  emulators: Detected demo project ID "demo-luma-commerce", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+i  firestore: Firestore Emulator logging to firestore-debug.log
+✔  firestore: Firestore Emulator was started in standard edition.
+✔  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: node_modules/.bin/vitest run src/lib/live-classroom-revocation.emulator.test.ts src/lib/live-classroom-attendance.emulator.test.ts src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.emulator.test.ts --maxWorkers=1
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace/projects/LUMA-live-zoom-qa-20261020[39m
+
+ [32m✓[39m src/lib/live-classroom-attendance.emulator.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 924[2mms[22m[39m
+   [32m✓[39m LUMA classroom Firestore security and attendance [2m(2)[22m
+     [33m[2m✓[22m[39m deduplicates and reorders signed presence events for an authorized pseudonymous participant[33m 627[2mms[22m[39m
+ [32m✓[39m src/lib/live-classroom-revocation.emulator.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 480[2mms[22m[39m
+ [32m✓[39m src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.emulator.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 179[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m16 passed[39m[22m[90m (16)[39m
+[2m   Start at [22m 18:03:12
+[2m   Duration [22m 4.56s[2m (import 56%, tests 37%, transform 7%)[22m
+
+[2m     Import [22m [33m34 modules were evaluated 47 times[39m[2m · 2.39s total, 56% of tracked time[22m
+[2m            [22m [2m~661ms faster with [22m[33misolate: false[39m[2m — shared modules are evaluated once per worker instead of once per file[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-isolation[22m
+
+✔  Script exited successfully (code 0)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator

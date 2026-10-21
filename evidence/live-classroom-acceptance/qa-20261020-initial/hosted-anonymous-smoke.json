@@ -1,0 +1,66 @@
+{
+  "runAt": "2026-10-20T18:12:16.465Z",
+  "classification": "PUBLIC_READ_ONLY_ANONYMOUS_PROBE_NOT_AUTHENTICATED_UAT",
+  "checks": [
+    {
+      "host": "https://luma.lch-app.cloud",
+      "check": "home-public",
+      "status": 200,
+      "contentType": "text/html",
+      "finalPath": "/"
+    },
+    {
+      "host": "https://luma.lch-app.cloud",
+      "check": "classroom-guest-page",
+      "status": 200,
+      "contentType": "text/html",
+      "finalPath": "/classroom/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/synthetic-guest-qa"
+    },
+    {
+      "host": "https://luma.lch-app.cloud",
+      "check": "classroom-guest-token-denial",
+      "status": 401,
+      "contentType": "application/json",
+      "finalPath": "/api/live/classrooms/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/synthetic-guest-qa/token",
+      "anonymousMediaTokenIssued": false
+    },
+    {
+      "host": "https://luma.lch-app.cloud",
+      "check": "classroom-guest-moderation-denial",
+      "status": 401,
+      "contentType": "application/json",
+      "finalPath": "/api/live/classrooms/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/synthetic-guest-qa/moderate",
+      "anonymousMediaTokenIssued": false
+    },
+    {
+      "host": "https://luma--luma-learning-intelligence.us-central1.hosted.app",
+      "check": "home-public",
+      "status": 200,
+      "contentType": "text/html",
+      "finalPath": "/"
+    },
+    {
+      "host": "https://luma--luma-learning-intelligence.us-central1.hosted.app",
+      "check": "classroom-guest-page",
+      "status": 200,
+      "contentType": "text/html",
+      "finalPath": "/classroom/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/synthetic-guest-qa"
+    },
+    {
+      "host": "https://luma--luma-learning-intelligence.us-central1.hosted.app",
+      "check": "classroom-guest-token-denial",
+      "status": 401,
+      "contentType": "application/json",
+      "finalPath": "/api/live/classrooms/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/synthetic-guest-qa/token",
+      "anonymousMediaTokenIssued": false
+    },
+    {
+      "host": "https://luma--luma-learning-intelligence.us-central1.hosted.app",
+      "check": "classroom-guest-moderation-denial",
+      "status": 401,
+      "contentType": "application/json",
+      "finalPath": "/api/live/classrooms/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/synthetic-guest-qa/moderate",
+      "anonymousMediaTokenIssued": false
+    }
+  ]
+}

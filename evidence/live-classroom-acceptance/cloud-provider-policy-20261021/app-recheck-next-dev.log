@@ -1,0 +1,10 @@
+▲ Next.js 16.3.8 (webpack)
+- Local:         http://127.0.0.1:3462
+- Network:       http://127.0.0.1:3462
+✓ Ready in 937ms
+✓ Running next.config.ts took 209ms
+
+○ Compiling /login ...
+ GET /login 200 in 3.4s (next.js: 3.2s, application-code: 201ms)
+ POST /api/live/classrooms/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/qa_prewarm/interaction 401 in 72s (next.js: 69s, application-code: 3.4s)
+ POST /api/programs/admin/offerings 200 in 7.1s (next.js: 941ms, application-code: 6.1s)

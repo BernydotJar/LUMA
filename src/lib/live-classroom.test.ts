@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  classroomAdmission, classroomCapacity, classroomCloseAvailable, classroomParticipantId, classroomRoomName,
+  classroomAdmission, classroomControlAdmission, classroomCapacity, classroomCloseAvailable, classroomParticipantId, classroomRoomName,
   resolveClassroomRole, reserveClassroomTokenQuota, summarizeClassroomPresence,
 } from "./live-classroom";
 import type { CommerceEnrollmentRecord } from "./commerce/enrollment";
@@ -130,5 +130,23 @@ describe("instructor overtime-classroom closure", () => {
     expect(classroomCloseAvailable({ ...session, status: "completed" }, start + 4 * 3_600_000)).toBe(true);
     expect(classroomCloseAvailable({ ...session, status: "cancelled" }, start)).toBe(false);
     expect(classroomCloseAvailable({ ...session, classroomProvider: "external" }, start)).toBe(false);
+  });
+});
+
+
+describe("live classroom overtime teaching controls, never overtime admissions", () => {
+  it("keeps instructor and connected-learner controls available during scheduled overrun", () => {
+    const time = new Date("2026-10-20T13:00:00.000Z").getTime();
+    const start = new Date(time - 3 * 3_600_000).toISOString();
+    const active = { ...offering, status: "active" as const, deliveryMode: "live" as const };
+    const running = { ...session, startsAt: start, durationMinutes: 90, status: "scheduled" as const };
+    expect(classroomAdmission(active, running, time)).toBe("closed");
+    expect(classroomControlAdmission(active, running, time)).toBe("allowed");
+    expect(classroomControlAdmission(active, { ...running, status: "completed" }, time)).toBe("closed");
+    expect(classroomControlAdmission(active, { ...running, durationMinutes: Number.NaN }, time)).toBe("closed");
+    expect(classroomControlAdmission(active, { ...running, status: "cancelled" }, time)).toBe("closed");
+    expect(classroomControlAdmission({ ...active, status: "archived" }, running, time)).toBe("closed");
+    expect(classroomControlAdmission(active, { ...running, classroomProvider: "external" }, time)).toBe("closed");
+    expect(classroomControlAdmission(active, { ...running, startsAt: new Date(time + 40 * 60_000).toISOString() }, time)).toBe("not_open");
   });
 });

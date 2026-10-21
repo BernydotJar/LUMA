@@ -1,0 +1,49 @@
+{
+  "decision": "FAIL",
+  "checks": [
+    {
+      "action": "webrtc_publish",
+      "role": "instructor",
+      "passed": true
+    },
+    {
+      "action": "webrtc_publish",
+      "role": "learner-one",
+      "passed": true
+    },
+    {
+      "action": "webrtc_publish",
+      "role": "learner-two",
+      "passed": true
+    },
+    {
+      "action": "instructor_data_chat_to_learner",
+      "passed": true
+    },
+    {
+      "action": "connected_learner_removed",
+      "passed": true,
+      "remaining": 2
+    },
+    {
+      "action": "old_token_replay_denied",
+      "passed": true
+    },
+    {
+      "action": "revoke_remaining_instructor_and_learner_before_delete",
+      "passed": true
+    },
+    {
+      "action": "closed_room_cached_token_denied",
+      "passed": true
+    },
+    {
+      "action": "failure",
+      "passed": false,
+      "errorType": "NO-GO: Cloud project auto-created a room from a cached roomJoin JWT"
+    }
+  ],
+  "projectId": "p_5650huuc5om",
+  "source": "evidence/live-classroom-acceptance/cloud-revoke-before-close-verification.json",
+  "exitCode": 1
+}

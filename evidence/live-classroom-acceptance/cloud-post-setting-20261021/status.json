@@ -1,0 +1,64 @@
+{
+  "decision": "PROVIDER_CLOUD_PASS",
+  "checks": [
+    {
+      "action": "automatic_room_creation_disabled_fresh_room_first",
+      "passed": true
+    },
+    {
+      "action": "webrtc_publish",
+      "role": "instructor",
+      "passed": true
+    },
+    {
+      "action": "webrtc_publish",
+      "role": "learner-one",
+      "passed": true
+    },
+    {
+      "action": "webrtc_publish",
+      "role": "learner-two",
+      "passed": true
+    },
+    {
+      "action": "instructor_data_chat_to_learner",
+      "passed": true
+    },
+    {
+      "action": "connected_learner_removed",
+      "passed": true,
+      "remaining": 2
+    },
+    {
+      "action": "old_token_replay_denied",
+      "passed": true
+    },
+    {
+      "action": "close_revoke_all_remaining_media_identities",
+      "passed": true
+    },
+    {
+      "action": "room_delete_absence_confirmed_at_provider",
+      "passed": true
+    },
+    {
+      "action": "closed_room_cached_token_denied",
+      "passed": true
+    },
+    {
+      "action": "automatic_room_creation_disabled",
+      "passed": true
+    },
+    {
+      "action": "finish_for_everyone_disconnects_all",
+      "passed": true
+    },
+    {
+      "action": "post_denial_positive_control_cloud_available",
+      "passed": true
+    }
+  ],
+  "projectId": "p_5650huuc5om",
+  "source": "evidence/live-classroom-acceptance/cloud-post-setting-20261021/cloud-provider-verification.json",
+  "exitCode": 0
+}

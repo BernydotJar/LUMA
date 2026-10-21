@@ -1,0 +1,487 @@
+{
+  "schema": "luma.livekit-cloud-uat.v1",
+  "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+  "productAppAcceptance": "PASS",
+  "productionRelease": "NO_GO",
+  "cloudProjectPolicy": "NO_GO_AUTO_ROOM_CREATION",
+  "graphHarness": {
+    "decision": "NO_GO",
+    "criticalActions": 20,
+    "blockerCount": 82
+  },
+  "counts": {
+    "pass": 36,
+    "fail": 0,
+    "skipped": 0
+  },
+  "checks": [
+    {
+      "checkId": "CLOUD-LUMA-01",
+      "action": "isolated-dev-and-emulator-provider",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:23.128Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {}
+    },
+    {
+      "checkId": "CLOUD-LUMA-02",
+      "action": "cold-interaction-route-prewarmed-anonymously",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:27.177Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "coldRouteCompileAndGuardMs": 4049
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-03",
+      "action": "created-five-synthetic-firebase-auth-users",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:27.235Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "admin": 1,
+        "instructor": 1,
+        "learners": 2,
+        "unauthorized": 1,
+        "project": "demo-luma-live-uat"
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-04",
+      "action": "admin-created-live-offering-api",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:28.369Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {}
+    },
+    {
+      "checkId": "CLOUD-LUMA-05",
+      "action": "admin-scheduled-90-minute-no-recording",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:30.484Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {}
+    },
+    {
+      "checkId": "CLOUD-LUMA-06",
+      "action": "admin-granted-two-institutional-enrollments",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:30.771Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {}
+    },
+    {
+      "checkId": "CLOUD-LUMA-07",
+      "action": "unauthorized-emulated-user-classroom-denied",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:32.335Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "http": 403
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-08",
+      "action": "learner-admin-api-access-denied",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:32.348Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "http": 403
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-09",
+      "action": "browser-login-instructor",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:37.234Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "authenticatedVia": "Firebase Auth Emulator"
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-10",
+      "action": "branded-luma-ui-join-instructor",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:38.078Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "uiTestId": "live-classroom-media"
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-11",
+      "action": "browser-login-learner-a",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:38.900Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "authenticatedVia": "Firebase Auth Emulator"
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-12",
+      "action": "branded-luma-ui-join-learner-a",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:39.190Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "uiTestId": "live-classroom-media"
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-13",
+      "action": "browser-login-learner-b",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:39.970Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "authenticatedVia": "Firebase Auth Emulator"
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-14",
+      "action": "branded-luma-ui-join-learner-b",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:40.285Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "uiTestId": "live-classroom-media"
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-15",
+      "action": "cached-livekit-cloud-tokens-from-luma-api",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:40.285Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "material": "volatile memory only",
+        "roles": [
+          "instructor",
+          "learner-a"
+        ]
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-16",
+      "action": "three-provider-participants-connected",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:40.555Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "count": 3
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-17",
+      "action": "real-luma-toolbar-camera-microphone-on-instructor",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:40.629Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {}
+    },
+    {
+      "checkId": "CLOUD-LUMA-18",
+      "action": "real-luma-toolbar-camera-microphone-on-learner-a",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:40.690Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {}
+    },
+    {
+      "checkId": "CLOUD-LUMA-19",
+      "action": "real-luma-toolbar-camera-microphone-on-learner-b",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:40.778Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {}
+    },
+    {
+      "checkId": "CLOUD-LUMA-20",
+      "action": "three-provider-real-audio-and-video-publishers",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:41.300Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "count": 3,
+        "tracks": [
+          2,
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-21",
+      "action": "real-browser-decodes-media-instructor",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:41.304Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "decodedVideoElements": 3
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-22",
+      "action": "real-browser-decodes-media-learner-a",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:41.306Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "decodedVideoElements": 3
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-23",
+      "action": "real-browser-decodes-media-learner-b",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:41.309Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "decodedVideoElements": 3
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-24",
+      "action": "learner-a-raises-hand-through-real-branded-ui",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:41.912Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "actionConfirmationMs": 236
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-25",
+      "action": "instructor-acknowledges-hand-through-real-ui",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:42.150Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "actionConfirmationMs": 233
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-26",
+      "action": "instructor-real-ui-mutes-both-students",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:42.969Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {}
+    },
+    {
+      "checkId": "CLOUD-LUMA-27",
+      "action": "learner-b-restores-own-microphone-after-instructor-mute",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:43.148Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {}
+    },
+    {
+      "checkId": "CLOUD-LUMA-28",
+      "action": "learner-instructor-only-action-denied",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:43.178Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "http": 403
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-29",
+      "action": "authenticated-mobile-375x812-controls",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:43.566Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "viewport": "375x812",
+        "buttonCount": 10,
+        "dockBottomGap": 10,
+        "handDockSeparation": 25
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-30",
+      "action": "institutional-revocation-evicts-connected-learner-a",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:46.364Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "apiElapsedMs": 2549,
+        "remainingMediaPeers": 2,
+        "revokedLearnerTokenHttp": 403
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-31",
+      "action": "firestore-entitlement-and-roster-ban-persisted",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:46.556Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {}
+    },
+    {
+      "checkId": "CLOUD-LUMA-32",
+      "action": "cloud-stale-learner-jwt-replay",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:47.070Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "denied": true
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-33",
+      "action": "instructor-and-second-learner-preserved-after-revocation",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:47.163Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "remaining": 2,
+        "tracks": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-34",
+      "action": "instructor-closes-class-for-everyone",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:50.719Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {}
+    },
+    {
+      "checkId": "CLOUD-LUMA-35",
+      "action": "no-new-admission-after-close",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:50.775Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "http": 409
+      }
+    },
+    {
+      "checkId": "CLOUD-LUMA-36",
+      "action": "cloud-closed-class-instructor-cached-jwt-replay",
+      "result": "PASS",
+      "timestamp": "2026-10-21T03:18:51.315Z",
+      "sourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+      "provider": "LiveKit Cloud p_5650huuc5om",
+      "firebaseSource": "Auth/Firestore Emulator demo-luma-live-uat",
+      "category": "authenticated_ui_or_business_or_provider",
+      "assertions": {
+        "denied": true
+      }
+    }
+  ]
+}

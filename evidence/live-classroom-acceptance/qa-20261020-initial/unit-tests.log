@@ -1,0 +1,28 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace/projects/LUMA-live-zoom-qa-20261020[39m
+
+ [32m✓[39m src/lib/live-classroom-webhook-body.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/lib/live-classroom-revocation-queue.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+[90mstderr[2m | src/app/api/live/webhooks/route.test.ts[2m > [22m[2msigned LiveKit join revocation fence[2m > [22m[2mfails retryably when the media provider cannot disconnect revoked access
+[22m[39mClassroom attendance ingest failed Error
+
+ [32m✓[39m src/app/api/live/webhooks/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/lib/live-classroom-interaction.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/live-classroom-token.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/lib/live-classroom.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+[90mstderr[2m | src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.test.ts[2m > [22m[2mPOST classroom interaction authorization / provider contract[2m > [22m[2mkeeps moderation audited when the provider rejects the change
+[22m[39mClassroom educational interaction failed Error
+
+[90mstderr[2m | src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.test.ts[2m > [22m[2mPOST classroom interaction authorization / provider contract[2m > [22m[2mdoes not mutate provider state when the moderation audit intent cannot be persisted
+[22m[39mClassroom educational interaction failed Error
+
+[90mstderr[2m | src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.test.ts[2m > [22m[2mPOST classroom interaction authorization / provider contract[2m > [22m[2mprovider programming errors fail as 503, never as a false successful client request
+[22m[39mClassroom educational interaction failed TypeError
+
+ [32m✓[39m src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+[2m      Tests [22m [1m[32m46 passed[39m[22m[90m (46)[39m
+[2m   Start at [22m 18:01:55
+[2m   Duration [22m 1.31s[2m (import 83%, transform 14%, tests 2%, worker 1%)[22m
+

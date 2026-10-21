@@ -1,0 +1,221 @@
+
+> luma-learning-intelligence@0.1.0 verify
+> npm run lint && npm run typecheck && npm run test:run && npm run build
+
+
+> luma-learning-intelligence@0.1.0 lint
+> eslint .
+
+
+/workspace/projects/LUMA-live-two-students-uat-20261020/scripts/qa/live-two-students-auth-e2e.mjs
+  226:10  warning  'grantB' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 1 problem (0 errors, 1 warning)
+
+
+> luma-learning-intelligence@0.1.0 typecheck
+> tsc --noEmit
+
+
+> luma-learning-intelligence@0.1.0 test:run
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace/projects/LUMA-live-two-students-uat-20261020[39m
+
+ [32m✓[39m src/lib/live-classroom-webhook-body.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m src/lib/pnl-rag.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/webhook-security.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+ [32m✓[39m scripts/release/review-gate.test.mjs [2m([22m[2m5 tests[22m[2m)[22m[32m 56[2mms[22m[39m
+ [32m✓[39m src/lib/program-schedule-status.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m src/lib/google-oidc.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 59[2mms[22m[39m
+ [32m✓[39m src/lib/themes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/providers/stripe.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/lib/live-classroom-token.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m scripts/release/policy.test.mjs [2m([22m[2m11 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/app/api/tutor/cx-control.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/lib/certificates/pdf.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 99[2mms[22m[39m
+[90mstderr[2m | src/app/api/live/webhooks/route.test.ts[2m > [22m[2msigned LiveKit join revocation fence[2m > [22m[2mfails retryably when the media provider cannot disconnect revoked access
+[22m[39mClassroom attendance ingest failed Error
+
+ [32m✓[39m src/app/api/live/webhooks/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/lib/certificates/stirling.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 216[2mms[22m[39m
+ [32m✓[39m src/lib/live-classroom-interaction.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/institutional-bulk.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/lib/learning-server.auth.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/lib/scoped-rag.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/app/api/enrollments/institutional/[id]/route.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/app/api/tutor/route.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/lib/scoped-rag.backend-contract.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/domain.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/lib/institutions/draft-input.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/lib/certificates/domain.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m scripts/lib/tenant-admin-claims.test.mjs [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/app/api/commerce/webhooks/[provider]/route.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/lib/institutions/publication-plan-input.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/trace.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/certificates/service.integration.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/lib/persistent-learning.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/providers/hotmart.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+[90mstderr[2m | src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.test.ts[2m > [22m[2mPOST classroom interaction authorization / provider contract[2m > [22m[2mkeeps moderation audited when the provider rejects the change
+[22m[39mClassroom educational interaction failed Error
+
+[90mstderr[2m | src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.test.ts[2m > [22m[2mPOST classroom interaction authorization / provider contract[2m > [22m[2mdoes not mutate provider state when the moderation audit intent cannot be persisted
+[22m[39mClassroom educational interaction failed Error
+
+[90mstderr[2m | src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.test.ts[2m > [22m[2mPOST classroom interaction authorization / provider contract[2m > [22m[2mprovider programming errors fail as 503, never as a false successful client request
+[22m[39mClassroom educational interaction failed TypeError
+
+ [32m✓[39m src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/lib/live-classroom-revocation-queue.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/se-voice-contract.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/reflection-engine.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/learner-projection.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/institutions/config.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/institutional-csv.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/live-classroom.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/economics.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/learning-entitlement.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/lib/engagement.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/policy.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/class-factory.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/learning-engine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/profile-name.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/experience-themes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/simulation-evidence.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/class-contract.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/webhook-errors.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/coach-data-status.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/entitlement.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/certificates/docusign.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/webhook-delivery.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/auth-token-error.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/coach-scoped-learning.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/lib/learning-store-path.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/commerce/institutional-grants.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/tenant-admin-access.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/institutions/draft-access.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/coach-access.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [2m[90m↓[39m[22m src/lib/learning-store.emulator.test.ts [2m([22m[2m4 tests[22m[2m | [22m[33m4 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/program-delivery.emulator.test.ts [2m([22m[2m12 tests[22m[2m | [22m[33m12 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/tenant-admin-auth.emulator.test.ts [2m([22m[2m2 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/commerce/institutional-grant.emulator.test.ts [2m([22m[2m3 tests[22m[2m | [22m[33m3 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/live-classroom-attendance.emulator.test.ts [2m([22m[2m2 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/commerce/ledger.emulator.test.ts [2m([22m[2m8 tests[22m[2m | [22m[33m8 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/live-classroom-revocation.emulator.test.ts [2m([22m[2m10 tests[22m[2m | [22m[33m10 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/commerce/orchestrator.emulator.test.ts [2m([22m[2m24 tests[22m[2m | [22m[33m24 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/institutions/draft-store.emulator.test.ts [2m([22m[2m6 tests[22m[2m | [22m[33m6 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/institutions/draft-route.emulator.test.ts [2m([22m[2m2 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/institutions/publication-plan-store.emulator.test.ts [2m([22m[2m9 tests[22m[2m | [22m[33m9 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/institutions/publication-plan-route.emulator.test.ts [2m([22m[2m2 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/institutions/publication-preflight.emulator.test.ts [2m([22m[2m8 tests[22m[2m | [22m[33m8 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/lib/institutions/publication-route.emulator.test.ts [2m([22m[2m2 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m
+ [2m[90m↓[39m[22m src/app/api/live/classrooms/[offeringId]/[sessionId]/interaction/route.emulator.test.ts [2m([22m[2m4 tests[22m[2m | [22m[33m4 skipped[39m[2m)[22m
+
+[2m Test Files [22m [1m[32m61 passed[39m[22m[2m | [22m[33m15 skipped[39m[90m (76)[39m
+[2m      Tests [22m [1m[32m350 passed[39m[22m[2m | [22m[33m98 skipped[39m[90m (448)[39m
+[2m   Start at [22m 00:44:06
+[2m   Duration [22m 8.70s[2m (import 94%, transform 4%, tests 1%, worker 1%)[22m
+
+[2m    Isolate [22m [33m76 workers spawned[39m[2m · ~184ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~1.09s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+
+> luma-learning-intelligence@0.1.0 prebuild
+> node scripts/release/manifest.mjs
+
+
+> luma-learning-intelligence@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.3.8 (webpack)
+✓ Running next.config.ts took 83ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 14.5s
+  Running TypeScript ...
+  Finished TypeScript in 3.2s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/52) ...
+  Generating static pages using 11 workers (13/52) 
+  Generating static pages using 11 workers (26/52) 
+  Generating static pages using 11 workers (39/52) 
+✓ Generating static pages using 11 workers (52/52) in 640ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/certificates
+├ ƒ /api/certificates/[id]
+├ ƒ /api/certificates/[id]/download
+├ ƒ /api/certificates/[id]/revoke
+├ ƒ /api/certificates/completions
+├ ƒ /api/certificates/console
+├ ƒ /api/certificates/issuers
+├ ƒ /api/certificates/mine
+├ ƒ /api/certificates/verify/[id]
+├ ƒ /api/certificates/webhooks/docusign
+├ ƒ /api/coach/interventions
+├ ƒ /api/coach/learners
+├ ƒ /api/coach/learners/[learnerId]
+├ ƒ /api/commerce/access
+├ ƒ /api/commerce/admin/access-trace
+├ ƒ /api/commerce/admin/mappings
+├ ƒ /api/commerce/webhooks/[provider]
+├ ƒ /api/content-intelligence/search
+├ ƒ /api/enrollments/institutional
+├ ƒ /api/enrollments/institutional/[id]
+├ ƒ /api/enrollments/institutional/bulk
+├ ƒ /api/enrollments/institutional/offerings
+├ ƒ /api/health
+├ ƒ /api/learning/events
+├ ƒ /api/learning/plan
+├ ƒ /api/live/classrooms/[offeringId]/[sessionId]/attendance
+├ ƒ /api/live/classrooms/[offeringId]/[sessionId]/close
+├ ƒ /api/live/classrooms/[offeringId]/[sessionId]/interaction
+├ ƒ /api/live/classrooms/[offeringId]/[sessionId]/moderate
+├ ƒ /api/live/classrooms/[offeringId]/[sessionId]/token
+├ ƒ /api/live/webhooks
+├ ƒ /api/platform/institutions/[tenantId]/draft
+├ ƒ /api/platform/institutions/[tenantId]/publication-plan
+├ ƒ /api/platform/institutions/[tenantId]/publication-preflight
+├ ƒ /api/programs/admin/offerings
+├ ƒ /api/programs/admin/offerings/[offeringId]/sessions
+├ ƒ /api/programs/my-schedule
+├ ƒ /api/reflections
+├ ƒ /api/tutor
+├ ƒ /api/version
+├ ƒ /classroom/[offeringId]/[sessionId]
+├ ○ /experience
+├ ○ /iconography
+├ ○ /learn
+├ ○ /learn/certificates
+├   /learn/experience/[slug]
+│ ├ ● /learn/experience/congruencia-tres-canales
+│ ├ ● /learn/experience/calibracion-observar-antes-de-interpretar
+│ ├ ● /learn/experience/rapport-sintonia-con-respeto
+│ └ ● [+4 more paths]
+├ ○ /learn/experiences
+├ ○ /learn/session/pas
+├ ○ /library
+├ ○ /login
+├ ○ /onboarding
+├ ○ /preview/liquid-light
+├ ○ /studio
+├ ○ /studio/certificates
+├ ○ /studio/class-intelligence
+├ ○ /studio/enrollments
+├ ƒ /studio/learners/[learnerId]
+├ ○ /studio/learners/mariana
+├ ○ /studio/programs
+├ ○ /studio/reflections
+├ ○ /twin
+└ ƒ /verify/[id]
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

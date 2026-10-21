@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { FieldValue } from "firebase-admin/firestore";
 import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
 import { requireLearningUser } from "@/lib/learning-server";
 import { authorizeClassroom, ClassroomError, liveKitConfiguration, roomReference, roomService } from "@/lib/live-classroom-server";
@@ -12,7 +13,7 @@ export async function POST(
   try {
     const user = await requireLearningUser(request, { checkRevoked: true });
     const { offeringId, sessionId } = await context.params;
-    const classroom = await authorizeClassroom(user, offeringId, sessionId);
+    const classroom = await authorizeClassroom(user, offeringId, sessionId, new Date(), { allowOvertime: true });
     if (classroom.role !== "instructor") {
       return NextResponse.json({ error: "instructor_only" }, { status: 403 });
     }
@@ -37,6 +38,10 @@ export async function POST(
     await rosterRef.set({
       bannedAt: removedAt,
       bannedBy: classroom.uid,
+      // An instructor's decision wins over an earlier commercial refund ban.
+      // A later purchase cannot silently undo a moderation removal.
+      banReason: "instructor_removed",
+      revocationJobId: FieldValue.delete(),
     }, { merge: true });
     // LiveKit Cloud also invalidates previously-issued media tokens.
     await roomService(configuration).removeParticipant(classroom.roomName, identity, {
