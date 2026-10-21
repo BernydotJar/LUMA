@@ -4,6 +4,7 @@ import { lstatSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { invariant } from './policy.mjs';
+import { verifyApprovalSignature } from './approval-signature.mjs';
 const root = resolve(import.meta.dirname, '../..');
 export const hash = value => createHash('sha256').update(value).digest('hex');
 export function reviewedSourceDigest(directory = root) {
@@ -21,15 +22,21 @@ export function reviewedSourceDigest(directory = root) {
   return digest.digest('hex');
 }
 export function assertReviewAttestation(attestation, digest) {
-  invariant(attestation?.schemaVersion === 1 && attestation.status === 'PASS', 'Independent Graph release approval is absent or blocked');
+  invariant(attestation?.schemaVersion === 2 && attestation.status === 'PASS', 'Independent Graph release approval is absent or blocked');
   invariant(/^[a-f0-9]{64}$/.test(digest) && attestation.sourceDigest === digest, 'Source changed since independent review');
   invariant(attestation.unresolvedCritical === 0 && attestation.unresolvedHigh === 0, 'Blocking adversarial findings remain');
+  invariant(attestation.review?.commitSha === attestation.testedCommit &&
+    Number.isSafeInteger(attestation.review?.reviewId) && attestation.review.reviewId > 0,
+    'External review provenance is missing or signed for another source SHA');
   invariant(typeof attestation.graphEventId === 'string' && /^[a-f0-9]{64}$/.test(attestation.graphEventHash ?? ''), 'Missing Graph gate receipt');
   for (const item of ['critic', 'verifier']) invariant(/^[a-f0-9]{64}$/.test(attestation[item]?.sha256 ?? ''), `Missing ${item} evidence digest`);
 }
 export function verifyReview(directory = root) {
   const attestation = JSON.parse(readFileSync(resolve(directory, 'evidence/cicd-enterprise/release-approval.json'), 'utf8'));
   assertReviewAttestation(attestation, reviewedSourceDigest(directory));
+  // PR-owned files and Graph hashes are NOT authoritative by themselves.
+  // A protected signer must attest the exact source, GitHub run, reviews, and gate.
+  verifyApprovalSignature(attestation, process.env.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64);
   for (const [kind, path] of Object.entries({ critic: 'evidence/cicd-enterprise/granite-review.json', verifier: 'evidence/cicd-enterprise/independent-review.json' })) {
     invariant(hash(readFileSync(resolve(directory, path))) === attestation[kind].sha256, `${kind} evidence changed after approval`);
     const evidence = JSON.parse(readFileSync(resolve(directory, path), 'utf8'));
