@@ -4,6 +4,7 @@ import { ArrowLeft, Check } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { ClassEntryDiagnostic } from "@/components/class-entry-diagnostic";
 import { ExperienceReflection } from "@/components/experience-reflection";
+import { TutorPanel } from "@/components/tutor-panel";
 import { SemanticObject } from "@/components/semantic-object";
 import { getLearningExperience, learningExperiences } from "@/lib/learning-content";
 import styles from "./page.module.css";
@@ -45,6 +46,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         </section>
       </div>
       <ExperienceReflection experience={experience} />
+      <TutorPanel classSlug={experience.slug} currentStep="overview" />
     </AppShell>
   );
 }

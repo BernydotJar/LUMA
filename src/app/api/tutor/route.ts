@@ -2,6 +2,13 @@ import { NextResponse } from "next/server";
 import { resolveLearningAccessPolicy, learningAccessFailure, type LearningScope } from "../../../lib/learning-entitlement";
 import { searchScopedPnlRag } from "../../../lib/scoped-rag";
 import { isRejectedFirebaseToken } from "../../../lib/auth-token-error";
+import {
+  createLearningContextEnvelope,
+  isLearningContextSourceAllowed,
+  parseLearningContextHint,
+  publicLearningContext,
+  type LearningContextEnvelope,
+} from "@/lib/learning-context";
 import { moduleThreeSource } from "@/lib/luma-data";
 import { extractivePnlAnswer, searchPnlRag } from "@/lib/pnl-rag";
 import {
@@ -57,11 +64,13 @@ const responses = [
 
 export async function POST(request: Request) {
   let scopedLearning: LearningScope | undefined;
+  let authenticatedLearnerId: string | undefined;
   try {
     if (resolveLearningAccessPolicy(process.env).mode === "entitled") {
       const { requireLearningUser } = await import("../../../lib/learning-server");
       const { requireLearningEntitlement } = await import("../../../lib/learning-entitlement-server");
       const identity = await requireLearningUser(request);
+      authenticatedLearnerId = identity.uid;
       scopedLearning = await requireLearningEntitlement(identity, request.headers.get("x-luma-program-id"));
     }
   } catch (error) {
@@ -77,6 +86,7 @@ export async function POST(request: Request) {
   const payload = (await request.json()) as {
     message?: unknown;
     messages?: unknown;
+    learningContext?: unknown;
   };
   const message = typeof payload.message === "string" ? payload.message.trim() : "";
 
@@ -85,6 +95,11 @@ export async function POST(request: Request) {
       { error: "Escribe una pregunta para continuar." },
       { status: 400 },
     );
+  }
+
+  const contextHint = parseLearningContextHint(payload.learningContext);
+  if (payload.learningContext !== undefined && !contextHint) {
+    return NextResponse.json({ error: "invalid_learning_context" }, { status: 400 });
   }
 
   const control = evaluateTutorControl({
@@ -116,7 +131,34 @@ export async function POST(request: Request) {
         trust: { status: "BLOCKED_CLAIM", reason: "Requiere validación cualificada." },
       });
     }
-    const rag = await searchScopedPnlRag(control.query, scopedLearning, 5);
+    let learningContext: LearningContextEnvelope | undefined;
+    if (contextHint) {
+      try {
+        const { learningStoreForScope } = await import("../../../lib/learning-server");
+        const store = learningStoreForScope(scopedLearning);
+        if (!authenticatedLearnerId) throw new Error("LEARNING_CONTEXT_IDENTITY_REQUIRED");
+        const learner = await store.get(authenticatedLearnerId);
+        if (!learner) {
+          return NextResponse.json({
+            error: "learning_profile_required",
+            trust: { status: "INSUFFICIENT_CONTEXT" },
+          }, { status: 409 });
+        }
+        const events = await store.listEvents(authenticatedLearnerId, 10);
+        learningContext = createLearningContextEnvelope(contextHint, learner.plan, events as Array<{
+          type?: unknown; twinAuthority?: unknown; sourceId?: unknown; classId?: unknown; conceptId?: unknown;
+        }>);
+      } catch {
+        return NextResponse.json({
+          answer: "No pude verificar tu clase y tu estado de aprendizaje. Inténtalo de nuevo.",
+          trust: { status: "RETRIEVAL_UNAVAILABLE", reason: "Contexto de aprendizaje autorizado no disponible." },
+        }, { status: 503 });
+      }
+    }
+    const retrievalQuery = learningContext
+      ? [control.query, learningContext.objective, learningContext.capability].join(" ").slice(0, 1200)
+      : control.query;
+    const rag = await searchScopedPnlRag(retrievalQuery, scopedLearning, 5);
     if (!rag.configured || rag.error) {
       return NextResponse.json({
         answer: "El contenido de este programa no está disponible para consulta en este momento.",
@@ -127,7 +169,8 @@ export async function POST(request: Request) {
       }, { status: 503 });
     }
     const relevant = rag.results.filter((hit) =>
-      isRagEvidenceRelevant(control.query, { text: hit.text, title: hit.title, module: hit.module }),
+      (!learningContext || isLearningContextSourceAllowed(learningContext, hit)) &&
+      isRagEvidenceRelevant(retrievalQuery, { text: hit.text, title: hit.title, module: hit.module }),
     );
     if (relevant.length === 0) {
       return NextResponse.json({
@@ -135,7 +178,10 @@ export async function POST(request: Request) {
         learningMove: "ASK",
         intent: control.intent,
         outcome: "NEEDS_CLARIFICATION",
-        trust: { status: "INSUFFICIENT_EVIDENCE", reason: "Sin pasajes relevantes en este programa." },
+        trust: { status: "INSUFFICIENT_EVIDENCE", reason: learningContext
+          ? "No existe un pasaje relevante que pertenezca a las fuentes de esta clase."
+          : "Sin pasajes relevantes en este programa." },
+        ...(learningContext ? { learningContext: publicLearningContext(learningContext) } : {}),
       });
     }
     const top = relevant[0];
@@ -155,6 +201,7 @@ export async function POST(request: Request) {
       outcome: control.outcome,
       trust: { status: "GROUNDED", artifactId: top.chunkId },
       retrieval: { backend: rag.backend ?? "scoped", resultCount: relevant.length },
+      ...(learningContext ? { learningContext: publicLearningContext(learningContext) } : {}),
     });
   }
 

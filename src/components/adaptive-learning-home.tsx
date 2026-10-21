@@ -18,6 +18,7 @@ import { LearnerGreeting } from "@/components/learner-greeting";
 import { LearningPulse } from "@/components/learning-pulse";
 import { LiveProgramSchedule } from "@/components/live-program-schedule";
 import { NextActionCard } from "@/components/next-action-card";
+import { ProgramEntryAssessment } from "@/components/program-entry-assessment";
 import { ProgressStory } from "@/components/progress-story";
 import { TutorPanel } from "@/components/tutor-panel";
 import { useLumaAuth } from "@/components/auth-provider";
@@ -217,6 +218,27 @@ export function AdaptiveLearningHome() {
             <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </nav>
+
+        <ProgramEntryAssessment
+          key={`${user?.uid ?? "guest"}:${programId ?? "showcase"}`}
+          summary={plan.entryAssessment}
+          hasProfile={hasProfile}
+          userId={user?.uid}
+          programId={programId}
+          onPlanUpdate={() => {
+            const uid = user?.uid;
+            const selectedProgram = programId;
+            if (!uid || !selectedProgram) return;
+            void (async () => {
+              try {
+                const latest = await fetchPersistentLearningSnapshot();
+                if (!latest || firebaseAuth.currentUser?.uid !== uid ||
+                    (latest.program?.programId ?? null) !== selectedProgram) return;
+                setRemoteState({ uid, programId: selectedProgram, snapshot: latest });
+              } catch { /* Keep existing trusted projection if refresh fails. */ }
+            })();
+          }}
+        />
 
         <LiveProgramSchedule activeProgramId={entitled ? programId : undefined} />
 
