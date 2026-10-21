@@ -14,7 +14,7 @@ const configPath=process.env.LUMA_QA_CLI_CONFIG_PATH ||
 const expectedId='p_5650huuc5om';
 const expectedHost='luma-0x6n7955.livekit.cloud';
 const mode=process.env.LUMA_CLOUD_QA_ALLOWED;
-if (!['provider-only','provider-revoke-before-close'].includes(mode)) {
+if (!['provider-only','provider-revoke-before-close','provider-post-settings'].includes(mode)) {
  throw new Error('Denied: explicit provider-only or provider-revoke-before-close mode required');
 }
 const meta=fs.statSync(configPath);
@@ -29,11 +29,15 @@ if (!project || new URL(project.url).hostname!==expectedHost ||
  throw new Error('Denied: expected LUMA Cloud project ID, endpoint and credentials not found');
 }
 const alternate=mode==='provider-revoke-before-close';
-const testFile=alternate
- ? 'scripts/qa/livekit-cloud-revoke-before-close.mjs'
- : 'scripts/qa/livekit-cloud-enterprise-gate.mjs';
+const postSetting=mode==='provider-post-settings';
+const testFile=postSetting
+ ? 'scripts/qa/livekit-cloud-post-settings-20261021.mjs'
+ : alternate
+   ? 'scripts/qa/livekit-cloud-revoke-before-close.mjs'
+   : 'scripts/qa/livekit-cloud-enterprise-gate.mjs';
 const target='evidence/live-classroom-acceptance/'+
- (alternate?'cloud-revoke-before-close-qa-20261020':'cloud-provider-qa-20261020');
+ (postSetting?'cloud-post-setting-20261021':alternate
+ ?'cloud-revoke-before-close-qa-20261020':'cloud-provider-qa-20261020');
 mkdirSync(target,{recursive:true});
 const stdout=fs.createWriteStream(target+'/execution.log',{flags:'w',mode:0o600});
 const env={...process.env,
@@ -63,9 +67,11 @@ child.stderr.on('data',capture);
 child.on('error',err=>{stdout.write('RUNNER_SPAWN_FAILURE '+err.name+'\n');});
 const result=await new Promise(resolve=>child.on('close',code=>resolve(code)));
 stdout.write(redact(carry));stdout.end();
-const source=alternate
- ? 'evidence/live-classroom-acceptance/cloud-revoke-before-close-verification.json'
- : 'evidence/live-classroom-acceptance/cloud-enterprise-verification.json';
+const source=postSetting
+ ? 'evidence/live-classroom-acceptance/cloud-post-setting-20261021/cloud-provider-verification.json'
+ : alternate
+   ? 'evidence/live-classroom-acceptance/cloud-revoke-before-close-verification.json'
+   : 'evidence/live-classroom-acceptance/cloud-enterprise-verification.json';
 let summary={decision:'NO_RESULT',checks:[],projectId:expectedId};
 try {
  const r=JSON.parse(fs.readFileSync(source,'utf8'));
