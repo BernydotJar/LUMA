@@ -8,7 +8,7 @@ import { AccessToken, RoomServiceClient, TrackSource } from 'livekit-server-sdk'
 import { randomUUID } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { createServer } from 'node:http';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 
 const target = process.env.LIVEKIT_CLOUD_TEST_URL || '';
 const apiKey = process.env.LIVEKIT_CLOUD_TEST_API_KEY || '';
@@ -45,7 +45,7 @@ if (!address || typeof address === 'string') {
 }
 const fixtureOrigin = 'http://127.0.0.1:' + address.port;
 const browser = await chromium.launch({
-  executablePath: '/usr/bin/chromium',
+  ...(existsSync('/usr/bin/chromium') ? { executablePath: '/usr/bin/chromium' } : {}),
   headless: true,
   args: ['--no-sandbox', '--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'],
 });
