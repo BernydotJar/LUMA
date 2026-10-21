@@ -1,0 +1,41 @@
+{
+  "environment": "dedicated LiveKit Cloud project, three isolated Chromium WebRTC peers",
+  "kind": "PROVIDER_CLOUD_ONLY_NOT_AUTHENTICATED_LUMA_APP_E2E",
+  "conclusion": "FAIL",
+  "checkedAt": "2026-10-21T02:59:33.516Z",
+  "checks": [
+    {
+      "action": "webrtc_publish",
+      "role": "instructor",
+      "passed": true
+    },
+    {
+      "action": "webrtc_publish",
+      "role": "learner-one",
+      "passed": true
+    },
+    {
+      "action": "webrtc_publish",
+      "role": "learner-two",
+      "passed": true
+    },
+    {
+      "action": "instructor_data_chat_to_learner",
+      "passed": true
+    },
+    {
+      "action": "connected_learner_removed",
+      "passed": true,
+      "remaining": 2
+    },
+    {
+      "action": "old_token_replay_denied",
+      "passed": true
+    },
+    {
+      "action": "failure",
+      "passed": false,
+      "error": "NO-GO: instructor cached JWT recreated a completed Cloud room"
+    }
+  ]
+}

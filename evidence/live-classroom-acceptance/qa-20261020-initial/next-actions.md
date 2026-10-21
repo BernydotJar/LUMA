@@ -1,0 +1,9 @@
+# Next actions ordered by enterprise impact
+
+1. **P0 — LiveKit Cloud isolated environment:** confirm a named authorized Cloud QA project and budget; securely inject `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` only into the protected test job. Configure signed webhook delivery; no secret in logs or PR.
+2. **P0 — Original and refreshed JWT replay:** instructor + two synthetic paid learners connected with actual AV, revoke A while media is flowing, assert A disconnects and remains denied with both tokens; instructor/B unaffected; measure provider round trips and media cessation. Cover refund/institutional revocation, timeouts, reordering and reactivation.
+3. **P0 — Source→UI→journey→runtime:** use approved admin, instructor, paid and unauthorized test accounts to create a 90-minute course/session, join, share screen, raise/acknowledge hands, moderate, close, inspect attendance. Record signed proofs for each of the 20 actions.
+4. **P0 — Independent attestation:** obtain actual rollout source/build SHA from Firebase provider, fix PR #71's source-review mismatch via a separate independent reviewer on the current digest; rerun Graph Harness and all required CI. Do not self-approve.
+5. **P1 — Real UI accessibility and responsive:** test 375x812, 390x844, tablet, desktop and Safari on real published authenticated controls, not CSS fixtures. Verify 44px targets, focus, keyboard, reduced motion and screen-reader labels.
+6. **P1 — Resilience and scale:** authorize staged 2/10/50 participants, browser reconnects, media quality, webhook retries and worker reconciliation; capture WebRTC metrics and recovery traces, propose but do not invent SLAs.
+7. **Release only after GO:** commit all verified evidence, obtain release owner approval, run predeploy/postdeploy against the exact accepted SHA, keep production feature disabled until all P0 controls have passed.

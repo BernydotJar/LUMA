@@ -192,14 +192,24 @@
     {
       "id": "operations:refund-revoke-live",
       "persona": "operations",
-      "outcome": "Revoke entitlement and disconnect an already connected refunded learner",
+      "outcome": "Immediately revoke the only valid institutional/paid cohort entitlement, disconnect the already connected learner using LiveKit Cloud, reject the prior JWT on reconnect, persist an independently verified audit and preserve other eligible learners",
       "mutates_state": true,
       "proofs": {
         "implementation": "operations:refund-revoke-live:implementation",
         "ui": "operations:refund-revoke-live:ui",
         "journey": "operations:refund-revoke-live:journey",
         "production": "operations:refund-revoke-live:production"
-      }
+      },
+      "negative_cases": [
+        "refund duplicate/retry",
+        "provider outage after datastore revocation",
+        "prior JWT replay",
+        "incorrect tenant/cohort",
+        "other active enrollment remains valid",
+        "reactivated enrollment supersedes older revocation",
+        "client may not alter roster ban",
+        "scheduled expiration at exact cutoff"
+      ]
     },
     {
       "id": "operations:attendance-ledger",
@@ -224,6 +234,30 @@
         "journey": "operations:incident-rollback:journey",
         "production": "operations:incident-rollback:production"
       }
+    },
+    {
+      "id": "learner:raise-hand",
+      "persona": "learner",
+      "outcome": "Raise and lower a hand during a real connected class; instructor observes state and learner can reverse it",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "learner:raise-hand:implementation",
+        "ui": "learner:raise-hand:ui",
+        "journey": "learner:raise-hand:journey",
+        "production": "learner:raise-hand:production"
+      }
+    },
+    {
+      "id": "instructor:acknowledge-hand",
+      "persona": "instructor",
+      "outcome": "Identify learners with raised hands and acknowledge them with server-side role and identity authorization",
+      "mutates_state": true,
+      "proofs": {
+        "implementation": "instructor:acknowledge-hand:implementation",
+        "ui": "instructor:acknowledge-hand:ui",
+        "journey": "instructor:acknowledge-hand:journey",
+        "production": "instructor:acknowledge-hand:production"
+      }
     }
   ],
   "workflows": [
@@ -246,7 +280,8 @@
         "instructor:share-screen",
         "instructor:moderate-class",
         "instructor:teaching-controls",
-        "instructor:end-for-everyone"
+        "instructor:end-for-everyone",
+        "instructor:acknowledge-hand"
       ]
     },
     {
@@ -257,7 +292,8 @@
         "learner:device-preflight",
         "learner:join-live-media",
         "learner:bottom-controls",
-        "learner:reconnect"
+        "learner:reconnect",
+        "learner:raise-hand"
       ]
     },
     {

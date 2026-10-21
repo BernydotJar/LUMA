@@ -1,0 +1,60 @@
+{
+  "environment": "isolated local LiveKit OSS 1.13.10 / Chromium WebRTC fake devices",
+  "kind": "REAL_PROVIDER_LOCAL_NOT_PRODUCTION_OR_CUSTOMER_UI",
+  "conclusion": "PARTIAL_TOKEN_REPLAY_NOT_PREVENTED",
+  "checks": [
+    {
+      "role": "instructor",
+      "state": {
+        "connectionState": "connected",
+        "publishedTracks": 1
+      },
+      "connected": true
+    },
+    {
+      "role": "learner-a",
+      "state": {
+        "connectionState": "connected",
+        "publishedTracks": 1
+      },
+      "connected": true
+    },
+    {
+      "role": "learner-b",
+      "state": {
+        "connectionState": "connected",
+        "publishedTracks": 1
+      },
+      "connected": true
+    },
+    {
+      "beforeEviction": [
+        {
+          "identity": "instructor",
+          "tracks": 1
+        },
+        {
+          "identity": "learner-a",
+          "tracks": 1
+        },
+        {
+          "identity": "learner-b",
+          "tracks": 1
+        }
+      ]
+    },
+    {
+      "eviction": true,
+      "disconnectedReason": "4",
+      "remainingIdentities": [
+        "instructor",
+        "learner-b"
+      ]
+    },
+    {
+      "oldTokenAttempt": {
+        "unexpectedlyReconnected": true
+      }
+    }
+  ]
+}

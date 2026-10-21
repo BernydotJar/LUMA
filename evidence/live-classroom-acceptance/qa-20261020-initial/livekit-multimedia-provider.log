@@ -1,0 +1,118 @@
+{
+  "startedAt": "2026-10-20T18:09:21.185Z",
+  "sourceSha": "ae9f984e07c222a88344300926f1ca0dab2725ad",
+  "environment": "LiveKit OSS v1.13.10 loopback with 3 isolated Chromium contexts and fake AV devices",
+  "classification": "LOCAL_PROVIDER_REAL_WEBRTC_NOT_CLOUD_NOT_LUMA_AUTHENTICATED",
+  "checks": [
+    {
+      "id": "published-instructor",
+      "result": "PASS",
+      "state": "connected",
+      "publisherAudio": 1,
+      "publisherVideo": 1
+    },
+    {
+      "id": "published-learner-a",
+      "result": "PASS",
+      "state": "connected",
+      "publisherAudio": 1,
+      "publisherVideo": 1
+    },
+    {
+      "id": "published-learner-b",
+      "result": "PASS",
+      "state": "connected",
+      "publisherAudio": 1,
+      "publisherVideo": 1
+    },
+    {
+      "id": "provider-tracks-before",
+      "count": 3,
+      "tracks": [
+        {
+          "identity": "learner-a",
+          "count": 2
+        },
+        {
+          "identity": "learner-b",
+          "count": 1
+        },
+        {
+          "identity": "instructor",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "instructor-receives-two-remote-av",
+      "result": "PASS",
+      "connected": "connected",
+      "peers": [
+        "learner-a",
+        "learner-b"
+      ],
+      "decodedRemoteVideos": 2,
+      "liveRemoteAudio": 2
+    },
+    {
+      "id": "learner-b-receives-two-remote-av",
+      "result": "PASS",
+      "connected": "connected",
+      "peers": [
+        "instructor",
+        "learner-a"
+      ],
+      "decodedRemoteVideos": 2,
+      "liveRemoteAudio": 2
+    },
+    {
+      "id": "learner-a-receives-two-remote-av",
+      "result": "PASS",
+      "connected": "connected",
+      "peers": [
+        "instructor",
+        "learner-b"
+      ],
+      "decodedRemoteVideos": 2,
+      "liveRemoteAudio": 2
+    },
+    {
+      "id": "learner-local-microphone-toggle",
+      "result": "PASS",
+      "micMute": {
+        "enabled": false
+      },
+      "micUnmute": {
+        "enabled": true
+      }
+    },
+    {
+      "id": "learner-local-camera-toggle",
+      "result": "PASS",
+      "cameraMute": {
+        "enabled": false
+      },
+      "cameraUnmute": {
+        "enabled": true
+      }
+    },
+    {
+      "id": "evict-learner-preserve-other-media",
+      "result": "PASS",
+      "removalToObservedDisconnectMs": 22,
+      "observedDisconnectedReason": "4",
+      "remaining": [
+        "instructor",
+        "learner-b"
+      ]
+    },
+    {
+      "id": "old-jwt-after-expulsion",
+      "provider": "LiveKit OSS",
+      "result": "FAIL_EXPECTED_LOCAL_OSS_TOKEN_REPLAY",
+      "accepted": true
+    }
+  ],
+  "overall": "PARTIAL_LOCAL_AV_EVICTION_PASS_OLD_JWT_REPLAY_NOT_BLOCKED",
+  "finishedAt": "2026-10-20T18:09:24.046Z"
+}
