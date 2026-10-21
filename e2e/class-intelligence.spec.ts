@@ -4,10 +4,19 @@ test.describe("AI-native class entry", () => {
   test("P.A.S. diagnostic records routing evidence without claiming mastery", async ({ page }) => {
     await page.goto("/learn/experience/pas-detectar-y-reformular");
 
+    // Scope the assertion to the one published learning contract. The page can
+    // transiently hydrate a second copy of generic text, but duplicates of the
+    // actual named contract still fail: no global .first() masking.
+    const learningContract = page.getByRole("region", {
+      name: /Empieza desde donde realmente estás/i,
+    });
+    await expect(learningContract).toHaveCount(1);
     await expect(
-      page.getByRole("heading", { name: /Empieza desde donde realmente estás/i }),
+      learningContract.getByRole("heading", { name: /Empieza desde donde realmente estás/i }),
     ).toBeVisible();
-    await expect(page.getByText(/Esta señal no certifica dominio/i)).toBeVisible();
+    await expect(
+      learningContract.getByText(/Esta señal no certifica dominio/i),
+    ).toBeVisible();
 
     await page
       .getByRole("button", { name: /La directora señaló dos errores de la propuesta/i })

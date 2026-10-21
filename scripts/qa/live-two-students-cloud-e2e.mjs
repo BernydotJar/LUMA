@@ -7,6 +7,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { execFileSync, spawn } from 'node:child_process';
 import { mkdirSync, writeFileSync, createWriteStream } from 'node:fs';
 import { chromium } from '@playwright/test';
+import { navigateToAuthenticatedQaClassroom } from './live-cloud-browser-navigation.mjs';
 import { initializeApp, deleteApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
@@ -128,8 +129,9 @@ async function loginBrowser(role,url) {
     if(/firebase|livekit|room|permission|auth|TypeError/i.test(msg))
       process.stdout.write('BROWSER_ERROR '+role+' '+msg+'\n');
   });
-  await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
-  await page.waitForFunction(()=>typeof window.__lumaQaEmailSignIn==='function',null,{timeout:20000});
+  // Cold Next dev DOMContentLoaded can stall while media routes compile.
+  // The QA hook and subsequent authenticated UI checks remain mandatory.
+  await navigateToAuthenticatedQaClassroom(page,url);
   await page.evaluate(async ({email,password})=>{
     await window.__lumaQaEmailSignIn(email,password);
   },{email:accounts[role].email,password:accounts[role].password});
@@ -254,7 +256,8 @@ try {
   record('learner-admin-api-access-denied','PASS',{http:learnerAdminAttempt.status});
   roomName=mediaRoom(tenantId,offeringId,sessionId);
   browser=await chromium.launch({headless:true,executablePath:'/usr/bin/chromium',
-    args:['--no-sandbox','--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream',
+    args:['--no-sandbox','--disable-dev-shm-usage',
+      '--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream',
       '--autoplay-policy=no-user-gesture-required','--ignore-certificate-errors']});
   replayFixture=createServer((_req,res)=>{
     res.writeHead(200,{'content-type':'text/html; charset=utf-8',
