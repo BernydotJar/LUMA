@@ -161,8 +161,29 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  deploy:
+  # Minimal trust-plane bootstrap: block every production rollout until a
+  # trusted, exact-SHA Ed25519 release attestation exists. All source-review
+  # scripts run fail-closed, and the protected signer is dispatched only on main.
+  release-readiness:
     needs: [verify, security, firestore, identity-roles, browser]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - name: Verify protected exact-source review and signed Graph release gate
+        env:
+          LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
+        run: node scripts/release/pr-readiness.mjs
+
+  deploy:
+    needs: [verify, security, firestore, identity-roles, browser, release-readiness]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
     runs-on: ubuntu-latest
     timeout-minutes: 45
