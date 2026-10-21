@@ -1,0 +1,16 @@
+{
+  "projectId": "p_5650huuc5om",
+  "kind": "CLOUD_APP_E2E_WITH_FIREBASE_AUTH_AND_FIRESTORE_EMULATORS",
+  "sourceSha": "09a5bb2061d1e622cbf3a7365c521b4c1dba20d1",
+  "overall": "FAIL",
+  "pass": 4,
+  "fail": 1,
+  "blocked": 0,
+  "failures": [
+    {
+      "name": "test-failed",
+      "reason": "The operation was aborted due to timeout"
+    }
+  ],
+  "exitCode": 1
+}
