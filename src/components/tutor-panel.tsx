@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import type { LearningStep } from "@/lib/learning-context";
 import {
   AlertTriangle,
   ArrowUp,
@@ -14,7 +15,7 @@ import {
 } from "lucide-react";
 import { tutorQuickPrompts } from "@/lib/luma-data";
 import { firebaseAuth } from "@/lib/firebase-client";
-import { readSelectedProgram } from "@/lib/program-selection";
+import { captureLearnerRequestScope, learnerProgramHeaders, assertLearnerRequestScope } from "@/lib/learner-program-request";
 import styles from "./learner-components.module.css";
 
 type TutorMessage = {
@@ -38,6 +39,13 @@ type TutorMessage = {
     insight: string;
     sourceCount: number;
   };
+  learningContext?: {
+    classTitle: string;
+    objective: string;
+    step: string;
+    masteryBasis: string;
+    nextAction: { title: string; href: string };
+  };
   trust?: {
     status:
       | "GROUNDED"
@@ -51,7 +59,10 @@ type TutorMessage = {
   };
 };
 
-export function TutorPanel() {
+export function TutorPanel({ classSlug, currentStep = "overview" }: {
+  classSlug?: string;
+  currentStep?: LearningStep;
+} = {}) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [recoveryQuestion, setRecoveryQuestion] = useState("");
@@ -83,18 +94,18 @@ export function TutorPanel() {
 
     try {
       const signedInUser = firebaseAuth.currentUser;
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (signedInUser) {
-        const selectedProgram = readSelectedProgram("learner", signedInUser.uid);
-        if (selectedProgram) headers["x-luma-program-id"] = selectedProgram;
-        headers.authorization = `Bearer ${await signedInUser.getIdToken()}`;
-      }
+      const scope = signedInUser ? captureLearnerRequestScope(signedInUser.uid) : null;
+      const headers: Record<string, string> = scope
+        ? await learnerProgramHeaders(scope, true)
+        : { "Content-Type": "application/json" };
+      if (scope) assertLearnerRequestScope(scope);
       const response = await fetch("/api/tutor", {
         method: "POST",
         headers,
         body: JSON.stringify({
           message: clean,
           messages: recentContext,
+          ...(classSlug ? { learningContext: { classSlug, step: currentStep } } : {}),
         }),
       });
       const data = (await response.json()) as {
@@ -103,7 +114,9 @@ export function TutorPanel() {
         evidence?: TutorMessage["evidence"];
         reflection?: TutorMessage["reflection"];
         trust?: TutorMessage["trust"];
+        learningContext?: TutorMessage["learningContext"];
       };
+      if (scope) assertLearnerRequestScope(scope);
       if (response.status === 503 || data.trust?.status === "RETRIEVAL_UNAVAILABLE") {
         setRecoveryQuestion(clean);
       }
@@ -122,6 +135,7 @@ export function TutorPanel() {
           evidence: data.evidence,
           reflection: data.reflection,
           trust: data.trust,
+          learningContext: data.learningContext,
         },
       ]);
     } catch {
@@ -148,6 +162,7 @@ export function TutorPanel() {
     <section
       className={`${styles.tutorPanel} content-surface`}
       id="luma"
+      data-context={classSlug ? "class" : "general"}
       aria-labelledby="tutor-title"
     >
       <div className={styles.tutorHeader}>
@@ -155,7 +170,7 @@ export function TutorPanel() {
           <span><Bot size={20} /></span>
           <div>
             <h2 id="tutor-title">Pregunta a LUMA</h2>
-            <p>Tu contexto de aprendizaje, aquí mismo</p>
+            <p>{classSlug ? "Dudas sobre tu clase y sus fuentes" : "Tu contexto de aprendizaje, aquí mismo"}</p>
           </div>
         </div>
         <span className="status-pill" data-tone="positive">
@@ -208,6 +223,19 @@ export function TutorPanel() {
                   <ExternalLink size={11} />
                 </a>
               )}
+              {item.learningContext && (
+                <div className={styles.reflectionInsight} aria-label="Orientación de esta clase">
+                  <BookOpenCheck size={14} aria-hidden="true" />
+                  <div>
+                    <strong>{item.learningContext.classTitle} · Objetivo de la clase</strong>
+                    <span>{item.learningContext.objective}</span>
+                    <small>Esta orientación no certifica dominio.</small>
+                    <Link href={item.learningContext.nextAction.href}>
+                      {item.learningContext.nextAction.title}
+                    </Link>
+                  </div>
+                </div>
+              )}
               {item.reflection && (
                 <div
                   className={styles.reflectionInsight}
@@ -243,7 +271,10 @@ export function TutorPanel() {
         </div>
       )}
       <div className={styles.quickPrompts}>
-        {tutorQuickPrompts.map((prompt) => (
+        {(classSlug
+          ? ["Explícame este objetivo con un ejemplo.", "Ayúdame a practicar una distinción de esta clase.", "¿Qué debería revisar antes de continuar?"]
+          : tutorQuickPrompts
+        ).map((prompt) => (
           <button
             type="button"
             key={prompt}

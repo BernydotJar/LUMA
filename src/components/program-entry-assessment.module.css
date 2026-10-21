@@ -1,0 +1,83 @@
+.surface {
+  display: grid;
+  gap: 1.25rem;
+  margin: 1rem 0 1.5rem;
+  padding: clamp(1.15rem, 3vw, 1.75rem);
+  border: 1px solid var(--glass-border, rgba(120, 128, 160, 0.18));
+  border-radius: 1.35rem;
+  background: var(--glass-content-bg, var(--surface, rgba(255, 255, 255, 0.94)));
+  color: var(--text-primary, inherit);
+}
+
+.top { display: flex; align-items: flex-start; gap: 1rem; }
+.symbol {
+  flex: 0 0 2.8rem;
+  height: 2.8rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.9rem;
+  color: var(--accent-color, #4b66a8);
+  background: rgba(105, 130, 200, 0.11);
+}
+.intro { max-width: 59ch; }
+.intro h2 { font-size: clamp(1.18rem, 2.8vw, 1.52rem); margin: 0.35rem 0 0.5rem; line-height: 1.2; }
+.intro p, .result p, .capability { color: var(--text-secondary, #666b75); line-height: 1.5; font-size: 0.94rem; margin: 0; }
+.action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: fit-content;
+  min-height: 44px;
+  padding: 0.68rem 1.05rem;
+  border-radius: 0.85rem;
+  border: 1px solid transparent;
+  /* Stable AA contrast in light, dark and SE themes; the theme accent can be #00a2f1 (2.82:1). */
+  background: #075a96;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 650;
+  font-size: 0.94rem;
+  cursor: pointer;
+}
+.action:hover { filter: brightness(1.07); }
+.action:disabled, .controls button:disabled { opacity: 0.52; cursor: not-allowed; }
+.action:focus-visible, .controls button:focus-visible, .choices label:focus-within { outline: 3px solid #6b90dc; outline-offset: 3px; }
+
+.result { display: flex; align-items: flex-start; gap: 0.8rem; padding: 1rem; border-radius: 0.9rem; background: rgba(56, 136, 112, 0.07); }
+.result > svg { flex-shrink: 0; color: #358b71; }
+.result strong { display: block; margin: 0 0 0.3rem; }
+.result a { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-weight: 650; text-decoration: underline; text-underline-offset: 3px; }
+.quiz { display: grid; gap: 1rem; }
+.progress { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: space-between; font-size: 0.82rem; font-weight: 650; }
+.quiz progress { width: 100%; height: 0.35rem; border-radius: 0.5rem; accent-color: #536eb3; }
+.quiz fieldset { min-width: 0; border: 0; padding: 0; margin: 0; }
+.quiz legend { width: 100%; font-size: 1.1rem; font-weight: 700; line-height: 1.35; padding: 0; margin-bottom: 0.4rem; }
+.capability { margin-bottom: 0.75rem; }
+.choices { display: grid; gap: 0.55rem; }
+.choices label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  cursor: pointer;
+  border-radius: 0.8rem;
+  border: 1px solid var(--glass-border, rgba(120, 128, 160, 0.23));
+  padding: 0.85rem 1rem;
+  min-height: 44px;
+  background: var(--glass-content-bg, transparent);
+  line-height: 1.4;
+}
+.choices label[data-selected="true"] { border-color: #6284bf; background: rgba(95, 131, 193, 0.09); }
+.choices input { margin-top: 0.25rem; accent-color: #4d70b3; }
+.controls { display: flex; justify-content: space-between; gap: 0.8rem; align-items: center; }
+.controls > button:not(.action) { min-height: 44px; padding: 0.7rem; background: transparent; border: 0; text-decoration: underline; cursor: pointer; color: inherit; }
+.error { margin: 0; color: #b13b3b; font-size: 0.91rem; }
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 480px) {
+  .surface { padding: 1rem; }
+  .top { gap: 0.7rem; }
+  .symbol { flex-basis: 2.3rem; height: 2.3rem; }
+  .controls { flex-wrap: wrap; }
+  .controls .action { flex: 1; }
+}

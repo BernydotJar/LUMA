@@ -8,6 +8,7 @@ import {
 } from "./learner-projection";
 import type { LearnerState, RankedLearningAction } from "../types/learning";
 import { evaluatePasSimulation } from "./simulation-evidence";
+import type { ProgramEntryAssessmentSummary } from "./program-assessment";
 
 export interface PersistedLearnerRecord {
   schemaVersion: 1;
@@ -23,6 +24,9 @@ export interface PersistedLearnerRecord {
   lastEventId?: string;
   /** Authoritative latest graded receipt, independent of the event pagination window. */
   lastScoredEvidence?: StoredLearningEvent;
+  /** Program-level diagnostic is observed only, never certified mastery. */
+  entryAssessment?: ProgramEntryAssessmentSummary;
+  entryAssessmentActive?: boolean;
 }
 
 const pasAnswerKey = {
@@ -128,12 +132,25 @@ export function applyEventToPersistentLearner(
   const previousPlan = createAdaptiveLearningPlanFromState(
     current.state,
     current.onboarding,
+    undefined,
+    current.entryAssessment,
+    current.entryAssessmentActive,
   );
   const nextState = applyLearningEvent(current.state, { ...event, eventId });
+  const entryAssessment = event.type === "PROGRAM_ENTRY_ASSESSMENT_COMPLETED"
+    ? event.programAssessment
+    : current.entryAssessment;
+  const entryAssessmentActive = event.type === "PROGRAM_ENTRY_ASSESSMENT_COMPLETED"
+    ? Boolean(entryAssessment)
+    : event.type === "SIMULATION_COMPLETED"
+      ? false
+      : current.entryAssessmentActive;
   const plan = createAdaptiveLearningPlanFromState(
     nextState,
     current.onboarding,
     previousPlan.nextAction,
+    entryAssessment,
+    entryAssessmentActive,
   );
 
   return {
@@ -153,6 +170,7 @@ export function applyEventToPersistentLearner(
         : current.lastScoredEvidence
           ? { lastScoredEvidence: current.lastScoredEvidence }
           : {}),
+      ...(entryAssessment ? { entryAssessment, entryAssessmentActive: Boolean(entryAssessmentActive) } : {}),
     },
     plan,
   };

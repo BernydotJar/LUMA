@@ -64,3 +64,9 @@ __pycache__/
 /firebase-debug.log
 /firestore-debug.log
 /ui-debug.log
+
+# Python bytecode generated during Graph Harness verification
+/scripts/__pycache__/
+
+# Authenticated UAT receipts must be generated anew, never committed historical PASS
+/evidence/learning-ui/qa-authorized-learning-uat.json

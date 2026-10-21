@@ -176,6 +176,60 @@ jobs:
           src/lib/certificates/eligibility.emulator.test.ts
           src/lib/live-classroom-attendance.emulator.test.ts"
 
+  # Authenticated program assessment UAT: disposable Auth/Firestore only.
+  learning-auth-uat:
+    needs: [verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: "21"
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Remove old receipts; never reuse committed PASS
+        run: rm -f evidence/learning-ui/qa-authorized-learning-uat.json
+      - name: Authenticate, assess, change program, revoke and exercise tutor in Chromium
+        run: >-
+          npx --yes firebase-tools@15.30.2
+          emulators:exec
+          --project demo-luma-learning-uat-20261020
+          --only auth,firestore
+          "bash scripts/qa/run-learning-assessment-uat.sh"
+        env:
+          CI: "true"
+          NEXT_TELEMETRY_DISABLED: "1"
+      - name: Require current-source nonproduction receipt for all 13 scenarios
+        run: |
+          node - <<'NODE'
+          const assert = require("node:assert/strict");
+          const fs = require("node:fs");
+          const report = JSON.parse(fs.readFileSync("evidence/learning-ui/qa-authorized-learning-uat.json", "utf8"));
+          assert.equal(report.sourceSha, process.env.GITHUB_SHA);
+          assert.equal(report.decision, "TECHNICAL_QA_PASS_RELEASE_NO_GO");
+          assert.equal(report.neverProduction, true);
+          assert.equal(report.signedIndependentReviewer, false);
+          assert.equal(report.realRagBackendValidated, false);
+          assert.equal(report.passed, 13);
+          assert.equal(report.failed, 0);
+          assert.equal(report.defects.length, 0);
+          NODE
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: learning-auth-uat-${{ github.run_attempt }}
+          path: evidence/learning-ui/qa-authorized-learning-uat.json
+          if-no-files-found: warn
+          retention-days: 14
+
   identity-roles:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -488,8 +542,9 @@ jobs:
           retention-days: 14
 
   release-readiness:
-    # Independent source signature is separate from operational customer UAT.
-    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval]
+    # The independent source signature remains mandatory. The authenticated
+    # learning UAT is an additional prerequisite, never a replacement.
+    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval, learning-auth-uat]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -507,8 +562,10 @@ jobs:
         run: node scripts/release/pr-readiness.mjs
 
   deploy:
-    # BOTH gates are required; never silently drop either source attestation or customer UAT.
-    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval, product-acceptance-contract, product-acceptance-predeploy, release-readiness]
+    # Do not authorize production on CI, emulator UAT, or inventory alone.
+    # Source, authenticated learning UAT and human-signed enterprise product
+    # acceptance are three independent required gates.
+    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval, learning-auth-uat, product-acceptance-contract, product-acceptance-predeploy, release-readiness]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
     runs-on: ubuntu-latest
     timeout-minutes: 45
