@@ -174,3 +174,7 @@ No hay tarifa obligatoria por documento impuesta por la implementación del adap
 - No afirma que el certificado institucional tenga validez jurídica en cualquier país, ni que esté desplegado en Firebase.
 
 Para mayor detalle del gate y evidencia verificable, ver `evidence/certificates-esign-20261009/release-evidence.md`.
+
+## 2026-10-20 SHIP acceptance update — academic eligibility before signing
+
+The academic graduation gate described in `docs/product-acceptance/ACADEMIC_CERTIFICATE_INTEGRAL_GATE_20261020.md` is mandatory before `approveCompletion` or `issue` can publish signed academic credentials. A stored PAS practice, a video checkpoint, arbitrary event IDs and a coach's free-text rationale cannot substitute for independently published curriculum and passing cohort-level assessments. Never present mock Stirling/DocuSign results as cryptographically signed PDFs. Until a real authorized signer and independent signature validator are verified and the exact release SHA passes UAT, the enterprise certificate release gate remains **NO-GO**.

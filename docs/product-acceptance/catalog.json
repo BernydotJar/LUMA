@@ -1,0 +1,716 @@
+{
+  "schemaVersion": "luma.product-acceptance.v1",
+  "project": "LUMA",
+  "customerContext": {
+    "persona": "cliente empresarial del sector agroquimico (escenario de prueba, no cliente identificado)",
+    "validatedWithCustomer": false,
+    "assumptions": [
+      "Necesita capacitar equipo comercial, colaboradores y distribuidores con derechos por programa/cohorte",
+      "Tiene cursos evergreen y sesiones high-ticket en vivo, con alta diversidad de cursos",
+      "Exige soporte, automatizacion, seguimiento, certificados y privacidad; confirmar prioridades y requisitos del sector"
+    ]
+  },
+  "policy": {
+    "definitionOfDone": "Source + usable authenticated UI action + complete business outcome with server readback/security/recovery + exact published version + human/UAT evidence",
+    "uiHttp200IsNotAcceptance": true,
+    "e2eGreenIsNotModuleComplete": true,
+    "dataDisplayIsNotAnOperationalAction": true,
+    "minimumJourneyWidth": "every mandatory action and all requested variants, negative/recovery, live verified role",
+    "productionWritesAllowed": false,
+    "manualReleaseGates": [
+      "customer_requirements_confirmed",
+      "business_owner_uat_signed",
+      "manual_accessibility_signed",
+      "privacy_and_abuse_signed",
+      "production_route_coverage_signed"
+    ]
+  },
+  "modules": [
+    {
+      "id": "institution-onboarding",
+      "title": "Solicitud, dos revisores, invitacion y primer administrador",
+      "required": true,
+      "actions": [
+        {
+          "id": "ORG-01",
+          "title": "Solicitar academia y conocer el estado",
+          "actor": "owner",
+          "path": "/academia/solicitud",
+          "uiFiles": [
+            "src/app/academia/solicitud/page.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/institutions/applications/route.ts"
+          ],
+          "serverOutcome": "Solicitud persistida en tenant de staging",
+          "negative": "correo sin verificar rechazado",
+          "recovery": "reintentar error transitorio",
+          "requiredVariants": [
+            "first_customer"
+          ]
+        },
+        {
+          "id": "ORG-02",
+          "title": "Revisar y aprobar por dos operadores distintos",
+          "actor": "platform_reviewer",
+          "path": "/plataforma/solicitudes",
+          "uiFiles": [
+            "src/app/plataforma/solicitudes/page.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/platform/institution-applications/[applicationId]/decisions/route.ts"
+          ],
+          "serverOutcome": "Dos decisiones y auditoria separadas",
+          "negative": "mismo revisor no puede aprobarse",
+          "recovery": "rechazo e invitacion revocable",
+          "requiredVariants": [
+            "two_operators"
+          ]
+        },
+        {
+          "id": "ORG-03",
+          "title": "Aceptar invitacion segura",
+          "actor": "owner",
+          "path": "/academia/invitacion",
+          "uiFiles": [
+            "src/app/academia/invitacion/page.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/institutions/invitations/accept/route.ts"
+          ],
+          "serverOutcome": "Invitacion consumida una sola vez",
+          "negative": "invitacion ajena o repetida rechazada",
+          "recovery": "reenvio y expiracion",
+          "requiredVariants": [
+            "expired_token"
+          ]
+        },
+        {
+          "id": "ORG-04",
+          "title": "Asignar primer administrador y acceder",
+          "actor": "platform_operator",
+          "path": "/academia/primer-curso",
+          "uiFiles": [
+            "src/app/academia/primer-curso/page.tsx"
+          ],
+          "serviceFiles": [
+            "src/lib/institutions/approval-store.ts"
+          ],
+          "serverOutcome": "Rol por tenant verificado con reingreso",
+          "negative": "suplantacion y cross-tenant rechazados",
+          "recovery": "reconciliar rol en fallo parcial",
+          "requiredVariants": [
+            "verified_identity"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "catalog-course-ops",
+      "title": "Catalogo con muchos cursos y cohortes live/evergreen",
+      "required": true,
+      "actions": [
+        {
+          "id": "CAT-01",
+          "title": "Crear primer curso y cohortes",
+          "actor": "tenant_admin",
+          "path": "/academia/primer-curso",
+          "uiFiles": [
+            "src/app/academia/primer-curso/page.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/programs/admin/offerings/route.ts"
+          ],
+          "serverOutcome": "Cohorte versionada en Firestore, inicialmente draft",
+          "negative": "admin de otra academia denegado",
+          "recovery": "edicion/duplicado controlado",
+          "requiredVariants": [
+            "evergreen",
+            "high_ticket_live"
+          ]
+        },
+        {
+          "id": "CAT-02",
+          "title": "Ver y gestionar 1, 10 y 50 cursos por nombre",
+          "actor": "tenant_admin",
+          "path": "/studio/programs",
+          "uiFiles": [
+            "src/app/studio/programs/page.tsx",
+            "src/components/academic-operations-console.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/programs/admin/offerings/route.ts"
+          ],
+          "serverOutcome": "Listado y busqueda reales, persistencia y paginacion",
+          "negative": "no leer otro tenant",
+          "recovery": "estado vacio, carga y error",
+          "requiredVariants": [
+            "one_course",
+            "ten_courses",
+            "fifty_courses"
+          ]
+        },
+        {
+          "id": "CAT-03",
+          "title": "Asignar instructores, horarios y cohortes",
+          "actor": "tenant_admin",
+          "path": "/studio/programs",
+          "uiFiles": [
+            "src/app/studio/programs/page.tsx",
+            "src/components/academic-operations-console.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/programs/admin/offerings/[offeringId]/sessions/route.ts"
+          ],
+          "serverOutcome": "Cohorte y sesiones en vivo asignadas",
+          "negative": "coach no asignado denegado",
+          "recovery": "cancelar y reprogramar",
+          "requiredVariants": [
+            "high_ticket_live",
+            "evergreen"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "curriculum-authoring",
+      "title": "Contenido real de Mary, evaluaciones, rubricas y publicacion",
+      "required": true,
+      "actions": [
+        {
+          "id": "CUR-01",
+          "title": "Crear modulo y leccion con derechos de fuente",
+          "actor": "academic_author",
+          "path": "/studio/programs",
+          "uiFiles": [
+            "src/app/studio/programs/page.tsx"
+          ],
+          "serviceFiles": [
+            "src/lib/learning-content.ts"
+          ],
+          "serverOutcome": "Modulo/leccion durables asociados a offeringId",
+          "negative": "autor sin tenant denegado",
+          "recovery": "editar borrador con conflicto",
+          "requiredVariants": [
+            "rights_confirmed"
+          ]
+        },
+        {
+          "id": "CUR-02",
+          "title": "Crear preguntas, respuesta, practica y rubrica",
+          "actor": "academic_author",
+          "path": "/studio/programs",
+          "uiFiles": [
+            "src/app/studio/programs/page.tsx"
+          ],
+          "serviceFiles": [
+            "src/lib/learning-content.ts"
+          ],
+          "serverOutcome": "Preguntas validas y rubrica versionada",
+          "negative": "no filtrar claves a alumnos",
+          "recovery": "corregir respuestas y rubricar",
+          "requiredVariants": [
+            "two_questions",
+            "scored_practice"
+          ]
+        },
+        {
+          "id": "CUR-03",
+          "title": "Previsualizar experiencia exactamente como alumno",
+          "actor": "academic_author",
+          "path": "/studio/programs",
+          "uiFiles": [
+            "src/app/studio/programs/page.tsx"
+          ],
+          "serviceFiles": [
+            "src/lib/learning-content.ts"
+          ],
+          "serverOutcome": "Previsualizacion de version sin publicarla",
+          "negative": "borrador invisible a alumno",
+          "recovery": "volver a editar",
+          "requiredVariants": [
+            "draft_preview"
+          ]
+        },
+        {
+          "id": "CUR-04",
+          "title": "Solicitar y registrar aprobacion academica independiente",
+          "actor": "academic_approver",
+          "path": "/studio/programs",
+          "uiFiles": [
+            "src/app/studio/programs/page.tsx"
+          ],
+          "serviceFiles": [
+            "src/lib/learning-content.ts"
+          ],
+          "serverOutcome": "Version inmutable firmada por segundo revisor",
+          "negative": "autor no se autoaprueba",
+          "recovery": "rechazar y resometer",
+          "requiredVariants": [
+            "second_approver"
+          ]
+        },
+        {
+          "id": "CUR-05",
+          "title": "Publicar version aprobada y comprobar acceso real",
+          "actor": "academic_approver",
+          "path": "/studio/programs",
+          "uiFiles": [
+            "src/app/studio/programs/page.tsx"
+          ],
+          "serviceFiles": [
+            "src/lib/learning-content.ts"
+          ],
+          "serverOutcome": "Solo alumno matriculado lee version aprobada",
+          "negative": "borrador y otro tenant denegados",
+          "recovery": "retirar sin perder auditoria",
+          "requiredVariants": [
+            "evergreen",
+            "high_ticket_live"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "enrollment-entitlement",
+      "title": "Matricula institucional y derechos del alumno",
+      "required": true,
+      "actions": [
+        {
+          "id": "ENR-01",
+          "title": "Matricular uno o multiples colaboradores",
+          "actor": "tenant_admin",
+          "path": "/studio/enrollments",
+          "uiFiles": [
+            "src/app/studio/enrollments/page.tsx",
+            "src/components/institutional-enrollment-console.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/enrollments/institutional/offerings/route.ts"
+          ],
+          "serverOutcome": "Derecho especifico programa/cohorte en servidor",
+          "negative": "duplicacion y tenant ajeno denegados",
+          "recovery": "revocar y corregir",
+          "requiredVariants": [
+            "individual",
+            "bulk"
+          ]
+        },
+        {
+          "id": "ENR-02",
+          "title": "Entrar como alumno y elegir curso autorizado",
+          "actor": "learner",
+          "path": "/learn",
+          "uiFiles": [
+            "src/app/learn/page.tsx",
+            "src/components/program-picker.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/programs/my-courses/route.ts"
+          ],
+          "serverOutcome": "Curso correcto visible por matricula",
+          "negative": "curso ajeno no autorizado",
+          "recovery": "sin cursos, multiples cursos",
+          "requiredVariants": [
+            "one_course",
+            "many_courses"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "learner-coach-experience",
+      "title": "Estudio, practica, feedback, restauracion y coaching",
+      "required": true,
+      "actions": [
+        {
+          "id": "LRN-01",
+          "title": "Empezar leccion y completar practica",
+          "actor": "learner",
+          "path": "/learn",
+          "uiFiles": [
+            "src/app/learn/page.tsx",
+            "src/components/practice-session.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/learning/events/route.ts"
+          ],
+          "serverOutcome": "Evento de practica ligado a offering, user y rubric",
+          "negative": "usuario ajeno sin permiso",
+          "recovery": "recuperar ejercicio",
+          "requiredVariants": [
+            "evergreen",
+            "high_ticket_live"
+          ]
+        },
+        {
+          "id": "LRN-02",
+          "title": "Recibir feedback util y evidencia recuperable",
+          "actor": "learner",
+          "path": "/learn",
+          "uiFiles": [
+            "src/app/learn/page.tsx",
+            "src/components/adaptive-learning-home.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/learning/events/route.ts"
+          ],
+          "serverOutcome": "Feedback y recibo persistente por cohorte",
+          "negative": "no mezclar cohorte archivada",
+          "recovery": "cerrar sesion y restaurar",
+          "requiredVariants": [
+            "restore_session",
+            "two_cohorts"
+          ]
+        },
+        {
+          "id": "LRN-03",
+          "title": "Hacer una pregunta y recibir seguimiento",
+          "actor": "learner",
+          "path": "/learn",
+          "uiFiles": [
+            "src/app/learn/page.tsx",
+            "src/components/adaptive-learning-home.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/learning/plan/route.ts"
+          ],
+          "serverOutcome": "Pregunta con respuesta y trazabilidad",
+          "negative": "no mezclar contenidos privados",
+          "recovery": "reintentar error de asistente",
+          "requiredVariants": [
+            "grounded_answer"
+          ]
+        },
+        {
+          "id": "COA-01",
+          "title": "Revisar evidencias de alumnos por cohorte",
+          "actor": "coach",
+          "path": "/studio",
+          "uiFiles": [
+            "src/app/studio/page.tsx",
+            "src/components/studio-dashboard.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/coach/learners/route.ts"
+          ],
+          "serverOutcome": "Vista de evidencias cohort-scoped con consentimiento",
+          "negative": "no exponer otra cohorte",
+          "recovery": "estado sin evidencias",
+          "requiredVariants": [
+            "two_cohorts",
+            "archived_cohort"
+          ]
+        },
+        {
+          "id": "COA-02",
+          "title": "Crear intervencion y comprobar que alumno la ve",
+          "actor": "coach",
+          "path": "/studio",
+          "uiFiles": [
+            "src/app/studio/page.tsx",
+            "src/components/studio-dashboard.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/coach/interventions/route.ts"
+          ],
+          "serverOutcome": "Intervencion auditada, recibida y seguida",
+          "negative": "instructor no asignado denegado",
+          "recovery": "cancelar/reasignar",
+          "requiredVariants": [
+            "teacher_reassigned"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "support-tickets",
+      "title": "Solicitudes y tickets de soporte con seguimiento de estado",
+      "required": true,
+      "actions": [
+        {
+          "id": "SUP-01",
+          "title": "Abrir ticket vinculado a un curso o incidencia",
+          "actor": "owner",
+          "path": "/support",
+          "uiFiles": [],
+          "serviceFiles": [],
+          "serverOutcome": "Ticket con prioridad y SLA visible",
+          "negative": "no exponer tickets ajenos",
+          "recovery": "consulta de estado y adjuntos",
+          "requiredVariants": [
+            "course_access_issue"
+          ]
+        },
+        {
+          "id": "SUP-02",
+          "title": "Asignar, responder y resolver ticket",
+          "actor": "support_agent",
+          "path": "/support",
+          "uiFiles": [],
+          "serviceFiles": [],
+          "serverOutcome": "Respuesta visible y ticket cerrado con auditoria",
+          "negative": "soporte de otro tenant denegado",
+          "recovery": "reabrir ticket",
+          "requiredVariants": [
+            "reopen_ticket"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "automated-followup",
+      "title": "Automatizacion de recordatorios y seguimientos consentidos",
+      "required": true,
+      "actions": [
+        {
+          "id": "AUT-01",
+          "title": "Crear regla de seguimiento por falta de avance",
+          "actor": "tenant_admin",
+          "path": "/studio/automation",
+          "uiFiles": [],
+          "serviceFiles": [],
+          "serverOutcome": "Regla persistente con disparadores, aprobacion y version",
+          "negative": "no permitir enviar a tenant ajeno",
+          "recovery": "pausar y reanudar",
+          "requiredVariants": [
+            "inactivity_trigger"
+          ]
+        },
+        {
+          "id": "AUT-02",
+          "title": "Comprobar entrega real y trazabilidad",
+          "actor": "tenant_admin",
+          "path": "/studio/automation",
+          "uiFiles": [],
+          "serviceFiles": [],
+          "serverOutcome": "Entrega/auditoria/error recuperable, sin duplicados",
+          "negative": "opt-out y duplicado bloqueados",
+          "recovery": "reintentar fallo proveedor",
+          "requiredVariants": [
+            "reminder_delivered",
+            "opt_out"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reporting-certification",
+      "title": "Reportes, progreso medible y certificados",
+      "required": true,
+      "actions": [
+        {
+          "id": "REP-01",
+          "title": "Revisar avance y evidencias verificables",
+          "actor": "tenant_admin",
+          "path": "/studio/class-intelligence",
+          "uiFiles": [
+            "src/app/studio/class-intelligence/page.tsx"
+          ],
+          "serviceFiles": [
+            "src/app/api/coach/learners/route.ts"
+          ],
+          "serverOutcome": "Reporte por tenant, programa y cohorte, no dato sintetico",
+          "negative": "no mezclar cohortes",
+          "recovery": "datos faltantes y exportacion",
+          "requiredVariants": [
+            "fifty_courses"
+          ]
+        },
+        {
+          "id": "REP-02",
+          "title": "Emitir y verificar certificado a alumno elegible",
+          "actor": "tenant_admin",
+          "path": "/studio/certificates",
+          "uiFiles": [
+            "src/app/studio/certificates/page.tsx",
+            "src/components/certificate-console.tsx"
+          ],
+          "serviceFiles": [
+            "src/lib/certificates/authorization.ts"
+          ],
+          "serverOutcome": "Certificado verificable con politica de firma",
+          "negative": "insuficiente evidencia se rechaza",
+          "recovery": "reemitir/revocar",
+          "requiredVariants": [
+            "cert_eligible"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lifecycle-privacy",
+      "title": "Revocacion, offboarding y retencion",
+      "required": true,
+      "actions": [
+        {
+          "id": "LIF-01",
+          "title": "Revocar acceso de empleado fuera de la empresa",
+          "actor": "tenant_admin",
+          "path": "/studio/enrollments",
+          "uiFiles": [
+            "src/app/studio/enrollments/page.tsx"
+          ],
+          "serviceFiles": [
+            "src/lib/commerce/enrollment.ts"
+          ],
+          "serverOutcome": "Revocacion inmediata sobre contenido/evidencia",
+          "negative": "tokens anteriores no deben servir",
+          "recovery": "restablecer acceso auditado",
+          "requiredVariants": [
+            "offboard_employee"
+          ]
+        },
+        {
+          "id": "LIF-02",
+          "title": "Aplicar politica de retencion, solicitud de eliminacion",
+          "actor": "privacy_operator",
+          "path": "/plataforma/solicitudes",
+          "uiFiles": [
+            "src/app/plataforma/solicitudes/page.tsx"
+          ],
+          "serviceFiles": [
+            "src/lib/institutions/approval-store.ts"
+          ],
+          "serverOutcome": "Expurgo trazable segun consentimiento vigente",
+          "negative": "no borrar evidencia legalmente requerida",
+          "recovery": "reconciliar fallos",
+          "requiredVariants": [
+            "retention_expiry"
+          ]
+        }
+      ]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "AGR-01",
+      "title": "Primera empresa de capacitacion agroquimica activa academia",
+      "actors": [
+        "owner",
+        "platform_reviewer",
+        "platform_operator"
+      ],
+      "actions": [
+        "ORG-01",
+        "ORG-02",
+        "ORG-03",
+        "ORG-04"
+      ],
+      "variants": [
+        "first_customer",
+        "two_operators",
+        "expired_token",
+        "verified_identity"
+      ],
+      "outcome": "Academia aprobada con administrador unico y sin escalamiento cruzado"
+    },
+    {
+      "id": "AGR-02",
+      "title": "Administrador organiza 1 a 50 cursos evergreen/live para equipos y distribuidores",
+      "actors": [
+        "tenant_admin",
+        "academic_author",
+        "academic_approver"
+      ],
+      "actions": [
+        "CAT-01",
+        "CAT-02",
+        "CAT-03",
+        "CUR-01",
+        "CUR-02",
+        "CUR-03",
+        "CUR-04",
+        "CUR-05"
+      ],
+      "variants": [
+        "one_course",
+        "ten_courses",
+        "fifty_courses",
+        "evergreen",
+        "high_ticket_live",
+        "rights_confirmed",
+        "two_questions",
+        "scored_practice",
+        "draft_preview",
+        "second_approver"
+      ],
+      "outcome": "Curso versionado y aprobado ofrecido solo a cohortes autorizadas"
+    },
+    {
+      "id": "AGR-03",
+      "title": "Representante aprende sin conocer LUMA, pregunta y demuestra competencia",
+      "actors": [
+        "tenant_admin",
+        "learner",
+        "coach"
+      ],
+      "actions": [
+        "ENR-01",
+        "ENR-02",
+        "LRN-01",
+        "LRN-02",
+        "LRN-03",
+        "COA-01",
+        "COA-02"
+      ],
+      "variants": [
+        "individual",
+        "bulk",
+        "one_course",
+        "many_courses",
+        "evergreen",
+        "high_ticket_live",
+        "restore_session",
+        "two_cohorts",
+        "archived_cohort",
+        "teacher_reassigned"
+      ],
+      "outcome": "Evidencia y seguimiento autenticos recuperables tras cerrar sesion"
+    },
+    {
+      "id": "AGR-04",
+      "title": "Solicitudes y automatizaciones resuelven incidencias del cliente",
+      "actors": [
+        "owner",
+        "support_agent",
+        "tenant_admin"
+      ],
+      "actions": [
+        "SUP-01",
+        "SUP-02",
+        "AUT-01",
+        "AUT-02"
+      ],
+      "variants": [
+        "course_access_issue",
+        "reopen_ticket",
+        "inactivity_trigger",
+        "reminder_delivered",
+        "opt_out"
+      ],
+      "outcome": "Ticket resuelto y automatizacion entregada con consentimiento y trazabilidad"
+    },
+    {
+      "id": "AGR-05",
+      "title": "Direccion verifica impacto y offboarding sin fuga de datos",
+      "actors": [
+        "tenant_admin",
+        "privacy_operator"
+      ],
+      "actions": [
+        "REP-01",
+        "REP-02",
+        "LIF-01",
+        "LIF-02"
+      ],
+      "variants": [
+        "fifty_courses",
+        "cert_eligible",
+        "offboard_employee",
+        "retention_expiry"
+      ],
+      "outcome": "Indicadores rastreables, certificado elegible y acceso revocado con auditoria"
+    }
+  ]
+}

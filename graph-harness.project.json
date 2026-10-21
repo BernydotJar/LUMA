@@ -36,6 +36,18 @@
         "production"
       ],
       "blocking": true
+    },
+    {
+      "id": "product-operational-acceptance",
+      "required_evidence_kinds": [
+        "operational-journey",
+        "ui-action",
+        "production-sha",
+        "human-uat",
+        "accessibility",
+        "security"
+      ],
+      "blocking": true
     }
   ],
   "nodes": [
@@ -2443,6 +2455,100 @@
         ],
         "customer_data_used": false,
         "production_permissions_change": false
+      }
+    },
+    {
+      "id": "LUMA-085-action-complete-product-acceptance-contract",
+      "kind": "product-quality",
+      "title": "Evidence-driven four-axis product acceptance contract; no data-only/green-E2E false PASS",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-073-first-client-institution-provisioning"
+      ],
+      "capability": "enterprise-operational-acceptance",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "release-quality"
+        ]
+      },
+      "allowed_paths": [
+        "docs/product-acceptance/**",
+        "scripts/qa/product-acceptance-*",
+        "scripts/qa/product-public-inventory.mjs",
+        "evidence/product-acceptance-2026-10-19/**",
+        ".github/workflows/quality.yml",
+        ".github/workflows/enterprise-product-acceptance.yml",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "scripts/qa/acceptance-attestation.mjs",
+        "scripts/qa/protected-acceptance-inputs.mjs"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "source_baseline": "878bca15fad3cafb6f9e4e2d4058bf5855835dd2",
+        "no_production_mutations": true,
+        "total_required_actions": 27,
+        "required_business_journeys": 5,
+        "customer_context": "agrochemical_training_hypothesis",
+        "human_signoff_required": true,
+        "adversarial_contract_tests": 18,
+        "signed_review_evidence": "Ed25519",
+        "trusted_keys": "GitHub protected environment external keyring",
+        "source_ui_journey_server_production_axes": 4
+      }
+    },
+    {
+      "id": "LUMA-086-agrochemical-customer-operational-release-gate",
+      "kind": "release-engineering",
+      "title": "End-to-end agrochemical enterprise client operations with verified UI, server state, deployed SHA and UAT",
+      "status": "ready",
+      "depends_on": [
+        "LUMA-085-action-complete-product-acceptance-contract",
+        "LUMA-084-first-curriculum-publication-gate",
+        "LUMA-077-first-client-cohort-evidence-isolation",
+        "LUMA-076-first-client-enterprise-release-gate"
+      ],
+      "capability": "enterprise-client-go-live-verification",
+      "gates": {
+        "review": [
+          "independent-review"
+        ],
+        "done": [
+          "product-operational-acceptance"
+        ]
+      },
+      "allowed_paths": [
+        "docs/product-acceptance/**",
+        "scripts/qa/product-acceptance-*",
+        "scripts/qa/product-public-inventory.mjs",
+        "evidence/product-acceptance-2026-10-19/**",
+        ".github/workflows/quality.yml",
+        ".github/workflows/enterprise-product-acceptance.yml",
+        "graph-harness.project.json",
+        "graph-harness.events.jsonl",
+        "src/app/**",
+        "src/lib/**",
+        "e2e/**"
+      ],
+      "metadata": {
+        "release": "NO-GO",
+        "customer_requirements_confirmed": false,
+        "unproven_modules": 9,
+        "unproven_mandatory_actions": 27,
+        "human_signoff_required": true,
+        "production_mutation_permission": false,
+        "production_version": "6ddcae8ff2464782b7e4001c4cd5d60092dbb099",
+        "candidate_baseline": "878bca15fad3cafb6f9e4e2d4058bf5855835dd2",
+        "public_404_routes": [
+          "/academia/solicitud",
+          "/plataforma/solicitudes",
+          "/academia/primer-curso"
+        ],
+        "verified_on": "2026-10-20",
+        "reason": "candidate SHA not deployed; no independently signed customer UAT"
       }
     }
   ]

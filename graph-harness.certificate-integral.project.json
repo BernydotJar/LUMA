@@ -1,0 +1,235 @@
+{
+  "schema_version": "graph-harness.project.v1",
+  "project_id": "luma-academic-certificate-integral-20261020",
+  "mode": "SHIP",
+  "gate_definitions": [
+    {
+      "id": "api-gate",
+      "required_evidence_kinds": [
+        "test",
+        "security"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "academic-gate",
+      "required_evidence_kinds": [
+        "test",
+        "content",
+        "critic"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "security-gate",
+      "required_evidence_kinds": [
+        "test",
+        "security",
+        "critic"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "signature-gate",
+      "required_evidence_kinds": [
+        "test",
+        "security",
+        "production",
+        "critic"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "release-gate",
+      "required_evidence_kinds": [
+        "test",
+        "security",
+        "a11y",
+        "performance",
+        "ci",
+        "production",
+        "critic"
+      ],
+      "blocking": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "LUMA-GRAD-001-enrollment",
+      "kind": "product-capability",
+      "title": "Verified tenant/cohort enrollment",
+      "status": "pending",
+      "depends_on": [],
+      "capability": "full-stack-product",
+      "gates": {
+        "done": [
+          "security-gate",
+          "api-gate"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/commerce",
+        "src/lib/learning-entitlement.ts"
+      ],
+      "metadata": {
+        "priority": "P0",
+        "mode": "SHIP",
+        "release_authority": "independent-human",
+        "acceptance_contract": "docs/product-acceptance/ACADEMIC_CERTIFICATE_INTEGRAL_GATE_20261020.md"
+      }
+    },
+    {
+      "id": "LUMA-GRAD-002-curriculum",
+      "kind": "product-capability",
+      "title": "Rights-cleared immutable academic publication",
+      "status": "pending",
+      "depends_on": [
+        "LUMA-GRAD-001-enrollment"
+      ],
+      "capability": "full-stack-product",
+      "gates": {
+        "done": [
+          "academic-gate"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/academic",
+        "src/app/api/academic"
+      ],
+      "metadata": {
+        "priority": "P0",
+        "mode": "SHIP",
+        "release_authority": "independent-human",
+        "acceptance_contract": "docs/product-acceptance/ACADEMIC_CERTIFICATE_INTEGRAL_GATE_20261020.md"
+      }
+    },
+    {
+      "id": "LUMA-GRAD-003-assessment",
+      "kind": "product-capability",
+      "title": "Completed and reviewed learner-cohort assessment",
+      "status": "pending",
+      "depends_on": [
+        "LUMA-GRAD-002-curriculum"
+      ],
+      "capability": "full-stack-product",
+      "gates": {
+        "done": [
+          "academic-gate",
+          "security-gate"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/academic/cohort-evidence.ts",
+        "src/app/api/learning/cohort-evidence"
+      ],
+      "metadata": {
+        "priority": "P0",
+        "mode": "SHIP",
+        "release_authority": "independent-human",
+        "acceptance_contract": "docs/product-acceptance/ACADEMIC_CERTIFICATE_INTEGRAL_GATE_20261020.md"
+      }
+    },
+    {
+      "id": "LUMA-GRAD-004-completion",
+      "kind": "product-capability",
+      "title": "Independent grade policy and authenticated finalization",
+      "status": "pending",
+      "depends_on": [
+        "LUMA-GRAD-003-assessment"
+      ],
+      "capability": "full-stack-product",
+      "gates": {
+        "done": [
+          "academic-gate",
+          "security-gate"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/certificates",
+        "src/app/api/certificates"
+      ],
+      "metadata": {
+        "priority": "P0",
+        "mode": "SHIP",
+        "release_authority": "independent-human",
+        "acceptance_contract": "docs/product-acceptance/ACADEMIC_CERTIFICATE_INTEGRAL_GATE_20261020.md"
+      }
+    },
+    {
+      "id": "LUMA-GRAD-005-signature",
+      "kind": "product-capability",
+      "title": "Cryptographically valid externally trusted signed PDF",
+      "status": "pending",
+      "depends_on": [
+        "LUMA-GRAD-004-completion"
+      ],
+      "capability": "full-stack-product",
+      "gates": {
+        "done": [
+          "signature-gate"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/certificates/stirling.ts",
+        "ops/stirling"
+      ],
+      "metadata": {
+        "priority": "P0",
+        "mode": "SHIP",
+        "release_authority": "independent-human",
+        "acceptance_contract": "docs/product-acceptance/ACADEMIC_CERTIFICATE_INTEGRAL_GATE_20261020.md"
+      }
+    },
+    {
+      "id": "LUMA-GRAD-006-public-verification",
+      "kind": "product-capability",
+      "title": "Signed and revoked certificate publicly verifiable",
+      "status": "pending",
+      "depends_on": [
+        "LUMA-GRAD-005-signature"
+      ],
+      "capability": "full-stack-product",
+      "gates": {
+        "done": [
+          "signature-gate",
+          "api-gate"
+        ]
+      },
+      "allowed_paths": [
+        "src/app/api/certificates/verify",
+        "src/app/verify"
+      ],
+      "metadata": {
+        "priority": "P0",
+        "mode": "SHIP",
+        "release_authority": "independent-human",
+        "acceptance_contract": "docs/product-acceptance/ACADEMIC_CERTIFICATE_INTEGRAL_GATE_20261020.md"
+      }
+    },
+    {
+      "id": "LUMA-GRAD-007-customer-uat",
+      "kind": "product-capability",
+      "title": "Independent, signed UAT of exact production release SHA",
+      "status": "pending",
+      "depends_on": [
+        "LUMA-GRAD-006-public-verification"
+      ],
+      "capability": "full-stack-product",
+      "gates": {
+        "done": [
+          "release-gate"
+        ]
+      },
+      "allowed_paths": [
+        "docs/product-acceptance",
+        "evidence"
+      ],
+      "metadata": {
+        "priority": "P0",
+        "mode": "SHIP",
+        "release_authority": "independent-human",
+        "acceptance_contract": "docs/product-acceptance/ACADEMIC_CERTIFICATE_INTEGRAL_GATE_20261020.md"
+      }
+    }
+  ]
+}
