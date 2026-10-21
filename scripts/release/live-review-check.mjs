@@ -14,9 +14,32 @@ function gh(path) {
     { encoding:'utf8', timeout:20000, maxBuffer:8*1024*1024 }));
 }
 
+/** A signed approval may be imported via ONE strictly receipt-only commit.
+ * Never treat an arbitrary descendant, a docs/catalog change, or a new source
+ * tree as an already reviewed and approved SHA. `compare` comes from GitHub's
+ * authenticated REST API, not candidate source or Graph/PR JSON.
+ */
+export function assertReceiptOnlyHeadAdvance(reviewedHead, currentHead, compare) {
+  invariant(SHA.test(reviewedHead ?? '') && SHA.test(currentHead ?? ''),
+    'Receipt-only head policy requires full source commit SHAs');
+  if (reviewedHead === currentHead) return 'EXACT_REVIEWED_HEAD';
+  const changed = compare?.files;
+  const later = compare?.commits;
+  invariant(compare?.status === 'ahead' && compare.ahead_by === 1 &&
+    compare.behind_by === 0 && compare.base_commit?.sha === reviewedHead &&
+    Array.isArray(later) && later.length === 1 &&
+    later[0]?.sha === currentHead &&
+    later[0]?.parents?.length === 1 && later[0].parents[0].sha === reviewedHead &&
+    Array.isArray(changed) && changed.length === 1 &&
+    changed[0]?.filename === 'evidence/cicd-enterprise/release-approval.json' &&
+    changed[0]?.status === 'modified',
+    'Unreviewed source or non-receipt changes after signed approval');
+  return 'SINGLE_SIGNED_RECEIPT_IMPORT';
+}
+
 /** Pure verification against already authenticated GitHub API responses. */
 export function assertCurrentIndependentReview(approval, pr, expectedHead,
-    comments, reviews, commits, reviewerAllowlist) {
+    comments, reviews, commits, reviewerAllowlist, authenticatedCompare = null) {
   invariant(approval?.schemaVersion === 2 && approval.status === 'PASS' &&
     SHA.test(approval.review?.commitSha ?? '') &&
     approval.review.commitSha === approval.testedCommit,
@@ -27,6 +50,11 @@ export function assertCurrentIndependentReview(approval, pr, expectedHead,
     'PR source, base, or current head changed after protected review event');
   invariant(commits.some(commit => commit.sha === approval.review.commitSha),
     'Signed reviewed SHA is no longer in the PR commit history');
+  // The signer reviews C0. Importing only its signed receipt as C1 may change
+  // the Git commit ID, but no executable or business acceptance content.
+  // Require the GitHub-authenticated C0..C1 delta before reusing that review.
+  assertReceiptOnlyHeadAdvance(approval.review.commitSha, expectedHead,
+    authenticatedCompare);
   const contributors = commits.flatMap(commit =>
     [commit.author?.login, commit.committer?.login].filter(Boolean));
   const current = authenticateIndependentSourceReview(comments, reviews,
@@ -47,6 +75,10 @@ export function verifyCurrentIndependentReview(directory, prNumber, expectedHead
   const comments = ghPages(`repos/${REPO}/issues/${prNumber}/comments?per_page=100`);
   const reviews = ghPages(`repos/${REPO}/pulls/${prNumber}/reviews?per_page=100`);
   const commits = ghPages(`repos/${REPO}/pulls/${prNumber}/commits?per_page=100`);
+  invariant(SHA.test(approval?.review?.commitSha ?? ''),
+    'Protected source check requires a valid signed reviewed commit');
+  const compare = approval.review.commitSha === expectedHead ? null :
+    gh(`repos/${REPO}/compare/${approval.review.commitSha}...${expectedHead}`);
   return assertCurrentIndependentReview(approval, pr, expectedHead,
-    comments, reviews, commits, process.env.LUMA_RELEASE_TRUSTED_REVIEWERS);
+    comments, reviews, commits, process.env.LUMA_RELEASE_TRUSTED_REVIEWERS, compare);
 }
