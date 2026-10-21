@@ -1,0 +1,30 @@
+{
+  "schema": "luma.live-classroom.qa-evidence.v1",
+  "generatedAt": "2026-10-21T00:46:42.558526+00:00",
+  "sourceSha": "7ce200faaf442a9e4adbb13b29759523a1d272c1",
+  "summary": {
+    "pass": 33,
+    "fail": 0,
+    "blocked": 1,
+    "productionGo": false
+  },
+  "sha256": {
+    "authenticated-e2e-result.json": "5e7a79e1c95128c1f3ad3a433815a5d550af2519a748906bdf782fb4be4285c7",
+    "execution.log": "6b7c382a6db9742261161e2f84c6591eabb9273de12b22fd523accfdf1a41fbb",
+    "executive-summary.md": "7e6c0a671769a80595f2887adaf63fa61f85ce2f9d1d5f0ac640246fe062ef28",
+    "instructor-after-hand.png": "c10f077b49516dca95002a21865e07cc1de1f4442b62e2cc301965265d68fe36",
+    "instructor-luma-connected.png": "c4855904cd56169de34b15d5b93743117e5b745e4478d9c3d5a50a919fde41ac",
+    "learner-a-after-revocation.png": "294886e27420aeb0f843194489fee5885e74549c3c816f4cf7202c99849e3724",
+    "learner-a-luma-connected.png": "8ecffd23e5f6a7601ef4f86451f8899b14963fd60ec51bf07e577a4ff87a4a53",
+    "learner-b-375x812-live.png": "bbd97d96847f37be3b8ce418a874c92841f185aa0d340cef6bc3c166f2ceb72e",
+    "learner-b-luma-connected.png": "51d7bce605eac651488df6fa79e21cf19ff430a5b2304c2b7f76fa0d2f39eec9",
+    "next-actions.md": "2fa76a13b0b26d634effae52e68ae9071a00e99343f893448fb61b01a4f87ff2",
+    "next-dev-local.log": "08d3d26b026f15207678f0cdf85b6760811f1b4e5e2b8b197e6ba0d92803b5eb",
+    "product-acceptance.json": "374663a84b5d1d388787dee5620938f561f9fd40cf53cc71c4782eb0e04cbc78",
+    "release-readiness.md": "e15d90544ce6fe441d71f556258a28110c0fc27afda2d8de7ed3f905ce681ed0",
+    "security-findings.md": "edca2bae39e3e4122c1226aed9999c390b7d31aee5806d1500bae4a8dbc5284c",
+    "source-verify.log": "f30a4487e6f683163f0529185f057cd61d59bebedd9076274580b65a25bcfa46",
+    "test-matrix.json": "5135a9d821bfef66c24e0a473e9e05a668fd110908f74fcefc4c3990afe83e19",
+    "visual-qa.md": "af01414ee49c0bc203c8be5eee5e77ebfb7cc559e0059f0bace9a2f280f92585"
+  }
+}
