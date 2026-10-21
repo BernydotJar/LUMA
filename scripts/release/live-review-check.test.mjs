@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { assertCurrentIndependentReview } from './live-review-check.mjs';
+import { assertCurrentIndependentReview, assertReceiptOnlyHeadAdvance } from './live-review-check.mjs';
 
 const REVIEWED='a'.repeat(40);
 const EVIDENCE_COMMIT='b'.repeat(40);
@@ -12,8 +12,13 @@ const commits=[{sha:REVIEWED,author:{login:'BernydotJar'},committer:{login:'sand
   {sha:EVIDENCE_COMMIT,author:{login:'BernydotJar'},committer:{login:'BernydotJar'}}];
 const approved={id:901,user:{login:'external-auditor',type:'User'},state:'APPROVED',
   commit_id:REVIEWED,submitted_at:'2026-10-20T18:00:00Z'};
-const check=(a=approval,p=pr,c=[],r=[approved],history=commits,allowlist='external-auditor') =>
-  assertCurrentIndependentReview(a,p,EVIDENCE_COMMIT,c,r,history,allowlist);
+const receiptOnlyCompare={status:'ahead',ahead_by:1,behind_by:0,
+  base_commit:{sha:REVIEWED},
+  commits:[{sha:EVIDENCE_COMMIT,parents:[{sha:REVIEWED}]}],
+  files:[{filename:'evidence/cicd-enterprise/release-approval.json',status:'modified'}]};
+const check=(a=approval,p=pr,c=[],r=[approved],history=commits,
+    allowlist='external-auditor',delta=receiptOnlyCompare) =>
+  assertCurrentIndependentReview(a,p,EVIDENCE_COMMIT,c,r,history,allowlist,delta);
 
 test('evidence-only commit retains an authenticated independent approval of exactly the same source', () => {
   assert.deepEqual(check(),{method:'github-human-approval',reviewer:'external-auditor',reviewId:901});
@@ -51,4 +56,38 @@ test('previously clean Codex review also must still have the same verified GitHu
   assert.deepEqual(check(signed,pr,[bot],[],commits,''),{
     method:'github-codex-clean-review',reviewer:'chatgpt-codex-connector[bot]',reviewId:161});
   assert.throws(()=>check(signed,pr,[{...bot,id:162}],[],commits,''),/revoked|superseded/);
+});
+
+
+test('receipt-only review inheritance rejects unreviewed source, workflow, catalog and evidence changes', () => {
+  assert.equal(assertReceiptOnlyHeadAdvance(REVIEWED,REVIEWED,null),'EXACT_REVIEWED_HEAD');
+  assert.equal(assertReceiptOnlyHeadAdvance(REVIEWED,EVIDENCE_COMMIT,receiptOnlyCompare),
+    'SINGLE_SIGNED_RECEIPT_IMPORT');
+  for (const filename of [
+    'src/app/page.tsx', '.github/workflows/quality.yml',
+    'docs/product-acceptance/catalog.json',
+    'evidence/cicd-enterprise/independent-review.json',
+  ]) {
+    const changed={...receiptOnlyCompare,files:[{filename,status:'modified'}]};
+    assert.throws(() => check(approval,pr,[],[approved],commits,'external-auditor',changed),
+      /Unreviewed source or non-receipt/);
+  }
+  for (const modified of [
+    {...receiptOnlyCompare,ahead_by:2},
+    {...receiptOnlyCompare,behind_by:1},
+    {...receiptOnlyCompare,status:'diverged'},
+    {...receiptOnlyCompare,commits:[{sha:EVIDENCE_COMMIT,parents:[{sha:'c'.repeat(40)}]}]},
+    {...receiptOnlyCompare,files:[...receiptOnlyCompare.files,{filename:'docs/README.md',status:'added'}]},
+    {...receiptOnlyCompare,files:[{...receiptOnlyCompare.files[0],status:'renamed'}]},
+    {...receiptOnlyCompare,files:[]},
+    {...receiptOnlyCompare,commits:[]},
+    null,
+  ]) {
+    assert.throws(() => check(approval,pr,[],[approved],commits,'external-auditor',modified),
+      /Unreviewed source or non-receipt/);
+  }
+  // Without authenticated compare proof, even a genuine historic reviewer
+  // cannot sign off on any newer PR HEAD simply because it is a descendant.
+  assert.throws(() => assertCurrentIndependentReview(approval,pr,EVIDENCE_COMMIT,
+    [],[approved],commits,'external-auditor'),/Unreviewed source or non-receipt/);
 });
