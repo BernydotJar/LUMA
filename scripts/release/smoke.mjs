@@ -2,6 +2,7 @@ import { chromium, devices, expect } from '@playwright/test';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { assertManifest, invariant, PRODUCTION_URL } from './policy.mjs';
+import { verifyPublicRuntimeParity } from './production-parity.mjs';
 const out = resolve(process.env.RELEASE_DIR ?? '/tmp/luma-release');
 mkdirSync(resolve(out, 'screenshots'), { recursive: true });
 const manifest = assertManifest(JSON.parse(readFileSync(resolve(out, 'manifest.json'), 'utf8')));
@@ -9,6 +10,15 @@ const routes = ['/', '/experience', '/learn', '/studio', '/library', '/studio/ce
 const result = { status: 'RUNNING', gitSha: manifest.gitSha, url: PRODUCTION_URL, routes: [], checks: [], errors: [] };
 const browser = await chromium.launch();
 try {
+  // A successful Firebase deployment is insufficient when Cloudflare still
+  // serves an earlier student-facing revision. Verify both public hostnames,
+  // full source/tree/run provenance and API + Firestore health before browser UX.
+  const probeContext = await browser.newContext();
+  try {
+    result.publicParity = await verifyPublicRuntimeParity(probeContext.request, manifest);
+    result.checks.push({ name: 'firebase-and-public-domain-source-parity',
+      status: result.publicParity.status, gitSha: result.publicParity.sha });
+  } finally { await probeContext.close(); }
   for (const mobile of [false, true]) {
     const context = await browser.newContext(mobile ? { ...devices['iPhone 14'] } : { viewport: { width: 1440, height: 900 } });
     const page = await context.newPage();
