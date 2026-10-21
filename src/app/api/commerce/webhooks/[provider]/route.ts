@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { dispatchClassroomRevocation } from "@/lib/live-classroom-revocation";
 import { webhookDeliveryHttp } from "@/lib/commerce/webhook-delivery";
 import { isCommerceProviderConfigurationError } from "@/lib/commerce/webhook-errors";
 import {
@@ -115,6 +116,9 @@ export async function POST(
       commerceCorrelationId(),
     );
 
+    // Do not ACK a refund to the commerce provider while a connected learner
+    // retains media access. Provider retry resumes the durable revocation job.
+    if (result.status === "processed") await dispatchClassroomRevocation(result.enrollment);
     const delivery = webhookDeliveryHttp(result.status);
     return NextResponse.json(
       {

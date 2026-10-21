@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { dispatchClassroomRevocation } from "@/lib/live-classroom-revocation";
 import { requireLearningAdmin } from "@/lib/learning-server";
 import { institutionalGrants } from "@/lib/commerce/institutional-grant-server";
 import { authorizeInstitutionalAdmin } from "@/lib/commerce/institutional-grants";
@@ -14,6 +15,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     authorizeInstitutionalAdmin(admin as Record<string, unknown>, tenantId);
     const { id } = await context.params;
     const result = await institutionalGrants.revoke(tenantId, id, admin.uid, body.reason);
+    await dispatchClassroomRevocation(result.record);
     return NextResponse.json({
       enrollmentId: result.record.enrollmentId,
       status: result.record.status,

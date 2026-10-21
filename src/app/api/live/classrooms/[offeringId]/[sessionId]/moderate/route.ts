@@ -12,7 +12,7 @@ export async function POST(
   try {
     const user = await requireLearningUser(request, { checkRevoked: true });
     const { offeringId, sessionId } = await context.params;
-    const classroom = await authorizeClassroom(user, offeringId, sessionId);
+    const classroom = await authorizeClassroom(user, offeringId, sessionId, new Date(), { allowOvertime: true });
     if (classroom.role !== "instructor") {
       return NextResponse.json({ error: "instructor_only" }, { status: 403 });
     }

@@ -8,6 +8,7 @@ import { FirestoreCommerceLedger } from "./ledger";
 import { FirestoreCommerceProductMappingStore } from "./mapping";
 import { CommerceEnrollmentOrchestrator } from "./orchestrator";
 import type { NormalizedCommerceEvent } from "./domain";
+import { revocationJobId } from "@/lib/live-classroom-revocation-queue";
 
 const emulatorEnabled = Boolean(process.env.FIRESTORE_EMULATOR_HOST);
 const app = emulatorEnabled
@@ -157,6 +158,94 @@ describe.runIf(emulatorEnabled)(
       expect(claimed).toHaveLength(0);
     });
 
+    it("atomically queues a single provider disconnect when a linked live learner is refunded", async () => {
+      const suffix = randomUUID();
+      const offeringId = "e".repeat(64);
+      const tenantId = `live-tenant-${suffix}`;
+      const learnerId = `linked-${suffix}`;
+      await mappings!.upsert({
+        provider: "hotmart", externalProductId: `external-program-${suffix}`,
+        tenantId, productId: "pnl-practitioner", programId: "pnl-practitioner", offeringId,
+      });
+      await orchestrator!.handle(event(suffix), `corr-payment-${suffix}`);
+      const claimed = await enrollments!.claimByEmail(learnerId, `learner-${suffix}@example.com`);
+      expect(claimed).toHaveLength(1);
+      const refund = event(suffix, {
+        externalEventId: `refund-${suffix}`, type: "commerce.payment.refunded",
+        occurredAt: "2026-10-08T12:10:00Z",
+      });
+      const result = await orchestrator!.handle(refund, `corr-refund-${suffix}`);
+      expect(result.enrollment).toMatchObject({ status: "revoked", learnerId, offeringId });
+      const jobId = revocationJobId({ enrollmentId: result.enrollment!.enrollmentId,
+        sourceEventId: result.enrollment!.lastProviderEventId });
+      const jobRef = firestore!.collection("liveClassroomRevocations").doc(jobId);
+      expect((await jobRef.get()).data()).toMatchObject({ state: "pending", learnerId,
+        tenantId, offeringId, enrollmentId: result.enrollment!.enrollmentId });
+      const again = await orchestrator!.handle(refund, `corr-refund-retry-${suffix}`);
+      expect(again.duplicate).toBe(true);
+      expect((await jobRef.get()).data()?.attempts).toBe(0);
+      const jobs = await firestore!.collection("liveClassroomRevocations")
+        .where("enrollmentId", "==", result.enrollment!.enrollmentId).get();
+      expect(jobs.size).toBe(1);
+    });
+
+    it("disconnects the ORIGINAL live cohort when merchant product mapping changes", async () => {
+      const suffix = randomUUID();
+      const offeringId = "a".repeat(64);
+      const replacementOfferingId = "b".repeat(64);
+      const tenantId = `mapping-drift-${suffix}`;
+      const learnerId = `learner-${suffix}`;
+      await mappings!.upsert({
+        provider: "hotmart", externalProductId: `external-program-${suffix}`,
+        tenantId, programId: "program-1", productId: "product-1", offeringId,
+      });
+      await orchestrator!.handle(event(suffix), `corr-payment-${suffix}`);
+      await enrollments!.claimByEmail(learnerId, `learner-${suffix}@example.com`);
+      // The original binding remains authoritative even if configuration moved.
+      await mappings!.upsert({
+        provider: "hotmart", externalProductId: `external-program-${suffix}`,
+        tenantId, programId: "program-1", productId: "product-1",
+        offeringId: replacementOfferingId,
+      });
+      const refund = event(suffix, {
+        externalEventId: `refund-mapping-${suffix}`,
+        type: "commerce.payment.refunded", occurredAt: "2026-10-08T12:10:00Z",
+      });
+      const output = await orchestrator!.handle(refund, `corr-refund-${suffix}`);
+      expect(output.enrollment).toMatchObject({ status: "revoked", offeringId });
+      const queued = await firestore!.collection("liveClassroomRevocations")
+        .doc(revocationJobId({ enrollmentId: output.enrollment!.enrollmentId,
+          sourceEventId: output.enrollment!.lastProviderEventId })).get();
+      expect(queued.data()).toMatchObject({ state: "pending", offeringId, learnerId });
+      expect(queued.get("offeringId")).not.toBe(replacementOfferingId);
+    });
+
+    it("creates a new outbox job for a second distinct refund while access is still revoked", async () => {
+      const suffix = randomUUID();
+      const offeringId = "e".repeat(64);
+      await mappings!.upsert({
+        provider: "hotmart", externalProductId: `external-program-${suffix}`,
+        tenantId: `t-${suffix}`, programId: "course", productId: "product", offeringId,
+      });
+      await orchestrator!.handle(event(suffix), `first-payment-${suffix}`);
+      await enrollments!.claimByEmail(`learner-${suffix}`, `learner-${suffix}@example.com`);
+      const first = event(suffix, {
+        type: "commerce.payment.refunded", externalEventId: `first-refund-${suffix}`,
+        occurredAt: "2026-10-08T12:10:00Z",
+      });
+      const a = await orchestrator!.handle(first, `first-refund-correlation-${suffix}`);
+      expect(a.enrollment?.status).toBe("revoked");
+      const second = { ...first, externalEventId: `second-refund-${suffix}`,
+        occurredAt: "2026-10-08T12:20:00Z" };
+      const b = await orchestrator!.handle(second, `second-refund-correlation-${suffix}`);
+      expect(b.enrollment?.status).toBe("revoked");
+      const jobs = await firestore!.collection("liveClassroomRevocations")
+        .where("enrollmentId", "==", b.enrollment!.enrollmentId).get();
+      expect(jobs.size).toBe(2);
+      expect(jobs.docs.map((doc) => doc.get("sourceEventId")).sort())
+        .toEqual([first.externalEventId, second.externalEventId].sort());
+    });
+
     it("revokes from the durable transaction binding when a refund omits product and customer", async () => {
       const suffix = randomUUID();
       await mappings!.upsert({
@@ -216,7 +305,7 @@ describe.runIf(emulatorEnabled)(
         customerExternalId: undefined,
         productExternalId: undefined,
         transactionExternalId: subscriptionId,
-        metadata: { accessEndsAt: "2026-10-20T12:00:00Z" },
+        metadata: { accessEndsAt: "2026-10-20T12:00:00-06:00" },
       });
       const result = await orchestrator!.handle(
         cancellation,
@@ -228,7 +317,7 @@ describe.runIf(emulatorEnabled)(
         outcome: "no_entitlement_change",
         enrollment: {
           status: "active",
-          accessEndsAt: "2026-10-20T12:00:00Z",
+          accessEndsAt: "2026-10-20T18:00:00.000Z",
         },
       });
       expect(
@@ -266,7 +355,7 @@ describe.runIf(emulatorEnabled)(
       const scheduled = await orchestrator!.handle(cancelled, `corr-cancel-${suffix}`);
       expect(scheduled.outcome).toBe("no_entitlement_change");
       expect(scheduled.enrollment?.status).toBe("active");
-      expect(scheduled.enrollment?.accessEndsAt).toBe("2026-10-10T12:10:00Z");
+      expect(scheduled.enrollment?.accessEndsAt).toBe("2026-10-10T12:10:00.000Z");
       expect(isActiveCommerceEnrollment(scheduled.enrollment!, "2026-10-09T00:00:00Z")).toBe(true);
       expect(isActiveCommerceEnrollment(scheduled.enrollment!, "2026-10-11T00:00:00Z")).toBe(false);
 
