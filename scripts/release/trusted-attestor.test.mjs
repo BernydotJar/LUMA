@@ -5,9 +5,13 @@ const SHA='a'.repeat(40);
 const good = {user:{login:'chatgpt-codex-connector[bot]'},body:'<!-- codex-review-state:v1 '+
   JSON.stringify({code_review:{commit_sha:SHA,status:'completed',has_any_findings:false,has_unresolved_findings:false}})+' -->'};
 const needed=['verify','security','firestore','identity-roles','browser',
-  'coach-rbac','institution-intake','institution-browser','institution-approval'];
+  'coach-rbac','institution-intake','institution-browser','institution-approval',
+  'learning-auth-uat',
+  'Operational acceptance contract self-test (not a release approval)'];
 const jobs=[...needed.map(name=>({name,conclusion:'success'})),
-  {name:'release-readiness',conclusion:'failure'},{name:'deploy',conclusion:'skipped'}];
+  {name:'release-readiness',conclusion:'failure'},
+  {name:'product-acceptance-predeploy',conclusion:'skipped'},
+  {name:'deploy',conclusion:'skipped'}];
 
 test('trusted attestor accepts an actual Codex review receipt for exact SHA', () => {
   expect(authenticateExternalCodexReview([good],SHA)).toBe(true);
@@ -26,7 +30,7 @@ test('PR-authored self-reviews, stale SHAs, and unresolved findings cannot autho
   expect(()=>authenticateExternalCodexReview([],SHA)).toThrow();
 });
 
-test('protected attestor requires nine verified checks from the registered GitHub quality workflow', () => {
+test('protected attestor requires eleven completed technical checks and both PR-only skips', () => {
   const workflowId=375119015;
   const run={head_sha:SHA,event:'pull_request',conclusion:'failure',workflow_id:workflowId,
     path:'.github/workflows/quality.yml',repository:{full_name:'BernydotJar/LUMA'},
@@ -39,6 +43,19 @@ test('protected attestor requires nine verified checks from the registered GitHu
   expect(()=>validateQualityRun(run,jobs,SHA,undefined)).toThrow();
   expect(()=>validateQualityRun(run,jobs.map(j=>j.name==='coach-rbac'?{...j,conclusion:'failure'}:j),SHA,workflowId)).toThrow();
   expect(()=>validateQualityRun(run,[...jobs,{name:'unknown-check',conclusion:'failure'}],SHA,workflowId)).toThrow();
+  for(const name of ['learning-auth-uat',
+    'Operational acceptance contract self-test (not a release approval)']) {
+    expect(()=>validateQualityRun(run,jobs.filter(j=>j.name!==name),SHA,workflowId)).toThrow();
+    for(const conclusion of ['skipped','failure',null,'in_progress']) {
+      expect(()=>validateQualityRun(run,jobs.map(j=>j.name===name?{...j,conclusion}:j),SHA,workflowId)).toThrow();
+    }
+  }
+  expect(()=>validateQualityRun(run,jobs.map(j=>j.name==='product-acceptance-predeploy'
+    ?{...j,conclusion:'success'}:j),SHA,workflowId)).toThrow();
+  expect(()=>validateQualityRun(run,jobs.filter(j=>j.name!=='product-acceptance-predeploy'),SHA,workflowId)).toThrow();
+  expect(()=>validateQualityRun(run,[...jobs,jobs[0]],SHA,workflowId)).toThrow();
+  expect(()=>validateQualityRun(run,jobs.map(j=>j.name==='security'
+    ?{...j,conclusion:null,status:'in_progress'}:j),SHA,workflowId)).toThrow();
 });
 
 test('rejects ancestor CI and stale independent review on an advanced PR head', () => {

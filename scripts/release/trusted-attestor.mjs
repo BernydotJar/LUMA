@@ -11,8 +11,14 @@ import { invariant } from './policy.mjs';
 
 const ROOT = resolve(import.meta.dirname, '../..');
 const REPO = 'BernydotJar/LUMA';
+// Every independently named quality job on the reviewed PR SHA is material.
+// A legacy nine-job PASS is insufficient after the authenticated learning and
+// independently protected enterprise-acceptance gates were introduced.
 const REQUIRED = ['verify','security','firestore','identity-roles','browser',
-  'coach-rbac','institution-intake','institution-browser','institution-approval'];
+  'coach-rbac','institution-intake','institution-browser','institution-approval',
+  'learning-auth-uat',
+  'Operational acceptance contract self-test (not a release approval)'];
+const SKIPPED_ON_PR = ['product-acceptance-predeploy','deploy'];
 function gh(path) {
   return JSON.parse(execFileSync('gh', ['api',path], { encoding:'utf8',timeout:20000,maxBuffer:8*1024*1024 }));
 }
@@ -161,14 +167,16 @@ export function validateQualityRun(run,jobs,commit,registeredWorkflowId) {
     const found = jobs.filter(job => job.name === name);
     invariant(found.length === 1 && found[0].conclusion === 'success', `Quality job not approved: ${name}`);
   }
-  invariant(jobs.filter(job => job.name === 'release-readiness').length === 1 &&
-    jobs.filter(job => job.name === 'deploy').length === 1,
-    'Release-readiness and deploy job receipts are required');
-  for (const job of jobs) {
-    if (REQUIRED.includes(job.name)) continue;
-    invariant(job.name === 'release-readiness' && ['failure','success'].includes(job.conclusion) ||
-      job.name === 'deploy' && job.conclusion === 'skipped', 'Unexpected failing or unverified CI job');
+  const releaseJobs = jobs.filter(job => job.name === 'release-readiness');
+  invariant(releaseJobs.length === 1 && ['failure','success'].includes(releaseJobs[0].conclusion),
+    'Release-readiness must run and fail closed until independently signed');
+  for (const name of SKIPPED_ON_PR) {
+    const matches = jobs.filter(job => job.name === name);
+    invariant(matches.length === 1 && matches[0].conclusion === 'skipped',
+      `Protected production-only job must stay skipped on a PR: ${name}`);
   }
+  invariant(jobs.length === REQUIRED.length + SKIPPED_ON_PR.length + 1,
+    'Unexpected or duplicated GitHub quality jobs');
   return true;
 }
 
