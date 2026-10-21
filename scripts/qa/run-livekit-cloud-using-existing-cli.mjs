@@ -14,7 +14,7 @@ const configPath=process.env.LUMA_QA_CLI_CONFIG_PATH ||
 const expectedId='p_5650huuc5om';
 const expectedHost='luma-0x6n7955.livekit.cloud';
 const mode=process.env.LUMA_CLOUD_QA_ALLOWED;
-if (!['provider-only','provider-revoke-before-close','provider-post-settings'].includes(mode)) {
+if (!['provider-only','provider-revoke-before-close','provider-post-settings','provider-departed'].includes(mode)) {
  throw new Error('Denied: explicit provider-only or provider-revoke-before-close mode required');
 }
 const meta=fs.statSync(configPath);
@@ -30,13 +30,16 @@ if (!project || new URL(project.url).hostname!==expectedHost ||
 }
 const alternate=mode==='provider-revoke-before-close';
 const postSetting=mode==='provider-post-settings';
-const testFile=postSetting
+const departedSetting=mode==='provider-departed';
+const testFile=departedSetting
+ ? 'scripts/qa/livekit-cloud-departed-learner-20261021.mjs'
+ : postSetting
  ? 'scripts/qa/livekit-cloud-post-settings-20261021.mjs'
  : alternate
    ? 'scripts/qa/livekit-cloud-revoke-before-close.mjs'
    : 'scripts/qa/livekit-cloud-enterprise-gate.mjs';
 const target='evidence/live-classroom-acceptance/'+
- (postSetting?'cloud-post-setting-20261021':alternate
+ (departedSetting?'cloud-departed-learner-20261021':postSetting?'cloud-post-setting-20261021':alternate
  ?'cloud-revoke-before-close-qa-20261020':'cloud-provider-qa-20261020');
 mkdirSync(target,{recursive:true});
 const stdout=fs.createWriteStream(target+'/execution.log',{flags:'w',mode:0o600});
@@ -46,6 +49,18 @@ const env={...process.env,
  LIVEKIT_CLOUD_TEST_API_SECRET:project.api_secret,
  PLAYWRIGHT_BROWSERS_PATH:'/usr/bin'
 };
+// Every run invalidates prior mutable reports BEFORE starting the child.
+const source=departedSetting
+ ? 'evidence/live-classroom-acceptance/cloud-departed-learner-20261021/cloud-provider-verification.json'
+ : postSetting
+ ? 'evidence/live-classroom-acceptance/cloud-post-setting-20261021/cloud-provider-verification.json'
+ : alternate
+   ? 'evidence/live-classroom-acceptance/cloud-revoke-before-close-verification.json'
+   : 'evidence/live-classroom-acceptance/cloud-enterprise-verification.json';
+for(const stale of [source,target+'/cloud-provider-result.json',target+'/status.json']){
+ fs.rmSync(stale,{force:true});
+}
+const runStartedAt=Date.now();
 const child=spawn(process.execPath,[testFile],{cwd:process.cwd(),env,stdio:['ignore','pipe','pipe']});
 function redact(x) {
  return x.replaceAll(project.api_secret,'[SECRET_REDACTED]')
@@ -67,19 +82,21 @@ child.stderr.on('data',capture);
 child.on('error',err=>{stdout.write('RUNNER_SPAWN_FAILURE '+err.name+'\n');});
 const result=await new Promise(resolve=>child.on('close',code=>resolve(code)));
 stdout.write(redact(carry));stdout.end();
-const source=postSetting
- ? 'evidence/live-classroom-acceptance/cloud-post-setting-20261021/cloud-provider-verification.json'
- : alternate
-   ? 'evidence/live-classroom-acceptance/cloud-revoke-before-close-verification.json'
-   : 'evidence/live-classroom-acceptance/cloud-enterprise-verification.json';
 let summary={decision:'NO_RESULT',checks:[],projectId:expectedId};
 try {
+ const stat=fs.statSync(source);
+ if(stat.mtimeMs < runStartedAt-1000)throw new Error('STALE_CLOUD_QA_EVIDENCE');
  const r=JSON.parse(fs.readFileSync(source,'utf8'));
- summary={decision:r.conclusion,checks:r.checks.map(({action,role,passed,remaining,error})=>({
+ if(!Array.isArray(r.checks)||!r.checks.length)throw new Error('EMPTY_CLOUD_QA_ASSERTIONS');
+ const allPassed=r.checks.every(check=>check.passed===true);
+ // Exit code AND the freshly written structured decision must both be green.
+ const decision=(result===0 && allPassed && r.conclusion==='PROVIDER_CLOUD_PASS')
+  ?'PROVIDER_CLOUD_PASS':'FAIL';
+ summary={decision,checks:r.checks.map(({action,role,passed,remaining,error})=>({
   action,role,passed,remaining,errorType:error?String(error).slice(0,200):undefined
  })),projectId:expectedId,source};
  fs.copyFileSync(source,target+'/cloud-provider-result.json');
-} catch {summary.noResult=true;}
+} catch {summary.decision='FAIL';summary.noResult=true;}
 summary.exitCode=result;
 fs.writeFileSync(target+'/status.json',JSON.stringify(summary,null,2)+'\n',{mode:0o600});
 console.log('PROJECT='+expectedId);
@@ -90,4 +107,4 @@ console.log('FAILURE_REASON='+(
  summary.checks.find(x=>x.passed===false)?.errorType||'none'
 ));
 console.log('RUN_EXIT='+result);
-if(result!==0)process.exitCode=1;
+if(result!==0||summary.decision!=='PROVIDER_CLOUD_PASS')process.exitCode=1;
