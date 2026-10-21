@@ -1,0 +1,20 @@
+{
+  "files": {
+    "defects.md": "9c3d8f20faac9ae7a21bce3fa2c2a151a4e7ca699b6626a06b27057e64e1148a",
+    "executive-summary.md": "c5fc1294a5df12490055f38579a1d52cd0c20c9a7667874c3aa8f12e56346d7e",
+    "graph-product-acceptance.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "graph-validate.json": "87f67693de9b45a5054931083b6c504587a9001169e3764c0eabc9ca2abbc393",
+    "graph-validate.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "livekit-provider-report.md": "0a6322e0f01a99082e78a25114629c735012857f8ca1b797fe6d64cc459015be",
+    "next-actions.md": "4a4c09063d54822bc4aa0ff4dda3d0f4d19f60af3abfaea5973b982e4c94ed80",
+    "product-acceptance.json": "50c00cea6429e01d10de8c18e605becf826ed8bfa6024d77260a530f7234e60e",
+    "release-readiness.md": "3f68d44bc8c152c5b0d04a218e5722ced7a4f1083757fc2b29145895674ef43a",
+    "security-findings.md": "62f8c62e580c8410800e072bbcf92bbd35645ac83c03aa6dc4c8bd9055878db6",
+    "test-matrix.json": "d5c8dd06567f588348f428c6fe9915ad357fee6ac09c0852cd62372c8c655ba4",
+    "visual-qa.md": "9259a0c3e0680a3666707636af5432cef0bd0a314843ce100dafb35c0b7be4cb"
+  },
+  "graph_harness_gate": "NO_GO",
+  "graph_harness_sha": "b3e991eaff98822defdd20287fa110586953abde",
+  "schema_version": "luma.qa.evidence-manifest.v1",
+  "tested_implementation_sha": "3fe24da039ec379967ab8ddd338dbaedf5ad0e38"
+}
