@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { WebhookReceiver } from "livekit-server-sdk";
 import { recordClassroomPresence } from "@/lib/live-classroom-attendance";
+import { disconnectIfClassroomAccessRevoked } from "@/lib/live-classroom-revocation";
 import { ClassroomWebhookBodyTooLarge, readClassroomWebhookBody } from "@/lib/live-classroom-webhook-body";
 import { ClassroomError, liveKitConfiguration } from "@/lib/live-classroom-server";
 
@@ -38,6 +39,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_event" }, { status: 400 });
   }
   try {
+    // A previously issued JWT can outlive a purchase. Validate the server-side
+    // entitlement on every signed provider join and evict access that was revoked.
+    if (event.event === "participant_joined") {
+      await disconnectIfClassroomAccessRevoked(event.room.name, event.participant.identity);
+    }
     await recordClassroomPresence({
       id: event.id,
       roomName: event.room.name,

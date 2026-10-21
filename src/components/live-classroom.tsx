@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "@firebase/auth";
 import Link from "next/link";
 import {
-  LiveKitRoom, PreJoin, VideoConference, useParticipants, useRoomContext,
+  LiveKitRoom, PreJoin, VideoConference, useConnectionState, useParticipants, useRoomContext,
 } from "@livekit/components-react";
-import { ArrowLeft, Radio, ShieldCheck, Users, VideoOff } from "lucide-react";
-import { DisconnectReason } from "livekit-client";
+import { ArrowLeft, Hand, MicOff, Radio, ShieldCheck, Users, VideoOff } from "lucide-react";
+import { ConnectionState, DisconnectReason, RoomEvent } from "livekit-client";
+import { isRaised, type ClassroomInteraction } from "@/lib/live-classroom-interaction";
 import { useLumaAuth } from "./auth-provider";
 import { firebaseAuth } from "@/lib/firebase-client";
 import styles from "./live-classroom.module.css";
@@ -35,6 +36,89 @@ const accessErrors: Record<string, string> = {
   authentication_required: "Inicia sesión para ingresar al aula.",
 };
 
+type ClassroomControlResponse = {
+  raised?: boolean;
+  acknowledged?: boolean;
+  muted?: number;
+  failed?: number;
+  status?: "completed" | "partial";
+  error?: string;
+};
+
+async function postClassroomControl(
+  user: { getIdToken: () => Promise<string> },
+  offeringId: string,
+  sessionId: string,
+  body: ClassroomInteraction,
+): Promise<ClassroomControlResponse> {
+  const response = await fetch(
+    `/api/live/classrooms/${encodeURIComponent(offeringId)}/${encodeURIComponent(sessionId)}/interaction`,
+    { method: "POST", cache: "no-store", headers: {
+      authorization: `Bearer ${await user.getIdToken()}`,
+      "content-type": "application/json",
+    }, body: JSON.stringify(body) },
+  );
+  const json = await response.json() as ClassroomControlResponse;
+  if (!response.ok) {
+    throw new Error(json.error === "classroom_rate_limited"
+      ? "Espera unos segundos antes de repetir la acción."
+      : json.error === "classroom_exceeds_moderation_limit"
+        ? "Esta sesión supera el límite de moderación grupal. Solicita que silencien sus micrófonos."
+        : "El control no se pudo aplicar en el aula. Intenta de nuevo.");
+  }
+  return json;
+}
+
+/** Educational interaction uses a verified API, never a locally simulated room state. */
+function ClassroomHandControl({ offeringId, sessionId }: { offeringId: string; sessionId: string }) {
+  const { user } = useLumaAuth();
+  const room = useRoomContext();
+  // Room.state is mutable; subscribing to connection transitions forces a React
+  // update so a newly connected learner can actually raise a hand.
+  const connectionState = useConnectionState();
+  const [raised, setRaised] = useState(() => isRaised(room.localParticipant.attributes));
+  const [pending, setPending] = useState(false);
+  const [notice, setNotice] = useState("");
+
+  useEffect(() => {
+    const onAttributes = (_attributes: Record<string, string>, participant: { identity: string }) => {
+      if (participant.identity === room.localParticipant.identity) {
+        setRaised(isRaised(room.localParticipant.attributes));
+      }
+    };
+    room.on(RoomEvent.ParticipantAttributesChanged, onAttributes);
+    return () => { room.off(RoomEvent.ParticipantAttributesChanged, onAttributes); };
+  }, [room]);
+
+  async function toggleHand() {
+    if (!user || pending || connectionState !== ConnectionState.Connected) return;
+    setPending(true);
+    setNotice("");
+    try {
+      const result = await postClassroomControl(user, offeringId, sessionId,
+        { action: "set_hand", raised: !raised });
+      if (typeof result.raised !== "boolean") throw new Error("El aula no confirmó el cambio.");
+      setRaised(result.raised);
+      setNotice(result.raised ? "Tu mano está levantada; el instructor puede verla." : "Bajaste la mano.");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "No se pudo actualizar tu mano.");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return <div className={styles.handDock}>
+    <button type="button" className={styles.handButton} aria-pressed={raised}
+      aria-label={raised ? "Bajar la mano" : "Levantar la mano"}
+      disabled={pending || connectionState !== ConnectionState.Connected}
+      onClick={() => void toggleHand()}>
+      <Hand size={18} aria-hidden="true" />
+      {pending ? "Actualizando…" : raised ? "Bajar la mano" : "Levantar la mano"}
+    </button>
+    {notice && <span className={styles.handNotice} role="status">{notice}</span>}
+  </div>;
+}
+
 function InstructorModeration({ offeringId, sessionId, onSessionClosed }: {
   offeringId: string; sessionId: string; onSessionClosed: () => void;
 }) {
@@ -44,7 +128,16 @@ function InstructorModeration({ offeringId, sessionId, onSessionClosed }: {
   const [pending, setPending] = useState<string | null>(null);
   const [closing, setClosing] = useState(false);
   const [notice, setNotice] = useState("");
+  const [mutePending, setMutePending] = useState(false);
+  const [handUpdate, setHandUpdate] = useState(0);
+  useEffect(() => {
+    const refresh = () => setHandUpdate((value) => value + 1);
+    room.on(RoomEvent.ParticipantAttributesChanged, refresh);
+    return () => { room.off(RoomEvent.ParticipantAttributesChanged, refresh); };
+  }, [room]);
   const others = participants.filter((participant) => participant.identity !== room.localParticipant.identity);
+  const ordered = [...others].sort((a, b) => Number(isRaised(b.attributes)) - Number(isRaised(a.attributes)));
+  const raisedCount = others.filter((participant) => isRaised(participant.attributes)).length;
   async function removeParticipant(identity: string) {
     if (!user || !window.confirm("¿Retirar a este participante del aula?")) return;
     setPending(identity);
@@ -86,12 +179,52 @@ function InstructorModeration({ offeringId, sessionId, onSessionClosed }: {
     }
   }
 
+  async function acknowledgeHand(identity: string) {
+    if (!user || pending !== null) return;
+    setPending(identity);
+    setNotice("");
+    try {
+      await postClassroomControl(user, offeringId, sessionId, { action: "acknowledge_hand", identity });
+      setNotice("Mano atendida y bajada para el participante.");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "No se pudo atender la mano.");
+    } finally {
+      setPending(null);
+    }
+  }
+  async function muteLearnerMicrophones() {
+    if (!user || mutePending ||
+        !window.confirm("¿Silenciar los micrófonos de los alumnos conectados? Podrán volver a activarlos. Los entrenadores no se verán afectados.")) return;
+    setMutePending(true);
+    setNotice("");
+    try {
+      const result = await postClassroomControl(user, offeringId, sessionId, { action: "mute_all" });
+      if (typeof result.muted !== "number" || typeof result.failed !== "number") {
+        throw new Error("El proveedor no confirmó la moderación.");
+      }
+      setNotice(result.failed > 0
+        ? `Se silenciaron ${result.muted} micrófonos y fallaron ${result.failed}. Revisa el aula.`
+        : `Se silenciaron ${result.muted} micrófonos. Cada alumno puede reactivar el suyo.`);
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "No se pudo silenciar al grupo.");
+    } finally {
+      setMutePending(false);
+    }
+  }
+
   return (
-    <aside className={styles.roster} aria-label="Moderación del instructor">
+    <aside className={styles.roster} data-hand-update={handUpdate} aria-label="Moderación del instructor">
       <h2><Users size={16} /> Participantes <span>{participants.length}</span></h2>
-      <p>Administra la asistencia dentro de esta sesión.</p>
+      <p>Gestiona las intervenciones en esta sesión. {raisedCount > 0
+        ? `${raisedCount} mano${raisedCount === 1 ? "" : "s"} levantada${raisedCount === 1 ? "" : "s"}.`
+        : "Sin manos levantadas."}</p>
+      <button type="button" className={styles.muteAll} disabled={mutePending || pending !== null || closing}
+        onClick={() => void muteLearnerMicrophones()}>
+        <MicOff size={15} aria-hidden="true" />
+        {mutePending ? "Silenciando…" : "Silenciar micrófonos"}
+      </button>
       <ul>
-        {others.map((participant) => {
+        {ordered.map((participant) => {
           const role = (() => {
             try {
               return (JSON.parse(participant.metadata || "{}") as { role?: string }).role;
@@ -99,21 +232,30 @@ function InstructorModeration({ offeringId, sessionId, onSessionClosed }: {
           })();
           return (
             <li key={participant.identity}>
-              <span className={styles.personName}>{participant.name || "Participante"}</span>
+              <div className={styles.personInfo}>
+                <span className={styles.personName}>{participant.name || "Participante"}</span>
+                {isRaised(participant.attributes) && <span className={styles.raised}><Hand size={13} /> Mano levantada</span>}
+              </div>
               {role === "instructor" ? <small>Entrenador</small> : (
-                <button
-                  type="button"
-                  disabled={pending !== null}
-                  onClick={() => void removeParticipant(participant.identity)}
-                  aria-label={`Retirar a ${participant.name || "participante"}`}
-                >{pending === participant.identity ? "Retirando" : "Retirar"}</button>
+                <div className={styles.rosterActions}>
+                  {isRaised(participant.attributes) && <button type="button"
+                    disabled={pending !== null || mutePending} onClick={() => void acknowledgeHand(participant.identity)}
+                    aria-label={`Bajar la mano de ${participant.name || "participante"}`}>
+                    Atender
+                  </button>}
+                  <button type="button" disabled={pending !== null || mutePending}
+                    onClick={() => void removeParticipant(participant.identity)}
+                    aria-label={`Retirar a ${participant.name || "participante"}`}>
+                    {pending === participant.identity ? "Procesando…" : "Retirar"}
+                  </button>
+                </div>
               )}
             </li>
           );
         })}
       </ul>
       {notice && <p role="status">{notice}</p>}
-      <button className={styles.endSession} type="button" disabled={closing || pending !== null} onClick={() => void closeSession()}>
+      <button className={styles.endSession} type="button" disabled={closing || pending !== null || mutePending} onClick={() => void closeSession()}>
         {closing ? "Cerrando el aula…" : "Terminar clase para todos"}
       </button>
     </aside>
@@ -210,7 +352,10 @@ export function LiveClassroom({
               onError={() => setError("Se perdió la conexión audiovisual. Puedes volver a ingresar.")}
               className={styles.media}
             >
-              <div className={styles.video} data-testid="live-classroom-media" aria-label="Videoconferencia con controles inferiores"><VideoConference /></div>
+              <div className={styles.video} data-testid="live-classroom-media" aria-label="Videoconferencia con controles inferiores">
+                <VideoConference />
+                {current.credentials.role === "learner" && <ClassroomHandControl offeringId={offeringId} sessionId={sessionId} />}
+              </div>
               {current.credentials.role === "instructor" && (
                 <InstructorModeration offeringId={offeringId} sessionId={sessionId}
                   onSessionClosed={() => { setJoined(null); setClosed(true); }} />

@@ -7,7 +7,7 @@
 
 ## Acceptance contract
 
-The canonical action inventory is [live-classroom-acceptance.json](./live-classroom-acceptance.json). Each of its **18 critical customer actions**, in **four end-to-end persona workflows**, requires four independently verified proofs:
+The canonical action inventory is [live-classroom-acceptance.json](./live-classroom-acceptance.json). Each of its **20 critical customer actions**, in **four end-to-end persona workflows**, requires four independently verified proofs:
 
 1. **Implemented:** a passing assertion tied to the exact source revision; existence of a UI component is insufficient.
 2. **Available/actionable UI:** authenticated, role-appropriate browser automation actually executes the control and observes a state transition; screenshots alone fail.
@@ -15,6 +15,8 @@ The canonical action inventory is [live-classroom-acceptance.json](./live-classr
 4. **Published:** evidence from the published website on an independently attested production commit matching the acceptance source SHA. HTTP 200 is only infrastructure availability, not feature acceptance.
 
 `graph-harness.live-classroom.project.json` and its append-only `.events.jsonl` are the execution graph; the separate acceptance manifest covers **breadth** across all customer actions and cannot be closed by a narrow test. Graph Harness CLI `product-acceptance` is the executable review gate, and `evidence/live-classroom-acceptance/proofs.json` starts empty rather than claiming tests never run.
+
+Hand-raise and acknowledgement are distinct learner/instructor actions. The UI may render before a provider has been exercised, so their implementation and deployment evidence remain intentionally empty until independently verified.
 
 The four required journeys are: **tenant administrator** (cohort, trainer, schedule, admissions, reschedule/cancel); **instructor** (join, share, control discussion, moderate, end for everyone); **learner** (find session, preflight, join, bottom dock/leave, reconnect); **operations** (refund disconnect, provisional attendance reconciliation, provider incident/rollback). These workflows must be validated across appropriate devices and tenant boundaries, including negative authorization tests.
 
@@ -27,13 +29,14 @@ The four required journeys are: **tenant administrator** (cohort, trainer, sched
 | Learner camera/mic, screen share, chat, leave | `src/components/live-classroom.tsx` uses `VideoConference` | Library's control bar exists; bottom Liquid Glass refactor on this branch | No connected live-provider action proof | Refactor not published |
 | Instructor remove and finish-for-everyone | `/moderate` and `/close` APIs + roster | Instructor view included | Provider room deletion/rejoin behavior not verified end-to-end | Not verified |
 | Attendance and refund revocation | Signed webhooks + Firestore attendance records | Coach attendance view | Real webhook replay/reconciliation and already-connected refund E2E open | Not verified |
-| Change scheduled live class; educator hand-raise/mute-all | Not established as end-to-end implemented | Not established as usable | Not verified | Not verified |
+| Change or cancel a future scheduled live class | Not established as a complete, safe customer edit flow | Not established as usable | Not verified | Not verified |
+| Learner hand raise / instructor acknowledgement / mute-all | Implemented on stacked educator-controls source branch | UI added in the classroom with role-specific controls | Firestore and unit checks only; LiveKit Cloud multi-user actions not verified | Not verified |
 
 ## UX decision: bottom Liquid Glass controls
 
 Preserve the real `VideoConference` controls and SDK behavior. Position the `.lk-control-bar` **bottom-center**, in a single translucent, blurred dock within the video stage, with understated plum/blue iridescence rather than saturated glow. Reserve safe space below participant tiles. Default camera/mic OFF before entering. Desktop and mobile must keep controls within viewport, minimum 44px target, visible focus, readable labels/tooltips, no hover-only critical affordances. Leave call is a distinct red-tinted control; instructor `Terminar clase para todos` stays separately confirmed. Support forced-colors, reduced-motion and no-backdrop-filter fallback.
 
-Do not advertise raise hand, mute-all, or breakout rooms until controls, role permissions, backend actions and real-user tests are complete. Mobile Safari WebRTC, poor bandwidth, rotated screens, keyboards, on-screen navigation, and lower safe areas are mandatory manual and automated review cases.
+Do not advertise raise hand, mute-all, or breakout rooms as released features until controls, role permissions, backend actions and real-user tests are complete; the first two are implemented only on an unmerged stacked branch. Mobile Safari WebRTC, poor bandwidth, rotated screens, keyboards, on-screen navigation, and lower safe areas are mandatory manual and automated review cases.
 
 ## Independent release checklist
 

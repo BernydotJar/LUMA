@@ -1,0 +1,58 @@
+{
+  "startedAt": "2026-10-21T05:03:23.787Z",
+  "kind": "AUTHENTICATED_LUMA_BROWSER_AND_API_WITH_REAL_LIVEKIT_CLOUD_AND_FIREBASE_EMULATORS",
+  "productSourceBeforeQaPatch": "7effcd08e7df429e6f219d0df40e3d3ce8b0cd23",
+  "qaSourceSha": "09a5bb2061d1e622cbf3a7365c521b4c1dba20d1",
+  "projectId": "demo-luma-live-uat",
+  "actors": [
+    "admin",
+    "instructor",
+    "learner-a",
+    "learner-b",
+    "unauthorized"
+  ],
+  "sourceFeatureFlags": "QA_ONLY_DEV_LOCALHOST_Firebase_Emulator",
+  "provider": "LiveKit Cloud p_5650huuc5om (synthetic AV, no real Firebase users)",
+  "results": [
+    {
+      "name": "isolated-dev-and-emulator-provider",
+      "result": "PASS",
+      "at": "2026-10-21T05:03:57.021Z"
+    },
+    {
+      "name": "cold-interaction-route-prewarmed-anonymously",
+      "result": "PASS",
+      "at": "2026-10-21T05:05:07.405Z",
+      "coldRouteCompileAndGuardMs": 70384
+    },
+    {
+      "name": "created-five-synthetic-firebase-auth-users",
+      "result": "PASS",
+      "at": "2026-10-21T05:05:07.552Z",
+      "admin": 1,
+      "instructor": 1,
+      "learners": 2,
+      "unauthorized": 1,
+      "project": "demo-luma-live-uat"
+    },
+    {
+      "name": "admin-created-live-offering-api",
+      "result": "PASS",
+      "at": "2026-10-21T05:05:16.305Z"
+    },
+    {
+      "name": "test-failed",
+      "result": "FAIL",
+      "at": "2026-10-21T05:05:42.624Z",
+      "reason": "The operation was aborted due to timeout"
+    }
+  ],
+  "overall": "FAIL",
+  "cloudAcceptance": "PENDING",
+  "error": "The operation was aborted due to timeout",
+  "finishedAt": "2026-10-21T05:05:43.305Z",
+  "executedCases": 5,
+  "passCount": 4,
+  "failCount": 1,
+  "blockedCount": 0
+}

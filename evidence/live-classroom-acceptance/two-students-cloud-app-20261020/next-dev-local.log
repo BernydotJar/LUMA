@@ -1,0 +1,188 @@
+▲ Next.js 16.3.8 (webpack)
+- Local:         http://127.0.0.1:3462
+- Network:       http://127.0.0.1:3462
+✓ Ready in 647ms
+✓ Running next.config.ts took 174ms
+
+ GET /login 200 in 3.3s (next.js: 3.1s, application-code: 144ms)
+ POST /api/live/classrooms/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/qa_prewarm/interaction 401 in 4.0s (next.js: 3.3s, application-code: 745ms)
+ POST /api/programs/admin/offerings 200 in 1130ms (next.js: 309ms, application-code: 820ms)
+ POST /api/programs/admin/offerings/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/sessions 200 in 2.1s (next.js: 2.0s, application-code: 65ms)
+ POST /api/enrollments/institutional 201 in 261ms (next.js: 216ms, application-code: 46ms)
+ POST /api/enrollments/institutional 201 in 20ms (next.js: 1.4ms, application-code: 18ms)
+ POST /api/live/classrooms/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19/token 403 in 1560ms (next.js: 1452ms, application-code: 108ms)
+ GET /api/programs/admin/offerings?tenantId=qa_tenant_fb8c18e9cd19 403 in 11ms (next.js: 5ms, application-code: 6ms)
+ GET /classroom/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19 200 in 3.9s (next.js: 3.7s, application-code: 242ms)
+ POST /api/live/classrooms/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19/token 200 in 704ms (next.js: 19ms, application-code: 685ms)
+[browser] Item with key lk-user-choices does not exist in local storage.
+[browser] Item with key lk-user-choices does not exist in local storage.
+ GET /classroom/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19 200 in 48ms (next.js: 16ms, application-code: 32ms)
+ POST /api/live/classrooms/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19/token 200 in 196ms (next.js: 3ms, application-code: 194ms)
+[browser] Item with key lk-user-choices does not exist in local storage.
+[browser] Item with key lk-user-choices does not exist in local storage.
+ GET /classroom/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19 200 in 39ms (next.js: 12ms, application-code: 27ms)
+ POST /api/live/classrooms/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19/token 200 in 212ms (next.js: 18ms, application-code: 195ms)
+[browser] Item with key lk-user-choices does not exist in local storage.
+[browser] Item with key lk-user-choices does not exist in local storage.
+ POST /api/live/classrooms/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19/interaction 200 in 166ms (next.js: 23ms, application-code: 144ms)
+ POST /api/live/classrooms/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19/interaction 200 in 157ms (next.js: 2ms, application-code: 155ms)
+ POST /api/live/classrooms/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19/interaction 200 in 398ms (next.js: 1.9ms, application-code: 396ms)
+ POST /api/live/classrooms/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19/interaction 403 in 24ms (next.js: 2ms, application-code: 21ms)
+[browser] DataChannel error on lossy: User-Initiated Abort, reason= {
+  error: [32m'[object RTCError]'[39m,
+  errorDetail: [32m'sctp-failure'[39m,
+  participant: [32m'p_c7447b0dc34d1182448342a8bd075934f0d3fbbd6451238da648bed941dc0add'[39m,
+  participantID: [32m'PA_MnfgQpHQmVJz'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m,
+  sctpCauseCode: [33m12[39m
+} 
+[browser] publisher data channel 'LOSSY' closed unexpectedly {
+  participant: [32m'p_c7447b0dc34d1182448342a8bd075934f0d3fbbd6451238da648bed941dc0add'[39m,
+  participantID: [32m'PA_MnfgQpHQmVJz'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m
+} 
+[browser] DataChannel error on reliable: User-Initiated Abort, reason= {
+  error: [32m'[object RTCError]'[39m,
+  errorDetail: [32m'sctp-failure'[39m,
+  participant: [32m'p_c7447b0dc34d1182448342a8bd075934f0d3fbbd6451238da648bed941dc0add'[39m,
+  participantID: [32m'PA_MnfgQpHQmVJz'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m,
+  sctpCauseCode: [33m12[39m
+} 
+[browser] publisher data channel 'RELIABLE' closed unexpectedly {
+  participant: [32m'p_c7447b0dc34d1182448342a8bd075934f0d3fbbd6451238da648bed941dc0add'[39m,
+  participantID: [32m'PA_MnfgQpHQmVJz'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m
+} 
+[browser] DataChannel error on lossy: User-Initiated Abort, reason= {
+  error: [32m'[object RTCError]'[39m,
+  errorDetail: [32m'sctp-failure'[39m,
+  participant: [32m'p_c7447b0dc34d1182448342a8bd075934f0d3fbbd6451238da648bed941dc0add'[39m,
+  participantID: [32m'PA_MnfgQpHQmVJz'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m,
+  sctpCauseCode: [33m12[39m
+} 
+[browser] publisher data channel 'DATA_TRACK_LOSSY' closed unexpectedly {
+  participant: [32m'p_c7447b0dc34d1182448342a8bd075934f0d3fbbd6451238da648bed941dc0add'[39m,
+  participantID: [32m'PA_MnfgQpHQmVJz'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m
+} 
+ POST /api/enrollments/institutional/66e2d83aee2fca124a3f84f30de28071e0ef439cda891463224df9632ab00ce6 200 in 2.5s (next.js: 2.3s, application-code: 275ms)
+[browser] could not createOffer with closed peer connection {
+  participant: [32m'p_c7447b0dc34d1182448342a8bd075934f0d3fbbd6451238da648bed941dc0add'[39m,
+  participantID: [32m'PA_MnfgQpHQmVJz'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m
+} (<anonymous>)
+ POST /api/live/classrooms/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19/token 403 in 51ms (next.js: 18ms, application-code: 33ms)
+[browser] DataChannel error on lossy: User-Initiated Abort, reason= {
+  error: [32m'[object RTCError]'[39m,
+  errorDetail: [32m'sctp-failure'[39m,
+  participant: [32m'p_0cf1b7c31553f06d90af3b5efc48a801068d0e4114a500e4e76e1560a45c547b'[39m,
+  participantID: [32m'PA_EWkko8K58vbK'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m,
+  sctpCauseCode: [33m12[39m
+} 
+[browser] publisher data channel 'LOSSY' closed unexpectedly {
+  participant: [32m'p_0cf1b7c31553f06d90af3b5efc48a801068d0e4114a500e4e76e1560a45c547b'[39m,
+  participantID: [32m'PA_EWkko8K58vbK'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m
+} 
+[browser] DataChannel error on reliable: User-Initiated Abort, reason= {
+  error: [32m'[object RTCError]'[39m,
+  errorDetail: [32m'sctp-failure'[39m,
+  participant: [32m'p_0cf1b7c31553f06d90af3b5efc48a801068d0e4114a500e4e76e1560a45c547b'[39m,
+  participantID: [32m'PA_EWkko8K58vbK'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m,
+  sctpCauseCode: [33m12[39m
+} 
+[browser] publisher data channel 'RELIABLE' closed unexpectedly {
+  participant: [32m'p_0cf1b7c31553f06d90af3b5efc48a801068d0e4114a500e4e76e1560a45c547b'[39m,
+  participantID: [32m'PA_EWkko8K58vbK'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m
+} 
+[browser] DataChannel error on lossy: User-Initiated Abort, reason= {
+  error: [32m'[object RTCError]'[39m,
+  errorDetail: [32m'sctp-failure'[39m,
+  participant: [32m'p_0cf1b7c31553f06d90af3b5efc48a801068d0e4114a500e4e76e1560a45c547b'[39m,
+  participantID: [32m'PA_EWkko8K58vbK'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m,
+  sctpCauseCode: [33m12[39m
+} 
+[browser] publisher data channel 'DATA_TRACK_LOSSY' closed unexpectedly {
+  participant: [32m'p_0cf1b7c31553f06d90af3b5efc48a801068d0e4114a500e4e76e1560a45c547b'[39m,
+  participantID: [32m'PA_EWkko8K58vbK'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m
+} 
+[browser] DataChannel error on lossy: User-Initiated Abort, reason= {
+  error: [32m'[object RTCError]'[39m,
+  errorDetail: [32m'sctp-failure'[39m,
+  participant: [32m'p_7f9aa8b4acc0665f079119f7cf6072c87e99292264e27d078eb2c318fe903266'[39m,
+  participantID: [32m'PA_fjfTsFs3VQMw'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m,
+  sctpCauseCode: [33m12[39m
+} 
+[browser] publisher data channel 'LOSSY' closed unexpectedly {
+  participant: [32m'p_7f9aa8b4acc0665f079119f7cf6072c87e99292264e27d078eb2c318fe903266'[39m,
+  participantID: [32m'PA_fjfTsFs3VQMw'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m
+} 
+[browser] DataChannel error on reliable: User-Initiated Abort, reason= {
+  error: [32m'[object RTCError]'[39m,
+  errorDetail: [32m'sctp-failure'[39m,
+  participant: [32m'p_7f9aa8b4acc0665f079119f7cf6072c87e99292264e27d078eb2c318fe903266'[39m,
+  participantID: [32m'PA_fjfTsFs3VQMw'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m,
+  sctpCauseCode: [33m12[39m
+} 
+[browser] publisher data channel 'RELIABLE' closed unexpectedly {
+  participant: [32m'p_7f9aa8b4acc0665f079119f7cf6072c87e99292264e27d078eb2c318fe903266'[39m,
+  participantID: [32m'PA_fjfTsFs3VQMw'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m
+} 
+[browser] DataChannel error on lossy: User-Initiated Abort, reason= {
+  error: [32m'[object RTCError]'[39m,
+  errorDetail: [32m'sctp-failure'[39m,
+  participant: [32m'p_7f9aa8b4acc0665f079119f7cf6072c87e99292264e27d078eb2c318fe903266'[39m,
+  participantID: [32m'PA_fjfTsFs3VQMw'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m,
+  sctpCauseCode: [33m12[39m
+} 
+[browser] publisher data channel 'DATA_TRACK_LOSSY' closed unexpectedly {
+  participant: [32m'p_7f9aa8b4acc0665f079119f7cf6072c87e99292264e27d078eb2c318fe903266'[39m,
+  participantID: [32m'PA_fjfTsFs3VQMw'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m
+} 
+[browser] could not createOffer with closed peer connection {
+  participant: [32m'p_7f9aa8b4acc0665f079119f7cf6072c87e99292264e27d078eb2c318fe903266'[39m,
+  participantID: [32m'PA_fjfTsFs3VQMw'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m
+} (<anonymous>)
+[browser] could not createOffer with closed peer connection {
+  participant: [32m'p_0cf1b7c31553f06d90af3b5efc48a801068d0e4114a500e4e76e1560a45c547b'[39m,
+  participantID: [32m'PA_EWkko8K58vbK'[39m,
+  room: [32m'luma_d39fd3d3f23af681d7d3b8306b01abb5d1a59b6f0e0b3093e9deb38c7ee80c2a'[39m,
+  roomID: [32m'RM_Usz3apuPDjTb'[39m
+} (<anonymous>)
+ POST /api/live/classrooms/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19/close 200 in 3.5s (next.js: 1893ms, application-code: 1656ms)
+ POST /api/live/classrooms/b480916938cb7d10182bb90f27df2f4d60dc5cc3596ef455284338fd0aae82d5/qa_session_fb8c18e9cd19/token 409 in 46ms (next.js: 24ms, application-code: 22ms)
+[?25h

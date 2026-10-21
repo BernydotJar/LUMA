@@ -1,0 +1,20 @@
+i  emulators: Starting emulators: auth, firestore
+i  emulators: Detected demo project ID "demo-luma-live-uat", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+i  firestore: Firestore Emulator logging to firestore-debug.log
+✔  firestore: Firestore Emulator was started in standard edition.
+✔  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: node scripts/qa/live-two-students-cloud-e2e.mjs
+QA_CASE isolated-dev-and-emulator-provider PASS
+QA_CASE cold-interaction-route-prewarmed-anonymously PASS
+QA_CASE created-five-synthetic-firebase-auth-users PASS
+QA_CASE admin-created-live-offering-api PASS
+QA_CASE test-failed FAIL
+QA_FINAL {"overall":"FAIL","pass":4,"fail":1,"blocked":0,"error":"The operation was aborted due to timeout"}
+⚠  Script exited unsuccessfully (code 1)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+i  auth: Stopping Authentication Emulator
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator
+
+Error: Script "node scripts/qa/live-two-students-cloud-e2e.mjs" exited with code 1
