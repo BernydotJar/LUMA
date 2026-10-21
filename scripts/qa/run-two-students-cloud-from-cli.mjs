@@ -3,7 +3,8 @@
  * writing, printing or checking in keys. Firebase accounts are demo-emulated.
  */
 import fs from 'node:fs';
-import { spawn } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
+import { validateAuthenticatedCloudUatReceipt } from './validated-luma-cloud-uat.mjs';
 import { createRequire } from 'node:module';
 const require=createRequire(import.meta.url);
 const yaml=require('js-yaml');
@@ -23,6 +24,13 @@ const p=projects.find(p=>p.project_id===projectId && p.url===expectedEndpoint);
 if(!p?.api_key || !p?.api_secret)throw new Error('Denied: project credentials mismatch');
 const out='evidence/live-classroom-acceptance/two-students-cloud-app-20261020';
 fs.mkdirSync(out,{recursive:true});
+// Historical PASS receipts are inert source fixtures. Never allow a crashed
+// child process to inherit an earlier successful authenticated app test.
+const reportFile=out+'/authenticated-e2e-result.json';
+const statusFile=out+'/run-status.json';
+for(const path of [reportFile,statusFile])fs.rmSync(path,{force:true});
+const runStartedAt=Date.now();
+const expectedSourceSha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const output=fs.createWriteStream(out+'/runner.log',{flags:'w',mode:0o600});
 const java='/opt/luma-jre21';
 if(!fs.existsSync(java+'/bin/java'))throw new Error('Firebase Emulator JRE21 unavailable');
@@ -58,14 +66,20 @@ child.on('error',err=>{output.write('RUN_SPAWN_ERROR '+err.name+'\n');});
 const code=await new Promise(resolve=>child.on('close',resolve));
 for(const value of buffers.values())output.write(sanitize(value));
 output.end();
-const reportFile=out+'/authenticated-e2e-result.json';
-let report;
-try{report=JSON.parse(fs.readFileSync(reportFile,'utf8'));}catch{report={overall:'MISSING_REPORT',results:[]};}
-const summary={projectId,kind:'CLOUD_APP_E2E_WITH_FIREBASE_AUTH_AND_FIRESTORE_EMULATORS',
- sourceSha:report.qaSourceSha??null,overall:report.overall,
- pass:report.passCount??0,fail:report.failCount??0,blocked:report.blockedCount??0,
- failures:(report.results||[]).filter(r=>r.result==='FAIL').map(r=>({name:r.name,reason:r.reason})),
- exitCode:code};
-fs.writeFileSync(out+'/run-status.json',JSON.stringify(summary,null,2)+'\n');
+let summary={projectId,kind:'CLOUD_APP_E2E_WITH_FIREBASE_AUTH_AND_FIRESTORE_EMULATORS',
+ sourceSha:expectedSourceSha,overall:'FAILED_QA_RECEIPT',pass:0,fail:1,blocked:0,
+ failures:[],exitCode:code};
+try {
+ const stat=fs.statSync(reportFile);
+ const report=JSON.parse(fs.readFileSync(reportFile,'utf8'));
+ const accepted=validateAuthenticatedCloudUatReceipt({report,expectedSourceSha,
+   runStartedAtMs:runStartedAt,reportMtimeMs:stat.mtimeMs,childExitCode:code});
+ summary={...summary,...accepted,failures:[],exitCode:code};
+} catch(error) {
+ // Never echo an exception containing live keys, JWTs or customer identities.
+ const reason=error instanceof Error?error.message:'QA_RECEIPT_VALIDATION_FAILED';
+ summary.failures=[{name:'authenticated_qa_receipt',reason:reason.slice(0,110)}];
+}
+fs.writeFileSync(statusFile,JSON.stringify(summary,null,2)+'\n');
 console.log(JSON.stringify(summary));
-if(code!==0 || report.overall!=='PASS_AUTHENTICATED_LUMA_CLOUD_E2E') process.exitCode=1;
+if(summary.overall!=='PASS_AUTHENTICATED_LUMA_CLOUD_E2E')process.exitCode=1;
