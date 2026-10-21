@@ -10,11 +10,37 @@ const compactSizes = [
 ];
 const themeIds = ["se", "light", "dark"] as const;
 
+// Observe one *visible* CTA in a single DOM snapshot. A separate count then
+// visibility assertion can race with React hydration and create a false flaky
+// failure. Require 450ms of uninterrupted stable DOM, without masking a real
+// persistent duplicate using .first().
+async function waitForStableHeroCta(page: Page) {
+  let since = 0;
+  await expect.poll(async () => {
+    const states = await page.locator('section[data-variant="hero"] a.button-primary')
+      .evaluateAll((links) => links.map((link) => {
+        const rect = link.getBoundingClientRect();
+        const style = getComputedStyle(link);
+        return rect.width > 0 && rect.height > 0 &&
+          style.display !== "none" && style.visibility !== "hidden";
+      }));
+    if (states.length === 1 && states[0] === true) {
+      if (!since) since = Date.now();
+      return Date.now() - since >= 450;
+    }
+    since = 0;
+    return false;
+  }, { timeout: 10_000, intervals: [100, 120, 150, 150, 200] })
+    .toBe(true);
+}
+
 async function measureMobileGeometry(page: Page) {
   return page.evaluate(() => {
-    const button = document.querySelector<HTMLAnchorElement>(
+    const links = document.querySelectorAll<HTMLAnchorElement>(
       'section[data-variant="hero"] a.button-primary',
     );
+    // Duplicate CTAs are a real product defect, even when one is hidden.
+    const button = links.length === 1 ? links[0] : null;
     const nav = document.querySelector<HTMLElement>(
       'nav[aria-label="Navegación móvil"]',
     );
@@ -52,10 +78,7 @@ test.describe("LUMA P0 mobile CTA geometry", () => {
           window.localStorage.setItem("luma-theme-v1", id);
         }, theme);
         await page.goto("/learn");
-        const cta = page.locator('section[data-variant="hero"] a.button-primary');
-        // Fail if a duplicate CTA persists, rather than masking it with .first().
-        await expect(cta).toHaveCount(1);
-        await expect(cta).toBeVisible();
+        await waitForStableHeroCta(page);
         await expect(page.getByRole("navigation", { name: "Navegación móvil" })).toBeVisible();
         await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
 
@@ -75,10 +98,9 @@ test.describe("LUMA P0 mobile CTA geometry", () => {
       test.skip(testInfo.project.name !== "mobile", "Mobile viewport geometry only");
       await page.setViewportSize(size);
       await page.goto("/learn");
-      const cta = page.locator('section[data-variant="hero"] a.button-primary');
-      await expect(cta).toHaveCount(1);
-      await cta.evaluate((element) => element.scrollIntoView({ block: "center", behavior: "instant" }));
-      await expect(cta).toBeVisible();
+      await waitForStableHeroCta(page);
+      await page.locator('section[data-variant="hero"] a.button-primary')
+        .evaluate((element) => element.scrollIntoView({ block: "center", behavior: "instant" }));
       const geometry = await measureMobileGeometry(page);
       expect(geometry).not.toBeNull();
       expect(geometry!.scrollWidth).toBe(geometry!.viewportWidth);
