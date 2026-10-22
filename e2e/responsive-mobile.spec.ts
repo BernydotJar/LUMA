@@ -3,8 +3,11 @@ import { expect, test } from "@playwright/test";
 test.describe("responsive mobile product", () => {
   test("mobile learner header does not overlap and navigation remains usable", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "mobile", "Mobile-specific geometry check.");
-    await page.goto("/learn");
-    await page.waitForLoadState("networkidle");
+    await page.goto("/learn", { waitUntil: "domcontentloaded" });
+    // Geometry must be measured after the interactive header has rendered.
+    await expect(page.locator('[class*="pageTitle"]')).toBeVisible();
+    await expect(page.locator('[class*="topbarActions"]')).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Navegación móvil" })).toBeVisible();
 
     const geometry = await page.evaluate(() => {
       const box = (selector: string) => {
