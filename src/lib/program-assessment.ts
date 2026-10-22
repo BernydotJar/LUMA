@@ -1,4 +1,5 @@
 import { getClassContract } from "./class-contract";
+import { SE_PRACTITIONER_CLASS_SLUGS, type PublishedProgramAssessment } from "./program-assessment-registry";
 import { getLearningExperience } from "./learning-content";
 import type { RankedLearningAction } from "../types/learning";
 
@@ -7,13 +8,7 @@ import type { RankedLearningAction } from "../types/learning";
  * raise mastery, issue credentials, or substitute for scored practice.
  */
 export const PROGRAM_ENTRY_ASSESSMENT_VERSION = "se-practitioner-entry-v1";
-const entrySlugs = [
-  "calibracion-observar-antes-de-interpretar",
-  "congruencia-tres-canales",
-  "rapport-sintonia-con-respeto",
-  "pas-detectar-y-reformular",
-  "creencias-evidencia-e-interpretacion",
-] as const;
+const entrySlugs = SE_PRACTITIONER_CLASS_SLUGS;
 
 export interface ProgramEntryAssessmentSummary {
   version: string;
@@ -25,10 +20,14 @@ export interface ProgramEntryAssessmentSummary {
   results: Array<{ slug: string; correct: boolean; feedback: string }>;
   evidenceCategory: "observed";
   twinAuthority: "none";
+  tenantId?: string;
+  programId?: string;
+  offeringId?: string;
+  curriculumRevision?: string;
 }
 
-export function getProgramEntryQuestions() {
-  return entrySlugs.map((slug) => {
+export function getProgramEntryQuestions(approved?: PublishedProgramAssessment) {
+  return (approved?.classSlugs ?? entrySlugs).map((slug) => {
     const contract = getClassContract(slug);
     const experience = getLearningExperience(slug);
     if (!contract || !experience) throw new Error("PROGRAM_ASSESSMENT_CONTRACT_MISSING");
@@ -46,15 +45,17 @@ export function getProgramEntryQuestions() {
 export function evaluateProgramEntryAssessment(
   answers: unknown,
   completedAt = new Date().toISOString(),
+  approved?: PublishedProgramAssessment,
 ): ProgramEntryAssessmentSummary | undefined {
   if (!answers || typeof answers !== "object" || Array.isArray(answers)) return undefined;
   const submitted = answers as Record<string, unknown>;
+  const activeSlugs = approved?.classSlugs ?? entrySlugs;
   if (
-    Object.keys(submitted).length !== entrySlugs.length ||
-    !entrySlugs.every((slug) => Object.hasOwn(submitted, slug))
+    Object.keys(submitted).length !== activeSlugs.length ||
+    !activeSlugs.every((slug) => Object.hasOwn(submitted, slug))
   ) return undefined;
 
-  const results = entrySlugs.map((slug) => {
+  const results = activeSlugs.map((slug) => {
     const selected = submitted[slug];
     const contract = getClassContract(slug);
     if (typeof selected !== "string" || !contract) return undefined;
@@ -66,25 +67,33 @@ export function evaluateProgramEntryAssessment(
 
   const valid = results as NonNullable<(typeof results)[number]>[];
   const needsPractice = valid.filter((item) => !item.correct).map((item) => item.slug);
-  const recommendedSlug = needsPractice[0] ?? "niveles-logicos-donde-intervenir";
+  const recommendedSlug = needsPractice[0] ??
+    approved?.recommendedNextSlug ?? "niveles-logicos-donde-intervenir";
 
   return {
-    version: PROGRAM_ENTRY_ASSESSMENT_VERSION,
+    version: approved?.version ?? PROGRAM_ENTRY_ASSESSMENT_VERSION,
     completedAt,
-    total: entrySlugs.length,
+    total: activeSlugs.length,
     correct: valid.filter((item) => item.correct).length,
     recommendedSlug,
     needsPractice,
     results: valid,
     evidenceCategory: "observed",
     twinAuthority: "none",
+    ...(approved ? {
+      tenantId: approved.tenantId,
+      programId: approved.programId,
+      offeringId: approved.offeringId,
+      curriculumRevision: approved.curriculumRevision,
+    } : {}),
   };
 }
 
 export function entryAssessmentNextAction(
   summary: ProgramEntryAssessmentSummary,
 ): RankedLearningAction | undefined {
-  if (summary.version !== PROGRAM_ENTRY_ASSESSMENT_VERSION) return undefined;
+  if (!/^[a-z][a-z0-9-]{2,95}$/.test(summary.version) ||
+    summary.twinAuthority !== "none") return undefined;
   const experience = getLearningExperience(summary.recommendedSlug);
   if (!experience) return undefined;
   const needsPractice = summary.needsPractice.includes(summary.recommendedSlug);

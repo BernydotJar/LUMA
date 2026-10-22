@@ -27,6 +27,25 @@ assert.equal(process.env.LUMA_SCOPED_RAG_ISOLATION_ATTESTED, undefined);
 
 const programA = "pnl-practitioner";
 const programB = "pnl-advanced";
+const programC = "pnl-unpublished";
+const diagnosticPacks = {
+  [programA]: {
+    version: "se-practitioner-entry-v1",
+    slugs: [
+      "calibracion-observar-antes-de-interpretar",
+      "congruencia-tres-canales",
+      "rapport-sintonia-con-respeto",
+      "pas-detectar-y-reformular",
+      "creencias-evidencia-e-interpretacion",
+    ],
+    sourceIds: ["166Ucwvs8pilTOwGkrp5wRQ3lvpS4Z5l-", "1OwHgWtDXC_AzkU31f6a7tuoHWHl0gv5V"],
+  },
+  [programB]: {
+    version: "pnl-advanced-entry-v1",
+    slugs: ["niveles-logicos-donde-intervenir", "creencias-evidencia-e-interpretacion"],
+    sourceIds: ["1OwHgWtDXC_AzkU31f6a7tuoHWHl0gv5V"],
+  },
+};
 const reportPath = "evidence/learning-ui/qa-authorized-learning-uat.json";
 const shotsPath = "/tmp/luma-learning-qa-20261020";
 const runId = randomUUID().slice(0, 10);
@@ -120,6 +139,34 @@ async function enroll(actor, program) {
   });
   return enrollmentId;
 }
+async function publishAssessment(program) {
+  const pack = diagnosticPacks[program];
+  assert.ok(pack, "QA fixture must have explicit approved curriculum");
+  const offeringId = "qa-approved-offering-" + program;
+  const identity = createHash("sha256").update(JSON.stringify([tenantId, program])).digest("hex");
+  const path = "learningAssessmentPrograms/" + identity;
+  await db.collection("programOfferings").doc(offeringId).set({
+    offeringId, tenantId, programId: program, cohortKey: "qa-" + runId,
+    title: "Programa QA " + program, deliveryMode: "asynchronous",
+    timezone: "America/Guatemala", status: "active", coachIds: [],
+    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+  });
+  await db.doc(path).set({
+    schemaVersion: 1, tenantId, programId: program,
+    status: "published", activeVersion: pack.version, offeringId,
+  });
+  await db.doc(path + "/versions/" + pack.version).set({
+    schemaVersion: 1, tenantId, programId: program,
+    version: pack.version, status: "approved", offeringId,
+    curriculumRevision: program + "-revision-v1",
+    classSlugs: pack.slugs, sourceIds: pack.sourceIds,
+    recommendedNextSlug: pack.slugs.at(-1),
+    submittedByUid: "qa-curriculum-author", approvedByUid: "qa-curriculum-reviewer",
+    approvedAt: "2026-10-20T12:00:00.000Z", publishedAt: "2026-10-20T13:00:00.000Z",
+  });
+  return path;
+}
+
 async function bootstrap(token, program, goal = "communication") {
   const response = await rest("/api/learning/plan", {
     method: "PUT", token, program, body: {
@@ -150,13 +197,19 @@ async function run() {
   const actorA = await makeActor("learner-a");
   const actorB = await makeActor("learner-b");
   const actorC = await makeActor("learner-without-purchase");
+  const actorD = await makeActor("learner-without-approved-curriculum");
   const [aEnrollment] = await Promise.all([
     enroll(actorA, programA), enroll(actorA, programB), enroll(actorB, programA),
+    enroll(actorD, programC),
   ]);
-  const [aToken, bToken, cToken] = await Promise.all([tokenFor(actorA), tokenFor(actorB), tokenFor(actorC)]);
+  const [pathA] = await Promise.all([publishAssessment(programA), publishAssessment(programB)]);
+  const [aToken, bToken, cToken, dToken] = await Promise.all([
+    tokenFor(actorA), tokenFor(actorB), tokenFor(actorC), tokenFor(actorD),
+  ]);
   await bootstrap(aToken, programA);
   await bootstrap(aToken, programB, "beliefs");
   await bootstrap(bToken, programA, "emotions");
+  await bootstrap(dToken, programC, "beliefs");
 
   const chromiumBinary = process.env.LUMA_QA_BROWSER_BIN ||
     (existsSync("/usr/bin/chromium") ? "/usr/bin/chromium" : undefined);
@@ -232,6 +285,31 @@ async function run() {
       return { crossLearnerRead: "blank", crossProgramRead: 403 };
     }, "P0");
 
+    await check("Program A and B load distinct approved assessment versions without foreign class questions", async () => {
+      const a = assertSuccess(await rest("/api/learning/entry-assessment", { token: aToken, program: programA }));
+      const b = assertSuccess(await rest("/api/learning/entry-assessment", { token: aToken, program: programB }));
+      assert.equal(a.version, "se-practitioner-entry-v1");
+      assert.equal(b.version, "pnl-advanced-entry-v1");
+      assert.equal(a.questions.length, 5);
+      assert.equal(b.questions.length, 2);
+      assert.ok(!b.questions.some(q => q.slug === "rapport-sintonia-con-respeto"));
+      return { practitioner: a.version, advanced: b.version, advancedQuestions: 2 };
+    }, "P0");
+
+    await check("An enrolled but unpublished third program receives no generic assessment", async () => {
+      const response = await rest("/api/learning/entry-assessment", { token: dToken, program: programC });
+      assert.equal(response.status, 409);
+      assert.equal(response.body.error, "assessment_not_published");
+      const unknown = await openBrowser(actorD, { width: 390, height: 844 });
+      try {
+        const start = unknown.page.getByTestId("program-entry-assessment");
+        await start.getByRole("button", { name: /Descubrir dónde empezar/i }).click();
+        await start.getByRole("alert").filter({ hasText: /todavía no está publicado/i }).waitFor({ timeout: 14000 });
+        assert.equal(await start.getByTestId("entry-assessment-quiz").count(), 0);
+      } finally { await unknown.context.close(); }
+      return { unapprovedGET: 409, leakedQuestions: 0 };
+    }, "P0");
+
     await check("Browser class question uses authenticated context and visible recovery, not a fabricated source", async () => {
       await pageA.locator("select#luma-program-learner").selectOption(programA);
       await pageA.goto(base + "/learn/experience/calibracion-observar-antes-de-interpretar", { waitUntil: "domcontentloaded" });
@@ -262,16 +340,16 @@ async function run() {
     }, "P0");
 
     await check("Concurrent program-B assessments serialize to one record even with different event IDs", async () => {
-      const questions = assertSuccess(await rest("/api/learning/entry-assessment", { token: aToken, program: programB })).questions;
-      const answers = Object.fromEntries(questions.map((q) => [q.slug, q.choices[0].id]));
+      const approval = assertSuccess(await rest("/api/learning/entry-assessment", { token: aToken, program: programB }));
+      const answers = Object.fromEntries(approval.questions.map((q) => [q.slug, q.choices[0].id]));
       const [first, second] = await Promise.all([
         rest("/api/learning/entry-assessment", {
           token: aToken, program: programB, method: "POST",
-          body: { eventId: "qa-parallel-" + randomUUID(), answers },
+          body: { eventId: "qa-parallel-" + randomUUID(), version: approval.version, answers },
         }),
         rest("/api/learning/entry-assessment", {
           token: aToken, program: programB, method: "POST",
-          body: { eventId: "qa-parallel-" + randomUUID(), answers },
+          body: { eventId: "qa-parallel-" + randomUUID(), version: approval.version, answers },
         }),
       ]);
       assert.deepEqual([first.status, second.status].sort(), [200, 429]);
@@ -279,6 +357,24 @@ async function run() {
       assert.equal(stored.persistence.version, 2);
       assert.equal(stored.scoredEvidence, null);
       return { race: "one commit", records: 1, statuses: [first.status, second.status].sort() };
+    }, "P0");
+
+    await check("Withdrawal of an approved assessment immediately blocks further curriculum reads and writes", async () => {
+      const before = assertSuccess(await rest("/api/learning/plan", { token: bToken, program: programA }));
+      const catalog = assertSuccess(await rest("/api/learning/entry-assessment", { token: bToken, program: programA }));
+      const answers = Object.fromEntries(catalog.questions.map(q => [q.slug, q.choices[0].id]));
+      await db.doc(pathA).update({ status: "draft" });
+      const response = await rest("/api/learning/entry-assessment", { token: bToken, program: programA });
+      assert.equal(response.status, 409);
+      const denied = await rest("/api/learning/entry-assessment", {
+        method: "POST", token: bToken, program: programA,
+        body: { eventId: "qa-withdrawn-" + randomUUID(), version: catalog.version, answers },
+      });
+      assert.equal(denied.status, 409);
+      const after = assertSuccess(await rest("/api/learning/plan", { token: bToken, program: programA }));
+      assert.equal(after.persistence.version, before.persistence.version);
+      await db.doc(pathA).update({ status: "published" });
+      return { blockedGet: response.status, blockedWrite: denied.status };
     }, "P0");
 
     await check("Class tutor fails closed without real scoped RAG, never invents evidence", async () => {
@@ -308,7 +404,7 @@ async function run() {
       const validAnswers = Object.fromEntries(questions.map((q) => [q.slug, q.choices[0].id]));
       const reply = await rest("/api/learning/entry-assessment", {
         method: "POST", token: aToken, program: programA,
-        body: { eventId: "blocked-" + randomUUID(), answers: validAnswers },
+        body: { eventId: "blocked-" + randomUUID(), version: "se-practitioner-entry-v1", answers: validAnswers },
       });
       assert.equal(reply.status, 403, "revoked token must not write a valid assessment event");
       assert.equal((await rest("/api/learning/plan", { token: aToken, program: programA })).status, 403);

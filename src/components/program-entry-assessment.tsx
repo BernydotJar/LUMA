@@ -32,6 +32,7 @@ export function ProgramEntryAssessment({
 }) {
   const [open, setOpen] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [version, setVersion] = useState("");
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [step, setStep] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -54,19 +55,23 @@ export function ProgramEntryAssessment({
         headers: request.headers,
         cache: "no-store",
       });
+      const body = (await response.json()) as { questions?: Question[]; version?: string; error?: string };
       if (!response.ok) {
-        throw new Error(response.status === 409
-          ? "Primero completa tu perfil de aprendizaje."
-          : response.status === 403
-            ? "Tu matrícula no permite este diagnóstico todavía."
-            : "No pudimos cargar el diagnóstico autorizado.");
+        throw new Error(body.error === "assessment_not_published"
+          ? "El diagnóstico todavía no está publicado para este programa. Puedes continuar con las prácticas disponibles."
+          : response.status === 409
+            ? "Primero completa tu perfil de aprendizaje."
+            : response.status === 403
+              ? "Tu matrícula no permite este diagnóstico todavía."
+              : "No pudimos cargar el diagnóstico autorizado.");
       }
-      const body = (await response.json()) as { questions: Question[] };
       assertLearnerRequestScope(request.scope);
-      if (!Array.isArray(body.questions) || body.questions.length === 0) {
+      if (!Array.isArray(body.questions) || body.questions.length === 0 ||
+        !body.version || !/^[a-z][a-z0-9-]{2,95}$/.test(body.version)) {
         throw new Error("Las preguntas no están disponibles.");
       }
       setQuestions(body.questions);
+      setVersion(body.version);
       setAnswers({});
       setStep(0);
       setOpen(true);
@@ -86,7 +91,7 @@ export function ProgramEntryAssessment({
       const response = await fetch("/api/learning/entry-assessment", {
         method: "POST",
         headers: request.headers,
-        body: JSON.stringify({ eventId: crypto.randomUUID(), answers }),
+        body: JSON.stringify({ eventId: crypto.randomUUID(), version, answers }),
       });
       const body = (await response.json()) as {
         summary?: ProgramEntryAssessmentSummary;
@@ -95,9 +100,11 @@ export function ProgramEntryAssessment({
       };
       assertLearnerRequestScope(request.scope);
       if (!response.ok || !body.summary || !body.plan) {
-        throw new Error(response.status === 429
-          ? "Acabas de completar el diagnóstico. Tu resultado anterior sigue disponible."
-          : response.status === 409
+        throw new Error(body.error === "assessment_version_changed"
+          ? "El programa actualizó su diagnóstico. Vuelve a abrirlo para responder la versión vigente."
+          : response.status === 429
+            ? "Acabas de completar el diagnóstico. Tu resultado anterior sigue disponible."
+            : response.status === 409
             ? "Completa primero tu perfil de aprendizaje."
             : "No pudimos guardar tu punto de partida. Tus respuestas siguen aquí.");
       }
@@ -120,7 +127,7 @@ export function ProgramEntryAssessment({
         <div className={styles.intro}>
           <span className="eyebrow">PUNTO DE PARTIDA · PROGRAMA</span>
           <h2 id="entry-assessment-title">Una ruta que empieza contigo.</h2>
-          <p>Cinco situaciones cortas para orientar tu primera práctica. No es un examen de certificación y no modifica tu nivel de dominio.</p>
+          <p>Situaciones breves del programa para orientar tu primera práctica. No es un examen de certificación y no modifica tu nivel de dominio.</p>
         </div>
       </div>
 
