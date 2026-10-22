@@ -48,15 +48,6 @@ const validDate = (value: unknown) => typeof value === "string" &&
   Number.isFinite(Date.parse(value)) && Date.parse(value) <= Date.now();
 const distinct = (values: string[]) => new Set(values).size === values.length;
 
-/** This is an authoring template only. Never an implicit fallback for a paid program. */
-export const SE_PRACTITIONER_CLASS_SLUGS = [
-  "calibracion-observar-antes-de-interpretar",
-  "congruencia-tres-canales",
-  "rapport-sintonia-con-respeto",
-  "pas-detectar-y-reformular",
-  "creencias-evidencia-e-interpretacion",
-] as const;
-
 export function assessmentCatalogPaths(scope: LearningScope) {
   if (!validLearningScopeId(scope.tenantId) || !validLearningScopeId(scope.programId)) {
     throw new Error("ASSESSMENT_SCOPE_INVALID");

@@ -1,5 +1,5 @@
 import { getClassContract } from "./class-contract";
-import { SE_PRACTITIONER_CLASS_SLUGS, type PublishedProgramAssessment } from "./program-assessment-registry";
+import type { PublishedProgramAssessment } from "./program-assessment-registry";
 import { getLearningExperience } from "./learning-content";
 import type { RankedLearningAction } from "../types/learning";
 
@@ -8,6 +8,13 @@ import type { RankedLearningAction } from "../types/learning";
  * raise mastery, issue credentials, or substitute for scored practice.
  */
 export const PROGRAM_ENTRY_ASSESSMENT_VERSION = "se-practitioner-entry-v1";
+export const SE_PRACTITIONER_CLASS_SLUGS = [
+  "calibracion-observar-antes-de-interpretar",
+  "congruencia-tres-canales",
+  "rapport-sintonia-con-respeto",
+  "pas-detectar-y-reformular",
+  "creencias-evidencia-e-interpretacion",
+] as const;
 const entrySlugs = SE_PRACTITIONER_CLASS_SLUGS;
 
 export interface ProgramEntryAssessmentSummary {

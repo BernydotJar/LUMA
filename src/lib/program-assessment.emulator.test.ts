@@ -3,9 +3,9 @@ import { deleteApp, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { afterAll, describe, expect, it } from "vitest";
 import { FirestoreLearningStore } from "./learning-store";
-import { evaluateProgramEntryAssessment, getProgramEntryQuestions } from "./program-assessment";
+import { evaluateProgramEntryAssessment, getProgramEntryQuestions, SE_PRACTITIONER_CLASS_SLUGS } from "./program-assessment";
 import { getClassContract } from "./class-contract";
-import { assessmentCatalogPaths, SE_PRACTITIONER_CLASS_SLUGS, type PublishedProgramAssessment } from "./program-assessment-registry";
+import { assessmentCatalogPaths, type PublishedProgramAssessment } from "./program-assessment-registry";
 
 const available = Boolean(process.env.FIRESTORE_EMULATOR_HOST);
 const app = available
