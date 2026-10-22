@@ -8,7 +8,7 @@ const path = resolve(import.meta.dirname, '../../.github/workflows/quality.yml')
 const workflow = yaml.load(readFileSync(path, 'utf8'));
 const jobs = workflow.jobs;
 const releaseSafety = ['release-readiness', 'learning-auth-uat',
-  'product-acceptance-contract', 'product-acceptance-predeploy'];
+  'product-acceptance-contract', 'product-acceptance-predeploy', 'assessment-publication'];
 
 // Regression guard for #71 + #83 integration. Successful emulated learner UAT
 // cannot replace source signature or independently protected product acceptance.
@@ -18,6 +18,7 @@ test('every independent release gate survives the enterprise/learning merge', ()
     assert.ok(jobs.deploy.needs.includes(name), `Deploy lost release blocker: ${name}`);
   }
   assert.ok(jobs['release-readiness'].needs.includes('learning-auth-uat'));
+  assert.ok(jobs['release-readiness'].needs.includes('assessment-publication'));
   assert.ok(jobs['product-acceptance-predeploy'].needs.includes('product-acceptance-contract'));
 });
 

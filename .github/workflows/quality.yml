@@ -230,6 +230,38 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+  # Institutional assessment publishing is separate from learner QA and
+  # from the protected independent release signer.
+  assessment-publication:
+    needs: [verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: "21"
+      - run: npm ci
+      - name: Verify a two-person publisher, tenant RBAC, withdrawal and immutable audit with real Firebase emulators
+        run: >-
+          npx --yes firebase-tools@15.30.2
+          emulators:exec
+          --project demo-luma-assessment-publication
+          --only auth,firestore
+          "npm run test:run --
+          src/lib/assessment-publication-store.emulator.test.ts
+          src/lib/assessment-publication-route.emulator.test.ts
+          --maxWorkers=1 --no-file-parallelism"
+      - name: Confirm server-only publishing is disabled on default hosting
+        run: node --test scripts/qa/assessment-publication-policy.check.mjs
+
   identity-roles:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -544,7 +576,7 @@ jobs:
   release-readiness:
     # The independent source signature remains mandatory. The authenticated
     # learning UAT is an additional prerequisite, never a replacement.
-    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval, learning-auth-uat]
+    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval, learning-auth-uat, assessment-publication]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -565,7 +597,7 @@ jobs:
     # Do not authorize production on CI, emulator UAT, or inventory alone.
     # Source, authenticated learning UAT and human-signed enterprise product
     # acceptance are three independent required gates.
-    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval, learning-auth-uat, product-acceptance-contract, product-acceptance-predeploy, release-readiness]
+    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval, learning-auth-uat, assessment-publication, product-acceptance-contract, product-acceptance-predeploy, release-readiness]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
     runs-on: ubuntu-latest
     timeout-minutes: 45
