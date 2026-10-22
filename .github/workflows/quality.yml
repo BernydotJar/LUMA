@@ -541,22 +541,23 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  # The protected independent signature is a separate release requirement.
+  # Keep authentic learning and institutional UAT as source-bound CI blockers,
+  # never treat their PASS alone as Graph or customer product acceptance.
   release-readiness:
-    # The independent source signature remains mandatory. The authenticated
-    # learning UAT is an additional prerequisite, never a replacement.
     needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval, learning-auth-uat]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
-      - name: Enforce the exact-source independent Graph release approval
+      - name: Verify protected exact-source independent Graph release approval
         env:
           LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
         run: node scripts/release/pr-readiness.mjs

@@ -21,13 +21,15 @@ This is an **internal solo-engineering workflow**, not evidence that Seres de Ex
 - Graph event chain is structurally VALID (717 events), but structural validity is not a current independently approved Graph `cicd-release` PASS.
 - Product acceptance inventory returns `BLOCKED`, with 9 required modules, 5 journeys and 21 missing/partial proofs. The catalog also mentions an unconfirmed agrochemical customer scenario. Before a Seres de Excelencia GO, confirm the correct tenant's actual use cases and prevent a stale or mismatched catalog from being signed.
 
-## Non-bypass bootstrap dependency
+## Protected signer bootstrap — completed under explicit owner authorization
 
-`main` at `5c822852` **does not contain** `.github/workflows/independent-attestation.yml`, `.github/workflows/source-attestation.yml`, or their trusted policy modules. Nevertheless, protected `main` already requires a `release-readiness` status that its own old workflow does **not** produce. It is impossible to complete the normal signed approval without first installing the trusted workflows. GitHub main also enforces required checks for administrators.
+**2026-10-21 22:02 UTC:** the repository owner authorized the narrowly audited protection exception for Draft PR #89. The only permitted mutation was a temporary reduction from the original 10 GitHub Actions app-ID-pinned required checks to the five technical checks that passed on #89. Administrator enforcement, `strict=true`, review/conversation protections, and the production manual owner approval remained intact. See the private, restricted Cloud Sandbox audit directory `/workspace/audits/luma-solo-release-20261021/bootstrap89-admin-audit-20261021/` (not a deployable artifact).
 
-Install these trust-plane files using a separately reviewed **narrowly scoped bootstrap** PR/change. A one-time, explicitly authorized and independently witnessed change to the protection policy may be necessary to break the chicken-and-egg requirement; such an exception must be separately recorded and restored immediately. **This artifact neither requests nor performs any bypass.** Do not merge the feature rollup as the bootstrap and do not use a candidate-owned success check in place of trusted protected-base review.
-
-After bootstrap: require `source-attestation` from the designated GitHub Actions app in protected branch checks, verify that the protected environment cannot run from non-main branches, and invoke `workflow_dispatch` with `pr_number=71` only when the exact candidate CI, authentic Codex/human review, Graph critic/verifier evidence and source digest agree. A clean Codex response alone does not authorize production.
+- Before main: `5c82285251be18c9cf876ae5fd8c307075904029`. Authorized PR #89 reviewed candidate SHA: `ee6667fb7e849b3b8b747265d514689dd0fd8bc8`. **Only #89** was merged, producing protected-main SHA `4b87923d87d045f938c42aeff02264cddee072d7`.
+- The original **10 exact GitHub Actions app ID 15368 required checks** were restored immediately after merge, with `strict=true` and administrator enforcement. Protection snapshot SHA-256: `7bad9ba1a1918b158d63fa64757856a74660f729f78c592aeab61b22c14924e2`. Restoration succeeded on the first attempt and was verified by read-back.
+- Main CI #310 completed five technical jobs successfully; unsigned `release-readiness` correctly failed, and `deploy` was **SKIPPED**. Public Firebase and `luma.lch-app.cloud` continued serving old approved `6ddcae8`. No production deployment or #71 merge occurred.
+- `.github/workflows/source-attestation.yml`, `independent-attestation.yml`, and their protected-base signing/reviewer verifier modules are now **installed on protected `main`**. This is functional trust-plane installation, not evidence of an authenticated independent source review, business/customer GO, or an actual Ed25519 signature.
+- The exact current #71 source needs a new independent external review and signed Graph business acceptance, and its branch must incorporate trusted `main`. After confirming a real `source-attestation` run, require that protected GitHub Actions context in branch policy; never mistake a candidate-controlled `release-readiness` pass for independent proof.
 
 ## Product staging and release plan
 
@@ -39,4 +41,4 @@ After bootstrap: require `source-attestation` from the designated GitHub Actions
 
 ### Current result
 
-**TRUST KEYS CONFIGURED; RELEASE NO-GO.** Protected workflow bootstrap, current independent review, real staging/UAT, protected acceptance/signatures and controlled production deployment are still required. No automatic or fictitious approval has been issued.
+**TRUST KEYS AND PROTECTED-MAIN WORKFLOWS CONFIGURED; RELEASE NO-GO.** Bootstrap #89 is complete and original branch protection is restored. Independent current-SHA review, source-attestation receipt, real staging UAT, protected product acceptance/signatures, and authorized production deployment remain required. No automatic or fictitious approval has been issued.
