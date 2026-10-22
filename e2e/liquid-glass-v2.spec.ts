@@ -45,7 +45,9 @@ test("Liquid Light renders bounded refraction without nested glass", async ({ pa
 
 test("Dense content surfaces stay out of the backdrop-filter layer", async ({ page }) => {
   for (const route of ["/learn", "/studio", "/library"]) {
-    await page.goto(route, { waitUntil: "networkidle" });
+    await page.goto(route, { waitUntil: "domcontentloaded" });
+    // Wait for the actual surface under test, not unrelated background requests.
+    await expect(page.locator(".content-surface").first()).toBeVisible();
 
     const material = await page.locator(".content-surface").first().evaluate((element) => {
       const style = getComputedStyle(element);
