@@ -60,6 +60,32 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
 
+      - name: Verify QA proof validator (no credentials)
+        run: npm run test:run -- scripts/qa/assert-livekit-cloud-proof.test.mjs
+
+      - name: Remove historical checked-in PASS reports and bind this run start
+        env:
+          QA_SCENARIO: ${{ inputs.scenario }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "$QA_SCENARIO" in
+            departed_learner)
+              report=evidence/live-classroom-acceptance/cloud-departed-learner-20261021/cloud-provider-verification.json
+              ;;
+            project_policy)
+              report=evidence/live-classroom-acceptance/cloud-post-setting-20261021/cloud-provider-verification.json
+              ;;
+            *)
+              echo "::error::Unsupported QA scenario"
+              exit 1
+              ;;
+          esac
+          # Checked-in QA evidence is historical, not new execution proof.
+          rm -f -- "$report"
+          test ! -e "$report"
+          echo "LUMA_QA_STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+
       - name: Enforce approved Cloud QA project, fail closed if credentials absent
         env:
           LIVEKIT_CLOUD_TEST_URL: ${{ secrets.LIVEKIT_CLOUD_TEST_URL }}
@@ -90,6 +116,7 @@ jobs:
           LIVEKIT_CLOUD_TEST_API_SECRET: ${{ secrets.LIVEKIT_CLOUD_TEST_API_SECRET }}
           LIVEKIT_CLOUD_PROJECT_ID: p_5650huuc5om
           QA_SCENARIO: ${{ inputs.scenario }}
+          LUMA_QA_NONCE: ${{ github.run_id }}-${{ github.run_attempt }}-${{ github.sha }}
           CI: "true"
         shell: bash
         run: |
@@ -106,7 +133,7 @@ jobs:
 
       - name: Refuse to upload unsanitized evidence
         id: scrub
-        if: always() && steps.cloud.outcome != 'skipped'
+        if: ${{ success() && steps.cloud.outcome == 'success' }}
         env:
           LIVEKIT_CLOUD_TEST_API_KEY: ${{ secrets.LIVEKIT_CLOUD_TEST_API_KEY }}
           LIVEKIT_CLOUD_TEST_API_SECRET: ${{ secrets.LIVEKIT_CLOUD_TEST_API_SECRET }}
@@ -120,24 +147,13 @@ jobs:
             report=evidence/live-classroom-acceptance/cloud-post-setting-20261021/cloud-provider-verification.json
           fi
           test -s "$report"
-          REPORT_PATH="$report" node -e '
-            const fs=require("node:fs"),e=process.env,text=fs.readFileSync(e.REPORT_PATH,"utf8");
-            for(const secret of [e.LIVEKIT_CLOUD_TEST_API_KEY,e.LIVEKIT_CLOUD_TEST_API_SECRET]){
-              if(secret && text.includes(secret))throw new Error("Secret in evidence: upload denied");
-            }
-            if(/eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{12,}\.[A-Za-z0-9_-]{12,}/.test(text)){
-              throw new Error("JWT in evidence: upload denied");
-            }
-            const report=JSON.parse(text);
-            if(!Array.isArray(report.checks)||!report.checks.length){
-              throw new Error("Incomplete security evidence");
-            }
-            console.log("QA evidence inspected and sanitized");
-          '
+          # Fail closed if checked-in source or a previous run claims PASS.
+          # Bind SHA, project, run and attempt, nonce, start time and checks.
+          node scripts/qa/assert-livekit-cloud-proof.mjs "$report"
           echo "qa_report=$report" >> "$GITHUB_OUTPUT"
 
       - name: Preserve scrubbed SHA-bound provider evidence
-        if: always() && steps.scrub.outcome == 'success'
+        if: ${{ success() && steps.scrub.outcome == 'success' }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: luma-cloud-qa-${{ github.run_id }}-${{ github.run_attempt }}

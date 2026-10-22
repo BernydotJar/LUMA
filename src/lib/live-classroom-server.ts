@@ -1,5 +1,5 @@
 import { RoomServiceClient } from "livekit-server-sdk";
-import { FieldValue } from "firebase-admin/firestore";
+import { FieldValue, type DocumentSnapshot } from "firebase-admin/firestore";
 import { isActiveCommerceEnrollment } from "./commerce/enrollment";
 import { mayRestoreRevokedLearnerAccess } from "./live-classroom-revocation-queue";
 import type { DecodedIdToken } from "firebase-admin/auth";
@@ -118,12 +118,50 @@ export function roomReference(roomName: string) {
   return firebaseAdminFirestore.collection("liveClassroomRooms").doc(roomName);
 }
 
+/**
+ * Read the same Firestore session document updated transactionally by
+ * completeClassroomSession(). A pre-close AuthorizedClassroom is NOT permission
+ * to mint a JWT after close: API requests can be suspended on provider I/O.
+ */
+function classroomSessionRef(classroom: AuthorizedClassroom) {
+  return firebaseAdminFirestore.collection("programOfferings")
+    .doc(classroom.offering.offeringId)
+    .collection("sessions").doc(classroom.session.sessionId);
+}
+
+function requireOpenIssuanceSession(
+  snapshot: DocumentSnapshot,
+  classroom: AuthorizedClassroom,
+): void {
+  const session = snapshot.data() as Partial<LiveProgramSession> | undefined;
+  if (!snapshot.exists || session?.status !== "scheduled" ||
+      session.offeringId !== classroom.offering.offeringId ||
+      session.sessionId !== classroom.session.sessionId ||
+      session.classroomProvider !== "livekit") {
+    throw new ClassroomError("classroom_closed", 409);
+  }
+}
+
+function requireNotClosedRoom(snapshot: DocumentSnapshot): void {
+  // A completed room must stay fenced even if an old session snapshot is reused.
+  if (snapshot.get("closeTokensRevokedAt")) {
+    throw new ClassroomError("classroom_closed", 409);
+  }
+}
+
 /** Idempotent mapping: webhooks never infer a tenant from mutable room metadata. */
 async function registerRoom(classroom: AuthorizedClassroom): Promise<void> {
   const ref = roomReference(classroom.roomName);
+  const sessionRef = classroomSessionRef(classroom);
   await firebaseAdminFirestore.runTransaction(async (transaction) => {
-    const snapshot = await transaction.get(ref);
+    // Both reads precede writes: Firestore conflicts this transaction with a
+    // concurrent completeClassroomSession() commit, unlike a stale API snapshot.
+    const [sessionSnapshot, snapshot] = await Promise.all([
+      transaction.get(sessionRef), transaction.get(ref),
+    ]);
+    requireOpenIssuanceSession(sessionSnapshot, classroom);
     if (snapshot.exists) {
+      requireNotClosedRoom(snapshot);
       const current = snapshot.data();
       if (current?.tenantId !== classroom.offering.tenantId ||
           current?.offeringId !== classroom.offering.offeringId ||
@@ -147,9 +185,9 @@ export async function createClassroomToken(
   classroom: AuthorizedClassroom,
 ): Promise<{ serverUrl: string; token: string; role: LiveClassroomRole }> {
   const configuration = liveKitConfiguration();
-  await registerRoom(classroom);
-  const rosterRef = roomReference(classroom.roomName)
-    .collection("authorized").doc(classroom.identity);
+  const sessionRef = classroomSessionRef(classroom);
+  const roomRef = roomReference(classroom.roomName);
+  const rosterRef = roomRef.collection("authorized").doc(classroom.identity);
   // Prevent a refund race between the first authorization read and token issuance.
   // Alternative, still-active grants are legitimate for the same tenant + cohort.
   const verifyCurrentGrant = async () => {
@@ -162,9 +200,16 @@ export async function createClassroomToken(
     return valid.map((record) => record.updatedAt);
   };
   const activeGrantTimes = await verifyCurrentGrant();
-  // Atomic and tenant-scoped. No client can bypass this distributed issuance budget.
+  await registerRoom(classroom);
+  // Atomic, session-status-bound and tenant-scoped reservation. The session
+  // document conflicts with close's completion transaction on concurrent writes.
+  // Its written roster identity is also included when close revokes JWT holders.
   await firebaseAdminFirestore.runTransaction(async (transaction) => {
-    const current = await transaction.get(rosterRef);
+    const [sessionSnapshot, roomSnapshot, current] = await Promise.all([
+      transaction.get(sessionRef), transaction.get(roomRef), transaction.get(rosterRef),
+    ]);
+    requireOpenIssuanceSession(sessionSnapshot, classroom);
+    requireNotClosedRoom(roomSnapshot);
     const bannedAt = current.get("bannedAt");
     const canRestore = bannedAt && mayRestoreRevokedLearnerAccess({
       bannedAt, banReason: current.get("banReason"),
@@ -225,5 +270,16 @@ export async function createClassroomToken(
     throw new ClassroomError("classroom_access_revoked", 403);
   }
   await verifyCurrentGrant();
+  // Final fail-closed checkpoint after *all* provider/signing awaits. If close
+  // completed during createRoom/signing, do not return the JWT. If close starts
+  // immediately after this read, it must revoke the already-reserved identity.
+  const [latestSession, latestRoom, lastRoster] = await Promise.all([
+    sessionRef.get(), roomRef.get(), rosterRef.get(),
+  ]);
+  requireOpenIssuanceSession(latestSession, classroom);
+  requireNotClosedRoom(latestRoom);
+  if (lastRoster.get("bannedAt")) {
+    throw new ClassroomError("classroom_access_revoked", 403);
+  }
   return { serverUrl: configuration.serverUrl, token, role: classroom.role };
 }
