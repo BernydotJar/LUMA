@@ -208,7 +208,7 @@ jobs:
         env:
           CI: "true"
           NEXT_TELEMETRY_DISABLED: "1"
-      - name: Require current-source nonproduction receipt for all 13 scenarios
+      - name: Require current-source nonproduction receipt for all 16 scenarios
         run: |
           node - <<'NODE'
           const assert = require("node:assert/strict");
@@ -219,7 +219,7 @@ jobs:
           assert.equal(report.neverProduction, true);
           assert.equal(report.signedIndependentReviewer, false);
           assert.equal(report.realRagBackendValidated, false);
-          assert.equal(report.passed, 13);
+          assert.equal(report.passed, 16);
           assert.equal(report.failed, 0);
           assert.equal(report.defects.length, 0);
           NODE
