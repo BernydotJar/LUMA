@@ -389,6 +389,11 @@ const report = {
   sourceSha:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
   conclusion,
   checkedAt: new Date().toISOString(),
+  // Null in interactive local runs. GitHub attestations must match a protected
+  // workflow dispatch's actual run, attempt, and checked-out commit.
+  qaRunId: process.env.GITHUB_RUN_ID ?? null,
+  qaRunAttempt: process.env.GITHUB_RUN_ATTEMPT ?? null,
+  qaRunNonce: process.env.LUMA_QA_NONCE ?? null,
   checks,
 };
 mkdirSync('evidence/live-classroom-acceptance/cloud-departed-learner-20261021', { recursive: true });

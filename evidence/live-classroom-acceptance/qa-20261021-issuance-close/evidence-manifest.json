@@ -1,0 +1,19 @@
+{
+  "schema_version": "luma.qa.sha256.manifest.v1",
+  "tested_code_source_sha": "e15e5450a6cb7f5275d9eaf34476b5206b56142c",
+  "review_code_commit_sha": "21cb995c141e2ca803cd922fa86bcba07fdc180f",
+  "code_tree_sha": "55679478859d81301e81f405eb360bae54990272",
+  "release_decision": "NO_GO",
+  "files": {
+    "executive-summary.md": "73364d03b2a9d6b0f89ae9bc6073f9b8d692507054afeeff1d1fa80c1cd02de2",
+    "graph-product.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "graph-validate.json": "87f67693de9b45a5054931083b6c504587a9001169e3764c0eabc9ca2abbc393",
+    "graph-validate.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "livekit-cloud-provider-18.json": "dddc213adafa781d62c019422f6db2dbd9fca8ce5dbc546b88bc4320b54670e9",
+    "livekit-cloud-sanitized.log": "8e264e159623547f3714bbd7030544e605a34f6cf4d3a52e80c33ccef4b528b7",
+    "livekit-cloud-status.json": "af9df640364946150ae63172fbfe6f7be5eef4a1e7adf11d22450741b384e81b",
+    "product-acceptance.json": "88a6463015b393b808c10d22f3e3242bec2f9ed5a09868b18637088e2e41c20e",
+    "release-decision.md": "2c107c4c72415c8539cd288b378befeec1abcefcbb5d1ffb3aac52e69b724c4a",
+    "test-matrix.json": "92e3dabdc4d70264b91b7a86bd6b2ce8bd5319a4aa1ef14e70d893ea1a6e1476"
+  }
+}

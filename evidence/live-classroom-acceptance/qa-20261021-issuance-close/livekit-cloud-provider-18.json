@@ -1,0 +1,97 @@
+{
+  "environment": "authorized LiveKit Cloud LUMA QA project, three synthetic Chromium WebRTC peers",
+  "kind": "CLOUD_PROVIDER_AND_EXPLICIT_CREDENTIAL_REVOCATION_AFTER_PROJECT_POLICY_FIX",
+  "cloudProjectId": "p_5650huuc5om",
+  "sourceSha": "e15e5450a6cb7f5275d9eaf34476b5206b56142c",
+  "conclusion": "PROVIDER_CLOUD_PASS",
+  "checkedAt": "2026-10-22T03:21:46.486Z",
+  "qaRunId": null,
+  "qaRunAttempt": null,
+  "qaRunNonce": null,
+  "checks": [
+    {
+      "action": "automatic_room_creation_disabled_fresh_room_first",
+      "passed": true,
+      "rejectionReason": 0
+    },
+    {
+      "action": "webrtc_publish",
+      "role": "instructor",
+      "passed": true
+    },
+    {
+      "action": "webrtc_publish",
+      "role": "learner-one",
+      "passed": true
+    },
+    {
+      "action": "webrtc_publish",
+      "role": "learner-two",
+      "passed": true
+    },
+    {
+      "action": "instructor_data_chat_to_learner",
+      "passed": true
+    },
+    {
+      "action": "connected_learner_removed",
+      "passed": true,
+      "remaining": 2
+    },
+    {
+      "action": "old_token_replay_denied",
+      "passed": true,
+      "errorReason": 0
+    },
+    {
+      "action": "learner_voluntary_departure_preserves_two_peers",
+      "passed": true
+    },
+    {
+      "action": "revocation_of_disconnected_learner_returns_success",
+      "passed": true
+    },
+    {
+      "action": "disconnected_learner_cached_jwt_replay_denied",
+      "passed": true,
+      "reason": 0
+    },
+    {
+      "action": "teacher_and_other_student_preserved_after_absent_revocation",
+      "passed": true
+    },
+    {
+      "action": "close_revoke_all_remaining_media_identities",
+      "passed": true,
+      "revoked": 2
+    },
+    {
+      "action": "room_delete_absence_confirmed_at_provider",
+      "passed": true
+    },
+    {
+      "action": "closed_room_cached_token_denied",
+      "passed": true,
+      "errorReason": 0
+    },
+    {
+      "action": "departed_learner_replay_denied_after_close",
+      "passed": true,
+      "reason": 0
+    },
+    {
+      "action": "automatic_room_creation_disabled",
+      "passed": true,
+      "responseReason": 0,
+      "providerRoomExists": false
+    },
+    {
+      "action": "finish_for_everyone_disconnects_all",
+      "passed": true
+    },
+    {
+      "action": "post_denial_positive_control_cloud_available",
+      "passed": true
+    }
+  ]
+}
