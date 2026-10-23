@@ -1,4 +1,5 @@
 import unittest
+from pathlib import Path
 
 from quality_run import REQUIRED_QUALITY, verify_quality_for_review
 
@@ -40,6 +41,12 @@ class QualityReviewBootstrapTests(unittest.TestCase):
         for wrong in [{**RUN, 'head_sha': 'b' * 40}, {**RUN, 'event': 'push'}, {**RUN, 'conclusion': None}]:
             with self.subTest(wrong=wrong), self.assertRaises(ValueError):
                 verify_quality_for_review(wrong, jobs, COMMIT)
+
+    def test_stateful_livekit_closure_race_is_mandatory_in_firestore_ci(self):
+        workflow = (Path(__file__).resolve().parents[2] / '.github/workflows/quality.yml').read_text(encoding='utf-8')
+        firestore_job = workflow.partition('\n  firestore:\n')[2].partition('\n  # Authenticated program assessment')[0]
+        self.assertIn('--only firestore', firestore_job)
+        self.assertIn('src/lib/live-classroom-issuance-close-race.emulator.test.ts', firestore_job)
 
     def test_required_checks_cannot_be_duplicated_or_missing(self):
         for missing in REQUIRED_QUALITY:
