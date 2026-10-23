@@ -174,7 +174,8 @@ jobs:
           src/lib/learning-store.emulator.test.ts
           src/lib/course-delivery.emulator.test.ts
           src/lib/certificates/eligibility.emulator.test.ts
-          src/lib/live-classroom-attendance.emulator.test.ts"
+          src/lib/live-classroom-attendance.emulator.test.ts
+          src/lib/live-classroom-issuance-close-race.emulator.test.ts"
 
   # Authenticated program assessment UAT: disposable Auth/Firestore only.
   learning-auth-uat:
