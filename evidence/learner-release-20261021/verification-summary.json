@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "kind": "LUMA-new-student-release-remediation",
+  "measuredAtUtc": "2026-10-22T02:34:45.467Z",
+  "scope": "read-only public baseline plus local candidate source; no deployment or production test identity",
+  "sourceBaseSha": "4b87923d87d045f938c42aeff02264cddee072d7",
+  "sourceTreeNote": "Working-tree patch applied above base SHA; final PR SHA requires separate CI run",
+  "publicAtObservation": {
+    "firebaseDirectSha": "6ddcae8ff2464782b7e4001c4cd5d60092dbb099",
+    "customDomainSha": "6ddcae8ff2464782b7e4001c4cd5d60092dbb099"
+  },
+  "checks": {
+    "build": {
+      "exit": 0
+    },
+    "eslint": {
+      "exit": 0
+    },
+    "typecheck": {
+      "exit": 0
+    },
+    "vitest": {
+      "exit": 0,
+      "passed": 331,
+      "skipped": 81
+    },
+    "targetedPlaywright": {
+      "exit": 0,
+      "passed": 15,
+      "skipped": 1,
+      "failed": 0,
+      "flaky": 0,
+      "startedAtUtc": "2026-10-22T02:29:51.837Z"
+    },
+    "fullPlaywright": {
+      "exit": 0,
+      "passed": 131,
+      "skipped": 7,
+      "failed": 0,
+      "flaky": 0,
+      "startedAtUtc": "2026-10-22T02:31:27.461Z"
+    }
+  },
+  "graphHarness": {
+    "canonicalChainValid": true,
+    "events": 685,
+    "releaseNode": "LUMA-CICD-002-release-pipeline",
+    "releaseNodeState": "review",
+    "releaseGateObserved": "PASS",
+    "currentSourceReviewVerified": false,
+    "productionGateVerified": false
+  },
+  "authenticatedEmulatorUat": {
+    "checkoutSha": "f1a0895bb9c4e7bdd3bde68d76a54e60bb422e66",
+    "passed": 13,
+    "failed": 0,
+    "notSameAsCandidate": true
+  },
+  "decision": "TECHNICAL_PATCH_PASS__PRODUCT_RELEASE_NO_GO",
+  "unvalidated": [
+    "independent signer bound to final SHA",
+    "academy learner coach UAT on final SHA",
+    "real commercial enrollment and retention",
+    "LiveKit Cloud classroom under product auth",
+    "postdeploy live SHA parity and product flows"
+  ]
+}
