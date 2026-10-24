@@ -44,7 +44,7 @@ test.describe("LUMA adaptive learning loop", () => {
     await expect(page.getByText("Gestionar mejor mis emociones", { exact: true }).first()).toBeVisible();
     // The editorial home removed the redundant time-budget sentence. Verify the
     // persisted planner input while retaining every goal-specific action assertion.
-    await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("luma-onboarding") ?? "{}").minutes)).toBe(8);
+    await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("luma-guest-onboarding") ?? "{}").minutes)).toBe(8);
     const learnerAAction = (await page.locator("#next-action-title").textContent())?.trim();
 
     await completeOnboarding(page, {
@@ -54,7 +54,7 @@ test.describe("LUMA adaptive learning loop", () => {
     });
 
     await expect(page.getByText("Comunicarme con más claridad", { exact: true }).first()).toBeVisible();
-    await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("luma-onboarding") ?? "{}").minutes)).toBe(35);
+    await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("luma-guest-onboarding") ?? "{}").minutes)).toBe(35);
     const learnerBAction = (await page.locator("#next-action-title").textContent())?.trim();
 
     await completeOnboarding(page, {
@@ -94,7 +94,7 @@ test.describe("LUMA adaptive learning loop", () => {
     await page.getByRole("button", { name: /Esta entrega tuvo dos errores concretos/i }).click();
     await page.getByRole("button", { name: /Registrar evidencia/i }).click();
 
-    await expect(page.getByRole("heading", { name: /Demostraste transferencia/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Terminaste la práctica de muestra/i })).toBeVisible();
     await page.getByRole("link", { name: /Volver a mi ruta/i }).click();
 
     await expect(page).toHaveURL(/\/learn$/);
@@ -105,7 +105,7 @@ test.describe("LUMA adaptive learning loop", () => {
     expect(after).toBeTruthy();
     expect(after).not.toBe(before);
 
-    const event = await page.evaluate(() => window.localStorage.getItem("luma-latest-learning-event"));
+    const event = await page.evaluate(() => window.localStorage.getItem("luma-guest-latest-scored-event"));
     expect(event).toContain('"correctCount":3');
   });
 });

@@ -13,16 +13,6 @@ type ResultState = {
   route: "review" | "practice" | "simulation" | "transfer";
 };
 
-function appendLearningEvent(event: Record<string, unknown>) {
-  const previous = JSON.parse(
-    window.localStorage.getItem("luma-learning-events") ?? "[]",
-  ) as unknown[];
-  window.localStorage.setItem(
-    "luma-learning-events",
-    JSON.stringify([...previous, event].slice(-30)),
-  );
-  window.localStorage.setItem("luma-latest-learning-event", JSON.stringify(event));
-}
 
 export function ClassEntryDiagnostic({ slug }: { slug: string }) {
   const contract = useMemo(() => getClassContract(slug), [slug]);
@@ -57,17 +47,8 @@ export function ClassEntryDiagnostic({ slug }: { slug: string }) {
 
     setResult(nextResult);
 
-    appendLearningEvent({
-      type: "CLASS_DIAGNOSTIC_COMPLETED",
-      classId: activeContract.experienceSlug,
-      capabilityId: activeContract.capabilityId,
-      sourceIds: activeContract.sourceIds,
-      correct: selectedChoice.correct,
-      recommendedRoute: route,
-      evidenceCategory: "observed",
-      twinAuthority: "none",
-      completedAt: new Date().toISOString(),
-    });
+    // Diagnostic answers influence only this public preview. They are not
+    // graded evidence and must never enter unowned localStorage keys.
   }
 
   function reset() {

@@ -12,6 +12,7 @@ import {
   Target,
 } from "lucide-react";
 import { useLumaAuth } from "@/components/auth-provider";
+import { ProgramPicker, useProgramSelection } from "@/components/program-picker";
 import {
   fetchCoachLearner,
   type CoachLearnerDetail,
@@ -33,33 +34,42 @@ function eventEvidenceSummary(event: Record<string, unknown>) {
 
 export function PersistentTwinDetail({ learnerId }: { learnerId: string }) {
   const { user, loading } = useLumaAuth();
+  const selection = useProgramSelection("coach");
+  const programId = selection.status === "entitled" ? selection.programId : null;
   const [detail, setDetail] = useState<CoachLearnerDetail | null>(null);
+  const [loadedFor, setLoadedFor] = useState<string | null>(null);
   const [state, setState] = useState<"loading" | "ready" | "forbidden" | "error">("loading");
 
   useEffect(() => {
-    if (loading || !user) return;
+    if (loading || !user || (selection.status !== "showcase" && !programId)) return;
 
     let cancelled = false;
     void fetchCoachLearner(learnerId)
       .then((result) => {
         if (cancelled) return;
         if (!result) {
+          setLoadedFor(programId);
           setState("forbidden");
           return;
         }
         setDetail(result);
+        setLoadedFor(programId);
         setState("ready");
       })
       .catch(() => {
-        if (!cancelled) setState("error");
+        if (!cancelled) {
+          setLoadedFor(programId);
+          setState("error");
+        }
       });
 
     return () => {
       cancelled = true;
     };
-  }, [learnerId, loading, user]);
+  }, [learnerId, loading, user, programId, selection.status]);
 
-  const viewState = !loading && !user ? "forbidden" : state;
+  const viewState = !loading && !user ? "forbidden" :
+    loadedFor !== programId ? "loading" : state;
 
   const averageMastery = useMemo(() => {
     if (!detail) return 0;
@@ -69,6 +79,11 @@ export function PersistentTwinDetail({ learnerId }: { learnerId: string }) {
       (concepts.reduce((sum, concept) => sum + concept.mastery, 0) / concepts.length) * 100,
     );
   }, [detail]);
+
+  if (user && selection.status !== "showcase" &&
+      (selection.status !== "entitled" || !selection.programId)) {
+    return <ProgramPicker audience="coach" selection={selection} />;
+  }
 
   if (viewState === "loading") {
     return (

@@ -12,6 +12,17 @@ export function programScheduleStatus(
 
 import type { LearnerScheduledSession } from "./program-api-client";
 
+/** Filter an already-authorized agenda for the course currently being studied. */
+export function scheduleForSelectedProgram<T extends { programId: string }>(
+  sessions: readonly T[],
+  programId: string | null | undefined,
+): T[] {
+  return programId
+    ? sessions.filter((item) => item.programId === programId)
+    : [...sessions];
+}
+
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }

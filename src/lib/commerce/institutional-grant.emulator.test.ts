@@ -5,6 +5,7 @@ import { afterAll, describe, expect, it } from "vitest";
 import { FirestoreInstitutionalGrantStore } from "./institutional-grant-store";
 import { parseInstitutionalBulkInput, runInstitutionalBulk } from "./institutional-bulk";
 import { FirestoreCommerceEnrollmentStore, isActiveCommerceEnrollment } from "./enrollment";
+import { revocationJobId } from "@/lib/live-classroom-revocation-queue";
 
 const enabled = Boolean(process.env.FIRESTORE_EMULATOR_HOST);
 const app = enabled
@@ -63,6 +64,13 @@ describe.runIf(enabled)("institutional enrollment Firestore integration", () => 
       "admin-1", "La institución canceló formalmente este acceso de acuerdo con su convenio.");
     expect(revoked.duplicate).toBe(false);
     expect(isActiveCommerceEnrollment(revoked.record)).toBe(false);
+    const job = await firestore!.collection("liveClassroomRevocations").doc(revocationJobId({
+      enrollmentId: revoked.record.enrollmentId,
+      sourceEventId: revoked.record.lastProviderEventId,
+    })).get();
+    expect(job.exists).toBe(true);
+    expect(job.data()).toMatchObject({ state: "pending", tenantId,
+      offeringId, learnerId: "firebase-" + suffix });
     const revokedAgain = await store!.revoke(tenantId, first.record.enrollmentId,
       "admin-1", "La institución canceló formalmente este acceso de acuerdo con su convenio.");
     expect(revokedAgain.duplicate).toBe(true);

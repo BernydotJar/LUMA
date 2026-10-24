@@ -1,0 +1,26 @@
+[WebServer] ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+
+
+Running 20 tests using 2 workers
+
+[1/20] [chromium] › e2e/adaptive-loop.spec.ts:37:3 › LUMA adaptive learning loop › canonical learner states receive materially different next actions
+[2/20] [chromium] › e2e/adaptive-loop.spec.ts:79:3 › LUMA adaptive learning loop › successful practice evidence changes the next best action
+[3/20] [chromium] › e2e/class-intelligence.spec.ts:4:3 › AI-native class entry › P.A.S. diagnostic records routing evidence without claiming mastery
+[4/20] [chromium] › e2e/class-intelligence.spec.ts:57:3 › AI-native class entry › every published experience exposes a learning contract
+[5/20] [chromium] › e2e/class-intelligence.spec.ts:84:3 › AI-native class entry › P.A.S. simulation emits rubric-based scored evidence
+[6/20] [chromium] › e2e/class-intelligence.spec.ts:112:3 › AI-native class entry › coach can inspect learning objectives and their evidence
+[7/20] [chromium] › e2e/program-entry-assessment.spec.ts:4:3 › LUMA 070/071 learner entry and contextual class acceptance › new learner sees a program assessment without extra primary navigation
+[8/20] [chromium] › e2e/program-entry-assessment.spec.ts:17:3 › LUMA 070/071 learner entry and contextual class acceptance › onboarding completes then safely requires sign-in for authoritative assessment
+[9/20] [chromium] › e2e/program-entry-assessment.spec.ts:33:3 › LUMA 070/071 learner entry and contextual class acceptance › all class learners can access a contextual assistant next to real instructional content
+[10/20] [chromium] › e2e/program-entry-assessment.spec.ts:54:3 › LUMA 070/071 learner entry and contextual class acceptance › entry API returns an authentication failure without using simulated identity
+[11/20] [mobile] › e2e/adaptive-loop.spec.ts:37:3 › LUMA adaptive learning loop › canonical learner states receive materially different next actions
+[12/20] [mobile] › e2e/adaptive-loop.spec.ts:79:3 › LUMA adaptive learning loop › successful practice evidence changes the next best action
+[13/20] [mobile] › e2e/class-intelligence.spec.ts:4:3 › AI-native class entry › P.A.S. diagnostic records routing evidence without claiming mastery
+[14/20] [mobile] › e2e/class-intelligence.spec.ts:57:3 › AI-native class entry › every published experience exposes a learning contract
+[15/20] [mobile] › e2e/class-intelligence.spec.ts:84:3 › AI-native class entry › P.A.S. simulation emits rubric-based scored evidence
+[16/20] [mobile] › e2e/class-intelligence.spec.ts:112:3 › AI-native class entry › coach can inspect learning objectives and their evidence
+[17/20] [mobile] › e2e/program-entry-assessment.spec.ts:4:3 › LUMA 070/071 learner entry and contextual class acceptance › new learner sees a program assessment without extra primary navigation
+[18/20] [mobile] › e2e/program-entry-assessment.spec.ts:17:3 › LUMA 070/071 learner entry and contextual class acceptance › onboarding completes then safely requires sign-in for authoritative assessment
+[19/20] [mobile] › e2e/program-entry-assessment.spec.ts:33:3 › LUMA 070/071 learner entry and contextual class acceptance › all class learners can access a contextual assistant next to real instructional content
+[20/20] [mobile] › e2e/program-entry-assessment.spec.ts:54:3 › LUMA 070/071 learner entry and contextual class acceptance › entry API returns an authentication failure without using simulated identity
+  20 passed (16.9s)

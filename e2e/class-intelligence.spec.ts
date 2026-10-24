@@ -4,10 +4,19 @@ test.describe("AI-native class entry", () => {
   test("P.A.S. diagnostic records routing evidence without claiming mastery", async ({ page }) => {
     await page.goto("/learn/experience/pas-detectar-y-reformular");
 
+    // Scope the assertion to the one published learning contract. The page can
+    // transiently hydrate a second copy of generic text, but duplicates of the
+    // actual named contract still fail: no global .first() masking.
+    const learningContract = page.getByRole("region", {
+      name: /Empieza desde donde realmente estás/i,
+    });
+    await expect(learningContract).toHaveCount(1);
     await expect(
-      page.getByRole("heading", { name: /Empieza desde donde realmente estás/i }),
+      learningContract.getByRole("heading", { name: /Empieza desde donde realmente estás/i }),
     ).toBeVisible();
-    await expect(page.getByText(/Esta señal no certifica dominio/i)).toBeVisible();
+    await expect(
+      learningContract.getByText(/Esta señal no certifica dominio/i),
+    ).toBeVisible();
 
     await page
       .getByRole("button", { name: /La directora señaló dos errores de la propuesta/i })
@@ -18,18 +27,9 @@ test.describe("AI-native class entry", () => {
       page.getByText(/Conviene reforzar una distinción antes de practicar/i),
     ).toBeVisible();
 
-    const firstReceipt = await page.evaluate(() =>
-      JSON.parse(window.localStorage.getItem("luma-latest-learning-event") ?? "{}"),
-    );
-    expect(firstReceipt).toMatchObject({
-      type: "CLASS_DIAGNOSTIC_COMPLETED",
-      classId: "pas-detectar-y-reformular",
-      capabilityId: "pas",
-      correct: false,
-      recommendedRoute: "review",
-      evidenceCategory: "observed",
-      twinAuthority: "none",
-    });
+    // A non-scored diagnostic is a transient route hint, not a personal receipt.
+    await expect(page.getByText(/Conviene reforzar una distinción/i)).toBeVisible();
+    expect(await page.evaluate(() => window.localStorage.getItem("luma-latest-learning-event"))).toBeNull();
 
     await page.getByRole("button", { name: /Intentar otra vez/i }).click();
     await page
@@ -40,18 +40,8 @@ test.describe("AI-native class entry", () => {
     await expect(page.getByText(/Puedes acelerar esta parte/i)).toBeVisible();
     await expect(page.getByRole("link", { name: /Ir a la simulación/i })).toBeVisible();
 
-    const secondReceipt = await page.evaluate(() =>
-      JSON.parse(window.localStorage.getItem("luma-latest-learning-event") ?? "{}"),
-    );
-    expect(secondReceipt).toMatchObject({
-      type: "CLASS_DIAGNOSTIC_COMPLETED",
-      classId: "pas-detectar-y-reformular",
-      capabilityId: "pas",
-      correct: true,
-      recommendedRoute: "simulation",
-      evidenceCategory: "observed",
-      twinAuthority: "none",
-    });
+    expect(await page.evaluate(() => window.localStorage.getItem("luma-latest-learning-event"))).toBeNull();
+    await expect(page.getByRole("link", { name: /Ir a la simulación/i })).toBeVisible();
   });
 
   test("every published experience exposes a learning contract", async ({ page }) => {
@@ -91,11 +81,11 @@ test.describe("AI-native class entry", () => {
     await page.getByRole("button", { name: /Esta entrega tuvo dos errores concretos/i }).click();
     await page.getByRole("button", { name: /Registrar evidencia/i }).click();
 
-    await expect(page.getByRole("heading", { name: /Demostraste transferencia/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Terminaste la práctica de muestra/i })).toBeVisible();
     await expect(page.getByText("pas-v1", { exact: true })).toBeVisible();
 
     const receipt = await page.evaluate(() =>
-      JSON.parse(window.localStorage.getItem("luma-latest-learning-event") ?? "{}"),
+      JSON.parse(window.localStorage.getItem("luma-guest-latest-scored-event") ?? "{}"),
     );
     expect(receipt).toMatchObject({
       type: "SIMULATION_COMPLETED",

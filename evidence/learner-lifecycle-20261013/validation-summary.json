@@ -1,0 +1,20 @@
+{
+  "type": "luma-learner-lifecycle-quality-gates",
+  "date": "2026-10-13",
+  "results": {
+    "unit_pass": 317,
+    "unit_skipped": 82,
+    "lint": "PASS",
+    "typescript": "PASS",
+    "webpack_production_build": "PASS",
+    "browser_cx_pass": 16,
+    "browser_cx_fail": 0,
+    "desktop_e2e_pass": 26,
+    "mobile_e2e_pass": 26,
+    "desktop_e2e_skipped": 1,
+    "mobile_e2e_skipped": 1,
+    "firestore_emulator_pass": 5
+  },
+  "overallRelease": "NO-GO",
+  "reason": "Published lessons, provider staging, manual accessibility, field perf and independent release review outstanding"
+}

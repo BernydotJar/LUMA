@@ -8,6 +8,7 @@ import {
 } from "./learner-projection";
 import type { LearnerState, RankedLearningAction } from "../types/learning";
 import { evaluatePasSimulation } from "./simulation-evidence";
+import type { ProgramEntryAssessmentSummary } from "./program-assessment";
 
 export interface PersistedLearnerRecord {
   schemaVersion: 1;
@@ -21,6 +22,11 @@ export interface PersistedLearnerRecord {
   createdAt: string;
   updatedAt: string;
   lastEventId?: string;
+  /** Authoritative latest graded receipt, independent of the event pagination window. */
+  lastScoredEvidence?: StoredLearningEvent;
+  /** Program-level diagnostic is observed only, never certified mastery. */
+  entryAssessment?: ProgramEntryAssessmentSummary;
+  entryAssessmentActive?: boolean;
 }
 
 const pasAnswerKey = {
@@ -72,9 +78,9 @@ export function verifyLearningEvent(value: unknown): StoredLearningEvent | undef
     conceptId: "pas",
     answers: normalizedAnswers,
     correctCount,
-    attempts: normalizedAttempts,
-    completedAt,
-    sourceId,
+    ...(normalizedAttempts ? { attempts: normalizedAttempts } : {}),
+    ...(completedAt ? { completedAt } : {}),
+    ...(sourceId ? { sourceId } : {}),
     evidenceCategory: evidence.evidenceCategory,
     twinAuthority: evidence.twinAuthority,
     rubricId: evidence.rubricId,
@@ -126,12 +132,25 @@ export function applyEventToPersistentLearner(
   const previousPlan = createAdaptiveLearningPlanFromState(
     current.state,
     current.onboarding,
+    undefined,
+    current.entryAssessment,
+    current.entryAssessmentActive,
   );
   const nextState = applyLearningEvent(current.state, { ...event, eventId });
+  const entryAssessment = event.type === "PROGRAM_ENTRY_ASSESSMENT_COMPLETED"
+    ? event.programAssessment
+    : current.entryAssessment;
+  const entryAssessmentActive = event.type === "PROGRAM_ENTRY_ASSESSMENT_COMPLETED"
+    ? Boolean(entryAssessment)
+    : event.type === "SIMULATION_COMPLETED"
+      ? false
+      : current.entryAssessmentActive;
   const plan = createAdaptiveLearningPlanFromState(
     nextState,
     current.onboarding,
     previousPlan.nextAction,
+    entryAssessment,
+    entryAssessmentActive,
   );
 
   return {
@@ -143,6 +162,15 @@ export function applyEventToPersistentLearner(
       version: current.version + 1,
       updatedAt: now,
       lastEventId: eventId,
+      // Firestore rejects undefined, including on optional nested fields.
+      // Never materialize an ungraded or absent receipt as an undefined field.
+      ...(event.type === "SIMULATION_COMPLETED" &&
+      event.evidenceCategory === "scored" && event.twinAuthority === "eligible"
+        ? { lastScoredEvidence: { ...event, eventId } }
+        : current.lastScoredEvidence
+          ? { lastScoredEvidence: current.lastScoredEvidence }
+          : {}),
+      ...(entryAssessment ? { entryAssessment, entryAssessmentActive: Boolean(entryAssessmentActive) } : {}),
     },
     plan,
   };

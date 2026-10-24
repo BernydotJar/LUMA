@@ -1,0 +1,40 @@
+{
+  "runId": "38516141684",
+  "headSha": "d30ec5d6d921521ab46827b6c8b0efd66155f7a9",
+  "event": "pull_request",
+  "conclusion": "failure",
+  "allFiveQualityPassed": true,
+  "newSourceReady": false,
+  "deployed": false,
+  "jobs": [
+    {
+      "name": "firestore",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify",
+      "conclusion": "success"
+    },
+    {
+      "name": "security",
+      "conclusion": "success"
+    },
+    {
+      "name": "identity-roles",
+      "conclusion": "success"
+    },
+    {
+      "name": "browser",
+      "conclusion": "success"
+    },
+    {
+      "name": "release-readiness",
+      "conclusion": "failure"
+    },
+    {
+      "name": "deploy",
+      "conclusion": "skipped"
+    }
+  ],
+  "actionsUrl": "https://github.com/BernydotJar/LUMA/actions/runs/38516141684"
+}

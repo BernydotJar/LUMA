@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
+import { enqueueClassroomRevocation } from "@/lib/live-classroom-revocation-queue";
 import { FieldPath, type Firestore } from "firebase-admin/firestore";
 import type { CommerceEnrollmentRecord } from "./enrollment";
 import type { ProgramOffering } from "@/lib/program-delivery";
@@ -145,6 +146,13 @@ export class FirestoreInstitutionalGrantStore {
         institutionalRevision: current.institutionalRevision + 1,
       };
       tx.set(ref, record);
+      if (record.offeringId && record.learnerId) {
+        enqueueClassroomRevocation(this.firestore, tx, {
+          enrollmentId: record.enrollmentId, tenantId: record.tenantId,
+          offeringId: record.offeringId, learnerId: record.learnerId,
+          sourceEventId: eventId, createdAt: now,
+        });
+      }
       tx.create(ref.collection("audit").doc(eventId), {
         action: "revoked", actorUid,
         at: now, tenantId, reason,

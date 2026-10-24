@@ -1,0 +1,162 @@
+name: LiveKit Cloud staging acceptance
+
+# Manual-only trusted ref. No production environment and no PR secret exposure.
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Exact reviewed 40-character protected-branch commit SHA
+        type: string
+        required: true
+      scenario:
+        description: LiveKit provider QA security scenario
+        type: choice
+        required: true
+        default: departed_learner
+        options: [departed_learner, project_policy]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: luma-livekit-cloud-qa-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  livekit-cloud-qa:
+    if: ${{ github.repository == 'BernydotJar/LUMA' && github.ref_protected && github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment:
+      name: livekit-acceptance
+    permissions:
+      contents: read
+    steps:
+      - name: Bind dispatch to the protected and reviewed commit
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          ACTUAL_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Full lowercase 40-character source SHA is required"
+            exit 1
+          fi
+          if test "$EXPECTED_SHA" != "$ACTUAL_SHA"; then
+            echo "::error::The protected ref differs from expected source SHA"
+            exit 1
+          fi
+
+      - name: Checkout reviewed source, never retain Git credentials
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Configure Node 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+
+      - name: Verify QA proof validator (no credentials)
+        run: npm run test:run -- scripts/qa/assert-livekit-cloud-proof.test.mjs
+
+      - name: Remove historical checked-in PASS reports and bind this run start
+        env:
+          QA_SCENARIO: ${{ inputs.scenario }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "$QA_SCENARIO" in
+            departed_learner)
+              report=evidence/live-classroom-acceptance/cloud-departed-learner-20261021/cloud-provider-verification.json
+              ;;
+            project_policy)
+              report=evidence/live-classroom-acceptance/cloud-post-setting-20261021/cloud-provider-verification.json
+              ;;
+            *)
+              echo "::error::Unsupported QA scenario"
+              exit 1
+              ;;
+          esac
+          # Checked-in QA evidence is historical, not new execution proof.
+          rm -f -- "$report"
+          test ! -e "$report"
+          echo "LUMA_QA_STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+
+      - name: Enforce approved Cloud QA project, fail closed if credentials absent
+        env:
+          LIVEKIT_CLOUD_TEST_URL: ${{ secrets.LIVEKIT_CLOUD_TEST_URL }}
+          LIVEKIT_CLOUD_TEST_API_KEY: ${{ secrets.LIVEKIT_CLOUD_TEST_API_KEY }}
+          LIVEKIT_CLOUD_TEST_API_SECRET: ${{ secrets.LIVEKIT_CLOUD_TEST_API_SECRET }}
+        run: |
+          node -e '
+            const e=process.env, names=[
+              "LIVEKIT_CLOUD_TEST_URL","LIVEKIT_CLOUD_TEST_API_KEY",
+              "LIVEKIT_CLOUD_TEST_API_SECRET",
+            ];
+            if(names.some(k=>!e[k]||e[k].length<6)) {
+              throw new Error("Missing protected LiveKit QA credentials; do not use production credentials");
+            }
+            const u=new URL(e.LIVEKIT_CLOUD_TEST_URL);
+            if(u.protocol!=="wss:" || u.hostname!=="luma-0x6n7955.livekit.cloud" ||
+               u.pathname!=="/" || u.search || u.username || u.password) {
+              throw new Error("Cloud project is not the authorized LUMA staging provider");
+            }
+            console.log("Approved test provider present; credential values hidden");
+          '
+
+      - name: Execute real Cloud provider security gate
+        id: cloud
+        env:
+          LIVEKIT_CLOUD_TEST_URL: ${{ secrets.LIVEKIT_CLOUD_TEST_URL }}
+          LIVEKIT_CLOUD_TEST_API_KEY: ${{ secrets.LIVEKIT_CLOUD_TEST_API_KEY }}
+          LIVEKIT_CLOUD_TEST_API_SECRET: ${{ secrets.LIVEKIT_CLOUD_TEST_API_SECRET }}
+          LIVEKIT_CLOUD_PROJECT_ID: p_5650huuc5om
+          QA_SCENARIO: ${{ inputs.scenario }}
+          LUMA_QA_NONCE: ${{ github.run_id }}-${{ github.run_attempt }}-${{ github.sha }}
+          CI: "true"
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "$QA_SCENARIO" in
+            departed_learner)
+              node scripts/qa/livekit-cloud-departed-learner-20261021.mjs ;;
+            project_policy)
+              node scripts/qa/livekit-cloud-post-settings-20261021.mjs ;;
+            *)
+              echo "::error::Unsupported scenario"
+              exit 1 ;;
+          esac
+
+      - name: Refuse to upload unsanitized evidence
+        id: scrub
+        if: ${{ success() && steps.cloud.outcome == 'success' }}
+        env:
+          LIVEKIT_CLOUD_TEST_API_KEY: ${{ secrets.LIVEKIT_CLOUD_TEST_API_KEY }}
+          LIVEKIT_CLOUD_TEST_API_SECRET: ${{ secrets.LIVEKIT_CLOUD_TEST_API_SECRET }}
+          QA_SCENARIO: ${{ inputs.scenario }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test "$QA_SCENARIO" = departed_learner; then
+            report=evidence/live-classroom-acceptance/cloud-departed-learner-20261021/cloud-provider-verification.json
+          else
+            report=evidence/live-classroom-acceptance/cloud-post-setting-20261021/cloud-provider-verification.json
+          fi
+          test -s "$report"
+          # Fail closed if checked-in source or a previous run claims PASS.
+          # Bind SHA, project, run and attempt, nonce, start time and checks.
+          node scripts/qa/assert-livekit-cloud-proof.mjs "$report"
+          echo "qa_report=$report" >> "$GITHUB_OUTPUT"
+
+      - name: Preserve scrubbed SHA-bound provider evidence
+        if: ${{ success() && steps.scrub.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: luma-cloud-qa-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ steps.scrub.outputs.qa_report }}
+          if-no-files-found: error
+          retention-days: 30

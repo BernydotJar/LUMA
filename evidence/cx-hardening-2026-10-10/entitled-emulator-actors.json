@@ -1,0 +1,24 @@
+{
+  "source": "Firebase Auth/Firestore emulators only",
+  "project": "demo-luma-cxh-20261010",
+  "outcomes": {
+    "guest_denied": 401,
+    "foreign_learner_denied": 403,
+    "entitled_empty_state": 404,
+    "entitled_onboarding": 200,
+    "rubric_receipt_version_2": 200,
+    "idempotent_replay": 200,
+    "fresh_session_readback": 200,
+    "unentitled_program_denied": 403,
+    "ordinary_coach_denied": 403,
+    "scoped_coach_roster": 200,
+    "coach_rubric_provenance": 200,
+    "cross_tenant_learner_denied": 403,
+    "foreign_coach_denied": 403,
+    "revoked_event_replay_denied": 403,
+    "revoked_coach_read_denied": 403
+  },
+  "cleanup": "PASS: QA users, entitlements and scoped learner records deleted",
+  "count": 15,
+  "verdict": "PASS"
+}

@@ -87,3 +87,17 @@ test("anonymous clients cannot import an institutional enrollment batch", async 
   });
   expect(response.status()).toBe(401);
 });
+
+test("an unauthenticated visitor cannot approve a graduation policy or inspect cohort grades", async ({ request }) => {
+  const offeringId = "a".repeat(64);
+  const eligibility = await request.get(
+    `/api/certificates/eligibility?offeringId=${offeringId}&learnerId=guest-learner`,
+  );
+  expect(eligibility.status()).toBe(401);
+  expect(eligibility.headers()["cache-control"]).toContain("no-store");
+  const policy = await request.post("/api/certificates/policy", {
+    data: { offeringId, minimumScore: 1, requestId: "forged-unapproved-policy-123" },
+  });
+  expect(policy.status()).toBe(401);
+  expect(policy.headers()["cache-control"]).toContain("no-store");
+});

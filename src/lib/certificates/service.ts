@@ -9,6 +9,7 @@ import type { ProgramOffering } from "@/lib/program-delivery";
 import { sendForSignature, downloadSignedEnvelope } from "./docusign";
 import { signCertificateWithStirling, loadStirlingConfig } from "./stirling";
 import { renderCertificatePdf, certificateBaseUrl } from "./pdf";
+import { verifyCertificateAssessment } from "./eligibility";
 import {
   canManageCertificates, cleanText, completionId, documentId, normalizedEmail,
   validateAttestation, type AcademicCertificate, type CertificateIssuer,
@@ -134,26 +135,46 @@ export class CertificateService {
     const learnerId = documentId(input.learnerId, "learner_id");
     const offeringId = documentId(input.offeringId, "offering_id");
     const offering = await this.authorizedOffering(coach, offeringId, learnerId);
-    const { rationale, evidenceEventIds, learnerLegalName } = validateAttestation(input);
+    const { rationale, evidenceEventIds: providedIds, learnerLegalName } = validateAttestation(input);
+    // Never let a coach select arbitrary global Twin/PAS events as a final exam.
+    if (providedIds.length) throw new Error("CERTIFICATE_UNTRUSTED_EVIDENCE_REFERENCE");
     const enrollments = await commerceEnrollments.listByLearner(learnerId);
-    if (!enrollments.some(row => row.tenantId === offering.tenantId &&
-        row.programId === offering.programId && row.offeringId === offeringId &&
-        isActiveCommerceEnrollment(row))) {
+    const eligible = enrollments.filter(row => row.tenantId === offering.tenantId &&
+      row.programId === offering.programId && row.offeringId === offeringId &&
+      isActiveCommerceEnrollment(row) && /^[a-f0-9]{64}$/.test(row.enrollmentId));
+    if (!eligible.length || eligible.length > 20) {
       throw new Error("CERTIFICATE_ENROLLMENT_REQUIRED");
     }
-    // User-provided event IDs are never trusted without ownership verification.
-    if (evidenceEventIds.length) {
-      const refs = evidenceEventIds.map(id =>
-        this.firestore.collection("learners").doc(learnerId).collection("events").doc(id));
-      const snapshots = await this.firestore.getAll(...refs);
-      if (snapshots.some(snapshot => !snapshot.exists || snapshot.data()?.learnerId !== learnerId)) {
-        throw new Error("CERTIFICATE_EVIDENCE_NOT_FOUND");
-      }
-    }
+    // Reconstruct every required assessment from the independently published
+    // cohort curriculum and its reviewed learner evidence. Nothing is inferred
+    // from video checkpoints, preview simulations or free-text coach comments.
+    const proof = await verifyCertificateAssessment(this.firestore, offering, learnerId);
+    const evidenceEventIds = proof.evidenceSubmissionIds;
     const id = completionId(offering.tenantId, offeringId, learnerId);
     const ref = this.completion(id);
+    const headRef = this.firestore.collection("academicCurricula").doc(offeringId);
+    const policyRef = this.firestore.collection("academicCertificatePolicies").doc(offeringId);
     return this.firestore.runTransaction(async tx => {
-      const snapshot = await tx.get(ref);
+      // Check the active entitlement and published approval again inside the
+      // completion transaction, preventing a late refund/withdrawn curriculum.
+      const [snapshot, policySnap, headSnap, ...enrollmentSnaps] = await Promise.all([
+        tx.get(ref), tx.get(policyRef), tx.get(headRef),
+        ...eligible.map(row => tx.get(this.firestore.collection("commerceEnrollments")
+          .doc(row.enrollmentId))),
+      ]);
+      if (!enrollmentSnaps.some(s => s.exists && s.data()?.learnerId === learnerId &&
+          s.data()?.tenantId === offering.tenantId &&
+          s.data()?.programId === offering.programId &&
+          s.data()?.offeringId === offeringId &&
+          isActiveCommerceEnrollment(s.data() as import("@/lib/commerce/enrollment").CommerceEnrollmentRecord))) {
+        throw new Error("CERTIFICATE_ENROLLMENT_REQUIRED");
+      }
+      if (createHash("sha256").update(JSON.stringify(policySnap.data())).digest("hex") !== proof.policyDigest ||
+          headSnap.data()?.publishedVersionId !== proof.policyVersionId ||
+          headSnap.data()?.publishedDigest !== proof.curriculumDigest ||
+          headSnap.data()?.status !== "published") {
+        throw new Error("CERTIFICATE_ASSESSMENT_CHANGED");
+      }
       if (snapshot.exists) {
         const current = snapshot.data() as CompletionAttestation;
         if (current.rationale !== rationale ||
@@ -168,6 +189,9 @@ export class CertificateService {
         programId: offering.programId, learnerId, rationale, evidenceEventIds,
         approvedBy: coach.uid, identityAttestedBy: coach.uid,
         learnerLegalName, approvedAt: clock(),
+        assessmentVersionId: proof.policyVersionId,
+        assessmentPolicyDigest: proof.policyDigest,
+        assessmentMinimumScore: proof.minimumScore,
       };
       tx.create(ref, record);
       return record;
@@ -196,13 +220,25 @@ export class CertificateService {
       throw new Error("STIRLING_ISSUER_NOT_AUTHORIZED");
     }
     const enrollments = await commerceEnrollments.listByLearner(learnerId);
-    if (!enrollments.some(enrollment =>
+    const eligible = enrollments.filter(enrollment =>
       enrollment.tenantId === offering.tenantId &&
       enrollment.programId === offering.programId &&
       enrollment.offeringId === offeringId &&
-      isActiveCommerceEnrollment(enrollment))) {
+      isActiveCommerceEnrollment(enrollment) &&
+      /^[a-f0-9]{64}$/.test(enrollment.enrollmentId));
+    if (!eligible.length || eligible.length > 20) {
       throw new Error("CERTIFICATE_ENROLLMENT_REQUIRED");
     }
+    const entitlementRefs = eligible.map(row =>
+      this.firestore.collection("commerceEnrollments").doc(row.enrollmentId));
+    const enrollmentStillActive = (docs: Array<{
+      exists: boolean; data(): Record<string, unknown> | undefined;
+    }>) => docs.some(snapshot => {
+      const record = snapshot.data() as import("@/lib/commerce/enrollment").CommerceEnrollmentRecord | undefined;
+      return snapshot.exists && Boolean(record) && record?.learnerId === learnerId &&
+        record?.tenantId === offering.tenantId && record?.programId === offering.programId &&
+        record?.offeringId === offeringId && isActiveCommerceEnrollment(record);
+    });
     // Email control is verified independently; academic legal name was frozen
     // during the responsible coach's completion/identity attestation.
     const learner = await firebaseAdminAuth.getUser(learnerId);
@@ -212,6 +248,7 @@ export class CertificateService {
     // Fail early on missing public verification origin or private artifact store.
     certificateBaseUrl();
     this.storage();
+    const assessment = await verifyCertificateAssessment(this.firestore, offering, learnerId);
     const completionKey = completionId(offering.tenantId, offeringId, learnerId);
     const ref = this.completion(completionKey);
     const now = clock();
@@ -224,13 +261,25 @@ export class CertificateService {
           throw new Error("CERTIFICATE_INSTITUTIONAL_SIGNING_NOT_AUTHORIZED");
         }
       }
-      const approved = await tx.get(ref);
+      const [approved, ...entitlementSnapshots] = await Promise.all([
+        tx.get(ref), ...entitlementRefs.map(eligibleRef => tx.get(eligibleRef)),
+      ]);
+      if (!enrollmentStillActive(entitlementSnapshots)) {
+        throw new Error("CERTIFICATE_ENROLLMENT_REQUIRED");
+      }
       if (!approved.exists) throw new Error("CERTIFICATE_COMPLETION_REQUIRED");
       const current = approved.data() as CompletionAttestation;
       if (current.tenantId !== offering.tenantId ||
           current.offeringId !== offeringId || current.learnerId !== learnerId ||
           !current.learnerLegalName || !current.identityAttestedBy) {
         throw new Error("CERTIFICATE_COMPLETION_CONFLICT");
+      }
+      if (current.assessmentVersionId !== assessment.policyVersionId ||
+          current.assessmentPolicyDigest !== assessment.policyDigest ||
+          current.assessmentMinimumScore !== assessment.minimumScore ||
+          JSON.stringify(current.evidenceEventIds) !==
+            JSON.stringify(assessment.evidenceSubmissionIds)) {
+        throw new Error("CERTIFICATE_ASSESSMENT_NOT_VERIFIED");
       }
       if (current.certificateId) {
         const previous = await tx.get(this.certificate(current.certificateId));
@@ -278,7 +327,12 @@ export class CertificateService {
         const signatureEvidenceSha256 = createHash("sha256").update(evidenceBytes).digest("hex");
         return this.firestore.runTransaction(async tx => {
           const certificateRef = this.certificate(record.certificateId);
-          const current = await tx.get(certificateRef);
+          const [current, ...entitlementSnapshots] = await Promise.all([
+            tx.get(certificateRef), ...entitlementRefs.map(eligibleRef => tx.get(eligibleRef)),
+          ]);
+          if (!enrollmentStillActive(entitlementSnapshots)) {
+            throw new Error("CERTIFICATE_ENROLLMENT_REQUIRED");
+          }
           if (!current.exists) throw new Error("CERTIFICATE_NOT_FOUND");
           const latest = current.data() as AcademicCertificate;
           if (latest.status !== "preparing" || latest.provider !== "stirling") {

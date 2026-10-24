@@ -1,0 +1,227 @@
+{
+  "actions": {
+    "instructor:acknowledge-hand": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "instructor:end-for-everyone": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "instructor:moderate-class": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "instructor:open-class": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "instructor:share-screen": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "instructor:teaching-controls": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "learner:bottom-controls": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "learner:device-preflight": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "learner:find-schedule": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "learner:join-live-media": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "learner:raise-hand": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "learner:reconnect": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "operations:attendance-ledger": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "operations:incident-rollback": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "operations:refund-revoke-live": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "tenant-admin:admit-learner": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "tenant-admin:assign-coach": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "tenant-admin:change-schedule": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "tenant-admin:create-cohort": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    },
+    "tenant-admin:schedule-live": {
+      "implementation": "missing_proof",
+      "journey": "missing_proof",
+      "production": "missing_proof",
+      "ui": "missing_proof"
+    }
+  },
+  "axis_pass_counts": {
+    "implementation": 0,
+    "journey": 0,
+    "production": 0,
+    "ui": 0
+  },
+  "blockers": [
+    "action:tenant-admin:create-cohort:implementation:missing_proof",
+    "action:tenant-admin:create-cohort:ui:missing_proof",
+    "action:tenant-admin:create-cohort:journey:missing_proof",
+    "action:tenant-admin:create-cohort:production:missing_proof",
+    "action:tenant-admin:assign-coach:implementation:missing_proof",
+    "action:tenant-admin:assign-coach:ui:missing_proof",
+    "action:tenant-admin:assign-coach:journey:missing_proof",
+    "action:tenant-admin:assign-coach:production:missing_proof",
+    "action:tenant-admin:schedule-live:implementation:missing_proof",
+    "action:tenant-admin:schedule-live:ui:missing_proof",
+    "action:tenant-admin:schedule-live:journey:missing_proof",
+    "action:tenant-admin:schedule-live:production:missing_proof",
+    "action:tenant-admin:admit-learner:implementation:missing_proof",
+    "action:tenant-admin:admit-learner:ui:missing_proof",
+    "action:tenant-admin:admit-learner:journey:missing_proof",
+    "action:tenant-admin:admit-learner:production:missing_proof",
+    "action:tenant-admin:change-schedule:implementation:missing_proof",
+    "action:tenant-admin:change-schedule:ui:missing_proof",
+    "action:tenant-admin:change-schedule:journey:missing_proof",
+    "action:tenant-admin:change-schedule:production:missing_proof",
+    "action:instructor:open-class:implementation:missing_proof",
+    "action:instructor:open-class:ui:missing_proof",
+    "action:instructor:open-class:journey:missing_proof",
+    "action:instructor:open-class:production:missing_proof",
+    "action:instructor:share-screen:implementation:missing_proof",
+    "action:instructor:share-screen:ui:missing_proof",
+    "action:instructor:share-screen:journey:missing_proof",
+    "action:instructor:share-screen:production:missing_proof",
+    "action:instructor:moderate-class:implementation:missing_proof",
+    "action:instructor:moderate-class:ui:missing_proof",
+    "action:instructor:moderate-class:journey:missing_proof",
+    "action:instructor:moderate-class:production:missing_proof",
+    "action:instructor:teaching-controls:implementation:missing_proof",
+    "action:instructor:teaching-controls:ui:missing_proof",
+    "action:instructor:teaching-controls:journey:missing_proof",
+    "action:instructor:teaching-controls:production:missing_proof",
+    "action:instructor:end-for-everyone:implementation:missing_proof",
+    "action:instructor:end-for-everyone:ui:missing_proof",
+    "action:instructor:end-for-everyone:journey:missing_proof",
+    "action:instructor:end-for-everyone:production:missing_proof",
+    "action:learner:find-schedule:implementation:missing_proof",
+    "action:learner:find-schedule:ui:missing_proof",
+    "action:learner:find-schedule:journey:missing_proof",
+    "action:learner:find-schedule:production:missing_proof",
+    "action:learner:device-preflight:implementation:missing_proof",
+    "action:learner:device-preflight:ui:missing_proof",
+    "action:learner:device-preflight:journey:missing_proof",
+    "action:learner:device-preflight:production:missing_proof",
+    "action:learner:join-live-media:implementation:missing_proof",
+    "action:learner:join-live-media:ui:missing_proof",
+    "action:learner:join-live-media:journey:missing_proof",
+    "action:learner:join-live-media:production:missing_proof",
+    "action:learner:bottom-controls:implementation:missing_proof",
+    "action:learner:bottom-controls:ui:missing_proof",
+    "action:learner:bottom-controls:journey:missing_proof",
+    "action:learner:bottom-controls:production:missing_proof",
+    "action:learner:reconnect:implementation:missing_proof",
+    "action:learner:reconnect:ui:missing_proof",
+    "action:learner:reconnect:journey:missing_proof",
+    "action:learner:reconnect:production:missing_proof",
+    "action:operations:refund-revoke-live:implementation:missing_proof",
+    "action:operations:refund-revoke-live:ui:missing_proof",
+    "action:operations:refund-revoke-live:journey:missing_proof",
+    "action:operations:refund-revoke-live:production:missing_proof",
+    "action:operations:attendance-ledger:implementation:missing_proof",
+    "action:operations:attendance-ledger:ui:missing_proof",
+    "action:operations:attendance-ledger:journey:missing_proof",
+    "action:operations:attendance-ledger:production:missing_proof",
+    "action:operations:incident-rollback:implementation:missing_proof",
+    "action:operations:incident-rollback:ui:missing_proof",
+    "action:operations:incident-rollback:journey:missing_proof",
+    "action:operations:incident-rollback:production:missing_proof",
+    "action:learner:raise-hand:implementation:missing_proof",
+    "action:learner:raise-hand:ui:missing_proof",
+    "action:learner:raise-hand:journey:missing_proof",
+    "action:learner:raise-hand:production:missing_proof",
+    "action:instructor:acknowledge-hand:implementation:missing_proof",
+    "action:instructor:acknowledge-hand:ui:missing_proof",
+    "action:instructor:acknowledge-hand:journey:missing_proof",
+    "action:instructor:acknowledge-hand:production:missing_proof",
+    "scope:missing_independent_coverage_approval",
+    "deployment:missing_independently_observed_revision"
+  ],
+  "capability": "Seres de Excelencia / enterprise live classroom",
+  "decision": "NO_GO",
+  "product": "LUMA",
+  "production_revision": null,
+  "required_actions": 20,
+  "schema_version": "graph-harness.acceptance-result.v1",
+  "source_revision": "3fe24da039ec379967ab8ddd338dbaedf5ad0e38",
+  "workflows": {
+    "instructor-journey": "covered",
+    "learner-journey": "covered",
+    "operations-journey": "covered",
+    "tenant-admin-journey": "covered"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "recordedOn": "2026-10-20",
+  "releaseDecision": "BLOCKED_EXTERNAL_REVIEW_AND_PROTECTED_KEY_CUSTODY",
+  "sourceDigestAfterLocalPatch": "59e95d178b8e844a0de1def51e161f1566546a4ca521193acbb7f707312cd030",
+  "scope": "PR71 independent human fallback, Ed25519 signed reviewer provenance, hydration rendered UI QA",
+  "executedChecks": {
+    "npm run lint": "PASS",
+    "npm run typecheck": "PASS",
+    "npm run test:run": "407 PASS; 85 SKIP requiring emulators",
+    "graph_harness validate": "712 event-chain receipts VALID",
+    "playwright learner-hydration-stability.spec.ts --repeat-each=22 --workers=3": "132 PASS; 0 flaky; desktop/mobile, 3 timezones",
+    "live gh api pagination smoke": "9 authentic PR review rows retrieved using explicit page numbers",
+    "Ed25519 regression": "Mutation of source/CI/Graph/reviewer identity/ID is rejected against fixed trusted key",
+    "GitHub human-review regression": "Self, stale SHA, untrusted reviewer, code contributor, dismissed/changes requested are rejected"
+  },
+  "previousRemoteQuality": {
+    "headSha": "3690c42af3fee4da79b955b1892130899fbf4734",
+    "runId": 39464149392,
+    "nineTechnicalJobs": "PASS",
+    "releaseReadiness": "FAIL_EXPECTED",
+    "deployment": "SKIPPED"
+  },
+  "criticalUnfinished": [
+    "Qualifying non-author, non-contributor independent review of the final source SHA is absent",
+    "GitHub repository protected allowlist, environment signing key and trusted public key are absent",
+    "Protected signing and source-attestation workflows are not installed on main",
+    "The newer final commit needs its own GitHub quality run",
+    "LiveKit customer acceptance and observed deployed SHA have not passed"
+  ],
+  "mergeAuthorized": false,
+  "productionDeployAuthorized": false,
+  "independentSignatureIssued": false,
+  "postSignatureReviewHardening": {
+    "provider": "GitHub signed reviewer identity via protected-main source-attestation",
+    "revalidation": "Re-read PR, original signed review ID, current reviewer status, contributors and event SHA from GitHub after cryptographic check",
+    "revocationEvents": [
+      "pull_request_review.submitted",
+      "pull_request_review.edited",
+      "pull_request_review.dismissed"
+    ],
+    "localSecurityTests": "30 PASS across signature/reviewer/bootstrap/readiness groups at first run",
+    "localCatalogStress": "60 PASS across Chromium desktop/mobile",
+    "remoteBrowserRun271": "FLAKY: 153 PASS; 22 SKIP; one mobile strict locator duplicate; remediation staged but not yet retested remotely",
+    "result": "SOURCE_CONTROL_FIXED_LOCALLY_RELEASE_STILL_BLOCKED",
+    "criticalHumanVeto": "Codex approval never overrides a current trusted human CHANGES_REQUESTED on the same source SHA",
+    "localSecurityRegression": "Protected issuance, current approval revocation and exact source tests PASS",
+    "newFullBrowserRun": "154 PASS; 22 SKIP; 0 FAILED / 0 FLAKY; full Chromium desktop/mobile suite",
+    "protectedReviewerVeto": "A trusted human CHANGES_REQUESTED on exact SHA vetoes both Codex and human approvals",
+    "liveReviewTests": "30 targeted passing tests across source signing, reviewer revocation and protected readiness",
+    "currentStatus": "CODE_QUALITY_PASS_RELEASE_EXTERNAL_ATTESTATION_BLOCKED"
+  }
+}

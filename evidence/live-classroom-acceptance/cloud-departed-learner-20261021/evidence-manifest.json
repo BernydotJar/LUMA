@@ -1,0 +1,22 @@
+{
+  "schema_version": "luma.livekit.departe_learner.manifest.v1",
+  "source_git_tree_sha": "2e8b1b3a25751bc088d3b7bcc6ec2c4ce50cb8f9",
+  "local_tested_source_sha": "58700ec8c8517cc9dd3a9b92b1eb26baeb725aba",
+  "github_code_commit_sha": "57d5a87967b116c0a6dfbeac7afbc06ee67ddf7f",
+  "provider_decision": "PROVIDER_CLOUD_PASS",
+  "product_decision": "NO_GO",
+  "files": {
+    "attempt1-browser-crash.json": "3705d9692ad6f9442609f0ad41e15bcd4bbdd94a9fa4397a47513c16b5c08b3f",
+    "cloud-provider-result.json": "e38b627bce7e0d6c1384eaf3c3c87d25d90d768bd2b322b5a948e33c66889acf",
+    "cloud-provider-verification.json": "e38b627bce7e0d6c1384eaf3c3c87d25d90d768bd2b322b5a948e33c66889acf",
+    "execution.log": "7adf8152f943411dbd7d59079a15cd06240ee3fbcb42d8fb99bc9673d98a6741",
+    "executive-summary.md": "655b44d0251855693575106fa888ea36de1b6248cb79ad6671bdf39897e942d2",
+    "graph-validate.json": "87f67693de9b45a5054931083b6c504587a9001169e3764c0eabc9ca2abbc393",
+    "graph-validate.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "product-acceptance.json": "7300c9a3ac12f1c784d8184feed9fe1386862622e0da3e0ab20bceade82774af",
+    "product-acceptance.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "qa-matrix.json": "7dd25daa7e256c59f5cfc095f5469f32312a03500847867eca8d30b22517e0b8",
+    "release-decision.md": "cfb4d3aadbc725a3898c8f45daacbfcc1582b9124558ba3e844c606f853065f5",
+    "status.json": "af9df640364946150ae63172fbfe6f7be5eef4a1e7adf11d22450741b384e81b"
+  }
+}

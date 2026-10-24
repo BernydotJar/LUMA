@@ -1,0 +1,2093 @@
+{
+  "meta": {
+    "time": "2026-10-11T00:06:31.941Z",
+    "commit": "fixer-working-tree-based-on-7d1715c",
+    "baseUrl": "http://127.0.0.1:3140",
+    "browser": "Chromium Playwright",
+    "mode": "localhost QA, guest, isolated contexts, no credentials",
+    "network": "native/no throttle",
+    "webVitals": "lab only, PerformanceObserver not field p75",
+    "browserVersion": "153.0.8010.12"
+  },
+  "geometry": [
+    {
+      "id": "320x568-se",
+      "firstScreen": false,
+      "initial": {
+        "url": "/learn",
+        "theme": "se",
+        "action": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "width": 0,
+          "height": 0
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": false,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 0,
+        "bodyHeight": 568
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "se",
+        "action": {
+          "top": 194.921875,
+          "bottom": 243.921875,
+          "left": 52,
+          "right": 268,
+          "width": 216,
+          "height": 49
+        },
+        "nav": {
+          "top": 486,
+          "bottom": 558,
+          "left": 10,
+          "right": 310,
+          "width": 300,
+          "height": 72
+        },
+        "clearance": 242.078125,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 26,
+        "bodyHeight": 3814
+      },
+      "afterReload": {
+        "theme": "se",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "320x568-light",
+      "firstScreen": false,
+      "initial": {
+        "url": "/learn",
+        "theme": "light",
+        "action": {
+          "top": 657.921875,
+          "bottom": 706.921875,
+          "left": 52,
+          "right": 268,
+          "width": 216,
+          "height": 49
+        },
+        "nav": {
+          "top": 486,
+          "bottom": 558,
+          "left": 10,
+          "right": 310,
+          "width": 300,
+          "height": 72
+        },
+        "clearance": -220.921875,
+        "hitCenter": false,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 25,
+        "bodyHeight": 3764
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "light",
+        "action": {
+          "top": 194.921875,
+          "bottom": 243.921875,
+          "left": 52,
+          "right": 268,
+          "width": 216,
+          "height": 49
+        },
+        "nav": {
+          "top": 486,
+          "bottom": 558,
+          "left": 10,
+          "right": 310,
+          "width": 300,
+          "height": 72
+        },
+        "clearance": 242.078125,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 26,
+        "bodyHeight": 3814
+      },
+      "afterReload": {
+        "theme": "light",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "320x568-dark",
+      "firstScreen": false,
+      "initial": {
+        "url": "/learn",
+        "theme": "dark",
+        "action": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "width": 0,
+          "height": 0
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": false,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 0,
+        "bodyHeight": 568
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "dark",
+        "action": {
+          "top": 194.921875,
+          "bottom": 243.921875,
+          "left": 52,
+          "right": 268,
+          "width": 216,
+          "height": 49
+        },
+        "nav": {
+          "top": 486,
+          "bottom": 558,
+          "left": 10,
+          "right": 310,
+          "width": 300,
+          "height": 72
+        },
+        "clearance": 242.078125,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 26,
+        "bodyHeight": 3814
+      },
+      "afterReload": {
+        "theme": "dark",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "360x740-se",
+      "firstScreen": false,
+      "initial": {
+        "url": "/learn",
+        "theme": "se",
+        "action": {
+          "top": 551.984375,
+          "bottom": 600.984375,
+          "left": 52,
+          "right": 308,
+          "width": 256,
+          "height": 49
+        },
+        "nav": {
+          "top": 658,
+          "bottom": 730,
+          "left": 10,
+          "right": 350,
+          "width": 340,
+          "height": 72
+        },
+        "clearance": 57.015625,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 360,
+          "height": 740
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 25,
+        "bodyHeight": 3529
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "se",
+        "action": {
+          "top": 280.984375,
+          "bottom": 329.984375,
+          "left": 52,
+          "right": 308,
+          "width": 256,
+          "height": 49
+        },
+        "nav": {
+          "top": 658,
+          "bottom": 730,
+          "left": 10,
+          "right": 350,
+          "width": 340,
+          "height": 72
+        },
+        "clearance": 328.015625,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 360,
+          "height": 740
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 26,
+        "bodyHeight": 3557
+      },
+      "afterReload": {
+        "theme": "se",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "360x740-light",
+      "firstScreen": false,
+      "initial": {
+        "url": "/learn",
+        "theme": "light",
+        "action": {
+          "top": 551.984375,
+          "bottom": 600.984375,
+          "left": 52,
+          "right": 308,
+          "width": 256,
+          "height": 49
+        },
+        "nav": {
+          "top": 658,
+          "bottom": 730,
+          "left": 10,
+          "right": 350,
+          "width": 340,
+          "height": 72
+        },
+        "clearance": 57.015625,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 360,
+          "height": 740
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 25,
+        "bodyHeight": 3529
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "light",
+        "action": {
+          "top": 280.984375,
+          "bottom": 329.984375,
+          "left": 52,
+          "right": 308,
+          "width": 256,
+          "height": 49
+        },
+        "nav": {
+          "top": 658,
+          "bottom": 730,
+          "left": 10,
+          "right": 350,
+          "width": 340,
+          "height": 72
+        },
+        "clearance": 328.015625,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 360,
+          "height": 740
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 26,
+        "bodyHeight": 3557
+      },
+      "afterReload": {
+        "theme": "light",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "360x740-dark",
+      "firstScreen": false,
+      "initial": {
+        "url": "/learn",
+        "theme": "dark",
+        "action": {
+          "top": 551.984375,
+          "bottom": 600.984375,
+          "left": 52,
+          "right": 308,
+          "width": 256,
+          "height": 49
+        },
+        "nav": {
+          "top": 658,
+          "bottom": 730,
+          "left": 10,
+          "right": 350,
+          "width": 340,
+          "height": 72
+        },
+        "clearance": 57.015625,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 360,
+          "height": 740
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 25,
+        "bodyHeight": 3529
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "dark",
+        "action": {
+          "top": 280.984375,
+          "bottom": 329.984375,
+          "left": 52,
+          "right": 308,
+          "width": 256,
+          "height": 49
+        },
+        "nav": {
+          "top": 658,
+          "bottom": 730,
+          "left": 10,
+          "right": 350,
+          "width": 340,
+          "height": 72
+        },
+        "clearance": 328.015625,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 360,
+          "height": 740
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 26,
+        "bodyHeight": 3557
+      },
+      "afterReload": {
+        "theme": "dark",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "390x844-se",
+      "firstScreen": true,
+      "initial": {
+        "url": "/learn",
+        "theme": "se",
+        "action": {
+          "top": 560.765625,
+          "bottom": 609.765625,
+          "left": 52,
+          "right": 338,
+          "width": 286,
+          "height": 49
+        },
+        "nav": {
+          "top": 762,
+          "bottom": 834,
+          "left": 10,
+          "right": 380,
+          "width": 370,
+          "height": 72
+        },
+        "clearance": 152.234375,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 25,
+        "bodyHeight": 3434
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "se",
+        "action": {
+          "top": 588.765625,
+          "bottom": 637.765625,
+          "left": 52,
+          "right": 338,
+          "width": 286,
+          "height": 49
+        },
+        "nav": {
+          "top": 762,
+          "bottom": 834,
+          "left": 10,
+          "right": 380,
+          "width": 370,
+          "height": 72
+        },
+        "clearance": 124.234375,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 26,
+        "bodyHeight": 3462
+      },
+      "afterReload": {
+        "theme": "se",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "390x844-light",
+      "firstScreen": true,
+      "initial": {
+        "url": "/learn",
+        "theme": "light",
+        "action": {
+          "top": 560.765625,
+          "bottom": 609.765625,
+          "left": 52,
+          "right": 338,
+          "width": 286,
+          "height": 49
+        },
+        "nav": {
+          "top": 762,
+          "bottom": 834,
+          "left": 10,
+          "right": 380,
+          "width": 370,
+          "height": 72
+        },
+        "clearance": 152.234375,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 25,
+        "bodyHeight": 3434
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "light",
+        "action": {
+          "top": 588.765625,
+          "bottom": 637.765625,
+          "left": 52,
+          "right": 338,
+          "width": 286,
+          "height": 49
+        },
+        "nav": {
+          "top": 762,
+          "bottom": 834,
+          "left": 10,
+          "right": 380,
+          "width": 370,
+          "height": 72
+        },
+        "clearance": 124.234375,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 26,
+        "bodyHeight": 3462
+      },
+      "afterReload": {
+        "theme": "light",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "390x844-dark",
+      "firstScreen": true,
+      "initial": {
+        "url": "/learn",
+        "theme": "dark",
+        "action": {
+          "top": 560.765625,
+          "bottom": 609.765625,
+          "left": 52,
+          "right": 338,
+          "width": 286,
+          "height": 49
+        },
+        "nav": {
+          "top": 762,
+          "bottom": 834,
+          "left": 10,
+          "right": 380,
+          "width": 370,
+          "height": 72
+        },
+        "clearance": 152.234375,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 25,
+        "bodyHeight": 3434
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "dark",
+        "action": {
+          "top": 588.765625,
+          "bottom": 637.765625,
+          "left": 52,
+          "right": 338,
+          "width": 286,
+          "height": 49
+        },
+        "nav": {
+          "top": 762,
+          "bottom": 834,
+          "left": 10,
+          "right": 380,
+          "width": 370,
+          "height": 72
+        },
+        "clearance": 124.234375,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 26,
+        "bodyHeight": 3462
+      },
+      "afterReload": {
+        "theme": "dark",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "428x926-se",
+      "firstScreen": true,
+      "initial": {
+        "url": "/learn",
+        "theme": "se",
+        "action": {
+          "top": 555.171875,
+          "bottom": 604.171875,
+          "left": 52,
+          "right": 376,
+          "width": 324,
+          "height": 49
+        },
+        "nav": {
+          "top": 844,
+          "bottom": 916,
+          "left": 10,
+          "right": 418,
+          "width": 408,
+          "height": 72
+        },
+        "clearance": 239.828125,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 428,
+          "height": 926
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 25,
+        "bodyHeight": 3371
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "se",
+        "action": {
+          "top": 583.171875,
+          "bottom": 632.171875,
+          "left": 52,
+          "right": 376,
+          "width": 324,
+          "height": 49
+        },
+        "nav": {
+          "top": 844,
+          "bottom": 916,
+          "left": 10,
+          "right": 418,
+          "width": 408,
+          "height": 72
+        },
+        "clearance": 211.828125,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 428,
+          "height": 926
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 26,
+        "bodyHeight": 3399
+      },
+      "afterReload": {
+        "theme": "se",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "428x926-light",
+      "firstScreen": true,
+      "initial": {
+        "url": "/learn",
+        "theme": "light",
+        "action": {
+          "top": 555.171875,
+          "bottom": 604.171875,
+          "left": 52,
+          "right": 376,
+          "width": 324,
+          "height": 49
+        },
+        "nav": {
+          "top": 844,
+          "bottom": 916,
+          "left": 10,
+          "right": 418,
+          "width": 408,
+          "height": 72
+        },
+        "clearance": 239.828125,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 428,
+          "height": 926
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 25,
+        "bodyHeight": 3371
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "light",
+        "action": {
+          "top": 583.171875,
+          "bottom": 632.171875,
+          "left": 52,
+          "right": 376,
+          "width": 324,
+          "height": 49
+        },
+        "nav": {
+          "top": 844,
+          "bottom": 916,
+          "left": 10,
+          "right": 418,
+          "width": 408,
+          "height": 72
+        },
+        "clearance": 211.828125,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 428,
+          "height": 926
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 26,
+        "bodyHeight": 3399
+      },
+      "afterReload": {
+        "theme": "light",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "428x926-dark",
+      "firstScreen": true,
+      "initial": {
+        "url": "/learn",
+        "theme": "dark",
+        "action": {
+          "top": 555.171875,
+          "bottom": 604.171875,
+          "left": 52,
+          "right": 376,
+          "width": 324,
+          "height": 49
+        },
+        "nav": {
+          "top": 844,
+          "bottom": 916,
+          "left": 10,
+          "right": 418,
+          "width": 408,
+          "height": 72
+        },
+        "clearance": 239.828125,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 428,
+          "height": 926
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 25,
+        "bodyHeight": 3371
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "dark",
+        "action": {
+          "top": 583.171875,
+          "bottom": 632.171875,
+          "left": 52,
+          "right": 376,
+          "width": 324,
+          "height": 49
+        },
+        "nav": {
+          "top": 844,
+          "bottom": 916,
+          "left": 10,
+          "right": 418,
+          "width": 408,
+          "height": 72
+        },
+        "clearance": 211.828125,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 428,
+          "height": 926
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 26,
+        "bodyHeight": 3399
+      },
+      "afterReload": {
+        "theme": "dark",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "768x1024-se",
+      "firstScreen": false,
+      "initial": {
+        "url": "/learn",
+        "theme": "se",
+        "action": {
+          "top": 690.453125,
+          "bottom": 740.453125,
+          "left": 168,
+          "right": 683.28125,
+          "width": 515.28125,
+          "height": 50
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "smallTargets": [
+          {
+            "type": "button",
+            "width": 41,
+            "height": 41,
+            "text": "Enviar pregunta"
+          }
+        ],
+        "smallTargetCount": 1,
+        "interactiveCount": 24,
+        "bodyHeight": 3564
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "se",
+        "action": {
+          "top": 709.453125,
+          "bottom": 759.453125,
+          "left": 168,
+          "right": 683.28125,
+          "width": 515.28125,
+          "height": 50
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "smallTargets": [
+          {
+            "type": "button",
+            "width": 41,
+            "height": 41,
+            "text": "Enviar pregunta"
+          }
+        ],
+        "smallTargetCount": 1,
+        "interactiveCount": 25,
+        "bodyHeight": 3583
+      },
+      "afterReload": {
+        "theme": "se",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "768x1024-light",
+      "firstScreen": false,
+      "initial": {
+        "url": "/learn",
+        "theme": "light",
+        "action": {
+          "top": 690.453125,
+          "bottom": 740.453125,
+          "left": 168,
+          "right": 683.28125,
+          "width": 515.28125,
+          "height": 50
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "smallTargets": [
+          {
+            "type": "button",
+            "width": 41,
+            "height": 41,
+            "text": "Enviar pregunta"
+          }
+        ],
+        "smallTargetCount": 1,
+        "interactiveCount": 24,
+        "bodyHeight": 3564
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "light",
+        "action": {
+          "top": 709.453125,
+          "bottom": 759.453125,
+          "left": 168,
+          "right": 683.28125,
+          "width": 515.28125,
+          "height": 50
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "smallTargets": [
+          {
+            "type": "button",
+            "width": 41,
+            "height": 41,
+            "text": "Enviar pregunta"
+          }
+        ],
+        "smallTargetCount": 1,
+        "interactiveCount": 25,
+        "bodyHeight": 3583
+      },
+      "afterReload": {
+        "theme": "light",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "768x1024-dark",
+      "firstScreen": false,
+      "initial": {
+        "url": "/learn",
+        "theme": "dark",
+        "action": {
+          "top": 690.453125,
+          "bottom": 740.453125,
+          "left": 168,
+          "right": 683.28125,
+          "width": 515.28125,
+          "height": 50
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "smallTargets": [
+          {
+            "type": "button",
+            "width": 41,
+            "height": 41,
+            "text": "Enviar pregunta"
+          }
+        ],
+        "smallTargetCount": 1,
+        "interactiveCount": 24,
+        "bodyHeight": 3564
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "dark",
+        "action": {
+          "top": 709.453125,
+          "bottom": 759.453125,
+          "left": 168,
+          "right": 683.28125,
+          "width": 515.28125,
+          "height": 50
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "smallTargets": [
+          {
+            "type": "button",
+            "width": 41,
+            "height": 41,
+            "text": "Enviar pregunta"
+          }
+        ],
+        "smallTargetCount": 1,
+        "interactiveCount": 25,
+        "bodyHeight": 3583
+      },
+      "afterReload": {
+        "theme": "dark",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "1440x900-se",
+      "firstScreen": false,
+      "initial": {
+        "url": "/learn",
+        "theme": "se",
+        "action": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0,
+          "width": 0,
+          "height": 0
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": false,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "interactiveCount": 0,
+        "bodyHeight": 900
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "se",
+        "action": {
+          "top": 404.640625,
+          "bottom": 454.640625,
+          "left": 909.125,
+          "right": 1295.453125,
+          "width": 386.328125,
+          "height": 50
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "smallTargets": [
+          {
+            "type": "button",
+            "width": 41,
+            "height": 41,
+            "text": "Enviar pregunta"
+          }
+        ],
+        "smallTargetCount": 1,
+        "interactiveCount": 25,
+        "bodyHeight": 2685
+      },
+      "afterReload": {
+        "theme": "se",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "1440x900-light",
+      "firstScreen": false,
+      "initial": {
+        "url": "/learn",
+        "theme": "light",
+        "action": {
+          "top": 404.640625,
+          "bottom": 454.640625,
+          "left": 909.125,
+          "right": 1295.453125,
+          "width": 386.328125,
+          "height": 50
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "smallTargets": [
+          {
+            "type": "button",
+            "width": 41,
+            "height": 41,
+            "text": "Enviar pregunta"
+          }
+        ],
+        "smallTargetCount": 1,
+        "interactiveCount": 24,
+        "bodyHeight": 2685
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "light",
+        "action": {
+          "top": 404.640625,
+          "bottom": 454.640625,
+          "left": 909.125,
+          "right": 1295.453125,
+          "width": 386.328125,
+          "height": 50
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "smallTargets": [
+          {
+            "type": "button",
+            "width": 41,
+            "height": 41,
+            "text": "Enviar pregunta"
+          }
+        ],
+        "smallTargetCount": 1,
+        "interactiveCount": 25,
+        "bodyHeight": 2685
+      },
+      "afterReload": {
+        "theme": "light",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    },
+    {
+      "id": "1440x900-dark",
+      "firstScreen": false,
+      "initial": {
+        "url": "/learn",
+        "theme": "dark",
+        "action": {
+          "top": 404.640625,
+          "bottom": 454.640625,
+          "left": 909.125,
+          "right": 1295.453125,
+          "width": 386.328125,
+          "height": 50
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "smallTargets": [
+          {
+            "type": "button",
+            "width": 41,
+            "height": 41,
+            "text": "Enviar pregunta"
+          }
+        ],
+        "smallTargetCount": 1,
+        "interactiveCount": 24,
+        "bodyHeight": 2685
+      },
+      "stable": {
+        "url": "/learn",
+        "theme": "dark",
+        "action": {
+          "top": 404.640625,
+          "bottom": 454.640625,
+          "left": 909.125,
+          "right": 1295.453125,
+          "width": 386.328125,
+          "height": 50
+        },
+        "nav": null,
+        "clearance": null,
+        "hitCenter": true,
+        "ctaCount": 1,
+        "navCount": 1,
+        "journeySummaryCount": 1,
+        "pageOverflow": 0,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "smallTargets": [
+          {
+            "type": "button",
+            "width": 41,
+            "height": 41,
+            "text": "Enviar pregunta"
+          }
+        ],
+        "smallTargetCount": 1,
+        "interactiveCount": 25,
+        "bodyHeight": 2685
+      },
+      "afterReload": {
+        "theme": "dark",
+        "ctaCount": 1
+      },
+      "result": "PASS",
+      "fail": []
+    }
+  ],
+  "axe": [
+    {
+      "id": "/learn@se",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/learn@light",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/learn@dark",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/login@se",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/login@light",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/login@dark",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/onboarding@se",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/onboarding@light",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/onboarding@dark",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/learn/experiences@se",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/learn/experiences@light",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/learn/experiences@dark",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/learn/session/pas@se",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/learn/session/pas@light",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/learn/session/pas@dark",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/studio@se",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/studio@light",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    },
+    {
+      "id": "/studio@dark",
+      "status": 200,
+      "serious": 0,
+      "violations": []
+    }
+  ],
+  "probes": [
+    {
+      "method": "GET",
+      "url": "/api/learning/plan",
+      "status": 401,
+      "body": "{\"error\":\"authentication_required\"}"
+    },
+    {
+      "method": "PUT",
+      "url": "/api/learning/plan",
+      "status": 401,
+      "body": "{\"error\":\"authentication_required\"}"
+    },
+    {
+      "method": "POST",
+      "url": "/api/learning/events",
+      "status": 401,
+      "body": "{\"error\":\"authentication_required\"}"
+    },
+    {
+      "method": "GET",
+      "url": "/api/coach/learners",
+      "status": 401,
+      "body": "{\"error\":\"authentication_required\"}"
+    }
+  ],
+  "stress": [
+    {
+      "trial": 1,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 2,
+          "journey": 2
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": true
+    },
+    {
+      "trial": 2,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    },
+    {
+      "trial": 3,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    },
+    {
+      "trial": 4,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    },
+    {
+      "trial": 5,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    },
+    {
+      "trial": 6,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    },
+    {
+      "trial": 7,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    },
+    {
+      "trial": 8,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    },
+    {
+      "trial": 9,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    },
+    {
+      "trial": 10,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    },
+    {
+      "trial": 11,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    },
+    {
+      "trial": 12,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    },
+    {
+      "trial": 13,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    },
+    {
+      "trial": 14,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    },
+    {
+      "trial": 15,
+      "counts": [
+        {
+          "ms": 0,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 30,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 80,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 200,
+          "cta": 1,
+          "journey": 1
+        },
+        {
+          "ms": 500,
+          "cta": 1,
+          "journey": 1
+        }
+      ],
+      "bad": false
+    }
+  ],
+  "perf": [
+    {
+      "id": "390x844",
+      "iteration": 1,
+      "metrics": {
+        "vitals": {
+          "lcp": 120,
+          "cls": 0,
+          "entries": []
+        },
+        "domContentLoadedMs": 24,
+        "loadMs": 144.30000000447035,
+        "responseEndMs": 4.600000001490116,
+        "resourceCount": 42
+      }
+    },
+    {
+      "id": "390x844",
+      "iteration": 2,
+      "metrics": {
+        "vitals": {
+          "lcp": 168,
+          "cls": 0,
+          "entries": []
+        },
+        "domContentLoadedMs": 69.10000000149012,
+        "loadMs": 108.39999999850988,
+        "responseEndMs": 3.7000000029802322,
+        "resourceCount": 42
+      }
+    },
+    {
+      "id": "390x844",
+      "iteration": 3,
+      "metrics": {
+        "vitals": {
+          "lcp": 100,
+          "cls": 0,
+          "entries": []
+        },
+        "domContentLoadedMs": 18.600000001490116,
+        "loadMs": 125.10000000149012,
+        "responseEndMs": 3.600000001490116,
+        "resourceCount": 42
+      }
+    },
+    {
+      "id": "1440x900",
+      "iteration": 1,
+      "metrics": {
+        "vitals": {
+          "lcp": 316,
+          "cls": 0.0010460415059156379,
+          "entries": []
+        },
+        "domContentLoadedMs": 33.099999994039536,
+        "loadMs": 226.09999999403954,
+        "responseEndMs": 5.5,
+        "resourceCount": 46
+      }
+    },
+    {
+      "id": "1440x900",
+      "iteration": 2,
+      "metrics": {
+        "vitals": {
+          "lcp": 244,
+          "cls": 0.0010460415059156379,
+          "entries": []
+        },
+        "domContentLoadedMs": 19.80000000447035,
+        "loadMs": 171.39999999850988,
+        "responseEndMs": 4.100000001490116,
+        "resourceCount": 46
+      }
+    },
+    {
+      "id": "1440x900",
+      "iteration": 3,
+      "metrics": {
+        "vitals": {
+          "lcp": 220,
+          "cls": 0.0010460415059156379,
+          "entries": []
+        },
+        "domContentLoadedMs": 18.600000001490116,
+        "loadMs": 154.20000000298023,
+        "responseEndMs": 4.799999997019768,
+        "resourceCount": 46
+      }
+    }
+  ],
+  "failures": []
+}

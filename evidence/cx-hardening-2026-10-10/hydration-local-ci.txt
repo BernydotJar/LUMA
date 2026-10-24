@@ -1,0 +1,9 @@
+Source: LUMA draft PR #43, working tree on parent 4b68445 before updated commit.
+Next 16.3.8 production build: PASS, compiled with webpack.
+ESLint: PASS (including scoped file-local CommonJS QA imports).
+TypeScript: PASS.
+Hydration + mobile-CTA focused Playwright: 14 passed, 8 project skips.
+CI=true PLAYWRIGHT_PORT=3155 npx playwright test --workers 2 --reporter=line:
+  131 passed; 21 skipped; 0 failed and 0 flaky. 152 test cases, 2 Chromium projects.
+Full CI command started its own local production Next.js server; no main/production deploy.
+Remaining external approvals: remote exact-SHA CI, real signed-in browser staging, manual WCAG, mobile lab LCP threshold.

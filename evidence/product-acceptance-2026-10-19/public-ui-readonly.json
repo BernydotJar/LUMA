@@ -1,0 +1,704 @@
+{
+  "origin": "https://luma.lch-app.cloud",
+  "checkedAt": "2026-10-20T15:26:08.879Z",
+  "mode": "UNAUTHENTICATED READ_ONLY",
+  "routes": [
+    {
+      "path": "/",
+      "httpStatus": 200,
+      "browserUrl": "https://luma.lch-app.cloud/learn",
+      "title": "LUMA · Inteligencia de Aprendizaje",
+      "headings": [
+        "Mi aprendizaje",
+        "Aprender se nota en lo que haces.",
+        "Detecta un P.A.S. en una situación real",
+        "Tu avance cobra forma con cada práctica.",
+        "Una mirada a tu recorrido.",
+        "Para seguir explorando.",
+        "El camino también es tuyo.",
+        "Cuando surge una pregunta, tienes dónde llevarla.",
+        "Pregunta a LUMA"
+      ],
+      "actions": [
+        {
+          "kind": "A",
+          "label": "LUMA para Seres de Excelencia, inicio",
+          "href": "/",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "Cambiar tema. Tema actual: Seres de Excelencia",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Acceder",
+          "href": "/login",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Accede para personalizar tu experiencia",
+          "href": "/login",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Elige lo que quieres desarrollar",
+          "href": "/onboarding",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Empezar práctica · 12 min",
+          "href": "/learn/session/pas",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "¿Por qué esta práctica?",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Explora tu programaExperiencias y prácticas",
+          "href": "/learn/experiences",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Consulta tu rutaObjetivo y próximos pasos",
+          "href": "/learn#journey",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Pregunta a LUMAOrientación sobre el material",
+          "href": "/learn#luma",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Iniciar práctica",
+          "href": "/learn/session/pas",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Ver todas",
+          "href": "/learn/experiences",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Abrir práctica",
+          "href": "/learn/experience/congruencia-tres-canales",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Abrir práctica",
+          "href": "/learn/experience/calibracion-observar-antes-de-interpretar",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Abrir práctica",
+          "href": "/learn/experience/niveles-logicos-donde-intervenir",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Ver programa",
+          "href": "/learn/experiences",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Definir mi objetivo",
+          "href": "/onboarding",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "Ayúdame a identificar un P.A.S.",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "¿Por qué me recomiendas esta práctica?",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "Dame un ejemplo de niveles lógicos",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "Enviar pregunta",
+          "disabled": true
+        },
+        {
+          "kind": "A",
+          "label": "Mis certificados",
+          "href": "/learn/certificates",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Hoy",
+          "href": "/learn",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Ruta",
+          "href": "/learn#journey",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Programa",
+          "href": "/learn/experiences",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "LUMA",
+          "href": "/learn#luma",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Certificados",
+          "href": "/learn/certificates",
+          "disabled": false
+        }
+      ],
+      "formCount": 1,
+      "overflow": 0
+    },
+    {
+      "path": "/learn",
+      "httpStatus": 200,
+      "browserUrl": "https://luma.lch-app.cloud/learn",
+      "title": "LUMA · Inteligencia de Aprendizaje",
+      "headings": [
+        "Mi aprendizaje",
+        "Aprender se nota en lo que haces.",
+        "Detecta un P.A.S. en una situación real",
+        "Tu avance cobra forma con cada práctica.",
+        "Una mirada a tu recorrido.",
+        "Para seguir explorando.",
+        "El camino también es tuyo.",
+        "Cuando surge una pregunta, tienes dónde llevarla.",
+        "Pregunta a LUMA"
+      ],
+      "actions": [
+        {
+          "kind": "A",
+          "label": "LUMA para Seres de Excelencia, inicio",
+          "href": "/",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "Cambiar tema. Tema actual: Seres de Excelencia",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Acceder",
+          "href": "/login",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Accede para personalizar tu experiencia",
+          "href": "/login",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Elige lo que quieres desarrollar",
+          "href": "/onboarding",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Empezar práctica · 12 min",
+          "href": "/learn/session/pas",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "¿Por qué esta práctica?",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Explora tu programaExperiencias y prácticas",
+          "href": "/learn/experiences",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Consulta tu rutaObjetivo y próximos pasos",
+          "href": "/learn#journey",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Pregunta a LUMAOrientación sobre el material",
+          "href": "/learn#luma",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Iniciar práctica",
+          "href": "/learn/session/pas",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Ver todas",
+          "href": "/learn/experiences",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Abrir práctica",
+          "href": "/learn/experience/congruencia-tres-canales",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Abrir práctica",
+          "href": "/learn/experience/calibracion-observar-antes-de-interpretar",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Abrir práctica",
+          "href": "/learn/experience/niveles-logicos-donde-intervenir",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Ver programa",
+          "href": "/learn/experiences",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Definir mi objetivo",
+          "href": "/onboarding",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "Ayúdame a identificar un P.A.S.",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "¿Por qué me recomiendas esta práctica?",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "Dame un ejemplo de niveles lógicos",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "Enviar pregunta",
+          "disabled": true
+        },
+        {
+          "kind": "A",
+          "label": "Mis certificados",
+          "href": "/learn/certificates",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Hoy",
+          "href": "/learn",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Ruta",
+          "href": "/learn#journey",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Programa",
+          "href": "/learn/experiences",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "LUMA",
+          "href": "/learn#luma",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Certificados",
+          "href": "/learn/certificates",
+          "disabled": false
+        }
+      ],
+      "formCount": 1,
+      "overflow": 0
+    },
+    {
+      "path": "/studio",
+      "httpStatus": 200,
+      "browserUrl": "https://luma.lch-app.cloud/studio",
+      "title": "Estudio del entrenador · LUMA",
+      "headings": [
+        "Estudio del entrenador",
+        "Accede para consultar a tus participantes."
+      ],
+      "actions": [
+        {
+          "kind": "A",
+          "label": "LUMA para Seres de Excelencia, inicio",
+          "href": "/",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "Cambiar tema. Tema actual: Seres de Excelencia",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Acceder",
+          "href": "/login",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Revisar experiencias",
+          "href": "/studio/class-intelligence",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Iniciar sesión",
+          "href": "/login",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Estudio del entrenador",
+          "href": "/studio",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Objetivos de aprendizaje",
+          "href": "/studio/class-intelligence",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Certificaciones",
+          "href": "/studio/certificates",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Mi experiencia",
+          "href": "/experience",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Programas y clases",
+          "href": "/studio/programs",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Matrículas",
+          "href": "/studio/enrollments",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Inteligencia de contenido",
+          "href": "/library",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Actualizaciones de contenido",
+          "href": "/studio/reflections",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Vista participante",
+          "href": "/learn",
+          "disabled": false
+        }
+      ],
+      "formCount": 0,
+      "overflow": 0
+    },
+    {
+      "path": "/studio/programs",
+      "httpStatus": 200,
+      "browserUrl": "https://luma.lch-app.cloud/studio/programs",
+      "title": "Programas y clases | LUMA · LUMA",
+      "headings": [
+        "Programas y clases",
+        "De la planificación a una experiencia en vivo."
+      ],
+      "actions": [
+        {
+          "kind": "A",
+          "label": "LUMA para Seres de Excelencia, inicio",
+          "href": "/",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "Cambiar tema. Tema actual: Seres de Excelencia",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Acceder",
+          "href": "/login",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Estudio del entrenador",
+          "href": "/studio",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Objetivos de aprendizaje",
+          "href": "/studio/class-intelligence",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Certificaciones",
+          "href": "/studio/certificates",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Mi experiencia",
+          "href": "/experience",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Programas y clases",
+          "href": "/studio/programs",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Matrículas",
+          "href": "/studio/enrollments",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Inteligencia de contenido",
+          "href": "/library",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Actualizaciones de contenido",
+          "href": "/studio/reflections",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Vista participante",
+          "href": "/learn",
+          "disabled": false
+        }
+      ],
+      "formCount": 0,
+      "overflow": 0
+    },
+    {
+      "path": "/studio/enrollments",
+      "httpStatus": 200,
+      "browserUrl": "https://luma.lch-app.cloud/studio/enrollments",
+      "title": "Matrículas institucionales | LUMA · LUMA",
+      "headings": [
+        "Matrículas institucionales",
+        "Gestiona la admisión con identidad, vigencia y evidencia."
+      ],
+      "actions": [
+        {
+          "kind": "A",
+          "label": "LUMA para Seres de Excelencia, inicio",
+          "href": "/",
+          "disabled": false
+        },
+        {
+          "kind": "BUTTON",
+          "label": "Cambiar tema. Tema actual: Seres de Excelencia",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Acceder",
+          "href": "/login",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Estudio del entrenador",
+          "href": "/studio",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Objetivos de aprendizaje",
+          "href": "/studio/class-intelligence",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Certificaciones",
+          "href": "/studio/certificates",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Mi experiencia",
+          "href": "/experience",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Programas y clases",
+          "href": "/studio/programs",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Matrículas",
+          "href": "/studio/enrollments",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Inteligencia de contenido",
+          "href": "/library",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Actualizaciones de contenido",
+          "href": "/studio/reflections",
+          "disabled": false
+        },
+        {
+          "kind": "A",
+          "label": "Vista participante",
+          "href": "/learn",
+          "disabled": false
+        }
+      ],
+      "formCount": 0,
+      "overflow": 0
+    },
+    {
+      "path": "/academia/solicitud",
+      "httpStatus": 404,
+      "browserUrl": "https://luma.lch-app.cloud/academia/solicitud",
+      "title": "LUMA · Inteligencia de Aprendizaje",
+      "headings": [
+        "Tu ruta continúa desde aquí."
+      ],
+      "actions": [
+        {
+          "kind": "A",
+          "label": "Volver a mi experiencia",
+          "href": "/learn",
+          "disabled": false
+        }
+      ],
+      "formCount": 0,
+      "overflow": 0
+    },
+    {
+      "path": "/plataforma/solicitudes",
+      "httpStatus": 404,
+      "browserUrl": "https://luma.lch-app.cloud/plataforma/solicitudes",
+      "title": "LUMA · Inteligencia de Aprendizaje",
+      "headings": [
+        "Tu ruta continúa desde aquí."
+      ],
+      "actions": [
+        {
+          "kind": "A",
+          "label": "Volver a mi experiencia",
+          "href": "/learn",
+          "disabled": false
+        }
+      ],
+      "formCount": 0,
+      "overflow": 0
+    },
+    {
+      "path": "/academia/primer-curso",
+      "httpStatus": 404,
+      "browserUrl": "https://luma.lch-app.cloud/academia/primer-curso",
+      "title": "LUMA · Inteligencia de Aprendizaje",
+      "headings": [
+        "Tu ruta continúa desde aquí."
+      ],
+      "actions": [
+        {
+          "kind": "A",
+          "label": "Volver a mi experiencia",
+          "href": "/learn",
+          "disabled": false
+        }
+      ],
+      "formCount": 0,
+      "overflow": 0
+    },
+    {
+      "path": "/api/academic/offerings/invalid/curriculum-draft",
+      "httpStatus": 404,
+      "browserUrl": "https://luma.lch-app.cloud/api/academic/offerings/invalid/curriculum-draft",
+      "title": "LUMA · Inteligencia de Aprendizaje",
+      "headings": [
+        "Tu ruta continúa desde aquí."
+      ],
+      "actions": [
+        {
+          "kind": "A",
+          "label": "Volver a mi experiencia",
+          "href": "/learn",
+          "disabled": false
+        }
+      ],
+      "formCount": 0,
+      "overflow": 0
+    }
+  ]
+}

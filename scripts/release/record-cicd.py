@@ -15,6 +15,7 @@ HARNESS = Path(os.environ.get('GRAPH_HARNESS_ROOT', '/workspace/projects/Graph-h
 sys.path.insert(0, str(HARNESS))
 from graph_harness.runtime import GraphRuntime
 from graph_harness.model import GateResult, NodeStatus
+from quality_run import verify_quality_for_review
 
 NODE = 'LUMA-CICD-002-release-pipeline'
 OUT = ROOT / 'evidence/cicd-enterprise'
@@ -84,11 +85,20 @@ def main() -> int:
         base = f'repos/BernydotJar/LUMA/actions/runs/{args.ci_run}'
         run = json.loads(command('gh', 'api', base))
         jobs = json.loads(command('gh', 'api', base + '/jobs?filter=latest&per_page=100'))['jobs']
-        assert run['head_sha'] == commit and run['conclusion'] == 'success', 'CI run does not verify the current commit'
-        for name in CHECKS:
-            matching = [job for job in jobs if job['name'] == name]
-            assert len(matching) == 1 and matching[0]['conclusion'] == 'success', f'Unsuccessful check: {name}'
-        summary = {'runId': args.ci_run, 'gitSha': commit, 'conclusion': run['conclusion'], 'url': run['html_url'], 'jobs': [{'name': job['name'], 'conclusion': job['conclusion'], 'url': job['html_url']} for job in jobs]}
+        if args.phase == 'release':
+            # The source-bound check must fail until this independent review is
+            # published. Do not create a circular review-approval dependency.
+            # Never waive one of the five real quality checks or another failure.
+            quality = verify_quality_for_review(run, jobs, commit)
+        else:
+            assert run['head_sha'] == commit and run['conclusion'] == 'success', 'Production CI run does not verify the current commit'
+            for name in CHECKS:
+                matching = [job for job in jobs if job['name'] == name]
+                assert len(matching) == 1 and matching[0]['conclusion'] == 'success', f'Unsuccessful check: {name}'
+            quality = {'quality': 'PASS', 'releaseReadiness': 'PASS', 'overall': 'success'}
+        summary = {'runId': args.ci_run, 'gitSha': commit, 'conclusion': run['conclusion'],
+                   'qualityEvidence': quality, 'url': run['html_url'],
+                   'jobs': [{'name': job['name'], 'conclusion': job['conclusion'], 'url': job['html_url']} for job in jobs]}
         save(f'evidence/cicd-enterprise/{args.phase}-ci.json', summary)
         if args.phase == 'release':
             digest = command('node', 'scripts/release/review-gate.mjs', '--digest')
@@ -107,14 +117,17 @@ def main() -> int:
             material = [p for p in changed if p.startswith(('src/', 'public/', 'scripts/', '.github/', 'e2e/')) and p != 'src/generated/release-manifest.json']
             assert not material, 'Code changed after the tested commit'
             metadata = {'source_digest': digest}
-            evidence(critic_path, 'adversarial-raw', critic['evaluation']['verdict'], 'ibm-granite-critic', metadata)
+            evidence(critic_path, 'adversarial-raw', critic['evaluation']['verdict'], 'github-codex-critic' if critic.get('model') == 'github-codex-review' else 'ibm-granite-critic', metadata)
             critic_id = evidence(verifier_path, 'critic', 'PASS', 'independent-verifier', {**metadata, 'meaning': 'Granite finding dispositions, not a rewritten model verdict', 'raw_critic_sha256': sha(critic_path)})
             verifier_id = evidence(verifier_path, 'verification', 'PASS', 'independent-verifier', metadata)
             ci_id = evidence('evidence/cicd-enterprise/release-ci.json', 'ci', 'PASS', 'github-actions-verifier', metadata)
             gate = runtime.evaluate_gate(NODE, actor='independent-verifier', gate_id=gate_id, result=GateResult.PASS, evidence_ids=[critic_id, verifier_id, ci_id], note=f'Code review and all five checks passed for source digest {digest}; production remains separately gated.')
             transition(NodeStatus.REVIEW, 'Candidate approved for the independently verified main deployment workflow')
-            save('evidence/cicd-enterprise/release-approval.json', {'schemaVersion': 1, 'status': 'PASS', 'sourceDigest': digest, 'testedCommit': commit, 'unresolvedCritical': 0, 'unresolvedHigh': 0, 'graphEventId': gate.event_id, 'graphEventHash': gate.event_hash, 'critic': {'sha256': sha(critic_path)}, 'verifier': {'sha256': sha(verifier_path)}})
-            command('node', 'scripts/release/review-gate.mjs')
+            save('evidence/cicd-enterprise/release-approval.json', {'schemaVersion': 2, 'status': 'PASS', 'sourceDigest': digest, 'testedCommit': commit, 'ciRunId': args.ci_run, 'unresolvedCritical': 0, 'unresolvedHigh': 0, 'graphEventId': gate.event_id, 'graphEventHash': gate.event_hash, 'critic': {'sha256': sha(critic_path)}, 'verifier': {'sha256': sha(verifier_path)}})
+            # The local process cannot mint independent authorization. The
+            # protected-main attestor signs only after external review/CI.
+            # Verifying now must fail until that CI-sourced signature arrives.
+            print('PENDING_EXTERNAL_ED25519_SIGNATURE: Graph gate recorded, protected signer still required')
         else:
             result = load('evidence/cicd-enterprise/production/release-result.json')
             smoke = load('evidence/cicd-enterprise/production/smoke.json')

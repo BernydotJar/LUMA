@@ -1,0 +1,101 @@
+{
+  "source": "Old production local build at 3140 vs corrected static build at 3141",
+  "runs": [
+    {
+      "version": "original",
+      "timezone": "UTC",
+      "rawSSR": "Buenas noches",
+      "http": 200,
+      "visibleGreeting": "Buenos días.",
+      "ctaCount": 1,
+      "journeyCount": 1,
+      "guestGreetingBounds": {
+        "height": 44,
+        "top": 121
+      },
+      "reactHydrationErrors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ],
+      "otherErrors": []
+    },
+    {
+      "version": "original",
+      "timezone": "America/Guatemala",
+      "rawSSR": "Buenas noches",
+      "http": 200,
+      "visibleGreeting": "Buenas tardes.",
+      "ctaCount": 1,
+      "journeyCount": 1,
+      "guestGreetingBounds": {
+        "height": 44,
+        "top": 121
+      },
+      "reactHydrationErrors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ],
+      "otherErrors": []
+    },
+    {
+      "version": "original",
+      "timezone": "America/Los_Angeles",
+      "rawSSR": "Buenas noches",
+      "http": 200,
+      "visibleGreeting": "Buenas tardes.",
+      "ctaCount": 1,
+      "journeyCount": 1,
+      "guestGreetingBounds": {
+        "height": 44,
+        "top": 121
+      },
+      "reactHydrationErrors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ],
+      "otherErrors": []
+    },
+    {
+      "version": "fixed",
+      "timezone": "UTC",
+      "rawSSR": "Hola",
+      "http": 200,
+      "visibleGreeting": "Buenos días.",
+      "ctaCount": 1,
+      "journeyCount": 1,
+      "guestGreetingBounds": {
+        "height": 44,
+        "top": 121
+      },
+      "reactHydrationErrors": [],
+      "otherErrors": []
+    },
+    {
+      "version": "fixed",
+      "timezone": "America/Guatemala",
+      "rawSSR": "Hola",
+      "http": 200,
+      "visibleGreeting": "Buenas tardes.",
+      "ctaCount": 1,
+      "journeyCount": 1,
+      "guestGreetingBounds": {
+        "height": 44,
+        "top": 121
+      },
+      "reactHydrationErrors": [],
+      "otherErrors": []
+    },
+    {
+      "version": "fixed",
+      "timezone": "America/Los_Angeles",
+      "rawSSR": "Hola",
+      "http": 200,
+      "visibleGreeting": "Buenas tardes.",
+      "ctaCount": 1,
+      "journeyCount": 1,
+      "guestGreetingBounds": {
+        "height": 44,
+        "top": 121
+      },
+      "reactHydrationErrors": [],
+      "otherErrors": []
+    }
+  ]
+}

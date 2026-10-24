@@ -1,0 +1,150 @@
+{
+  "project": "demo-luma-firstclient-intake-20261014",
+  "environment": "Local Chromium Playwright, Next development server and synthetic Auth+Firestore emulators, QA-only Auth overlay",
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "01 unprivileged academy visitor cannot see inbox",
+      "status": "PASS",
+      "detail": {
+        "inboxDenied": true
+      }
+    },
+    {
+      "id": "02 applicant submits real form and sees persisted confirmation",
+      "status": "PASS",
+      "detail": {
+        "submitted": true,
+        "serverPersistence": true
+      }
+    },
+    {
+      "id": "03 first platform operator reviews request and reserves tenant",
+      "status": "PASS",
+      "detail": {
+        "firstReviewer": true,
+        "reserved": true
+      }
+    },
+    {
+      "id": "04 operator desktop three themes automated WCAG AA",
+      "status": "PASS",
+      "detail": [
+        {
+          "theme": "se",
+          "violations": []
+        },
+        {
+          "theme": "light",
+          "violations": []
+        },
+        {
+          "theme": "dark",
+          "violations": []
+        }
+      ]
+    },
+    {
+      "id": "05 second operator issues one-use invitation from mobile inbox",
+      "status": "PASS",
+      "detail": {
+        "secureProofIssued": true,
+        "plaintextNotRendered": true
+      }
+    },
+    {
+      "id": "06 invitation panel mobile three themes automated WCAG AA",
+      "status": "PASS",
+      "detail": [
+        {
+          "theme": "se",
+          "violations": []
+        },
+        {
+          "theme": "light",
+          "violations": []
+        },
+        {
+          "theme": "dark",
+          "violations": []
+        }
+      ]
+    },
+    {
+      "id": "07 original verified applicant accepts invitation after opening fragment",
+      "status": "PASS",
+      "detail": {
+        "received": true,
+        "hashErased": true
+      }
+    },
+    {
+      "id": "08 explicit CLI operator activation grants only one tenant",
+      "status": "PASS",
+      "detail": {
+        "adminTenantOnly": true,
+        "approvalAudit": true
+      }
+    },
+    {
+      "id": "09 operator initializes tenant draft only after owner activation",
+      "status": "PASS",
+      "detail": {
+        "tenantDraftExists": true
+      }
+    },
+    {
+      "id": "10 owner re-authenticates and creates first cohort draft",
+      "status": "PASS",
+      "detail": {
+        "firstCourseDraft": true,
+        "published": false
+      }
+    },
+    {
+      "id": "11 owner course mobile WCAG AA and touch target geometry",
+      "status": "PASS",
+      "detail": {
+        "checks": [
+          {
+            "theme": "se",
+            "violations": []
+          },
+          {
+            "theme": "light",
+            "violations": []
+          },
+          {
+            "theme": "dark",
+            "violations": []
+          }
+        ],
+        "overflow": 0
+      }
+    },
+    {
+      "id": "12 independent foreign user cannot manage academy course",
+      "status": "PASS",
+      "detail": {
+        "foreignDenied": true
+      }
+    },
+    {
+      "id": "13 responsive and keyboard-safe geometry across all target viewports",
+      "status": "PASS",
+      "detail": {
+        "surfaces": 2,
+        "viewports": 6,
+        "themes": 3,
+        "observations": 36,
+        "violations": 0
+      }
+    }
+  ],
+  "pageErrors": [],
+  "summary": {
+    "passed": 13,
+    "failed": 0
+  },
+  "cleanup": "Synthetic identities deleted; emulator discarded"
+}
