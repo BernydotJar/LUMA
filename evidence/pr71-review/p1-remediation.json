@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-20",
+  "pr": 71,
+  "status": "TECHNICAL_FIXES_TESTED_AT_LOCAL_SOURCE_PENDING_EXTERNAL_ATTESTATION",
+  "reviewedFindingThreads": [
+    {
+      "threadId": "PRRT_kwDOU63WLc6uJVZv",
+      "finding": "PR-generated self-attested Graph receipt",
+      "change": "Ed25519 release signature bound to source/CI/review/Graph with public trust root outside PR and protected-main signer",
+      "cryptographicTests": "Forgery, wrong public key, stale digest, wrong CI run and Graph receipt fail closed",
+      "remainingExternalRequirement": "Provision environment private key/repository public variable in GitHub, bootstrap protected-main signer, obtain fresh independent review and real signed artifact"
+    },
+    {
+      "threadId": "PRRT_kwDOU63WLc6uJVZx",
+      "finding": "Missing program header on course list/player/media/checkpoint/page",
+      "change": "Verified program picker and UID/program-scoped headers plus async identity/program checks on every operation",
+      "verifiedLocally": true
+    },
+    {
+      "threadId": "PRRT_kwDOU63WLc6uJVZ1",
+      "finding": "Cross-program reflection writes and reads",
+      "change": "UID + program keyed reflection state and server-entitled x-luma-program-id header",
+      "verifiedLocally": true
+    },
+    {
+      "threadId": "PRRT_kwDOU63WLc6uJVZ6",
+      "finding": "Expired signed media range after two minutes",
+      "change": "Private V4 GCS media URL valid two hours for pause/range with existing server reauthorization on issuance",
+      "acceptedResidualRisk": "An issued signed URL remains usable until expiry even after purchase refund; new signing is denied on revocation",
+      "verifiedLocally": true
+    }
+  ],
+  "localChecks": {
+    "eslint": "PASS",
+    "typescript": "PASS",
+    "unitAndSecurityTests": "400 PASS / 85 excluded emulator-dependent at first full run; further small tests added afterwards",
+    "playwrightFullChromium": "154 PASS / 22 SKIP",
+    "firebaseMulticourseCoachJourney": "16 PASS / 0 FAIL",
+    "nextProductionBuild": "PASS",
+    "graphRootChainBeforeNewEvidence": "VALID, 712 events"
+  },
+  "publication": "NO_MERGE_NO_DEPLOY",
+  "signerSecretProvisioned": false,
+  "realIndependentSourceApproval": "PENDING",
+  "livekitProviderAcceptance": "NO_GO"
+}

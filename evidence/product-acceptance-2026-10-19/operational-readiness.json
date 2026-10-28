@@ -1,0 +1,647 @@
+{
+  "schemaVersion": "luma.product-acceptance.report.v1",
+  "phase": "inventory",
+  "observedAt": "2026-10-20T15:33:22.978Z",
+  "candidateSha": "878bca15fad3cafb6f9e4e2d4058bf5855835dd2",
+  "observedProductionSha": "6ddcae8ff2464782b7e4001c4cd5d60092dbb099",
+  "verdict": "BLOCKED",
+  "releaseAllowed": false,
+  "modules": [
+    {
+      "id": "institution-onboarding",
+      "title": "Solicitud, dos revisores, invitacion y primer administrador",
+      "status": "BLOCKED",
+      "required": true,
+      "actions": [
+        {
+          "id": "ORG-01",
+          "actor": "owner",
+          "path": "/academia/solicitud",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_404",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "ROUTE_404_IN_PRODUCTION",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "ORG-02",
+          "actor": "platform_reviewer",
+          "path": "/plataforma/solicitudes",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_404",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "ROUTE_404_IN_PRODUCTION",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "ORG-03",
+          "actor": "owner",
+          "path": "/academia/invitacion",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "UNVERIFIED",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_PUBLISHED_ROUTE_PROOF",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "ORG-04",
+          "actor": "platform_operator",
+          "path": "/academia/primer-curso",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_404",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "ROUTE_404_IN_PRODUCTION",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "catalog-course-ops",
+      "title": "Catalogo con muchos cursos y cohortes live/evergreen",
+      "status": "BLOCKED",
+      "required": true,
+      "actions": [
+        {
+          "id": "CAT-01",
+          "actor": "tenant_admin",
+          "path": "/academia/primer-curso",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_404",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "ROUTE_404_IN_PRODUCTION",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "CAT-02",
+          "actor": "tenant_admin",
+          "path": "/studio/programs",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "CAT-03",
+          "actor": "tenant_admin",
+          "path": "/studio/programs",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "curriculum-authoring",
+      "title": "Contenido real de Mary, evaluaciones, rubricas y publicacion",
+      "status": "BLOCKED",
+      "required": true,
+      "actions": [
+        {
+          "id": "CUR-01",
+          "actor": "academic_author",
+          "path": "/studio/programs",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "CUR-02",
+          "actor": "academic_author",
+          "path": "/studio/programs",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "CUR-03",
+          "actor": "academic_author",
+          "path": "/studio/programs",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "CUR-04",
+          "actor": "academic_approver",
+          "path": "/studio/programs",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "CUR-05",
+          "actor": "academic_approver",
+          "path": "/studio/programs",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "enrollment-entitlement",
+      "title": "Matricula institucional y derechos del alumno",
+      "status": "BLOCKED",
+      "required": true,
+      "actions": [
+        {
+          "id": "ENR-01",
+          "actor": "tenant_admin",
+          "path": "/studio/enrollments",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "ENR-02",
+          "actor": "learner",
+          "path": "/learn",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "learner-coach-experience",
+      "title": "Estudio, practica, feedback, restauracion y coaching",
+      "status": "BLOCKED",
+      "required": true,
+      "actions": [
+        {
+          "id": "LRN-01",
+          "actor": "learner",
+          "path": "/learn",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "LRN-02",
+          "actor": "learner",
+          "path": "/learn",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "LRN-03",
+          "actor": "learner",
+          "path": "/learn",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "COA-01",
+          "actor": "coach",
+          "path": "/studio",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "COA-02",
+          "actor": "coach",
+          "path": "/studio",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "support-tickets",
+      "title": "Solicitudes y tickets de soporte con seguimiento de estado",
+      "status": "BLOCKED",
+      "required": true,
+      "actions": [
+        {
+          "id": "SUP-01",
+          "actor": "owner",
+          "path": "/support",
+          "source": "MISSING_OR_UNMATCHED_SOURCE",
+          "interface": "UNVERIFIED",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "NO_MATCHING_SOURCE_REFERENCES",
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_PUBLISHED_ROUTE_PROOF",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "SUP-02",
+          "actor": "support_agent",
+          "path": "/support",
+          "source": "MISSING_OR_UNMATCHED_SOURCE",
+          "interface": "UNVERIFIED",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "NO_MATCHING_SOURCE_REFERENCES",
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_PUBLISHED_ROUTE_PROOF",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "automated-followup",
+      "title": "Automatizacion de recordatorios y seguimientos consentidos",
+      "status": "BLOCKED",
+      "required": true,
+      "actions": [
+        {
+          "id": "AUT-01",
+          "actor": "tenant_admin",
+          "path": "/studio/automation",
+          "source": "MISSING_OR_UNMATCHED_SOURCE",
+          "interface": "UNVERIFIED",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "NO_MATCHING_SOURCE_REFERENCES",
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_PUBLISHED_ROUTE_PROOF",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "AUT-02",
+          "actor": "tenant_admin",
+          "path": "/studio/automation",
+          "source": "MISSING_OR_UNMATCHED_SOURCE",
+          "interface": "UNVERIFIED",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "NO_MATCHING_SOURCE_REFERENCES",
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_PUBLISHED_ROUTE_PROOF",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reporting-certification",
+      "title": "Reportes, progreso medible y certificados",
+      "status": "BLOCKED",
+      "required": true,
+      "actions": [
+        {
+          "id": "REP-01",
+          "actor": "tenant_admin",
+          "path": "/studio/class-intelligence",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "UNVERIFIED",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_PUBLISHED_ROUTE_PROOF",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "REP-02",
+          "actor": "tenant_admin",
+          "path": "/studio/certificates",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "UNVERIFIED",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_PUBLISHED_ROUTE_PROOF",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lifecycle-privacy",
+      "title": "Revocacion, offboarding y retencion",
+      "status": "BLOCKED",
+      "required": true,
+      "actions": [
+        {
+          "id": "LIF-01",
+          "actor": "tenant_admin",
+          "path": "/studio/enrollments",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_RENDERS_ACTION_NOT_YET_PROVEN",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        },
+        {
+          "id": "LIF-02",
+          "actor": "privacy_operator",
+          "path": "/plataforma/solicitudes",
+          "source": "SOURCE_REFERENCES_PRESENT_NOT_FUNCTION_PROOF",
+          "interface": "ROUTE_404",
+          "authorizedStagingAction": "BLOCKED",
+          "published": "NOT_VERIFIED",
+          "productionAction": "BLOCKED",
+          "verdict": "BLOCKED",
+          "blockers": [
+            "MISSING_INDEPENDENT_AUTHENTICATED_ACTION_PROOF",
+            "DEPLOYMENT_SHA_DOES_NOT_MATCH_REVIEWED_SOURCE",
+            "ROUTE_404_IN_PRODUCTION",
+            "NO_AUTHENTICATED_PRODUCTION_ACTION_VERIFICATION"
+          ]
+        }
+      ]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "AGR-01",
+      "title": "Primera empresa de capacitacion agroquimica activa academia",
+      "status": "BLOCKED",
+      "staging": "MISSING_INDEPENDENT_BUSINESS_JOURNEY_PROOF",
+      "production": "MISSING_INDEPENDENT_BUSINESS_JOURNEY_PROOF",
+      "allMandatoryActionsProven": false,
+      "requiredVariants": [
+        "first_customer",
+        "two_operators",
+        "expired_token",
+        "verified_identity"
+      ]
+    },
+    {
+      "id": "AGR-02",
+      "title": "Administrador organiza 1 a 50 cursos evergreen/live para equipos y distribuidores",
+      "status": "BLOCKED",
+      "staging": "MISSING_INDEPENDENT_BUSINESS_JOURNEY_PROOF",
+      "production": "MISSING_INDEPENDENT_BUSINESS_JOURNEY_PROOF",
+      "allMandatoryActionsProven": false,
+      "requiredVariants": [
+        "one_course",
+        "ten_courses",
+        "fifty_courses",
+        "evergreen",
+        "high_ticket_live",
+        "rights_confirmed",
+        "two_questions",
+        "scored_practice",
+        "draft_preview",
+        "second_approver"
+      ]
+    },
+    {
+      "id": "AGR-03",
+      "title": "Representante aprende sin conocer LUMA, pregunta y demuestra competencia",
+      "status": "BLOCKED",
+      "staging": "MISSING_INDEPENDENT_BUSINESS_JOURNEY_PROOF",
+      "production": "MISSING_INDEPENDENT_BUSINESS_JOURNEY_PROOF",
+      "allMandatoryActionsProven": false,
+      "requiredVariants": [
+        "individual",
+        "bulk",
+        "one_course",
+        "many_courses",
+        "evergreen",
+        "high_ticket_live",
+        "restore_session",
+        "two_cohorts",
+        "archived_cohort",
+        "teacher_reassigned"
+      ]
+    },
+    {
+      "id": "AGR-04",
+      "title": "Solicitudes y automatizaciones resuelven incidencias del cliente",
+      "status": "BLOCKED",
+      "staging": "MISSING_INDEPENDENT_BUSINESS_JOURNEY_PROOF",
+      "production": "MISSING_INDEPENDENT_BUSINESS_JOURNEY_PROOF",
+      "allMandatoryActionsProven": false,
+      "requiredVariants": [
+        "course_access_issue",
+        "reopen_ticket",
+        "inactivity_trigger",
+        "reminder_delivered",
+        "opt_out"
+      ]
+    },
+    {
+      "id": "AGR-05",
+      "title": "Direccion verifica impacto y offboarding sin fuga de datos",
+      "status": "BLOCKED",
+      "staging": "MISSING_INDEPENDENT_BUSINESS_JOURNEY_PROOF",
+      "production": "MISSING_INDEPENDENT_BUSINESS_JOURNEY_PROOF",
+      "allMandatoryActionsProven": false,
+      "requiredVariants": [
+        "fifty_courses",
+        "cert_eligible",
+        "offboard_employee",
+        "retention_expiry"
+      ]
+    }
+  ],
+  "manual": {
+    "customer_requirements_confirmed": "BLOCKED",
+    "business_owner_uat_signed": "BLOCKED",
+    "manual_accessibility_signed": "BLOCKED",
+    "privacy_and_abuse_signed": "BLOCKED",
+    "production_route_coverage_signed": "BLOCKED"
+  },
+  "blockers": [
+    "MODULE_institution-onboarding_INCOMPLETE",
+    "MODULE_catalog-course-ops_INCOMPLETE",
+    "MODULE_curriculum-authoring_INCOMPLETE",
+    "MODULE_enrollment-entitlement_INCOMPLETE",
+    "MODULE_learner-coach-experience_INCOMPLETE",
+    "MODULE_support-tickets_INCOMPLETE",
+    "MODULE_automated-followup_INCOMPLETE",
+    "MODULE_reporting-certification_INCOMPLETE",
+    "MODULE_lifecycle-privacy_INCOMPLETE",
+    "JOURNEY_AGR-01_NOT_VERIFIED",
+    "JOURNEY_AGR-02_NOT_VERIFIED",
+    "JOURNEY_AGR-03_NOT_VERIFIED",
+    "JOURNEY_AGR-04_NOT_VERIFIED",
+    "JOURNEY_AGR-05_NOT_VERIFIED",
+    "MANUAL_customer_requirements_confirmed_MISSING",
+    "MANUAL_business_owner_uat_signed_MISSING",
+    "MANUAL_manual_accessibility_signed_MISSING",
+    "MANUAL_privacy_and_abuse_signed_MISSING",
+    "MANUAL_production_route_coverage_signed_MISSING",
+    "CUSTOMER_AGROCHEMICAL_REQUIREMENTS_UNCONFIRMED",
+    "PRODUCTION_NOT_EXACT_REVIEWED_COMMIT"
+  ],
+  "note": "Inventory NEVER approves a release. Live route 200 and generic E2E pass do not attest a functional user action. Production verification needs authorized test tenant/identities; NO live writes by this scanner."
+}

@@ -1,0 +1,59 @@
+name: Enterprise operational product acceptance (no deployment)
+
+on:
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: "predeploy (staging and human approvals) or postdeploy (published real-action UAT)"
+        type: choice
+        required: true
+        options: [predeploy, postdeploy]
+
+permissions:
+  contents: read
+
+jobs:
+  full-product-acceptance:
+    name: Full business acceptance — fail closed / no production writes
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment:
+      name: enterprise-product-acceptance
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - name: Test evaluator's anti-false-positive rules
+        run: node --test scripts/qa/product-acceptance-contract-checks.mjs
+      - name: Install Chromium for read-only live inventory when postdeploy
+        if: inputs.phase == 'postdeploy'
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Capture live SHA and visible public routes without changing data
+        if: inputs.phase == 'postdeploy'
+        run: node scripts/qa/product-public-inventory.mjs
+      - name: Load independently signed evidence from protected environment
+        env:
+          LUMA_ACCEPTANCE_TRUST_STORE_B64: ${{ secrets.LUMA_ACCEPTANCE_TRUST_STORE_B64 }}
+          LUMA_ACCEPTANCE_SIGNED_RECEIPTS_B64: ${{ secrets.LUMA_ACCEPTANCE_SIGNED_RECEIPTS_B64 }}
+        run: node scripts/qa/protected-acceptance-inputs.mjs
+      - name: Require verified, current, action-by-action evidence and signed UAT
+        run: >-
+          node scripts/qa/product-acceptance-gate.mjs
+          --phase ${{ inputs.phase }}
+          --receipts "$LUMA_ACCEPTANCE_RECEIPTS"
+      - name: Publish diagnostic evidence even when blocked
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: enterprise-customer-product-acceptance-${{ github.run_attempt }}
+          path: |
+            evidence/product-acceptance-2026-10-19/operational-readiness.json
+            evidence/product-acceptance-2026-10-19/public-ui-readonly.json
+            evidence/product-acceptance-2026-10-19/published-version.json
+          if-no-files-found: warn
+          retention-days: 30

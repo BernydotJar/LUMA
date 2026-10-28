@@ -12,13 +12,15 @@ import styles from "./progress-story.module.css";
 interface ProgressStoryProps {
   event?: StoredLearningEvent;
   nextAction: RankedLearningAction;
+  source?: "server" | "preview";
 }
 
-export function ProgressStory({ event, nextAction }: ProgressStoryProps) {
+export function ProgressStory({ event, nextAction, source = "preview" }: ProgressStoryProps) {
   const [active, setActive] = useState(1);
   const receipt = event && evidenceMayUpdateTwin(event) ? event : undefined;
   const criteria = receipt?.criteria ?? [];
   const passed = criteria.filter((criterion) => criterion.passed).length;
+  const guidedCriteria = criteria.filter((criterion) => criterion.attempts > 1).length;
   const nextHref = nextAction.href ?? "/learn/experiences";
 
   // Never display demo learner achievements as if they belonged to the visitor.
@@ -58,7 +60,7 @@ export function ProgressStory({ event, nextAction }: ProgressStoryProps) {
       eyebrow: "Práctica registrada",
       title: "Una situación de aprendizaje ya tiene resultado.",
       body: "Puedes consultar lo que respondió la actividad. Una práctica registrada no equivale automáticamente a dominio.",
-      evidence: "Resultado de la actividad · registro local",
+      evidence: source === "server" ? "Resultado guardado en tu expediente" : "Vista previa de esta práctica",
       icon: ClipboardCheck,
       object: "lens" as const,
     },
@@ -66,7 +68,9 @@ export function ProgressStory({ event, nextAction }: ProgressStoryProps) {
       id: "criteria",
       eyebrow: "Criterios de evaluación",
       title: resultTitle,
-      body: "La rúbrica permite distinguir los criterios alcanzados de los que todavía requieren práctica.",
+      body: guidedCriteria > 0
+        ? `Completaste la actividad. ${guidedCriteria} ${guidedCriteria === 1 ? "criterio necesitó" : "criterios necesitaron"} un reintento o una pista; es una señal para seguir practicando.`
+        : "La rúbrica permite distinguir los criterios alcanzados de los que todavía requieren práctica.",
       evidence: receipt.rubricId ? "Rúbrica " + receipt.rubricId : "Lectura de la práctica",
       icon: Check,
       object: "prism" as const,
@@ -91,7 +95,7 @@ export function ProgressStory({ event, nextAction }: ProgressStoryProps) {
           <h2 id="progress-story-title">Tu avance se apoya en evidencias concretas.</h2>
           <p>Revisa el resultado de tu práctica, sus criterios y la siguiente oportunidad de aplicación.</p>
         </div>
-        <span className={styles.signal}>Práctica registrada en este dispositivo</span>
+        <span className={styles.signal}>{source === "server" ? "Evidencia verificada en tu expediente" : "Vista previa guardada en este dispositivo"}</span>
       </div>
       <div className={styles.deck} role="tablist" aria-label="Momentos de progreso">
         {progressMoments.map((moment, index) => {

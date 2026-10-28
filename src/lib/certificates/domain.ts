@@ -26,6 +26,9 @@ export interface CompletionAttestation {
   identityAttestedBy: string;
   rationale: string;
   evidenceEventIds: string[];
+  assessmentVersionId?: string;
+  assessmentPolicyDigest?: string;
+  assessmentMinimumScore?: number;
   approvedAt: string;
   certificateId?: string;
 }

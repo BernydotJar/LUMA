@@ -1,0 +1,9 @@
+{
+  "reviewer": "adversarial QA agent, deterministic separate-worktree verification, not external human",
+  "date": "2026-10-13",
+  "scope": "Synthetic Hotmart learner lifecycle; Firebase Auth and Firestore emulator; local Next.js",
+  "critiqueResult": "PASS for implemented narrow privacy/provenance/preview/fallback behaviors, RELEASE BLOCKED",
+  "verified": ["Cross-account goal and scored receipt no longer reused", "Server ledger grade persists across new browser and additional reflection", "Self-report stored separately from graded mastery", "Program purchase verified and unauthorized API remains HTTP 403", "Tutor retry and schedule disclosed without invented source"],
+  "openRisks": ["Multi-program offline replay ownership is incomplete", "Approved lessons and time checkpoints not published", "Genuine Hotmart staging, Google OAuth and LiveKit not executed", "Manual WCAG and field CWV not certified", "Independent human QA and customer content signoff outstanding"],
+  "overallRelease": "NO-GO"
+}

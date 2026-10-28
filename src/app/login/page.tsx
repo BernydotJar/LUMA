@@ -9,6 +9,14 @@ import { GoogleMark } from "@/components/google-mark";
 import { useLumaAuth } from "@/components/auth-provider";
 import styles from "./login.module.css";
 
+/** Strictly allowlisted post-login destination prevents open redirects. */
+function postLoginDestination(): string {
+  const next = typeof window === "undefined" ? null :
+    new URLSearchParams(window.location.search).get("next");
+  return next === "/academia/solicitud" || next === "/academia/invitacion"
+    ? next : "/learn";
+}
+
 export default function LoginPage() {
   const router = useRouter();
   const { user, loading, signInWithGoogle } = useLumaAuth();
@@ -16,7 +24,7 @@ export default function LoginPage() {
   const [notice, setNotice] = useState("");
 
   useEffect(() => {
-    if (!loading && user) router.replace("/learn");
+    if (!loading && user) router.replace(postLoginDestination());
   }, [loading, router, user]);
 
   async function login() {
@@ -24,7 +32,7 @@ export default function LoginPage() {
     setNotice("");
     try {
       await signInWithGoogle();
-      router.replace("/learn");
+      router.replace(postLoginDestination());
     } catch (error) {
       const code =
         typeof error === "object" && error && "code" in error
@@ -66,6 +74,11 @@ export default function LoginPage() {
             <ShieldCheck size={16} />
             <span>Tu sesión usa Firebase Authentication. LUMA no recibe tu contraseña de Google.</span>
           </div>
+
+          <Link className={styles.demoLink} href="/academia/solicitud">
+            ¿Diriges una academia? Solicitar un espacio institucional
+            <ArrowRight size={15} aria-hidden="true" />
+          </Link>
 
           <Link className={styles.demoLink} href="/learn">
             Explorar las experiencias de aprendizaje

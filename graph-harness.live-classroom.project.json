@@ -1,0 +1,328 @@
+{
+  "schema_version": "graph-harness.project.v1",
+  "project_id": "luma-live-classroom-ship-20261019",
+  "mode": "SHIP",
+  "gate_definitions": [
+    {
+      "id": "critical-journey-coverage",
+      "required_evidence_kinds": [
+        "customer-journey",
+        "critic"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "ui-visual-a11y",
+      "required_evidence_kinds": [
+        "build",
+        "visual",
+        "a11y"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "real-live-provider",
+      "required_evidence_kinds": [
+        "provider",
+        "browser",
+        "security"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "production-source-attestation",
+      "required_evidence_kinds": [
+        "production",
+        "deployed-sha",
+        "ops"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "customer-acceptance",
+      "required_evidence_kinds": [
+        "independent-review",
+        "source",
+        "ui",
+        "journey",
+        "production"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "edu-controls-contract",
+      "required_evidence_kinds": [
+        "api-contract",
+        "security",
+        "unit",
+        "a11y"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "edu-controls-live-provider",
+      "required_evidence_kinds": [
+        "livekit",
+        "browser",
+        "production"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "revoked-learner-provider",
+      "required_evidence_kinds": [
+        "firestore-transaction",
+        "backend-contract",
+        "provider-token-replay",
+        "signed-livekit-webhook"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "real-multiuser-hosted",
+      "required_evidence_kinds": [
+        "livekit-cloud",
+        "firebase-auth",
+        "browser",
+        "recorded-rollback",
+        "deployed-revision"
+      ],
+      "blocking": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "LIVE-AC-001",
+      "kind": "customer-journey-coverage",
+      "title": "Define and independently review all critical real customer workflows",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "business-analysis",
+      "gates": {
+        "done": [
+          "critical-journey-coverage"
+        ]
+      },
+      "allowed_paths": [
+        "docs/enterprise/live-classroom-*",
+        "evidence/live-classroom-acceptance/**",
+        "src/components/live-classroom.*",
+        "e2e/live-classroom-*",
+        "scripts/**"
+      ],
+      "metadata": {
+        "scope": "Seres de Excelencia Live Classroom",
+        "required": "evidence per customer action and runtime SHA before release"
+      }
+    },
+    {
+      "id": "LIVE-AC-002",
+      "kind": "ui-controls",
+      "title": "Bottom-centered accessible Liquid Glass LiveKit controls",
+      "status": "ready",
+      "depends_on": [
+        "LIVE-AC-001"
+      ],
+      "capability": "frontend",
+      "gates": {
+        "done": [
+          "ui-visual-a11y"
+        ]
+      },
+      "allowed_paths": [
+        "docs/enterprise/live-classroom-*",
+        "evidence/live-classroom-acceptance/**",
+        "src/components/live-classroom.*",
+        "e2e/live-classroom-*",
+        "scripts/**"
+      ],
+      "metadata": {
+        "scope": "Seres de Excelencia Live Classroom",
+        "required": "evidence per customer action and runtime SHA before release"
+      }
+    },
+    {
+      "id": "LIVE-AC-003",
+      "kind": "role-e2e",
+      "title": "Multi-person authorized instructor/learner live-provider scenarios",
+      "status": "blocked",
+      "depends_on": [
+        "LIVE-AC-001"
+      ],
+      "capability": "test-engineering",
+      "gates": {
+        "done": [
+          "real-live-provider"
+        ]
+      },
+      "allowed_paths": [
+        "docs/enterprise/live-classroom-*",
+        "evidence/live-classroom-acceptance/**",
+        "src/components/live-classroom.*",
+        "e2e/live-classroom-*",
+        "scripts/**"
+      ],
+      "metadata": {
+        "scope": "Seres de Excelencia Live Classroom",
+        "required": "evidence per customer action and runtime SHA before release"
+      }
+    },
+    {
+      "id": "LIVE-AC-004",
+      "kind": "production",
+      "title": "Production configuration, signoff, matching SHA and external provider verification",
+      "status": "blocked",
+      "depends_on": [
+        "LIVE-AC-002",
+        "LIVE-AC-003"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "done": [
+          "production-source-attestation"
+        ]
+      },
+      "allowed_paths": [
+        "docs/enterprise/live-classroom-*",
+        "evidence/live-classroom-acceptance/**",
+        "src/components/live-classroom.*",
+        "e2e/live-classroom-*",
+        "scripts/**"
+      ],
+      "metadata": {
+        "scope": "Seres de Excelencia Live Classroom",
+        "required": "evidence per customer action and runtime SHA before release"
+      }
+    },
+    {
+      "id": "LIVE-AC-005",
+      "kind": "product-acceptance",
+      "title": "All critical customer actions have independent four-axis evidence",
+      "status": "blocked",
+      "depends_on": [
+        "LIVE-AC-004"
+      ],
+      "capability": "independent-verification",
+      "gates": {
+        "done": [
+          "customer-acceptance"
+        ]
+      },
+      "allowed_paths": [
+        "docs/enterprise/live-classroom-*",
+        "evidence/live-classroom-acceptance/**",
+        "src/components/live-classroom.*",
+        "e2e/live-classroom-*",
+        "scripts/**"
+      ],
+      "metadata": {
+        "scope": "Seres de Excelencia Live Classroom",
+        "required": "evidence per customer action and runtime SHA before release"
+      }
+    },
+    {
+      "id": "LIVE-AC-006",
+      "kind": "live-teaching-ui",
+      "title": "Teacher hand acknowledgement, learner hand toggle, mute-all actual UI and SDK actions",
+      "status": "ready",
+      "depends_on": [
+        "LIVE-AC-002"
+      ],
+      "capability": "product+security+browser",
+      "gates": {
+        "done": [
+          "edu-controls-contract"
+        ]
+      },
+      "allowed_paths": [
+        "src/components/live-classroom.*",
+        "src/app/api/live/classrooms/**",
+        "src/lib/live-classroom*",
+        "docs/enterprise/**",
+        "e2e/**",
+        "evidence/live-classroom-acceptance/**"
+      ],
+      "metadata": {
+        "quality": "NO_GO until real provider and runtime deployment proof"
+      }
+    },
+    {
+      "id": "LIVE-AC-007",
+      "kind": "live-teaching-e2e",
+      "title": "Multi-user teacher and learner LiveKit controls, permission/revocation, connection recovery",
+      "status": "blocked",
+      "depends_on": [
+        "LIVE-AC-006",
+        "LIVE-AC-003"
+      ],
+      "capability": "product+security+browser",
+      "gates": {
+        "done": [
+          "edu-controls-live-provider"
+        ]
+      },
+      "allowed_paths": [
+        "src/components/live-classroom.*",
+        "src/app/api/live/classrooms/**",
+        "src/lib/live-classroom*",
+        "docs/enterprise/**",
+        "e2e/**",
+        "evidence/live-classroom-acceptance/**"
+      ],
+      "metadata": {
+        "quality": "NO_GO until real provider and runtime deployment proof"
+      }
+    },
+    {
+      "id": "LIVE-AC-008",
+      "kind": "revocation-control",
+      "title": "Refund and institutional access revocation with connected participant removal and prior JWT invalidation",
+      "status": "ready",
+      "depends_on": [
+        "LIVE-AC-007"
+      ],
+      "capability": "commerce+security+livekit",
+      "gates": {
+        "done": [
+          "revoked-learner-provider"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/live-classroom*",
+        "src/lib/commerce/**",
+        "src/app/api/live/**",
+        "src/app/api/commerce/**",
+        "src/app/api/enrollments/**",
+        "docs/enterprise/**",
+        "evidence/live-classroom-acceptance/**"
+      ],
+      "metadata": {
+        "remaining": "LiveKit Cloud must reject earlier JWT; local OSS v1.13.10 did not reject replay"
+      }
+    },
+    {
+      "id": "LIVE-AC-009",
+      "kind": "release-e2e",
+      "title": "Production LiveKit Cloud instructor and two learners with commerce revocation, prior token replay attempt, attendance and UX",
+      "status": "blocked",
+      "depends_on": [
+        "LIVE-AC-008",
+        "LIVE-AC-004"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "done": [
+          "real-multiuser-hosted"
+        ]
+      },
+      "allowed_paths": [
+        "docs/**",
+        "evidence/**",
+        "scripts/qa/**"
+      ],
+      "metadata": {
+        "decision": "NO_GO pending customer connected WebRTC E2E"
+      }
+    }
+  ]
+}

@@ -53,6 +53,10 @@ next-env.d.ts
 /evidence/visual/*-console.txt
 /evidence/visual/*-errors.txt
 
+# Python verification bytecode is generated at runtime, never reviewed source
+__pycache__/
+*.py[cod]
+
 # local Graph Harness control-plane projections
 /.graph-harness/
 
@@ -60,3 +64,9 @@ next-env.d.ts
 /firebase-debug.log
 /firestore-debug.log
 /ui-debug.log
+
+# Python bytecode generated during Graph Harness verification
+/scripts/__pycache__/
+
+# Authenticated UAT receipts must be generated anew, never committed historical PASS
+/evidence/learning-ui/qa-authorized-learning-uat.json

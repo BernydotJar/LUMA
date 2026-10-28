@@ -1,0 +1,1674 @@
+{
+  "schema_version": "graph-harness.state.v1",
+  "project_id": "luma-product-showcase-0.1.0",
+  "mode": "SHIP",
+  "last_event_id": "7aed88ef-ee36-476d-84c9-a548ccaf5501",
+  "event_count": 706,
+  "ready_nodes": [
+    "LUMA-036-liquid-glass-refraction-v2",
+    "LUMA-075-cohort-peer-learning-evaluation"
+  ],
+  "nodes": [
+    {
+      "id": "LUMA-001-foundation",
+      "kind": "product-foundation",
+      "title": "Product thesis, architecture, research, and specifications",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [],
+      "capability": "product-architecture",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "04942c6d-f120-4674-b705-46f5fa7f55d4",
+        "a3aab404-6462-4986-b9b0-7e5a657a23d5"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-002-learner-experience",
+      "kind": "product-surface",
+      "title": "Marketing, onboarding, learner home, and guided practice",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-001-foundation"
+      ],
+      "capability": "full-stack-product",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "488a7654-0a81-4423-b662-1c9fc7516455",
+        "d8560c33-c1b8-4aa8-b126-7bae5453283e"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-003-twin-tutor",
+      "kind": "ai-learning-capability",
+      "title": "Explainable Learning Twin and grounded tutor experience",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-001-foundation"
+      ],
+      "capability": "ai-orchestration-and-trust",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "09507b77-2ab3-4468-a4d1-19e734914361",
+        "a499c22c-8bc7-4313-b2ae-528352e618dc"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-004-studio-content",
+      "kind": "product-surface",
+      "title": "Content Intelligence library and instructor Learning Studio",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-001-foundation"
+      ],
+      "capability": "learning-intelligence",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "b922328c-8c7c-4f97-9662-e94ccb8fc241",
+        "f8e51db6-6949-4ff1-8729-87c24e933e8b"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-005-showcase-release",
+      "kind": "release",
+      "title": "Independent verification and Product Showcase release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-002-learner-experience",
+        "LUMA-003-twin-tutor",
+        "LUMA-004-studio-content"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "0a37cc93-ac76-4925-836a-c6d3b02a4cdc",
+        "398e2cea-e7c7-4210-b3c6-4526457161b6",
+        "551f73e0-0311-46d7-b821-7739546b9785",
+        "769f445d-873d-43df-9359-5370eaeb1edc",
+        "7fd31645-acf7-4563-8b1a-fd0cd3a726d4",
+        "85967ab2-f7a8-48c0-b4c0-8058c49750f6",
+        "cd3eec72-9653-4050-9ab7-04f25e005aac",
+        "cefe99db-ae30-493a-8c26-58867e0fec67"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-006-knowledge-reflection",
+      "kind": "ai-learning-capability",
+      "title": "Inspectable Knowledge Reflection with gated retrieval and trust controls",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-003-twin-tutor",
+        "LUMA-004-studio-content"
+      ],
+      "capability": "knowledge-reflection-and-trust",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "361d59ca-d205-4caf-9b75-b71a6973359b",
+        "c455ac1a-70fa-48b1-96b8-3818a189e82f",
+        "d71623b2-7147-4043-b153-1e585bbd0ce0"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-007-reflection-showcase-release",
+      "kind": "release",
+      "title": "Knowledge Reflection client-showcase release gate",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-006-knowledge-reflection"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "03baa9f6-b700-4623-acb9-882326585792",
+        "2265ac99-5a22-4ab8-98d9-7a80f6701903",
+        "57c5eeb7-0c52-4c72-8992-a63bc2150e64",
+        "926c5f9a-fea1-4850-af4d-09cef26f9b06",
+        "9a1044ba-5577-48df-96c2-14453e1f220d",
+        "c409daca-2432-4949-863b-d592d859cc69",
+        "d66dcf5d-224b-472d-bc1d-7c2f03a35db0"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-008-learner-ux-v2",
+      "kind": "product-surface",
+      "title": "Learner-first experience UI v2 with adaptive-action hierarchy",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-007-reflection-showcase-release"
+      ],
+      "capability": "learner-experience-design",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "486f581a-33c2-4335-9309-6caa9826fe42",
+        "51ce58f1-50ae-403d-9ed7-bb49dc862a5a",
+        "58542ee9-41d8-4ac1-b7f1-fa1cd45181b9",
+        "6e420e6e-a176-4d58-8530-5a31ea501c46",
+        "946d8f2b-acc5-4f6a-acf0-34562ebb36ea"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-009-ui-v2-firebase-release",
+      "kind": "release",
+      "title": "Learner UX v2 Firebase client-showcase release gate",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-008-learner-ux-v2"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "0adef937-8741-412c-84ca-1703e954542b",
+        "1640da8a-0b32-4b62-8bd0-3e2fdecef68b",
+        "2bdc7f57-ea8b-4527-9271-f2762241deb3",
+        "322e42fd-4a18-4c02-b22e-5198c50b3acb",
+        "3849624d-3c44-4c6b-a963-9c45524dde82",
+        "51a8d3df-80aa-4b7b-835e-0412bba00c23",
+        "835b6e6b-c317-41f8-9008-6ec25fefb369",
+        "a42bb47b-e6af-466a-bea8-445583516595"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-010-coachee-language-separation",
+      "kind": "product-surface",
+      "title": "Positive coachee language and internal-model separation",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-009-ui-v2-firebase-release"
+      ],
+      "capability": "coachee-experience-design",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "0900be29-5ba8-4ed2-87ff-b75f604290d3",
+        "879ccd3d-b2b4-43f4-afe9-3f0d5b47fc9c",
+        "c89fa0bc-fbcf-4d29-ab52-8ec39bf7fe11",
+        "ccd653c0-0ea8-4ed6-9d2b-ae4d26c181d3"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-011-coach-intelligence-ui",
+      "kind": "product-surface",
+      "title": "Coach Intelligence, proprietary Learning Twin, and visual parity",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-010-coachee-language-separation"
+      ],
+      "capability": "coach-intelligence-experience",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "26c015ec-dbc9-4f01-85c1-59dc495b6727",
+        "3d74bb8e-d8f5-4ac6-ad43-b8280a647053",
+        "7f975217-8c82-45bb-8f5a-ba284a182a08",
+        "8d1321e5-e9d0-4b68-955a-67b7a3beee29",
+        "a6ade6e1-280d-4258-af22-d8dfcc498fb4",
+        "eda66169-1d9e-4bca-a947-baeb75c3a6e2"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-012-role-separated-showcase-release",
+      "kind": "release",
+      "title": "Role-separated coachee and coach client-showcase release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-010-coachee-language-separation",
+        "LUMA-011-coach-intelligence-ui"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "08a3ef8a-4c7e-47d2-bc16-5ab0dae6473c",
+        "4c2dafa6-bb7a-413b-a66d-4117f3e12a2f",
+        "a1f2cdb4-2542-4ecc-bdf3-4957548d68b0",
+        "bdc2a972-9cda-429d-89e8-09ce4c57063e",
+        "e0415ab8-e0ac-4835-8ab5-395f7f3d2008",
+        "eadbd918-3b45-4e4b-a393-b4c3b1194b5d",
+        "f073ea24-d974-430f-bbba-497911dc2a32",
+        "f62e1292-8049-4eca-99b1-000a69d16f45"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-013-premium-adult-intelligence",
+      "kind": "product-surface",
+      "title": "Premium adult intelligence and source-guided product messaging",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-012-role-separated-showcase-release"
+      ],
+      "capability": "premium-adult-experience",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "030e2167-f719-4b05-9caa-f498bf2ef660",
+        "18d351a9-24af-4f98-9e2b-a69ac70a4c36",
+        "7319d2f6-a294-4830-a580-c2b34c534a8e",
+        "dd584d43-82e9-46e9-9981-03bfec8ae406",
+        "f7e00245-7fdb-4e8e-aace-18f2688ee1e8"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-014-semantic-3d-system",
+      "kind": "product-surface",
+      "title": "Premium semantic 3D system for practice, progress, coach insight, and human intervention",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-013-premium-adult-intelligence"
+      ],
+      "capability": "semantic-visual-language",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "24bb8e39-ed54-4976-a4fe-df1339ed1a36",
+        "2c1ca157-948d-40ed-877d-4bbfe80522cd",
+        "99016695-e354-461b-803e-994c87dbb1ae",
+        "bdca9a7e-e33f-4ac1-b0af-a6e5c60430cd"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-015-voice-modality-evaluation",
+      "kind": "product-research",
+      "title": "Voice as a pedagogical modality, provider-neutral evaluation",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-014-semantic-3d-system"
+      ],
+      "capability": "voice-learning-modality",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "5f336e07-b95b-45a4-bfe0-d7f5a4980ff1",
+        "9a491cf4-1ecb-4b06-a281-60d9f634c757",
+        "e23945f9-bab8-4e4d-8c70-59f608745dcf"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-016-premium-showcase-release",
+      "kind": "release",
+      "title": "Premium adult intelligence client-showcase release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-013-premium-adult-intelligence",
+        "LUMA-014-semantic-3d-system",
+        "LUMA-015-voice-modality-evaluation"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "31b6ba2d-a87a-4a5c-b613-7e047197dff1",
+        "3a2699fb-3a4a-4b6d-b341-e7cf0a5dfd80",
+        "501a9a24-774f-48f2-92e7-820fb54df0c7",
+        "7e1799cc-0158-4aa0-ba3f-0cf0aa619091",
+        "b3e701b4-6d34-44f7-bdf7-9ba5a20af705",
+        "dbdbd0b1-57df-4431-9b9b-8e41a057642c",
+        "eccfc24c-6339-4658-9cd2-36ef324088b6",
+        "fb6dde64-cbf2-4cdb-9064-5ceca82285b5"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-017-theme-superuser-architecture",
+      "kind": "product-foundation",
+      "title": "Three-theme architecture and unified superuser experience console",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-016-premium-showcase-release"
+      ],
+      "capability": "theme-and-profile-experience",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "76d23761-82fe-4f9d-8632-98e02f9c4a43",
+        "92abef4b-234e-411f-9bb4-81819e9b2f2d",
+        "ee2e4b0f-f2c3-49dd-98a3-658e31304c24",
+        "f6475ab7-eee7-4b32-95b6-299f36cd7c76"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-018-seres-institutional-theme",
+      "kind": "product-surface",
+      "title": "Seres de Excelencia institutional theme and brand provenance",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-017-theme-superuser-architecture"
+      ],
+      "capability": "institutional-theme",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "41fab59e-cc72-4fc5-842c-da13d3046102",
+        "98ae3f81-2b4d-4858-8819-9def7b3ed90d",
+        "e094de36-5838-4ced-ab1b-69bbd49edaaa"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-019-liquid-light-theme",
+      "kind": "product-surface",
+      "title": "Liquid Light material theme with accessible motion and transparency fallbacks",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-017-theme-superuser-architecture"
+      ],
+      "capability": "light-material-theme",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "18f2c573-3f6e-42b9-abdb-375e1dcd7a98",
+        "2ef59ae1-bc72-4d99-b031-3da83e05ee00",
+        "dd36ab6b-d534-4127-90de-6de8b678cc71"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-020-nocturne-theme",
+      "kind": "product-surface",
+      "title": "Nocturne Intelligence dark theme across coachee and coach surfaces",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-017-theme-superuser-architecture"
+      ],
+      "capability": "dark-material-theme",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "6801b914-2885-47b8-9a37-cbc349d2a1a6",
+        "6f56c514-f263-45f9-a384-f99224b5d6c3",
+        "c7eabc36-c088-4c87-832f-955b07a4bda7"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-021-glass-adversarial-harness",
+      "kind": "verification-capability",
+      "title": "Glass material adversarial testing across themes, roles and viewports",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-018-seres-institutional-theme",
+        "LUMA-019-liquid-light-theme",
+        "LUMA-020-nocturne-theme"
+      ],
+      "capability": "ui-adversarial-testing",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "635f24c0-6c7c-44fb-9e6c-a5a1baa87e70",
+        "accef24c-aa8b-4781-8f0d-7eb39b733a88"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-022-iconography-3dicon-pipeline",
+      "kind": "product-foundation",
+      "title": "Theme-aware iconography baseline and controlled 3dicon animation pipeline",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-018-seres-institutional-theme",
+        "LUMA-019-liquid-light-theme",
+        "LUMA-020-nocturne-theme"
+      ],
+      "capability": "iconography-and-motion-assets",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "6ef6a5b4-8a31-46e9-b504-45c4662bcac7",
+        "8ca28f85-199d-43d5-9a9c-2c562f841caa",
+        "ea2df343-5d3a-4765-a21b-af4f758ef5f5"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-023-andragogical-progress",
+      "kind": "product-surface",
+      "title": "Andragogical progress narrative using capability, transfer and next demonstration",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-017-theme-superuser-architecture"
+      ],
+      "capability": "adult-progress-experience",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "116b051e-c053-4205-a764-4500e4aef8c3",
+        "246317d2-b987-4c0d-95a0-2f0092dcc16b",
+        "55ec86de-aecc-4152-b9cc-222323838e7e",
+        "b4841540-5f35-45f2-a2e9-7056b5b43b9a"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-024-original-coach-voice",
+      "kind": "product-research",
+      "title": "Original Seres Coach Voice direction, rights gate and provider-neutral architecture",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-017-theme-superuser-architecture"
+      ],
+      "capability": "voice-learning-modality",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "127ce1c3-85e5-4c84-9ca4-697070adac5f",
+        "2506e4c5-eb5a-4a93-9870-feb083126210",
+        "71b96111-7acd-4701-8551-4829d0f764f5",
+        "d041ba13-2638-4b0d-ab98-13777a7f8e02"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-025-private-video-showcase-pipeline",
+      "kind": "product-research",
+      "title": "Private course video rights, ingestion, transcode and learning-evidence pipeline",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-017-theme-superuser-architecture"
+      ],
+      "capability": "video-learning-pipeline",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "8cb91d73-e4bb-4e5b-b4f9-4f79a27154c9",
+        "beada870-0709-4fe7-9191-b0cf080eae75",
+        "e9ef3ba9-a7ce-4664-84d7-eacf7ba2ec75",
+        "f5f852c0-22b0-4ac7-ad5b-50e605c5a7b4"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-026-themed-superuser-release",
+      "kind": "release",
+      "title": "Three-theme superuser and premium asset-system client-showcase release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-021-glass-adversarial-harness",
+        "LUMA-022-iconography-3dicon-pipeline",
+        "LUMA-023-andragogical-progress",
+        "LUMA-024-original-coach-voice",
+        "LUMA-025-private-video-showcase-pipeline"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "0fd5403c-1d63-454c-a6fb-de32b0726a7e",
+        "621e926c-851d-4197-8e15-33b8192d5a5c",
+        "7abb2a17-d052-4f4f-9d79-31d61c3817b9",
+        "87e58148-7727-49e8-b21a-8fbaf01eda76",
+        "907125e4-5786-41aa-8bfa-2c4e89db2e67",
+        "9b6262a6-a1ab-4699-b174-8feba521beac",
+        "b753ca88-3691-45b6-8b52-15c2d57ee678",
+        "ba7d0b7b-6331-4840-91cf-c38ec3b4d1d3",
+        "d268bbd7-c994-4320-a335-ea7e007a162f"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-027-beta-content-graph",
+      "kind": "content",
+      "title": "Source-grounded Practitioner beta content graph",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-026-themed-superuser-release"
+      ],
+      "capability": "curriculum-content",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "c161babd-f683-4f55-a366-8c1bb6d54165",
+        "e62f7c05-4271-4839-849d-234c5a2c5fff",
+        "eb7b7f5e-22fc-4f31-a465-cbe359ed4ce1"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-028-learner-experience-library",
+      "kind": "product-surface",
+      "title": "Learner experience library and reflective practice routes",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-027-beta-content-graph"
+      ],
+      "capability": "learner-content-experience",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "6e53f39c-c414-4044-842a-2cbafb4bbc21",
+        "80260ec5-78ac-47b7-af93-982681414975",
+        "ce8fdfc5-0b62-4aef-9da6-7ddaebb62ca9"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-029-beta-content-release",
+      "kind": "release",
+      "title": "First-user beta content release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-027-beta-content-graph",
+        "LUMA-028-learner-experience-library"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "05bd4534-4843-4b4b-92e9-2790bf77567f",
+        "18733d1a-d0cc-4f59-aadf-51e3f2b85b44",
+        "353ede92-533a-4cf6-ac88-150ab12280de",
+        "587f4797-6ca5-41b9-a455-6d390a9d4ff4",
+        "a9a63db6-4573-4d76-85e3-013758768631",
+        "b1ef81b3-08b2-4a2d-a88c-5cb4f3c3b2be",
+        "cf70a919-2df9-4b3d-8bb4-c6614df67193",
+        "f084ca9f-f26a-435d-9f69-92697be6115b"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-030-mobile-responsive-concept",
+      "kind": "product-surface",
+      "title": "Mobile-responsive learner concept with folio program and field-note practices",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-029-beta-content-release"
+      ],
+      "capability": "mobile-responsive-experience",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "12af651a-79e8-4d14-99a9-78d025bbd499",
+        "6244b185-3636-4d82-aea2-bf4146ef88d7",
+        "db6947fd-ec61-4204-b3c3-099acdf8c594",
+        "f4bb51c7-9eb2-4e94-9e40-136ee37dc04e"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-031-seven-module-spanish-learner-surface",
+      "kind": "content",
+      "title": "Seven-module source-grounded learner program and Spanish product terminology",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-030-mobile-responsive-concept"
+      ],
+      "capability": "program-navigation-localization",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "21a10e4c-4446-4fa2-9692-55eb065990e2",
+        "a3d7a4f0-cd31-4de6-b1c6-255ce6e4f4f7",
+        "c002e8a6-e83c-45e9-95fe-bc3214e47102",
+        "e1f6726a-86f8-4481-9395-5412688baee6"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-032-finish-line-client-demo-release",
+      "kind": "release",
+      "title": "Responsive seven-module client-demo finish-line release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-030-mobile-responsive-concept",
+        "LUMA-031-seven-module-spanish-learner-surface"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "0433ea26-0826-473b-af04-350bb84d9917",
+        "1cbcef3d-5419-4f0f-9bd4-9199898341fb",
+        "54b2b619-7ba1-4d3e-b118-70cbbfb08a5d",
+        "80a70381-d258-43fa-9f27-cd592f664206",
+        "82fcb582-ebd9-4e17-9ae3-f5730b8e0bf7",
+        "b7692a09-25ce-4beb-ac7a-d044816f4585",
+        "d9edf957-193b-4fec-84a3-73356634e172",
+        "dc258512-2f6f-43ef-aac6-d84681bc1cc9",
+        "f4c5c5d8-d309-47f0-9211-b366b13ac62a"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-033-google-auth-participant-profile",
+      "kind": "product-capability",
+      "title": "Firebase Google sign-in with participant preferred display name",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-032-finish-line-client-demo-release"
+      ],
+      "capability": "participant-auth-profile",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "0b3925a0-be5b-4ce1-a30c-6a55e4192dc1",
+        "3916b924-3d3f-40c6-9e9e-29a0531bf6ac",
+        "9909e8d8-51b7-4a3b-b759-c221b06e74e4",
+        "e83d671c-9a3f-470e-9662-df619953f67c"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-034-uiux-adversarial-desktop-mobile",
+      "kind": "verification",
+      "title": "Adversarial UI UX review across mobile desktop themes auth and learner journeys",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-033-google-auth-participant-profile"
+      ],
+      "capability": "uiux-adversarial-verification",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "9dcaf7b0-c451-460d-8817-5c829cf11fe4",
+        "db887450-9af0-4515-97b9-4badfd7c5d87"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-035-auth-uiux-client-release",
+      "kind": "release",
+      "title": "Google-auth and adversarial UI UX client-demo release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-033-google-auth-participant-profile",
+        "LUMA-034-uiux-adversarial-desktop-mobile"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "1c2d14b9-dfe6-417d-a128-81117abcaa85",
+        "29d82bae-f79a-421d-8bab-1ea27748f647",
+        "62b65737-6bfa-494c-93bd-e3e2be04d75c",
+        "669f1fcb-468e-4a11-958c-5604beda28ed",
+        "986de4b4-bfc6-43dc-b601-03ba7636c81b",
+        "9d3ba503-7485-4f75-875e-e64da2f49d4c",
+        "ff3f3c62-dad6-484f-900b-cdfb2d91b738"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-036-adaptive-next-best-action",
+      "kind": "product-capability",
+      "title": "Evidence-driven adaptive Next Best Action with canonical learner differentiation",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-035-auth-uiux-client-release"
+      ],
+      "capability": "adaptive-learning-intelligence",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "07fe10f8-e9ef-47c4-8a2a-52968ced2afd",
+        "0ea1414c-8285-469c-a596-9313e65411bc",
+        "50fb7750-f49b-42a2-aecd-1f49da1d14da",
+        "608bf2cd-48b6-4df2-a53a-e8eb30d579a5",
+        "e99501c5-bcab-40a4-83e6-808b47b7f642"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-036-liquid-glass-refraction-v2",
+      "kind": "product-surface",
+      "title": "Bounded Liquid Light refraction and lens-material v2",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-035-auth-uiux-client-release"
+      ],
+      "capability": "liquid-glass-refraction-v2",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-037-persistent-learning-twin",
+      "kind": "product-capability",
+      "title": "Firestore-backed persistent learner state and append-only evidence ledger",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-036-adaptive-next-best-action"
+      ],
+      "capability": "persistent-learning-twin",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "6ec4f4c4-62dc-4979-8e58-0a03c9b38b72",
+        "a1918e6d-455d-45a8-bf73-a80e6eeaafeb",
+        "afa234b0-12dd-4949-a5c7-0c5f49a3eeee",
+        "aff71faa-5998-4225-89fb-ec99b7b688ee",
+        "b31caeef-0c7d-4003-b5b5-efa541033fdd",
+        "bdba45a3-657b-447e-98ff-261a1e1a894b"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-038-theme-hydration-hygiene",
+      "kind": "verification",
+      "title": "Deterministic theme hydration across server and persisted client themes",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-037-persistent-learning-twin"
+      ],
+      "capability": "runtime-hydration-hygiene",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "00d44320-b646-4cdf-bda1-f91367b8b4cd",
+        "aad28072-a25a-40b5-b020-e86aaa8b5e72"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-039-persistent-twin-release",
+      "kind": "release",
+      "title": "Persistent Learning Twin code release with adversarial and integration gates",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-036-adaptive-next-best-action",
+        "LUMA-037-persistent-learning-twin",
+        "LUMA-038-theme-hydration-hygiene"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "08cd4edb-70da-4110-837c-769262b58e3e",
+        "22d1b904-817a-4dfa-b7c9-821842d1a298",
+        "26510ea7-9eae-410d-aeb0-23bb9f251d60",
+        "592427a2-c423-4136-9b83-cffe47311381",
+        "6c06f1d6-7a03-4431-ac3d-91fca57a32b1",
+        "83e1ebe3-60c2-4ce1-afa1-97381d334388",
+        "87a96285-4523-42d2-9a35-8de2c2f43466",
+        "e482695c-b988-44d5-9242-12cd076e0fb2",
+        "ea4506c6-e73c-49c8-9225-f7d632c6261a"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-040-production-persistent-twin-deployment",
+      "kind": "deployment",
+      "title": "Production deployment of Persistent Learning Twin and deny-all Firestore client boundary",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-039-persistent-twin-release"
+      ],
+      "capability": "production-persistent-learning-twin",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "0bda6b2b-f763-4b5d-952c-9da7ea0b7ca2",
+        "32e086dc-1ade-4eb6-949c-89348f852272",
+        "b1349f6f-f8db-4cb8-a689-c2f9b353173a",
+        "b46bfb42-9f72-40e4-9a4e-8a63205f9f7f"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-041-coach-authoritative-learning-state",
+      "kind": "product-capability",
+      "title": "Role-authorized Coach Studio reads the same authoritative learner state and evidence ledger",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-040-production-persistent-twin-deployment"
+      ],
+      "capability": "coach-authoritative-learning-state",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "2b00f397-ae89-4fc9-9576-fc3eb91b72da",
+        "9a5f1546-5f3b-4d5a-999d-05e4906dab49",
+        "ad829181-8e40-4ad2-9417-e232316fc73f",
+        "bb42edd3-dd29-400c-a140-a08bf2b7cc03"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-042-authoritative-twin-production-release",
+      "kind": "release",
+      "title": "Production release of shared learner and coach authoritative Learning Twin",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-040-production-persistent-twin-deployment",
+        "LUMA-041-coach-authoritative-learning-state"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "03b1075e-bf60-4be7-9da8-a2546d899d8b",
+        "22861279-e70d-4be7-90a6-341e1af23cc6",
+        "3837ab20-f915-4444-b90e-a26094eb80b2",
+        "55cae2bd-dba6-4aa7-9f36-71e811e9a92c",
+        "7075a8f2-eb2d-46fb-809b-6bd2d8e3bcb0",
+        "c51200c9-67b7-48df-aa5e-898f7985872f",
+        "c9afbfb7-b01f-472c-b80b-2eff2a61d18f",
+        "e105d5b8-0736-488c-82aa-a1733fd9c20f"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-043-learning-pattern-research",
+      "kind": "product-research",
+      "title": "Platzi and AI-EdTech learning pattern research with adoption decisions",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-042-authoritative-twin-production-release"
+      ],
+      "capability": "learning-product-research",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "1957970b-aaf9-4a4b-8962-f452872ec802",
+        "4c5f96c3-991c-4f25-838a-08891254f3b5"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-044-pedagogy-as-code-contract",
+      "kind": "ai-learning-capability",
+      "title": "Pedagogy-as-code class contract, topologies, invariants and quality gate",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-043-learning-pattern-research"
+      ],
+      "capability": "learning-quality-policy",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "08b414a6-1a06-4ec1-9962-651744624ce4",
+        "70153528-94db-40da-a33e-5c0aeac952f1",
+        "c257d3eb-1c05-4c6e-85d5-0222ad6900c5"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-045-adaptive-entry-diagnostic",
+      "kind": "product-surface",
+      "title": "Capability micro-diagnostic and adaptive class entry routing",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-044-pedagogy-as-code-contract"
+      ],
+      "capability": "adaptive-learning-entry",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "8161d884-75a7-4059-8b34-f28e6a888ae4",
+        "a4989ffe-3894-491b-ae5b-85423c0d0444",
+        "fef2a3ae-ce9a-4f36-9d2b-63c83c0b9216"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-046-simulation-evidence-runtime",
+      "kind": "ai-learning-capability",
+      "title": "Criterion-based simulation, remediation, replay and evidence authority runtime",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-045-adaptive-entry-diagnostic"
+      ],
+      "capability": "evidence-first-practice",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "6c5115fc-4a21-4148-8cf5-d04c26300332",
+        "917172f7-39f0-4636-8941-8353faaf55dc",
+        "996a246d-18f9-4c9e-996a-abc6fe0b471a",
+        "bf3285ea-8e58-43ff-9db6-91062138c6e4"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-047-self-refreshing-class-factory",
+      "kind": "ai-learning-capability",
+      "title": "Source-grounded class factory with reflection, impact analysis and human promotion",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-044-pedagogy-as-code-contract"
+      ],
+      "capability": "class-generation-reflection",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "6ea1ca46-fca2-4252-aecb-fa5c2508f0dd",
+        "c33e5dc0-8790-46ab-b2b6-8e21bea3c063",
+        "d82faf8b-a8e2-43d1-abbe-1103ffbef500"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-048-learning-impact-observability",
+      "kind": "product-surface",
+      "title": "Learning evidence to coach insight and class-quality observability",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-046-simulation-evidence-runtime",
+        "LUMA-047-self-refreshing-class-factory"
+      ],
+      "capability": "learning-impact-observability",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "05cac77d-4ed7-4988-bb30-00793f2266b0",
+        "3cab815b-e54d-4d66-815b-05d3762ec7ef",
+        "676b0d86-13c6-4548-b5b9-56a3956a90c9",
+        "e3dcb83d-9aa5-495f-af7f-23b4eb4cdcca",
+        "f81c1d34-078e-4ba0-a4c6-902aef3484bc"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-049-class-intelligence-release",
+      "kind": "release",
+      "title": "AI-native class intelligence client-demo release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-045-adaptive-entry-diagnostic",
+        "LUMA-046-simulation-evidence-runtime",
+        "LUMA-047-self-refreshing-class-factory",
+        "LUMA-048-learning-impact-observability"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {
+        "independent-review": "PASS",
+        "release-quality": "PASS"
+      },
+      "active_evidence_ids": [
+        "038f8dc1-4174-4971-babd-ce172da39235",
+        "046d989c-1bdc-4127-aa95-25f318a1e842",
+        "366ca360-7aca-4fa5-8874-89aeaccac5f8",
+        "75336ee1-e29f-4959-96f8-58022feb036f",
+        "bf9fc19f-a49a-449a-b498-45c8768ae6c1",
+        "c2648509-cbdc-4b27-a208-5a016275ed2c",
+        "f4d8b399-56b7-4da6-aac3-bb3930b63dfd"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-050-v2-post-client-baseline",
+      "kind": "architecture",
+      "title": "V2 post-client architecture baseline and bounded migration plan",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-049-class-intelligence-release"
+      ],
+      "capability": "solution-architecture",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "0248a823-fa55-4f5a-98a2-b6ff019a9b71",
+        "7f92ee4b-0a62-453e-ae02-ca4bac08a7c3"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-051-commerce-domain-contract",
+      "kind": "domain-foundation",
+      "title": "Provider-neutral commerce events, provider contract, entitlement and enrollment boundaries",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-050-v2-post-client-baseline"
+      ],
+      "capability": "commerce-domain",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "257f03c4-2b11-4d53-882f-a7d635c74dee",
+        "5f381bf6-bd00-4452-81fa-eea61653942b",
+        "67e08b2b-ad93-418b-aa19-ffffed5a975b",
+        "eb2bd949-f821-4761-9036-bf8d141ebc8c",
+        "ed8cb44d-8430-429d-a7b5-653f360708b3",
+        "fa08443d-8ea4-4fd8-8f38-39fd9b2e079b"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-052-commerce-idempotency-ledger",
+      "kind": "domain-foundation",
+      "title": "Idempotent provider-event ledger and replay-safe processing",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-051-commerce-domain-contract"
+      ],
+      "capability": "commerce-reliability",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "07f7eee5-4522-41a8-9c58-bdb5d9728ece",
+        "2db6741c-e8f1-4708-b1cd-34cc36474a2a",
+        "40ac40e5-16c9-4db3-b526-2ab2f5a9613c",
+        "55194769-6c1d-4094-a5a7-60d0379a01ec",
+        "6b38422a-c12c-4178-9ccf-f3cd805c6701",
+        "8c5a8662-9bf8-4e38-aff6-e49920f79de5",
+        "99844edd-6841-4789-9dec-f1ff2caf4aa6",
+        "db2fa612-d3bf-4d91-8856-c0a4942416ff",
+        "ffb1acb8-f6ad-443c-9785-7225f38f548c"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-053-hotmart-provider",
+      "kind": "integration",
+      "title": "Hotmart provider adapter with signed webhook normalization and lifecycle mapping",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-052-commerce-idempotency-ledger"
+      ],
+      "capability": "commerce-provider-hotmart",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "156ac061-e0b2-404b-9c59-1a7a6e27e2ee",
+        "44e81b46-3461-401f-b69d-cf62d0c5558a",
+        "5716fd9d-e2bf-47dc-95ae-b16421ed3d65",
+        "775c3ba0-62d5-4044-9f9d-f74064de5745",
+        "e64059c8-30ab-4ef1-a152-e72dd44c1723",
+        "edfdf918-491d-4d50-ab5f-e8596253b78a",
+        "f3aec051-54c6-4130-8f4c-ec1b8050e46c"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-054-stripe-provider",
+      "kind": "integration",
+      "title": "Stripe provider adapter using the same normalized commerce contract",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-052-commerce-idempotency-ledger"
+      ],
+      "capability": "commerce-provider-stripe",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "047a0d8b-4991-4a79-8fd7-bd67b315f7e6",
+        "2fb6816f-a077-4b7d-a252-f5b5032f8fe7",
+        "5d8f43b6-e1a4-4670-8219-8f227d3e0e0c",
+        "69ce135e-03cb-433a-966a-9f7f5a7f7ecb",
+        "d562ffa1-3029-4792-8fd2-af9fd1f79183",
+        "dcb44661-29c2-4cf8-8e58-e19ed35017fc",
+        "f3c5b003-1f27-49da-9bd1-7302c852afd6"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-055-v2-enterprise-pilot-gate",
+      "kind": "release",
+      "title": "V2 enterprise pilot readiness gate for commerce-independent learning intelligence",
+      "status": "ready",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-062-capacity-resilience-validation"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-056-liquid-glass-functional-layer-v3",
+      "kind": "product-surface",
+      "title": "Liquid Glass functional-layer hierarchy and bounded refraction v3",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-050-v2-post-client-baseline"
+      ],
+      "capability": "liquid-glass-functional-layer",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "263195ce-666c-4d7c-90d4-278568e59e6c",
+        "2a477d7b-7541-4bd1-a91e-b5670937c830",
+        "3685396b-7200-49e2-a5dd-80dfe209c541",
+        "77e1c843-b895-4feb-9588-d67a4c136174",
+        "87727c50-ed90-42ea-b3f7-d7f461393dab",
+        "962a0e13-5656-4a94-8e32-673181bb30ff",
+        "a2befcae-3663-4f69-988a-c4569467208c"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-057-commerce-enrollment-activation",
+      "kind": "domain-foundation",
+      "title": "Provider events to entitlement, enrollment, and verified-email access activation",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-053-hotmart-provider",
+        "LUMA-054-stripe-provider"
+      ],
+      "capability": "commerce-enrollment",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "2181f541-3052-4956-98b8-82d8e776a654",
+        "6decc97a-0c57-4912-bdbf-b6de16274e9e",
+        "910f9867-1ed9-4029-9936-5a139979aa64",
+        "96b0e5af-3e1d-41d3-a0a6-21ba6ac0af43",
+        "b0e7b709-55d6-43d4-8c75-f9450cac972e",
+        "db738280-cdd2-4ee0-8d6c-eebbf87a5d73",
+        "e3004532-6645-4b5c-a194-abe5ae4377eb",
+        "e9e96b9c-88f7-480b-bfbd-8b76e7c34a91"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-058-live-program-delivery",
+      "kind": "product-capability",
+      "title": "Live, asynchronous, and hybrid program offerings with session schedules",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-057-commerce-enrollment-activation"
+      ],
+      "capability": "program-delivery",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "36c378e1-a6ab-4b9e-ad4c-dcf6b5645421",
+        "38ed9d8d-0081-418b-a75c-4d19b1c79e9a",
+        "50419a56-c95e-43aa-8f82-1571e867bd35",
+        "797dd48c-5f8c-4811-8d77-c18d6cd21911",
+        "ad98500c-6d2e-4d87-8567-235c193dd499",
+        "ca71b985-e7df-431f-8a8c-bc297b11b686",
+        "ecd48fef-1541-4b07-93d3-a1670645a49a"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-059-engagement-intervention-runtime",
+      "kind": "learning-intelligence",
+      "title": "Andragogy-aligned engagement signals and human intervention queue",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-058-live-program-delivery"
+      ],
+      "capability": "engagement-intelligence",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "0ed45958-83b8-4166-ad3f-95cebfbf9b3c",
+        "0fa7173c-05d8-4fa1-bb18-bfbb8abce0e2",
+        "23f2c981-9ba7-44fa-a9f7-451e679c2ba3",
+        "34a79028-85e9-49b7-a1cd-7ebf3fbaf93e",
+        "5bc6f1a3-c857-4238-9e1f-b52d4456e271",
+        "a5dbc3c0-0db1-4042-adeb-dbb0ff1b7dc7",
+        "bb0c31ee-82cb-402b-9c6b-040fafbc91aa",
+        "c6c47873-7658-46e8-98b6-df466098faf8",
+        "fb31c16a-f068-4a93-aace-f67779c99f50"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-060-content-intelligence-search",
+      "kind": "learning-intelligence",
+      "title": "Grounded audiovisual corpus search with exact source timestamps and voice query input",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-052-commerce-idempotency-ledger"
+      ],
+      "capability": "content-intelligence",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "02004041-7831-45d5-a23f-ae5ffc0c5a96",
+        "053a17e5-c840-4f9c-b8bc-6df15ca6f474",
+        "1aa711ab-435f-41b6-88b3-4ae74e6f5346",
+        "62f644c1-8e54-47e7-8b57-476986dae16a",
+        "867ca05e-0b2d-45a7-a759-886b26756060",
+        "d6c03187-fc85-493a-8216-b55b1754c6ee",
+        "e3c1838e-380b-4843-b88f-29be446e5497",
+        "f733e400-6423-42ee-80bc-5d4517d99da7"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-061-platform-operability-contract",
+      "kind": "architecture",
+      "title": "Core health, data boundary, provider setup, and evidence-based SLA contract",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-057-commerce-enrollment-activation",
+        "LUMA-059-engagement-intervention-runtime",
+        "LUMA-060-content-intelligence-search"
+      ],
+      "capability": "platform-operability",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "043cb68f-c5b1-4d81-8ffb-1aab3e212fe9",
+        "2a6777fd-b335-4b5f-8517-e98c3608bd6a",
+        "34c903c7-246b-470f-93e5-74baf6a3be90",
+        "53dcf6e7-4c25-492f-ac9f-7c97e1bc67d1",
+        "7057382e-117d-4082-a261-f3aacb18dc48",
+        "7aebcf27-f50b-467e-ad60-28456a6222f4",
+        "a8d51242-a3eb-490c-aef2-49acfe0702b2",
+        "fd596437-1cd9-40bf-a018-99ce9ab6fc0e"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-062-capacity-resilience-validation",
+      "kind": "release",
+      "title": "Production-like load, soak, recovery, and resilience validation for target pilot tier",
+      "status": "ready",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-061-platform-operability-contract"
+      ],
+      "capability": "capacity-resilience",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-063-tenant-program-twin-rag-isolation",
+      "kind": "security-hardening",
+      "title": "Tenant/program-scoped Learning Twin, coach authorization, and private RAG evidence boundary",
+      "status": "ready",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-057-commerce-enrollment-activation",
+        "LUMA-059-engagement-intervention-runtime",
+        "LUMA-060-content-intelligence-search"
+      ],
+      "capability": "enterprise-tenant-isolation",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-064-scoped-rag-retrieval-backend",
+      "kind": "security-hardening",
+      "title": "Server-enforced tenant/program RAG retrieval and citable corpus lifecycle",
+      "status": "ready",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-063-tenant-program-twin-rag-isolation",
+        "LUMA-060-content-intelligence-search"
+      ],
+      "capability": "isolated-knowledge-intelligence",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-065-scoped-rag-staging-security",
+      "kind": "security-hardening",
+      "title": "Synthetic HTTP staging verification and read-only grant-enforcement for scoped retrieval",
+      "status": "ready",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-064-scoped-rag-retrieval-backend"
+      ],
+      "capability": "isolated-rag-staging-evidence",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-067-se-liquid-glass-brand-v4",
+      "kind": "product-surface",
+      "title": "Seres de Excelencia optical glass and public-asset brand provenance",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-056-liquid-glass-functional-layer-v3"
+      ],
+      "capability": "se-optical-material",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "1a053abd-2db2-46fb-9907-17bdff74f652",
+        "5ff61352-af6d-4e47-a16c-866835587f72",
+        "6987a3a3-4581-4e6f-8c0c-d265f81d2655",
+        "74d59b49-7e49-45fe-a350-b767a6ead6c0",
+        "786e065d-73cb-48b3-b3da-f5488e189837",
+        "7a64f67e-c1cb-4a69-8a39-ff571e537081",
+        "b0566d85-2f31-4b19-bfe4-9c2c923f92b5",
+        "b35de3bb-b737-4d69-a023-68d957f4fb79",
+        "bd93cc67-f077-47d9-b4d1-8a9db5103c95",
+        "d78d1a41-c9c6-4240-8364-f9b4b7c02912"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-068-studio-ci-strict-locator",
+      "kind": "release-hardening",
+      "title": "Fix duplicate Studio unauthenticated gate heading locator blocking Firebase release",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-067-se-liquid-glass-brand-v4"
+      ],
+      "capability": "ci-release-reliability",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "2099fa3a-7df2-41c8-be68-c72c2b52969e",
+        "302fa83a-a30f-4cfe-bacd-5d701ccf6eb7",
+        "3cfb891f-d81f-4bd3-917b-0f1121e5956a",
+        "472af19b-20f5-4416-a1cf-79e359cc9cf2",
+        "5e340fb4-5e55-43f7-b3f3-7b2bfdacdd51",
+        "60b2f5ec-c932-4b31-97ad-437d9ad962a8",
+        "92c801f2-0341-4b62-8e4a-ea69f9a43648",
+        "95b1eae0-17e9-48cb-bef4-4cc50c25b8a6",
+        "a08497d8-eb0c-44df-b809-946d8d2f3b30",
+        "c6d9f7d4-b40b-42ec-b86e-ea03a68d2759"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-069-learning-surface-inventory",
+      "kind": "product-research",
+      "title": "Role-separated UI surface inventory and Platzi learning-pattern gap map",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-049-class-intelligence-release"
+      ],
+      "capability": "learning-ui-information-architecture",
+      "active_gates": {
+        "independent-review": "PASS"
+      },
+      "active_evidence_ids": [
+        "3eba0b14-ddac-46a2-8303-19f16ba04e6e",
+        "efd917be-e0bf-425b-a789-e25a6243a782"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-070-program-entry-assessment",
+      "kind": "product-surface",
+      "title": "Program-level capability assessment and adaptive starting point",
+      "status": "running",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-069-learning-surface-inventory"
+      ],
+      "capability": "program-adaptive-entry",
+      "active_gates": {},
+      "active_evidence_ids": [
+        "18d901dd-e794-40f8-8f12-736ab3dc5ba6",
+        "4a30cbeb-174a-4e1d-a211-d01e3613c123",
+        "a7ebe278-5b96-4d8f-8b35-03f75347e6b0",
+        "d88ef7b8-5aab-4769-9908-5169a0316e7c",
+        "f61c76b8-8e2a-43be-8369-4e5e023d89a8"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-071-contextual-learning-assistant",
+      "kind": "ai-learning-capability",
+      "title": "Contextual learning assistant scoped by class objective, capability, learner state and sources",
+      "status": "running",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-069-learning-surface-inventory"
+      ],
+      "capability": "contextual-learning-assistant",
+      "active_gates": {},
+      "active_evidence_ids": [
+        "6e24e4f9-54cf-4450-9ea1-bb6eb4168fcf",
+        "7aed88ef-ee36-476d-84c9-a548ccaf5501",
+        "98f1c07a-5d3f-41c7-ab8a-844b05431ead",
+        "a73af686-7f3e-496b-9874-bfffa85c6f3e",
+        "cfcc892a-d262-4bd3-a3ba-58b8e61d9bf4"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-072-generalized-simulation-runtime",
+      "kind": "ai-learning-capability",
+      "title": "Generalized real-world simulation, criterion feedback, remediation and replay beyond P.A.S.",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-070-program-entry-assessment",
+        "LUMA-071-contextual-learning-assistant"
+      ],
+      "capability": "scenario-practice-runtime",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-073-class-runtime-ui",
+      "kind": "product-surface",
+      "title": "Unified adult class runtime from objective to diagnostic, practice, evidence, transfer and recheck",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-070-program-entry-assessment",
+        "LUMA-072-generalized-simulation-runtime"
+      ],
+      "capability": "class-runtime-experience",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-074-organizational-learning-map",
+      "kind": "product-surface",
+      "title": "Coach and superuser organizational learning map from source to class to evidence to intervention to reflection",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-071-contextual-learning-assistant",
+        "LUMA-072-generalized-simulation-runtime"
+      ],
+      "capability": "organizational-learning-memory",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-075-cohort-peer-learning-evaluation",
+      "kind": "product-research",
+      "title": "Evaluate cohort and peer-learning patterns without copying open community mechanics",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-069-learning-surface-inventory"
+      ],
+      "capability": "cohort-peer-learning",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-076-learning-system-release",
+      "kind": "release",
+      "title": "Platzi-informed learning system UX and adaptive class release gate",
+      "status": "approved",
+      "revision": 0,
+      "depends_on": [
+        "LUMA-073-class-runtime-ui",
+        "LUMA-074-organizational-learning-map",
+        "LUMA-075-cohort-peer-learning-evaluation"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "LUMA-CICD-002-release-pipeline",
+      "kind": "release-engineering",
+      "title": "Protected CI, keyless release and exact production verification",
+      "status": "review",
+      "revision": 0,
+      "depends_on": [],
+      "capability": "enterprise-delivery",
+      "active_gates": {
+        "cicd-release": "PASS"
+      },
+      "active_evidence_ids": [
+        "1a62f065-0248-44fb-9706-747670246c38",
+        "233f3bcd-9ab0-48d5-85c4-1d087ca2137b",
+        "246f3ad5-707d-4b71-a5e0-6015cf55b3e2",
+        "4db84fe6-dee9-4577-93ce-8ea4d0a25c8b",
+        "5249e035-2f8b-4f5f-a80c-b57405658f5f",
+        "a5db06a1-5818-491b-ac77-2d664e92875a",
+        "b771aa18-5b18-42a0-b4ed-f6141c034da2",
+        "b7864ded-8777-4521-a94a-ed1dc1f8022e",
+        "e3c32956-8fd2-4d18-a96f-5413cbdaa589"
+      ],
+      "approval_count": 0
+    }
+  ],
+  "checkpoint_count": 25,
+  "repair_plan_count": 0
+}

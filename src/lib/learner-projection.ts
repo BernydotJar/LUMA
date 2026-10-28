@@ -1,4 +1,5 @@
 import { selectNextLearningAction } from "./learning-engine";
+import { entryAssessmentNextAction, type ProgramEntryAssessmentSummary } from "./program-assessment";
 import { evidenceMayUpdateTwin, type SimulationCriterionResult } from "./simulation-evidence";
 import {
   journeySteps,
@@ -39,6 +40,7 @@ export interface StoredLearningEvent {
   twinAuthority?: "none" | "supporting" | "eligible";
   rubricId?: string;
   criteria?: SimulationCriterionResult[];
+  programAssessment?: ProgramEntryAssessmentSummary;
 }
 
 export interface AdaptiveLearningPlan {
@@ -48,6 +50,8 @@ export interface AdaptiveLearningPlan {
   routeChanged: boolean;
   journey: JourneyStep[];
   dimensions: TwinDimension[];
+  entryAssessment?: ProgramEntryAssessmentSummary;
+  entryAssessmentActive?: boolean;
 }
 
 const goalConfig: Record<OnboardingGoal, { label: string; focusConceptIds: string[] }> = {
@@ -261,8 +265,13 @@ export function createAdaptiveLearningPlanFromState(
   state: LearnerState,
   onboarding?: StoredOnboardingState,
   previousAction?: RankedLearningAction,
+  entryAssessment?: ProgramEntryAssessmentSummary,
+  entryAssessmentActive = false,
 ): AdaptiveLearningPlan {
-  const nextAction = selectNextLearningAction(state, learningActions) ?? showcaseNextAction;
+  const adaptiveAction = selectNextLearningAction(state, learningActions) ?? showcaseNextAction;
+  const nextAction = entryAssessmentActive && entryAssessment
+    ? entryAssessmentNextAction(entryAssessment) ?? adaptiveAction
+    : adaptiveAction;
   const routeChanged = Boolean(previousAction && previousAction.id !== nextAction.id);
 
   return {
@@ -272,6 +281,8 @@ export function createAdaptiveLearningPlanFromState(
     routeChanged,
     journey: projectJourney(state, nextAction),
     dimensions: projectDimensions(state, onboarding),
+    entryAssessment,
+    entryAssessmentActive,
   };
 }
 

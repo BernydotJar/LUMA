@@ -1,0 +1,196 @@
+{
+  "project": "demo-luma-firstclient-20261014",
+  "base": "local Firebase emulators + Next production build",
+  "baseSHA": "2328a8d147350113ca2ebf51c2bd4398ba0ab46b",
+  "branch": "fix/coach-program-rbac-20261014",
+  "checks": [
+    {
+      "id": "01 admin permissions and tenant isolation",
+      "result": "PASS",
+      "detail": {
+        "guest": 401,
+        "foreignAdmin": 403,
+        "student": 403
+      }
+    },
+    {
+      "id": "02 Mary live and evergreen academic offerings",
+      "result": "PASS",
+      "detail": {
+        "modes": [
+          "live",
+          "asynchronous"
+        ],
+        "tenantOfferings": 2
+      }
+    },
+    {
+      "id": "03 Mary live classroom scheduled without recording",
+      "result": "PASS",
+      "detail": {
+        "liveSession": "QA Mary - apertura",
+        "evergreenNotSchedulable": true,
+        "foreignTenantDenied": true
+      }
+    },
+    {
+      "id": "04 premium bulk enrollment and idempotency",
+      "result": "PASS",
+      "detail": {
+        "first": {
+          "requested": 4,
+          "granted": 2,
+          "extended": 0,
+          "reactivated": 0,
+          "unchanged": 0,
+          "duplicate_input": 1,
+          "invalid": 1,
+          "rejected": 0
+        },
+        "replay": {
+          "requested": 4,
+          "granted": 0,
+          "extended": 0,
+          "reactivated": 0,
+          "unchanged": 2,
+          "duplicate_input": 1,
+          "invalid": 1,
+          "rejected": 0
+        }
+      }
+    },
+    {
+      "id": "05 evergreen and multiple course enrollment",
+      "result": "PASS",
+      "detail": {
+        "evergreenEnrolled": true,
+        "twoCoursesForSameLearner": true,
+        "enrollmentRecords": 4
+      }
+    },
+    {
+      "id": "06 verified claims and correct live schedule",
+      "result": "PASS",
+      "detail": {
+        "activeEnrollments": [
+          1,
+          1,
+          2
+        ],
+        "sessionCounts": [
+          1,
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "id": "06b entitled course selector returns only assigned programs",
+      "result": "PASS",
+      "detail": {
+        "learnerCourseCounts": [
+          1,
+          1,
+          2,
+          0
+        ],
+        "coachCourseCount": 2,
+        "foreignDenied": 403,
+        "guestDenied": 401
+      }
+    },
+    {
+      "id": "07 multi-course plan demands selection",
+      "result": "PASS",
+      "detail": {
+        "noSelectionStatus": 409,
+        "error": "program_selection_required",
+        "apiProgramScopeRequired": true
+      }
+    },
+    {
+      "id": "08 premium onboarding evidence survives fresh auth",
+      "result": "PASS",
+      "detail": {
+        "serverPersisted": true,
+        "version": 2,
+        "restoreWithNewToken": true
+      }
+    },
+    {
+      "id": "09 coach evidence with scoped course; cross-tenant denial",
+      "result": "PASS",
+      "detail": {
+        "unselectedStatus": 409,
+        "authorizedCoach": true,
+        "evidenceCount": 1,
+        "foreignDenied": true
+      }
+    },
+    {
+      "id": "09b same-tenant unassigned coach denied on ALL evidence surfaces",
+      "result": "PASS",
+      "detail": {
+        "unassignedVisibleCourses": 0,
+        "unassignedEvidenceStatus": 403,
+        "unassignedRosterStatus": 403,
+        "unassignedSignalsStatus": 403,
+        "adminAccess": 200
+      }
+    },
+    {
+      "id": "09c live course reassignment and revocation effective without token refresh",
+      "result": "PASS",
+      "detail": {
+        "oldCoachDeniedAfterReassignment": true,
+        "newCoachAllowedWhenAssigned": true,
+        "revocationImmediate": true
+      }
+    },
+    {
+      "id": "09d mixed-cohort course evidence is denied to both partial-cohort coaches",
+      "result": "PASS",
+      "detail": {
+        "mixedCohortOfferingId": "960f8a306143751327eab7b7c622576823485d05fcaf393c6d7d6c73fa4ec837",
+        "partialCoachDenied": true,
+        "adminAllowed": true,
+        "archivingAloneDoesNotExposeEvidence": true,
+        "fullHistoricalAssignmentRestores": true
+      }
+    },
+    {
+      "id": "10 scoped intervention insight but no outbound notification",
+      "result": "PASS",
+      "detail": {
+        "signalCount": 1,
+        "outboundHttp": 405
+      }
+    },
+    {
+      "id": "11 premium access revocation blocks learner",
+      "result": "PASS",
+      "detail": {
+        "revokedLearnerDenied": true,
+        "multiLearnerOtherProgramRetained": true,
+        "revokedProgramRemovedFromSelector": true
+      }
+    },
+    {
+      "id": "12 101 offerings produce explicit fail-closed capacity response",
+      "result": "PASS",
+      "detail": {
+        "initialOfferingCount": 3,
+        "withinBoundCourses": 99,
+        "catalogStatus": 409,
+        "evidenceReadStatus": 409,
+        "crossTenantDisclosure": false
+      }
+    }
+  ],
+  "status": "PASS",
+  "summary": {
+    "passed": 16,
+    "failed": 0
+  },
+  "cleanup": "Deleted all test Firebase Auth users; emulator process discards temporary Firestore records"
+}

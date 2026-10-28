@@ -1,0 +1,26 @@
+.root { width: 100%; max-width: 1080px; margin: 0 auto; padding: clamp(14px, 2.5vw, 32px) 0 92px; }
+.player { display: grid; gap: 26px; }
+.back { color: var(--muted-strong); display: inline-flex; gap: 10px; align-items: center; width: fit-content; min-height: 44px; }
+.back:hover, .practiceLink:hover { color: var(--accent); }
+.header { display: grid; gap: 13px; }
+.header h1 { font-size: clamp(2.4rem, 4.8vw, 4.5rem); line-height: 1.06; max-width: 930px; letter-spacing: -.058em; }
+.header p { color: var(--muted-strong); line-height: 1.6; max-width: 760px; font-size: 1.05rem; }
+.attributes { display: flex; flex-wrap: wrap; gap: 12px 22px; padding-top: 5px; }
+.attributes span { display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; color: var(--muted); }
+.mediaPanel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; min-height: clamp(310px, 44vw, 600px); display: grid; place-items: center; }
+.mediaEmpty, .message { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 17px; padding: clamp(24px, 5vw, 52px); }
+.mediaEmpty { width: 100%; max-width: 610px; }
+.message { min-height: 340px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
+.mediaEmpty > svg, .message > svg, .document > svg { color: var(--accent); }
+.mediaEmpty h2, .message h2, .document h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.12; }
+.mediaEmpty p, .message p, .document p { max-width: 540px; line-height: 1.67; color: var(--muted-strong); }
+.video { width: 100%; max-height: 72vh; background: #060909; display: block; }
+.document { display: grid; justify-items: start; gap: 17px; width: min(100%, 690px); padding: clamp(25px, 5vw, 55px); }
+.pageForm { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+.pageForm label { font-size: .9rem; color: var(--muted-strong); }
+.pageForm input { width: 115px; min-height: 46px; color: var(--ink); border: 1px solid var(--line-strong); background: var(--bg-soft); border-radius: var(--radius-xs); padding: 7px 12px; }
+.pageForm button { min-height: 46px; }
+.footnote { display: flex; flex-wrap: wrap; align-items: center; gap: 15px 22px; justify-content: space-between; }
+.footnote p { max-width: 610px; line-height: 1.6; font-size: .85rem; color: var(--muted-strong); }
+.practiceLink { display: inline-flex; align-items: center; gap: 8px; color: var(--muted-strong); font-size: .9rem; min-height: 44px; }
+@media (max-width: 700px) { .root { padding: 12px 0 108px; } .header h1 { font-size: clamp(2.4rem, 10vw, 3.6rem); } .mediaPanel { min-height: 340px; } .footnote { align-items: flex-start; flex-direction: column; } .pageForm { align-items: stretch; } .pageForm label { width: 100%; } }

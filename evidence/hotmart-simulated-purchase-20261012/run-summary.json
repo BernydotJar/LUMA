@@ -1,0 +1,62 @@
+{
+  "verdict": "PASS",
+  "kind": "hotmart-approved-purchase-qa-e2e",
+  "environment": "LOCAL_EMULATOR_ONLY",
+  "project": "demo-luma-hotmart-paid-e2e",
+  "productionWrites": false,
+  "simulatedOnly": true,
+  "events": {
+    "purchaseApproved": 200,
+    "replayDuplicate": true,
+    "enrollmentCount": 1,
+    "refunded": true,
+    "refundReplayDuplicate": true
+  },
+  "learning": {
+    "eventVersion": 2,
+    "nextStepChanged": true,
+    "coachSeesEvidence": true
+  },
+  "security": {
+    "guestDenied": 401,
+    "beforePurchaseDenied": 403,
+    "badHottokDenied": 401,
+    "otherBuyerDenied": 403,
+    "wrongProgramDenied": 403,
+    "crossTenantCoachDenied": 403,
+    "refundRevokesLearner": 403,
+    "refundRevokesCoachAccess": 403
+  },
+  "cleanup": "Firebase emulators shut down on command exit",
+  "date": "2026-10-12",
+  "sourceCommit": "7ef32ba9ff3c56896da536a86ca14286b99ddfb3",
+  "passedAssertions": 22,
+  "failedAssertions": 0,
+  "qaEndpoint": "http://127.0.0.1:3285",
+  "firestore": "emulator only",
+  "auth": "emulator only",
+  "realPurchase": false,
+  "realGoogleOAuthTested": false,
+  "merchantSandboxTested": false,
+  "observedPortsClosed": [
+    8085,
+    9099,
+    3285
+  ],
+  "statement": "This is a local HTTP/API-level end-to-end test, not a browser login or real Hotmart sandbox sale.",
+  "repeatedRuns": 2,
+  "secondRunPassedAssertions": 22,
+  "secondRunFailedAssertions": 0,
+  "validation": {
+    "typecheck": "PASS",
+    "targetedVitest": "41 PASS / 4 files",
+    "lint": "PASS",
+    "nodeSyntax": "PASS",
+    "shellSyntax": "PASS"
+  },
+  "remaining": [
+    "Real Hotmart sandbox purchase and provider callback",
+    "Google OAuth sign-in in browser with entitled QA learner",
+    "User-facing course unlock and navigation checked as a signed-in learner"
+  ]
+}

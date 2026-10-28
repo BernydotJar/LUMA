@@ -11,17 +11,23 @@ import {
   Target,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
+import { CourseEnrollmentStatus } from "@/components/course-enrollment-status";
 import { ExperienceShelf } from "@/components/experience-shelf";
 import { LearningJourney } from "@/components/learning-journey";
 import { LearnerGreeting } from "@/components/learner-greeting";
 import { LearningPulse } from "@/components/learning-pulse";
 import { LiveProgramSchedule } from "@/components/live-program-schedule";
 import { NextActionCard } from "@/components/next-action-card";
+import { ProgramEntryAssessment } from "@/components/program-entry-assessment";
 import { ProgressStory } from "@/components/progress-story";
 import { TutorPanel } from "@/components/tutor-panel";
 import { useLumaAuth } from "@/components/auth-provider";
-import { fetchPersistentLearningPlan, syncPendingLearningEvent } from "@/lib/learning-api-client";
-import { createAdaptiveLearningPlan, parseStoredLearningEvent, parseStoredOnboarding, type AdaptiveLearningPlan } from "@/lib/learner-projection";
+import { ProgramPicker, useProgramSelection } from "@/components/program-picker";
+import { fetchPersistentLearningSnapshot, syncPendingLearningEvent, type PersistentLearningSnapshot } from "@/lib/learning-api-client";
+import { guestLearningKeys } from "@/lib/learner-client-storage";
+import { claimEntitledPrograms } from "@/lib/commerce-access-client";
+import { firebaseAuth } from "@/lib/firebase-client";
+import { createAdaptiveLearningPlan, parseStoredLearningEvent, parseStoredOnboarding } from "@/lib/learner-projection";
 import { evidenceMayUpdateTwin } from "@/lib/simulation-evidence";
 import styles from "@/app/learn/learn.module.css";
 
@@ -34,8 +40,8 @@ function subscribeToLearningStorage(callback: () => void) {
 
 function getLearningStorageSnapshot() {
   return JSON.stringify([
-    window.localStorage.getItem("luma-onboarding"),
-    window.localStorage.getItem("luma-latest-learning-event"),
+    window.localStorage.getItem(guestLearningKeys.onboarding),
+    window.localStorage.getItem(guestLearningKeys.latestScored),
   ]);
 }
 
@@ -45,7 +51,14 @@ function getServerLearningStorageSnapshot() {
 
 export function AdaptiveLearningHome() {
   const { user, loading } = useLumaAuth();
-  const [remotePlan, setRemotePlan] = useState<{ uid: string; plan: AdaptiveLearningPlan } | null>(null);
+  const selection = useProgramSelection("learner");
+  const programId = selection.status === "entitled" ? selection.programId : null;
+  const [remoteState, setRemoteState] = useState<{
+    uid: string; programId: string | null; snapshot: PersistentLearningSnapshot;
+  } | null>(null);
+  const [accessStatus, setAccessStatus] = useState<{
+    uid: string; programId: string | null; error: string;
+  } | null>(null);
   const storageSnapshot = useSyncExternalStore(
     subscribeToLearningStorage,
     getLearningStorageSnapshot,
@@ -61,32 +74,88 @@ export function AdaptiveLearningHome() {
 
   useEffect(() => {
     const uid = user?.uid;
-    if (loading || !uid) return;
+    if (loading || !uid ||
+        (selection.status !== "showcase" && !programId)) return;
     let cancelled = false;
     void (async () => {
       try {
-        const synced = await syncPendingLearningEvent();
-        const persistent = synced ?? await fetchPersistentLearningPlan();
-        if (!cancelled && persistent) setRemotePlan({ uid, plan: persistent });
-      } catch {
-        // An available local practice remains usable while persistence is temporarily offline.
+        // A verified purchase claim precedes reading per-course evidence.
+        await claimEntitledPrograms();
+        const prior = await fetchPersistentLearningSnapshot();
+        if (firebaseAuth.currentUser?.uid !== uid) return;
+        if (prior && (prior.program?.programId ?? null) !== programId) {
+          throw new Error("LEARNING_SCOPE_MISMATCH");
+        }
+        let changed = false;
+        if (prior) {
+          try {
+            changed = Boolean(await syncPendingLearningEvent(prior, uid));
+          } catch {
+            // Retry failures do not replace the trusted server snapshot.
+          }
+        }
+        const snapshot = changed ? await fetchPersistentLearningSnapshot() : prior;
+        if (snapshot && (snapshot.program?.programId ?? null) !== programId) {
+          throw new Error("LEARNING_SCOPE_MISMATCH");
+        }
+        if (!cancelled && firebaseAuth.currentUser?.uid === uid) {
+          setRemoteState(snapshot ? { uid, programId, snapshot } : null);
+          setAccessStatus(null);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          // Never restore another account/course's state or a guest preview.
+          setRemoteState(null);
+          setAccessStatus({
+            uid, programId,
+            error: error instanceof Error ? error.message : "PLAN_UNAVAILABLE",
+          });
+        }
       }
     })();
     return () => { cancelled = true; };
-  }, [loading, user?.uid]);
+  }, [loading, user?.uid, programId, selection.status]);
 
-  const persistent = remotePlan && remotePlan.uid === user?.uid ? remotePlan.plan : null;
-  const plan = persistent ?? localProjection.plan;
-  const hasProfile = localProjection.hasOnboarding || Boolean(persistent);
-  const evidenceEvent = localProjection.event && evidenceMayUpdateTwin(localProjection.event)
-    ? localProjection.event : undefined;
+  // Authenticated evidence must match both verified UID and chosen program.
+  const snapshot = !loading && user && remoteState?.uid === user.uid &&
+    remoteState.programId === programId ? remoteState.snapshot : undefined;
+  const guest = !loading && !user;
+  const entitled = selection.status === "entitled";
+  const plan = snapshot?.plan ?? (guest ? localProjection.plan : createAdaptiveLearningPlan());
+  const hasProfile = Boolean(snapshot || (guest && localProjection.hasOnboarding));
+  const evidenceEvent = snapshot?.scoredEvidence ?? (
+    guest && localProjection.event && evidenceMayUpdateTwin(localProjection.event)
+      ? localProjection.event : undefined
+  );
+  const accessError = user && accessStatus?.uid === user.uid &&
+    accessStatus.programId === programId ? accessStatus.error : null;
   const routeChangeCopy = hasProfile && plan.routeChanged && plan.previousAction
     ? plan.previousAction.title + " → " + plan.nextAction.title
     : undefined;
 
+  if (user && selection.status !== "showcase" &&
+      (selection.status !== "entitled" || !selection.programId)) {
+    return (
+      <AppShell title="Mi aprendizaje" subtitle="Elige el programa para continuar.">
+        <div className={styles.home}>
+          <ProgramPicker audience="learner" selection={selection} />
+        </div>
+      </AppShell>
+    );
+  }
+
+  // The primary practice action remains above the fold on mobile. New
+  // multicourse learners see ONLY the picker until an authorized course is
+  // chosen; afterwards switching courses is a secondary action below the hero.
+  const chosenCourseTitle = selection.courses.find(
+    (course) => course.programId === programId,
+  )?.title;
   return (
-    <AppShell title="Mi aprendizaje" subtitle="Un lugar para aprender, practicar y seguir avanzando.">
+    <AppShell title="Mi aprendizaje" subtitle={chosenCourseTitle
+      ? `Programa actual: ${chosenCourseTitle}`
+      : "Un lugar para aprender, practicar y seguir avanzando."}>
       <div className={styles.home}>
+        <CourseEnrollmentStatus />
         <section className={styles.intro} aria-labelledby="learner-home-title">
           <div className={styles.introCopy}>
             <span className={styles.eyebrow}>TU ESPACIO DE APRENDIZAJE <span aria-hidden="true">/</span> LUMA</span>
@@ -110,6 +179,17 @@ export function AdaptiveLearningHome() {
           </div>
           <NextActionCard action={plan.nextAction} personalized={hasProfile} variant="hero" />
         </section>
+
+        <ProgramPicker audience="learner" selection={selection} />
+        {accessError && (
+          <section className={styles.routeChange} role="alert">
+            <Compass size={20} aria-hidden="true" />
+            <div>
+              <strong>{accessError.includes("403") ? "Tu inscripción requiere revisión" : "No pudimos recuperar tu avance"}</strong>
+              <p>Tu información personal no se mostrará sin verificar tu cuenta y tu curso. Revisa el correo de compra o intenta ingresar de nuevo.</p>
+            </div>
+          </section>
+        )}
 
         {routeChangeCopy && (
           <section className={styles.routeChange} data-testid="route-changed" role="status">
@@ -139,10 +219,31 @@ export function AdaptiveLearningHome() {
           </Link>
         </nav>
 
-        <LiveProgramSchedule />
+        <ProgramEntryAssessment
+          key={`${user?.uid ?? "guest"}:${programId ?? "showcase"}`}
+          summary={plan.entryAssessment}
+          hasProfile={hasProfile}
+          userId={user?.uid}
+          programId={programId}
+          onPlanUpdate={() => {
+            const uid = user?.uid;
+            const selectedProgram = programId;
+            if (!uid || !selectedProgram) return;
+            void (async () => {
+              try {
+                const latest = await fetchPersistentLearningSnapshot();
+                if (!latest || firebaseAuth.currentUser?.uid !== uid ||
+                    (latest.program?.programId ?? null) !== selectedProgram) return;
+                setRemoteState({ uid, programId: selectedProgram, snapshot: latest });
+              } catch { /* Keep existing trusted projection if refresh fails. */ }
+            })();
+          }}
+        />
+
+        <LiveProgramSchedule activeProgramId={entitled ? programId : undefined} />
 
         <section className={styles.progressArea} aria-label="Avance y evidencia">
-          <ProgressStory event={evidenceEvent} nextAction={plan.nextAction} />
+          <ProgressStory event={evidenceEvent} nextAction={plan.nextAction} source={snapshot?.scoredEvidence ? "server" : "preview"} />
           <LearningPulse
             dimensions={plan.dimensions}
             personalized={hasProfile}
@@ -188,7 +289,7 @@ export function AdaptiveLearningHome() {
               <p>LUMA puede ayudarte a encontrar un concepto, examinar un ejemplo o practicar una idea.</p>
             </div>
           </div>
-          <TutorPanel />
+          <TutorPanel key={`${user?.uid ?? "guest"}:${programId ?? "showcase"}`} />
         </div>
 
         <footer className={styles.footer}>

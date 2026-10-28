@@ -1,0 +1,48 @@
+{
+  "decision": "PROVIDER_CLOUD_PASS",
+  "checks": [
+    {
+      "action": "webrtc_publish",
+      "role": "instructor",
+      "passed": true
+    },
+    {
+      "action": "webrtc_publish",
+      "role": "learner-one",
+      "passed": true
+    },
+    {
+      "action": "webrtc_publish",
+      "role": "learner-two",
+      "passed": true
+    },
+    {
+      "action": "instructor_data_chat_to_learner",
+      "passed": true
+    },
+    {
+      "action": "connected_learner_removed",
+      "passed": true,
+      "remaining": 2
+    },
+    {
+      "action": "old_token_replay_denied",
+      "passed": true
+    },
+    {
+      "action": "closed_room_cached_token_denied",
+      "passed": true
+    },
+    {
+      "action": "automatic_room_creation_disabled",
+      "passed": true
+    },
+    {
+      "action": "finish_for_everyone_disconnects_all",
+      "passed": true
+    }
+  ],
+  "projectId": "p_5650huuc5om",
+  "source": "evidence/live-classroom-acceptance/cloud-enterprise-verification.json",
+  "exitCode": 0
+}

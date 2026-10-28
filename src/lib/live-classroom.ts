@@ -119,6 +119,26 @@ export function classroomAdmission(
 }
 
 /**
+ * Media controls stay available in an overtime class, but new admission tokens do not.
+ * The provider action itself must target an existing connected room/participant.
+ */
+export function classroomControlAdmission(
+  offering: ProgramOffering,
+  session: LiveProgramSession,
+  nowMs = Date.now(),
+): "allowed" | "not_open" | "closed" {
+  const admission = classroomAdmission(offering, session, nowMs);
+  if (admission !== "closed") return admission;
+  const start = Date.parse(session.startsAt);
+  if (offering.status !== "active" || !["live", "hybrid"].includes(offering.deliveryMode) ||
+      session.status !== "scheduled" || !isLiveKitClassroom(session) ||
+      !Number.isFinite(start) || !Number.isInteger(session.durationMinutes) ||
+      session.durationMinutes < 10 || session.durationMinutes > 720 ||
+      nowMs < start - 30 * 60_000) return "closed";
+  return "allowed";
+}
+
+/**
  * An instructor can finish a running class even if it runs past the planned end time.
  * Prevent closing a future class more than 30 minutes before its start.
  * Completed sessions remain eligible for provider cleanup retries.

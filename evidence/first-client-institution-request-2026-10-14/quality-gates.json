@@ -1,0 +1,34 @@
+{
+  "change": "LUMA-073 verified applicant submission slice",
+  "baselineSHA": "6faf77d95e34c62514a640884587c14131f63ac2",
+  "local": {
+    "lint": "PASS",
+    "typescript": "PASS",
+    "vitestPassed": 354,
+    "vitestSkipped": 81,
+    "build": "PASS",
+    "apiPassed": 13,
+    "apiFailed": 0,
+    "browserPassed": 8,
+    "browserFailed": 0,
+    "pageErrors": 0,
+    "axeThemes": [
+      "se",
+      "light",
+      "dark"
+    ],
+    "axeViolationsDetected": 0
+  },
+  "externalReviewer": "Not yet approved; synthetic emulator and automated axe tests are not real signoff",
+  "release": "NO-GO",
+  "criticalOpen": [
+    "institution owner/operator trust review",
+    "first tenant grant+invitation",
+    "rate limit/WAF",
+    "PII retention/deletion",
+    "licensed provider and manual browser QA",
+    "first published course"
+  ],
+  "productionRoleChanges": false,
+  "productionDeploy": false
+}

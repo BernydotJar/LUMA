@@ -3,8 +3,11 @@ import { expect, test } from "@playwright/test";
 test.describe("responsive mobile product", () => {
   test("mobile learner header does not overlap and navigation remains usable", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "mobile", "Mobile-specific geometry check.");
-    await page.goto("/learn");
-    await page.waitForLoadState("networkidle");
+    await page.goto("/learn", { waitUntil: "domcontentloaded" });
+    // Geometry must be measured after the interactive header has rendered.
+    await expect(page.locator('[class*="pageTitle"]')).toBeVisible();
+    await expect(page.locator('[class*="topbarActions"]')).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Navegación móvil" })).toBeVisible();
 
     const geometry = await page.evaluate(() => {
       const box = (selector: string) => {
@@ -39,7 +42,16 @@ test.describe("responsive mobile product", () => {
     await nav.locator("summary").click();
     await expect(nav.getByRole("link", { name: "Certificados", exact: true })).toBeVisible();
     await expect(nav.getByRole("link", { name: "LUMA", exact: true })).toBeVisible();
-    await expect(nav.getByRole("link")).toHaveCount(5);
+    await expect(nav.getByRole("link", { name: "Lecciones", exact: true })).toBeVisible();
+    // A new product destination should not break accessibility merely because
+    // the old suite hard-coded the number of tabs.
+    const destinations = await nav.getByRole("link").evaluateAll((links) =>
+      links.map((link) => link.getAttribute("href")));
+    for (const essentialHref of ["/learn", "/learn#journey", "/learn/experiences",
+      "/learn/course", "/learn/certificates", "/learn#luma"]) {
+      expect(destinations).toContain(essentialHref);
+    }
+    expect(new Set(destinations).size).toBe(destinations.length);
 
     const layout = await nav.evaluate((element) => ({
       scrollWidth: element.scrollWidth,

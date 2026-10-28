@@ -1,0 +1,66 @@
+{
+  "release_decision": "NO_GO",
+  "customer_livekit_cloud_e2e": "NOT_RUN",
+  "deployed_source_sha": "NOT_VERIFIED",
+  "local_provider_replay_finding": "PARTIAL_TOKEN_REPLAY_NOT_PREVENTED",
+  "local_provider_kind": "REAL_PROVIDER_LOCAL_NOT_PRODUCTION_OR_CUSTOMER_UI",
+  "local_provider_roles": [
+    "instructor",
+    "learner-a",
+    "learner-b"
+  ],
+  "local_provider_assertions": {
+    "three_webRTC_mic_publishers_joined": true,
+    "revoked_member_disconnected": true,
+    "instructor_and_other_learner_remained_connected": true,
+    "old_unexpired_jwt_denied_reentry": false
+  },
+  "tests": {
+    "tsc": "PASS",
+    "eslint": "PASS",
+    "unit_without_emulators": {
+      "passed": 350,
+      "skipped": 98
+    },
+    "firestore_revocation_and_commerce": {
+      "passed": 37,
+      "note": "Latest independent isolated Firestore emulator run: 10 revocation, 24 commerce orchestration, 3 institutional grant"
+    },
+    "firestore_revocation_newest": {
+      "passed": 10
+    },
+    "production_build": "PASS",
+    "playwright_anonymous_only": {
+      "passed": 4,
+      "profiles": [
+        "Chromium",
+        "mobile Chromium"
+      ]
+    },
+    "graph_harness_validation": "PASS",
+    "full_product_acceptance": {
+      "decision": "NO_GO",
+      "critical_actions": 20,
+      "blockers": 82
+    }
+  },
+  "blocking_dependencies": [
+    "Graph Harness PR #5 repository-wide default-branch update prohibition",
+    "LUMA #71 release-readiness failing and required five CI contexts missing on other PRs",
+    "real LiveKit Cloud hosted multiuser JWT replay, per-enrollment instant disconnect and true UI acceptance",
+    "production deployment attestation and independent customer review"
+  ],
+  "interpretation": "The observed local old-JWT replay is expected on LiveKit OSS self-hosted and does not establish a vulnerability in LiveKit Cloud. Cloud credential revocation must be verified with an actual Cloud session and refreshed JWT. The customer release decision remains NO_GO until independently verified.",
+  "source_notes": [
+    "Refund preserves the originally purchased offering despite mutable merchant product mapping",
+    "Distinct refunded provider events enqueue distinct deterministic revocation outbox entries",
+    "Missing outbox is a retryable source consistency error rather than successful media attestation",
+    "Before each provider removal, enrollment and alternative grants are refreshed to reduce concurrent reactivation races",
+    "Token issuance checks valid cohort membership before and after signing; join webhooks perform compensating provider eviction"
+  ],
+  "provider_compatibility": "LiveKit OSS self-hosted does not support RemoveParticipant token revocation; Cloud-specific revocation requires a new test",
+  "provider_documentation": [
+    "https://docs.livekit.io/frontends/reference/tokens-grants/",
+    "https://docs.livekit.io/intro/basics/rooms-participants-tracks/participants/"
+  ]
+}

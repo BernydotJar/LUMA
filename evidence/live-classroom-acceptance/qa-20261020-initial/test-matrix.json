@@ -1,0 +1,381 @@
+{
+  "schema": "luma.enterprise.qa.test-matrix.v1",
+  "runId": "qa-20261020-initial",
+  "generatedAt": "2026-10-20T18:16:45.727941+00:00",
+  "testedProductSourceSha": "ae9f984e07c222a88344300926f1ca0dab2725ad",
+  "harnessSourceSha": "b3e991eaff98822defdd20287fa110586953abde",
+  "independentReviewer": null,
+  "customerAcceptance": "NO_GO",
+  "stagingProviderCredentialsAvailable": false,
+  "executed": [
+    {
+      "id": "LUMA-UNIT-FULL",
+      "persona": "engineering",
+      "environment": "isolated local source",
+      "result": "PASS",
+      "assertions": [
+        "350 tests passed",
+        "98 emulator-conditioned skipped in this invocation"
+      ],
+      "evidence": "full-unit-suite.log",
+      "kind": "unit"
+    },
+    {
+      "id": "LUMA-FIRESTORE-FULL",
+      "persona": "learner/operator/admin",
+      "environment": "demo-luma-commerce Firestore emulator",
+      "result": "PASS",
+      "assertions": [
+        "67 persisted integration tests passed, mocked LiveKit calls"
+      ],
+      "evidence": "full-commerce-firestore-emulator.log",
+      "kind": "integration"
+    },
+    {
+      "id": "LUMA-FIRESTORE-P0",
+      "persona": "revoked learner/operator",
+      "environment": "demo-luma-commerce Firestore emulator",
+      "result": "PASS",
+      "assertions": [
+        "16 revocation, attendance and classroom interaction cases passed"
+      ],
+      "evidence": "emulator-tests.log",
+      "kind": "subset_of_full_emulator_not_additive"
+    },
+    {
+      "id": "LUMA-GUEST-DESKTOP",
+      "persona": "unauthenticated visitor",
+      "environment": "Chromium local Next.js desktop",
+      "result": "PASS",
+      "assertions": [
+        "guest cannot mint media token",
+        "guest cannot perform educational controls"
+      ],
+      "evidence": "browser-guest-local.log",
+      "kind": "unauthenticated_browser"
+    },
+    {
+      "id": "LUMA-GUEST-MOBILE",
+      "persona": "unauthenticated visitor",
+      "environment": "Chromium iPhone 14 emulation local Next.js",
+      "result": "PASS",
+      "assertions": [
+        "guest cannot mint media token",
+        "guest cannot perform educational controls"
+      ],
+      "evidence": "browser-guest-local.log",
+      "kind": "unauthenticated_browser"
+    },
+    {
+      "id": "LIVEKIT-OSS-THREE-AV",
+      "persona": "synthetic instructor + learners A/B",
+      "environment": "localhost LiveKit OSS v1.13.10",
+      "result": "PASS",
+      "assertions": [
+        "each publishes audio and camera",
+        "each sees two decoded remote videos and two live subscribed audio tracks"
+      ],
+      "evidence": "livekit-multimedia-provider.json",
+      "kind": "actual_WebRTC_not_LUMA_UI"
+    },
+    {
+      "id": "LIVEKIT-OSS-SELF-TOGGLE",
+      "persona": "learner B",
+      "environment": "localhost LiveKit OSS v1.13.10",
+      "result": "PASS",
+      "assertions": [
+        "mute and unmute local microphone",
+        "turn off/on camera"
+      ],
+      "evidence": "livekit-multimedia-provider.json",
+      "kind": "provider_sdk_not_branded_ui"
+    },
+    {
+      "id": "LIVEKIT-OSS-P0-REMOVE",
+      "persona": "instructor + learners A/B",
+      "environment": "localhost LiveKit OSS v1.13.10",
+      "result": "PASS",
+      "assertions": [
+        "learner A removed",
+        "instructor and B remain in room",
+        "learner A observed disconnected"
+      ],
+      "metric": {
+        "removeToObservedDisconnectMs": 22,
+        "sampleCount": 1,
+        "network": "loopback"
+      },
+      "evidence": "livekit-multimedia-provider.json",
+      "kind": "actual_provider_not_Cloud"
+    },
+    {
+      "id": "LIVEKIT-OSS-OLD-JWT-REPLAY",
+      "persona": "revoked learner A",
+      "environment": "localhost LiveKit OSS v1.13.10",
+      "result": "FAIL",
+      "assertions": [
+        "old JWT was accepted on rejoin"
+      ],
+      "expectedProviderLimitation": true,
+      "doesNotImplyCloudBug": true,
+      "evidence": "livekit-multimedia-provider.json",
+      "kind": "expected_OSS_security_limitation"
+    },
+    {
+      "id": "LUMA-HOSTED-ANONYMOUS",
+      "persona": "unauthenticated visitor",
+      "environment": "public custom domain + Firebase upstream",
+      "result": "PASS",
+      "assertions": [
+        "two roots HTTP 200",
+        "two guest classrooms HTTP 200",
+        "two guest token POST HTTP 401",
+        "two guest moderation POST HTTP 401"
+      ],
+      "evidence": "hosted-anonymous-smoke.json",
+      "kind": "public_read_only_not_authenticated_UAT"
+    },
+    {
+      "id": "GRAPH-ACCEPTANCE-20",
+      "persona": "four required contract personas",
+      "environment": "Graph Harness PR #5",
+      "result": "FAIL",
+      "assertions": [
+        "NO_GO",
+        "20 actions",
+        "82 independent-proof/deployment blockers"
+      ],
+      "evidence": "product-acceptance.json",
+      "kind": "expected_fail_closed_policy"
+    },
+    {
+      "id": "GITHUB-PR71-RELEASE",
+      "persona": "release engineer",
+      "environment": "GitHub Actions PR #71",
+      "result": "FAIL",
+      "assertions": [
+        "9 jobs passed",
+        "release-readiness failed: Source changed since independent review",
+        "deploy skipped"
+      ],
+      "evidence": "release-readiness.md",
+      "kind": "release_gate"
+    },
+    {
+      "id": "CLOUD-AV",
+      "persona": "instructor and 2 learners",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "Cloud real WebRTC media and remote track reception"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-P0-OLD-JWT",
+      "persona": "revoked learner A",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "strict old JWT replay denial with explicit revoke_token_ts"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-P0-REFRESHED-JWT",
+      "persona": "revoked learner A",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "refreshed token replay denial after removal"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-P0-REFUND",
+      "persona": "operator/learner",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "signed provider refund while learner actively transmits media"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-P0-INSTITUTIONAL",
+      "persona": "institution admin/learner",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "institutional revocation while learner actively transmits media"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-P0-DUPLICATE",
+      "persona": "operator",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "duplicated and out-of-order refunds on real provider"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-P0-OUTAGE",
+      "persona": "operator",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "LiveKit outage during revocation and durable retry"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-P0-ALTERNATE",
+      "persona": "learner",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "preserve another valid entitlement during real provider removal"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-P0-REACTIVATION",
+      "persona": "operator/learner",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "legitimate reactivation and no unauthorized restoration of moderation ban"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-P0-RACE",
+      "persona": "learner",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "concurrent refund, JWT issuance and network reconnect"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-P0-SIGNED-WEBHOOK",
+      "persona": "provider/operator",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "signed participant_joined webhook re-removes replaying participant"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-REAL-ADMIN-JOURNEY",
+      "persona": "institution admin",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "create and publish program plus 90-minute live class in authorized staging"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-REAL-TEACHING-UI",
+      "persona": "instructor/learners",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "share screen, raise hand, acknowledgment, mute, remove, attendance, close and rejoin in branded UI"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-TENANT-SECURITY",
+      "persona": "cross-tenant user",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "prevent other-tenant/cohort unauthorized access in published staging"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "CLOUD-SCALE",
+      "persona": "2/10/50 synthetic learners",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "approved real network stress with QoS metrics"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "RUNTIME-SHA",
+      "persona": "release auditor",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "independently observed Firebase deployed commit and current runtime feature flag"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "VISUAL-REAL-DOCK",
+      "persona": "instructor/learners",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "responsive liquid glass dock, 44px, safe area, screenreader, WebKit"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    },
+    {
+      "id": "INDEPENDENT-REVIEW",
+      "persona": "independent reviewer",
+      "environment": "Cloud staging or attested published runtime",
+      "result": "BLOCKED",
+      "assertions": [
+        "review and sign four-axis action proof exact source SHA"
+      ],
+      "blocker": "Credentials, approved staging/UAT identities, runtime SHA, or independent reviewer not available",
+      "kind": "not_executed"
+    }
+  ],
+  "fourAxisProductAcceptance": {
+    "requiredActions": 20,
+    "axisPassCounts": {
+      "implementation": 0,
+      "journey": 0,
+      "production": 0,
+      "ui": 0
+    },
+    "blockers": 82,
+    "decision": "NO_GO",
+    "evidence": "product-acceptance.json"
+  },
+  "hostedGuestChecks": 8,
+  "notes": [
+    "Local provider tokens and video devices are synthetic.",
+    "Mocked Firestore provider actions are not equivalent to Cloud media acceptance.",
+    "No deployment, merge, billing, account mutation or reviewer approval performed."
+  ]
+}

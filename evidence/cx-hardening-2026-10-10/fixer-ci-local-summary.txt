@@ -1,0 +1,9 @@
+FULL_CI_LOCAL
+[145/146] [mobile] › e2e/showcase.spec.ts:259:3 › LUMA product showcase › key client-facing views satisfy automated WCAG checks
+[146/146] [mobile] › e2e/spanish-ui.spec.ts:36:1 › client-facing product terminology stays in Spanish
+  21 skipped
+  125 passed (1.2m)
+UNIT_LOCAL
+ Test Files  51 passed | 7 skipped (58)
+      Tests  291 passed | 52 skipped (343)
+   Duration  3.50s (import 85%, transform 11%, tests 3%, worker 1%)

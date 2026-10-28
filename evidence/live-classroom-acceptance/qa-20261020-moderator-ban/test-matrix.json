@@ -1,0 +1,147 @@
+{
+  "schema_version": "luma.qa.acceptance-run.v1",
+  "run_id": "qa-20261020-moderator-ban",
+  "tested_source_sha": "3fe24da039ec379967ab8ddd338dbaedf5ad0e38",
+  "branch": "qa/livekit-av-enterprise-acceptance-20261020",
+  "graph_harness_sha": "b3e991eaff98822defdd20287fa110586953abde",
+  "gate": {
+    "decision": "NO_GO",
+    "critical_actions": 20,
+    "blockers": 82,
+    "independent_reviewer": false,
+    "published_runtime_sha": null
+  },
+  "definitions": {
+    "PASS": "assertions directly executed in scoped environment",
+    "BLOCKED": "needs authorized environment/secret/independent control",
+    "NOT_TESTED": "not executed in this run"
+  },
+  "scenarios": [
+    {
+      "id": "QA-SEC-001-RED",
+      "actors": [
+        "instructor",
+        "learner A"
+      ],
+      "environment": "Vitest mocked provider and Firestore",
+      "result": "FAIL_BEFORE_FIX",
+      "observed": "2 of 3 added tests failed before patch: missing explicit moderator ban reason",
+      "repro": "npm run test:run -- 'src/app/api/live/classrooms/[offeringId]/[sessionId]/moderate/route.test.ts'"
+    },
+    {
+      "id": "QA-SEC-001-GREEN",
+      "actors": [
+        "instructor",
+        "learner A"
+      ],
+      "environment": "Vitest mocked provider and Firestore",
+      "result": "PASS",
+      "observed": "3/3 including moderator ban precedence, provider failure 503, learner denied moderator action",
+      "source_sha": "3fe24da039ec379967ab8ddd338dbaedf5ad0e38"
+    },
+    {
+      "id": "QA-UNIT-FULL",
+      "actors": [
+        "system"
+      ],
+      "environment": "Cloud Sandbox, local Vitest",
+      "result": "PASS",
+      "assertions_passed": 353,
+      "skipped": 98,
+      "command": "npm run test:run"
+    },
+    {
+      "id": "QA-FIRESTORE-REVOCATION",
+      "actors": [
+        "learner A",
+        "commerce webhook"
+      ],
+      "environment": "Firestore Emulator demo-luma-qa77 port 8097, LiveKit mocked",
+      "result": "PASS",
+      "assertions_passed": 10,
+      "command": "firebase emulators:exec --only firestore --project demo-luma-qa77 'npm run test:run -- src/lib/live-classroom-revocation.emulator.test.ts'"
+    },
+    {
+      "id": "QA-UI-ANONYMOUS",
+      "actors": [
+        "anonymous guest"
+      ],
+      "environment": "local Next.js dev, Playwright Chromium desktop and mobile",
+      "result": "PASS",
+      "assertions_passed": 4,
+      "command": "CI= PLAYWRIGHT_PORT=3188 npm run test:e2e -- e2e/live-classroom-auth.spec.ts"
+    },
+    {
+      "id": "QA-LINT-TSC",
+      "actors": [
+        "system"
+      ],
+      "environment": "Cloud Sandbox",
+      "result": "PASS",
+      "command": "npm run lint && npm run typecheck"
+    },
+    {
+      "id": "QA-LIVEKIT-CLOUD-P0",
+      "actors": [
+        "instructor",
+        "learner A",
+        "learner B"
+      ],
+      "environment": "dedicated LiveKit Cloud QA",
+      "result": "BLOCKED",
+      "blocker": "No authorized LiveKit Cloud test endpoint/key/secret"
+    },
+    {
+      "id": "QA-FIREBASE-STAGING-UAT",
+      "actors": [
+        "institution-admin",
+        "instructor",
+        "learner A",
+        "learner B",
+        "learner C unauthorized",
+        "learner D revoked"
+      ],
+      "environment": "separate Firebase staging",
+      "result": "BLOCKED",
+      "blocker": "No distinct staging project and provisioned synthetic identities"
+    },
+    {
+      "id": "QA-REFUND-LIVE-EVICT-REPLAY",
+      "actors": [
+        "learner A",
+        "instructor",
+        "learner B"
+      ],
+      "environment": "staging Firebase plus LiveKit Cloud",
+      "result": "BLOCKED",
+      "blocker": "Provider secrets, signed-webhook delivery and authenticated staging UAT"
+    },
+    {
+      "id": "QA-DOCK-ACTIONABLE-UI",
+      "actors": [
+        "instructor",
+        "learner"
+      ],
+      "environment": "branded authenticated Playwright real AV",
+      "result": "NOT_TESTED"
+    },
+    {
+      "id": "QA-LOAD-10-50",
+      "actors": [
+        "10-50 synthetic participants"
+      ],
+      "environment": "authorized Cloud QA quota",
+      "result": "BLOCKED",
+      "blocker": "Cloud QA quota, cost and environment"
+    },
+    {
+      "id": "QA-GRAPH-ACCEPTANCE",
+      "actors": [
+        "independent reviewer"
+      ],
+      "environment": "Graph Harness PR #5 (local)",
+      "result": "BLOCKED",
+      "observed": "NO_GO, 20 actions, 82 blockers; no independently observed published SHA or reviewer proof"
+    }
+  ]
+}

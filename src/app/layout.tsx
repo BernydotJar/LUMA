@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { ThemeBootstrap } from "@/components/theme-bootstrap";
 import { AuthProvider } from "@/components/auth-provider";
+import { QaEmulatorAuth } from "@/components/qa-emulator-auth";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
-import "@livekit/components-styles";
 
 export const metadata: Metadata = {
   title: {
@@ -35,7 +35,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <ThemeBootstrap />
       </head>
       <body>
-        <ThemeProvider><AuthProvider>{children}</AuthProvider></ThemeProvider>
+        <ThemeProvider><AuthProvider>
+          {process.env.NODE_ENV === "development" &&
+           process.env.NEXT_PUBLIC_LUMA_QA_FIREBASE_PROJECT?.startsWith("demo-") &&
+           process.env.NEXT_PUBLIC_LUMA_QA_AUTH_EMULATOR_URL === "http://127.0.0.1:9099" && <QaEmulatorAuth />}
+          {children}
+        </AuthProvider></ThemeProvider>
       </body>
     </html>
   );

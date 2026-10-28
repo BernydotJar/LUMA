@@ -13,6 +13,16 @@ import {
   type StoredOnboardingState,
 } from "./learner-projection";
 
+/** Personal reflection: saved, but never an assessed Learning Twin update. */
+export interface StoredLearnerReflection {
+  experienceId: string;
+  sourceId: string;
+  response: string;
+  evidenceCategory: "self-reported";
+  twinAuthority: "none";
+  updatedAt: string;
+}
+
 export interface LearningStoreResult {
   record: PersistedLearnerRecord;
   duplicate: boolean;
@@ -85,6 +95,8 @@ export class FirestoreLearningStore {
         record.state,
         record.onboarding,
         record.previousAction ?? undefined,
+        record.entryAssessment,
+        record.entryAssessmentActive,
       ),
     };
   }
@@ -154,6 +166,33 @@ export class FirestoreLearningStore {
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   }
 
+  async getReflection(learnerId: string, experienceId: string): Promise<StoredLearnerReflection | null> {
+    const snapshot = await this.learnerRef(learnerId).collection("reflections").doc(experienceId).get();
+    return snapshot.exists ? snapshot.data() as StoredLearnerReflection : null;
+  }
+
+  async saveReflection(
+    learnerId: string,
+    experienceId: string,
+    sourceId: string,
+    response: string,
+  ): Promise<StoredLearnerReflection> {
+    const record: StoredLearnerReflection = {
+      experienceId,
+      sourceId,
+      response,
+      evidenceCategory: "self-reported",
+      twinAuthority: "none",
+      updatedAt: new Date().toISOString(),
+    };
+    const ref = this.learnerRef(learnerId).collection("reflections").doc(experienceId);
+    await this.firestore.runTransaction(async (transaction) => {
+      await this.assertScopedEntitlementForWrite(transaction, learnerId);
+      transaction.set(ref, record);
+    });
+    return record;
+  }
+
   async bootstrap(
     learnerId: string,
     onboarding: StoredOnboardingState,
@@ -202,6 +241,15 @@ export class FirestoreLearningStore {
       const current = learnerSnapshot.data() as PersistedLearnerRecord;
       if (eventSnapshot.exists) {
         return this.resultForRecord(current, true);
+      }
+
+      // This check is in the same Firestore transaction as the event append:
+      // concurrent submissions with distinct event IDs must not evade the API cooldown.
+      if (event.type === "PROGRAM_ENTRY_ASSESSMENT_COMPLETED" && current.entryAssessment) {
+        const elapsed = Date.now() - Date.parse(current.entryAssessment.completedAt);
+        if (Number.isFinite(elapsed) && elapsed >= 0 && elapsed < 60_000) {
+          throw new Error("ENTRY_ASSESSMENT_RECENTLY_COMPLETED");
+        }
       }
 
       const applied = applyEventToPersistentLearner(current, eventId, event);

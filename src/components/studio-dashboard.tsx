@@ -9,11 +9,13 @@ import {
 import { fetchCoachInterventions, fetchCoachLearners, type CoachInterventionSignal, type CoachLearnerSummary } from "@/lib/coach-api-client";
 import { deriveCoachDataStatus } from "@/lib/coach-data-status";
 import { useLumaAuth } from "@/components/auth-provider";
+import { ProgramPicker, useProgramSelection } from "@/components/program-picker";
 import { SemanticObject } from "@/components/semantic-object";
 import styles from "./studio-dashboard.module.css";
 
 type CoachSnapshot = {
   uid: string;
+  programId: string | null;
   learners?: CoachLearnerSummary[];
   interventions?: CoachInterventionSignal[];
   error: boolean;
@@ -32,11 +34,13 @@ function priorityLabel(priority: CoachInterventionSignal["priority"]) {
 
 export function StudioDashboard() {
   const { user, loading } = useLumaAuth();
+  const selection = useProgramSelection("coach");
+  const programId = selection.status === "entitled" ? selection.programId : null;
   const [snapshot, setSnapshot] = useState<CoachSnapshot | null>(null);
   const [selectedLearnerId, setSelectedLearnerId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (loading || !user) return;
+    if (loading || !user || (selection.status !== "showcase" && !programId)) return;
     let cancelled = false;
     const uid = user.uid;
     void Promise.allSettled([fetchCoachLearners(), fetchCoachInterventions()])
@@ -44,15 +48,17 @@ export function StudioDashboard() {
         if (cancelled) return;
         setSnapshot({
           uid,
+          programId,
           learners: learnerResult.status === "fulfilled" ? learnerResult.value : undefined,
           interventions: interventionResult.status === "fulfilled" ? interventionResult.value : undefined,
           error: learnerResult.status === "rejected" || interventionResult.status === "rejected",
         });
       });
     return () => { cancelled = true; };
-  }, [loading, user]);
+  }, [loading, user, programId, selection.status]);
 
-  const current = user && snapshot?.uid === user.uid ? snapshot : null;
+  const current = user && snapshot?.uid === user.uid &&
+    snapshot.programId === programId ? snapshot : null;
   const authenticated = Boolean(user);
   const hasInterventions = current?.interventions !== undefined;
   const coachDataStatus = deriveCoachDataStatus(current);
@@ -64,8 +70,18 @@ export function StudioDashboard() {
   const lastUpdate = interventions.map((item) => item.updatedAt).filter(Boolean).sort().at(-1);
   const selected = interventions.find((item) => item.learnerId === selectedLearnerId) ?? interventions[0];
 
+  if (user && selection.status !== "showcase" &&
+      (selection.status !== "entitled" || !programId)) {
+    return (
+      <div className={styles.dashboard}>
+        <ProgramPicker audience="coach" selection={selection} />
+      </div>
+    );
+  }
+
   return (
     <div className={styles.dashboard}>
+      <ProgramPicker audience="coach" selection={selection} />
       <section className={styles.controlBar}>
         <div>
           <span className="status-pill" data-tone={available && !incomplete ? "positive" : "warning"}>

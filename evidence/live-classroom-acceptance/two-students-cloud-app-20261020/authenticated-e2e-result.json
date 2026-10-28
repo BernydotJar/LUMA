@@ -1,0 +1,252 @@
+{
+  "startedAt": "2026-10-21T03:18:16.982Z",
+  "kind": "AUTHENTICATED_LUMA_BROWSER_AND_API_WITH_REAL_LIVEKIT_CLOUD_AND_FIREBASE_EMULATORS",
+  "productSourceBeforeQaPatch": "7effcd08e7df429e6f219d0df40e3d3ce8b0cd23",
+  "qaSourceSha": "41eefebb47375c0e95627716c5e026578eb3b9a3",
+  "projectId": "demo-luma-live-uat",
+  "actors": [
+    "admin",
+    "instructor",
+    "learner-a",
+    "learner-b",
+    "unauthorized"
+  ],
+  "sourceFeatureFlags": "QA_ONLY_DEV_LOCALHOST_Firebase_Emulator",
+  "provider": "LiveKit Cloud p_5650huuc5om (synthetic AV, no real Firebase users)",
+  "results": [
+    {
+      "name": "isolated-dev-and-emulator-provider",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:23.128Z"
+    },
+    {
+      "name": "cold-interaction-route-prewarmed-anonymously",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:27.177Z",
+      "coldRouteCompileAndGuardMs": 4049
+    },
+    {
+      "name": "created-five-synthetic-firebase-auth-users",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:27.235Z",
+      "admin": 1,
+      "instructor": 1,
+      "learners": 2,
+      "unauthorized": 1,
+      "project": "demo-luma-live-uat"
+    },
+    {
+      "name": "admin-created-live-offering-api",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:28.369Z"
+    },
+    {
+      "name": "admin-scheduled-90-minute-no-recording",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:30.484Z"
+    },
+    {
+      "name": "admin-granted-two-institutional-enrollments",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:30.771Z"
+    },
+    {
+      "name": "unauthorized-emulated-user-classroom-denied",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:32.335Z",
+      "http": 403
+    },
+    {
+      "name": "learner-admin-api-access-denied",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:32.348Z",
+      "http": 403
+    },
+    {
+      "name": "browser-login-instructor",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:37.234Z",
+      "authenticatedVia": "Firebase Auth Emulator"
+    },
+    {
+      "name": "branded-luma-ui-join-instructor",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:38.078Z",
+      "uiTestId": "live-classroom-media"
+    },
+    {
+      "name": "browser-login-learner-a",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:38.900Z",
+      "authenticatedVia": "Firebase Auth Emulator"
+    },
+    {
+      "name": "branded-luma-ui-join-learner-a",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:39.190Z",
+      "uiTestId": "live-classroom-media"
+    },
+    {
+      "name": "browser-login-learner-b",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:39.970Z",
+      "authenticatedVia": "Firebase Auth Emulator"
+    },
+    {
+      "name": "branded-luma-ui-join-learner-b",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:40.285Z",
+      "uiTestId": "live-classroom-media"
+    },
+    {
+      "name": "cached-livekit-cloud-tokens-from-luma-api",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:40.285Z",
+      "material": "volatile memory only",
+      "roles": [
+        "instructor",
+        "learner-a"
+      ]
+    },
+    {
+      "name": "three-provider-participants-connected",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:40.555Z",
+      "count": 3
+    },
+    {
+      "name": "real-luma-toolbar-camera-microphone-on-instructor",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:40.629Z"
+    },
+    {
+      "name": "real-luma-toolbar-camera-microphone-on-learner-a",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:40.690Z"
+    },
+    {
+      "name": "real-luma-toolbar-camera-microphone-on-learner-b",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:40.778Z"
+    },
+    {
+      "name": "three-provider-real-audio-and-video-publishers",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:41.300Z",
+      "count": 3,
+      "tracks": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "name": "real-browser-decodes-media-instructor",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:41.304Z",
+      "decodedVideoElements": 3
+    },
+    {
+      "name": "real-browser-decodes-media-learner-a",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:41.306Z",
+      "decodedVideoElements": 3
+    },
+    {
+      "name": "real-browser-decodes-media-learner-b",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:41.309Z",
+      "decodedVideoElements": 3
+    },
+    {
+      "name": "learner-a-raises-hand-through-real-branded-ui",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:41.912Z",
+      "actionConfirmationMs": 236
+    },
+    {
+      "name": "instructor-acknowledges-hand-through-real-ui",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:42.150Z",
+      "actionConfirmationMs": 233
+    },
+    {
+      "name": "instructor-real-ui-mutes-both-students",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:42.969Z"
+    },
+    {
+      "name": "learner-b-restores-own-microphone-after-instructor-mute",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:43.148Z"
+    },
+    {
+      "name": "learner-instructor-only-action-denied",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:43.178Z",
+      "http": 403
+    },
+    {
+      "name": "authenticated-mobile-375x812-controls",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:43.566Z",
+      "viewport": "375x812",
+      "buttonCount": 10,
+      "dockBottomGap": 10,
+      "handDockSeparation": 25
+    },
+    {
+      "name": "institutional-revocation-evicts-connected-learner-a",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:46.364Z",
+      "apiElapsedMs": 2549,
+      "remainingMediaPeers": 2,
+      "revokedLearnerTokenHttp": 403
+    },
+    {
+      "name": "firestore-entitlement-and-roster-ban-persisted",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:46.556Z"
+    },
+    {
+      "name": "cloud-stale-learner-jwt-replay",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:47.070Z",
+      "denied": true
+    },
+    {
+      "name": "instructor-and-second-learner-preserved-after-revocation",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:47.163Z",
+      "remaining": 2,
+      "tracks": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "instructor-closes-class-for-everyone",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:50.719Z"
+    },
+    {
+      "name": "no-new-admission-after-close",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:50.775Z",
+      "http": 409
+    },
+    {
+      "name": "cloud-closed-class-instructor-cached-jwt-replay",
+      "result": "PASS",
+      "at": "2026-10-21T03:18:51.315Z",
+      "denied": true
+    }
+  ],
+  "overall": "PASS_AUTHENTICATED_LUMA_CLOUD_E2E",
+  "cloudAcceptance": "PROVIDER_AND_APP_CLOUD_PASS",
+  "finishedAt": "2026-10-21T03:18:51.315Z",
+  "executedCases": 36,
+  "passCount": 36,
+  "failCount": 0,
+  "blockedCount": 0
+}

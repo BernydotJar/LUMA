@@ -8,6 +8,11 @@ runConfig:
   concurrency: 80
 
 env:
+  # Explicit release gate: never expose customer WebRTC before signed Cloud E2E.
+  - variable: LUMA_LIVE_CLASSROOM_ENABLED
+    value: "false"
+    availability:
+      - RUNTIME
   - variable: SE_VOICE_API_URL
     value: https://se-voice-runtime-2zp4gbirka-uc.a.run.app
     availability:

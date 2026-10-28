@@ -1,0 +1,48 @@
+{
+  "assessment": "LOCAL_SOURCE_ONLY_NO_GO",
+  "feature": "Live classroom educational controls / Seres de Excelencia",
+  "base_branch": "feat/live-classroom-glass-acceptance-20261019",
+  "base_sha": "9d799dd0d929aa3c528395aa70ba0d42dc2f0591",
+  "checks": {
+    "typecheck": "PASS",
+    "eslint": "PASS",
+    "next_production_build": "PASS",
+    "vitest_non_emulator": {
+      "passed": 336,
+      "skipped_emulator_gated": 85
+    },
+    "firestore_emulator": {
+      "passed": 18,
+      "subsets": [
+        "14 baseline classroom/program delivery tests",
+        "4 new educational-control stateful transaction and audit tests"
+      ],
+      "project": "demo-luma-education-20261019",
+      "java_runtime": 21
+    },
+    "playwright_guest_denial": {
+      "passed": 4,
+      "profiles": [
+        "Chromium desktop",
+        "Chromium mobile"
+      ],
+      "auth_source": "unauthenticated only"
+    },
+    "css_only_visual_fixture": {
+      "desktop": "PASS",
+      "mobile": "PASS",
+      "does_not_test_real_livekit": true
+    },
+    "graph_validation": "PASS",
+    "full_customer_product_acceptance": "NO_GO"
+  },
+  "not_proven": [
+    "LiveKit Cloud project credentials or hosted feature flag activation",
+    "actual connected instructor and learners exercising audio, gestures, screen share, reconnection and exit",
+    "refund revocation and already-connected participant removal with real provider",
+    "active-class instructor support on Safari and real mobile devices",
+    "producer-independent scope review, capacity/soak and release attestation",
+    "source SHA independently observed on public production"
+  ],
+  "notes": "Unit and emulator stubs are not proof that LiveKit Cloud or customer-facing production works. Reuse the 20-action four-axis SHIP acceptance matrix to make the release decision."
+}

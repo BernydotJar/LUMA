@@ -1,0 +1,218 @@
+{
+  "date": "2026-10-15T04:07:38.429Z",
+  "sourceCommit": "5332b8ed8b5c6bdee81f9c09ce83fde40cbe624c",
+  "project": "demo-luma-firstclient-20261014",
+  "environment": "isolated QA source overlay + Next dev on localhost + Firebase emulators",
+  "checks": [
+    {
+      "id": "SETUP demo institution, Mary offerings, grants, live session",
+      "result": "PASS",
+      "detail": {
+        "liveProgram": "qa-mary-premium",
+        "everProgram": "qa-mary-evergreen",
+        "scheduledLive": true,
+        "learnerHasTwoEntitlements": true
+      }
+    },
+    {
+      "id": "LEARNER-01 first sign-in sees only enrolled programs",
+      "result": "PASS",
+      "detail": {
+        "options": [
+          "Selecciona tu programa",
+          "QA Mary Evergreen",
+          "QA Mary Premium Live"
+        ],
+        "initialSelection": "requires_choice"
+      }
+    },
+    {
+      "id": "LEARNER-02 live course selection scopes plan and agenda",
+      "result": "PASS",
+      "detail": {
+        "selected": "qa-mary-premium",
+        "liveClassVisible": true,
+        "learningPlanRequestScoped": true,
+        "geometries": [
+          {
+            "theme": "se",
+            "ctaTop": 622.25,
+            "ctaBottom": 671.25,
+            "ctaHeight": 49,
+            "navTop": 762,
+            "clearance": 90.75,
+            "horizontalOverflow": 0,
+            "hitTest": true,
+            "scrollY": 0
+          },
+          {
+            "theme": "light",
+            "ctaTop": 622.25,
+            "ctaBottom": 671.25,
+            "ctaHeight": 49,
+            "navTop": 762,
+            "clearance": 90.75,
+            "horizontalOverflow": 0,
+            "hitTest": true,
+            "scrollY": 0
+          },
+          {
+            "theme": "dark",
+            "ctaTop": 622.25,
+            "ctaBottom": 671.25,
+            "ctaHeight": 49,
+            "navTop": 762,
+            "clearance": 90.75,
+            "horizontalOverflow": 0,
+            "hitTest": true,
+            "scrollY": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "LEARNER-02b compact and tablet viewport CTA remains reachable",
+      "result": "PASS",
+      "detail": [
+        {
+          "width": 320,
+          "top": 207.921875,
+          "bottom": 256.921875,
+          "navTop": 486,
+          "overflow": 0,
+          "hitTest": true,
+          "scrollY": 541,
+          "minClearance": 229.078125,
+          "viewportHeight": 568,
+          "ctaHeight": 49
+        },
+        {
+          "width": 360,
+          "top": 586.71875,
+          "bottom": 635.71875,
+          "navTop": 658,
+          "overflow": 0,
+          "hitTest": true,
+          "scrollY": 26,
+          "minClearance": 22.28125,
+          "viewportHeight": 740,
+          "ctaHeight": 49
+        },
+        {
+          "width": 390,
+          "top": 622.25,
+          "bottom": 671.25,
+          "navTop": 762,
+          "overflow": 0,
+          "hitTest": true,
+          "scrollY": 0,
+          "minClearance": 90.75,
+          "viewportHeight": 844,
+          "ctaHeight": 49
+        },
+        {
+          "width": 428,
+          "top": 617.65625,
+          "bottom": 666.65625,
+          "navTop": 844,
+          "overflow": 0,
+          "hitTest": true,
+          "scrollY": 0,
+          "minClearance": 177.34375,
+          "viewportHeight": 926,
+          "ctaHeight": 49
+        },
+        {
+          "width": 768,
+          "top": 687.453125,
+          "bottom": 737.453125,
+          "navTop": null,
+          "overflow": 0,
+          "hitTest": true,
+          "scrollY": 0,
+          "minClearance": 286.546875,
+          "viewportHeight": 1024,
+          "ctaHeight": 50
+        }
+      ]
+    },
+    {
+      "id": "LEARNER-03 switching evergreen hides unrelated live sessions and restores",
+      "result": "PASS",
+      "detail": {
+        "selected": "qa-mary-evergreen",
+        "liveClassAbsent": true,
+        "sameBrowserReloadRestores": true
+      }
+    },
+    {
+      "id": "COACH-01 select authorized live program and read roster",
+      "result": "PASS",
+      "detail": {
+        "courseOptions": [
+          "Selecciona tu programa",
+          "QA Mary Evergreen",
+          "QA Mary Premium Live"
+        ],
+        "selected": "qa-mary-premium",
+        "coachReadScoped": true
+      }
+    },
+    {
+      "id": "COACH-02 cross-tenant actor denied",
+      "result": "PASS",
+      "detail": {
+        "coachPickerDenied": true
+      }
+    }
+  ],
+  "status": "PASS",
+  "pageErrors": [
+    {
+      "url": "http://127.0.0.1:3191/learn",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "url": "http://127.0.0.1:3191/learn",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "url": "http://127.0.0.1:3191/studio",
+      "message": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    }
+  ],
+  "requests": [
+    {
+      "route": "/api/learning/plan",
+      "selectedProgram": "qa-mary-premium",
+      "status": "requested"
+    },
+    {
+      "route": "/api/learning/plan",
+      "selectedProgram": "qa-mary-evergreen",
+      "status": "requested"
+    },
+    {
+      "route": "/api/learning/plan",
+      "selectedProgram": "qa-mary-evergreen",
+      "status": "requested"
+    },
+    {
+      "route": "/api/coach/learners",
+      "selectedProgram": "qa-mary-premium",
+      "status": "requested"
+    },
+    {
+      "route": "/api/coach/interventions",
+      "selectedProgram": "qa-mary-premium",
+      "status": "requested"
+    }
+  ],
+  "summary": {
+    "pass": 7,
+    "fail": 0,
+    "actorCount": 4
+  },
+  "cleanup": "All emulator identities deleted; emulator runtime discarded after execution",
+  "geometrySerializationNote": "Viewport heights restored from the literal Playwright test matrix because the initial result object reused the key height for the CTA height; measured CTA and clearance values were not changed."
+}

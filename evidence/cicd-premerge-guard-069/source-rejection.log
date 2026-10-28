@@ -1,0 +1,2 @@
+{"status":"BLOCKED","sourceDigest":"08f374f9b66dff8d87320fa5de615f7277020fea7b0a7b0be2b129f9f7b308c6","reason":"Source changed since independent review"}
+RELEASE_READINESS_BLOCKED: independently reviewed source approval is required before merging or deploying.

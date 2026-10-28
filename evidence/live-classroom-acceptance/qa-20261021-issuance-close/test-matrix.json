@@ -1,0 +1,90 @@
+{
+  "schema_version": "luma.live.issuance-close-review.v1",
+  "tested_local_code_sha": "e15e5450a6cb7f5275d9eaf34476b5206b56142c",
+  "github_code_commit_sha": "21cb995c141e2ca803cd922fa86bcba07fdc180f",
+  "identical_git_tree_sha": "55679478859d81301e81f405eb360bae54990272",
+  "base_integration_sha": "99a9a7bae4089742fe341752c85c56e2e8a6126a",
+  "business_gate": {
+    "decision": "NO_GO",
+    "actions": 20,
+    "blockers": 82,
+    "deployed_runtime_sha": null,
+    "independent_review_signed": false
+  },
+  "checks": [
+    {
+      "id": "issuance_race_red_before_patch",
+      "environment": "deterministic Vitest",
+      "outcome": "FAIL_BEFORE_FIX",
+      "passed": 1,
+      "failed": 4,
+      "scope": "four pre-fix regressions exposing stale JWT issuance"
+    },
+    {
+      "id": "issuance_race_green_after_patch",
+      "environment": "deterministic Vitest",
+      "outcome": "PASS",
+      "passed": 5,
+      "failed": 0
+    },
+    {
+      "id": "issuance_race_real_firestore_tx",
+      "environment": "Firestore Emulator demo-luma-issuance-qa",
+      "outcome": "PASS",
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "cloud_qa_proof_provenance",
+      "environment": "Vitest no secrets",
+      "outcome": "PASS",
+      "passed": 7,
+      "failed": 0
+    },
+    {
+      "id": "full_vitest",
+      "environment": "Cloud Sandbox isolated checkout",
+      "outcome": "PASS",
+      "passed": 528,
+      "skipped": 113,
+      "failed": 0
+    },
+    {
+      "id": "typecheck_and_lint",
+      "environment": "Cloud Sandbox",
+      "outcome": "PASS",
+      "note": "Full ESLint exit 0 with max-old-space-size=640, no errors, three unrelated warnings"
+    },
+    {
+      "id": "real_livekit_cloud_provider",
+      "environment": "authorized Cloud QA project p_5650huuc5om",
+      "source_sha": "e15e5450a6cb7f5275d9eaf34476b5206b56142c",
+      "outcome": "PASS",
+      "passed": 18,
+      "failed": 0,
+      "artifact": "livekit-cloud-provider-18.json",
+      "qualification": "provider only, no deployed Firebase app, no Github protected environment"
+    },
+    {
+      "id": "graphql_product_acceptance",
+      "environment": "Graph Harness source-based",
+      "outcome": "NO_GO",
+      "blockers": 82,
+      "artifact": "product-acceptance.json"
+    },
+    {
+      "id": "cloud_github_environment",
+      "environment": "GitHub environment livekit-acceptance",
+      "outcome": "NOT_RUN",
+      "required_secret_count": 3,
+      "available_secrets_at_review": 0,
+      "qualification": "reviewed workflow not bootstrapped on protected default branch"
+    },
+    {
+      "id": "firebase_deployed_enterprise_uat",
+      "environment": "separate staging project",
+      "outcome": "BLOCKED",
+      "reason": "No deployed authenticated Firebase staging SHA or independent acceptance"
+    }
+  ]
+}

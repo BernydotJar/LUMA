@@ -1,0 +1,75 @@
+{
+  "schema_version": "luma.livekit.departe_learner.qa.v1",
+  "test_project": "p_5650huuc5om",
+  "source_git_tree": "2e8b1b3a25751bc088d3b7bcc6ec2c4ce50cb8f9",
+  "local_integrated_code_sha": "58700ec8c8517cc9dd3a9b92b1eb26baeb725aba",
+  "github_review_code_sha": "57d5a87967b116c0a6dfbeac7afbc06ee67ddf7f",
+  "environment": "real authorized LiveKit Cloud provider with synthetic Chromium peers; NOT deployed Firebase staging",
+  "prior_attempt": {
+    "result": "FAIL",
+    "passed_checks": 15,
+    "failed_checks": 1,
+    "reason": "Chromium renderer Target crashed under shared runner memory pressure",
+    "artifact": "attempt1-browser-crash.json"
+  },
+  "verified_attempt": {
+    "result": "PROVIDER_CLOUD_PASS",
+    "passed_checks": 18,
+    "failed_checks": 0,
+    "run_exit": 0,
+    "checked_at": "2026-10-21T06:27:58.068Z",
+    "test_script": "scripts/qa/livekit-cloud-departed-learner-20261021.mjs",
+    "outcome": "voluntarily disconnected learner JWT revoked while room live and after class closure",
+    "jwt_expiry_guard": "original 5m JWT requires >60s remaining at each replay",
+    "actions": [
+      "automatic_room_creation_disabled_fresh_room_first",
+      "webrtc_publish",
+      "webrtc_publish",
+      "webrtc_publish",
+      "instructor_data_chat_to_learner",
+      "connected_learner_removed",
+      "old_token_replay_denied",
+      "learner_voluntary_departure_preserves_two_peers",
+      "revocation_of_disconnected_learner_returns_success",
+      "disconnected_learner_cached_jwt_replay_denied",
+      "teacher_and_other_student_preserved_after_absent_revocation",
+      "close_revoke_all_remaining_media_identities",
+      "room_delete_absence_confirmed_at_provider",
+      "closed_room_cached_token_denied",
+      "departed_learner_replay_denied_after_close",
+      "automatic_room_creation_disabled",
+      "finish_for_everyone_disconnects_all",
+      "post_denial_positive_control_cloud_available"
+    ]
+  },
+  "integrated_local_quality": {
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "vitest_pass": 473,
+    "vitest_skipped": 107,
+    "unit_route_tests_pass": 6
+  },
+  "github_manual_workflow": {
+    "path": ".github/workflows/livekit-cloud-staging-qa.yml",
+    "trigger": "workflow_dispatch only, trusted protected ref and SHA match",
+    "environment": "livekit-acceptance",
+    "configured_secret_count": 0,
+    "executed": false
+  },
+  "graph_harness": {
+    "source": "b3e991e",
+    "gate": "NO_GO",
+    "required_actions": 20,
+    "blockers": 82,
+    "deployed_runtime_sha": null
+  },
+  "release_decision": "NO_GO",
+  "excluded": [
+    "Firebase deployed staging",
+    "real payment providers",
+    "10/50 load",
+    "refreshed long-session JWT",
+    "signed webhook UAT",
+    "independent release approval"
+  ]
+}

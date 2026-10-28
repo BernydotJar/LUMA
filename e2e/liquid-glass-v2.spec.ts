@@ -45,7 +45,9 @@ test("Liquid Light renders bounded refraction without nested glass", async ({ pa
 
 test("Dense content surfaces stay out of the backdrop-filter layer", async ({ page }) => {
   for (const route of ["/learn", "/studio", "/library"]) {
-    await page.goto(route, { waitUntil: "networkidle" });
+    await page.goto(route, { waitUntil: "domcontentloaded" });
+    // Wait for the actual surface under test, not unrelated background requests.
+    await expect(page.locator(".content-surface").first()).toBeVisible();
 
     const material = await page.locator(".content-surface").first().evaluate((element) => {
       const style = getComputedStyle(element);
@@ -66,6 +68,14 @@ test("appearance previews keep brands and labels unobstructed", async ({ page })
   await page.goto("/experience", { waitUntil: "domcontentloaded" });
   const cards = page.locator('button[aria-pressed][class*="themeCard"]');
   await expect(cards).toHaveCount(3);
+  // A client-side transition can briefly retain the previous view alongside
+  // the hydrated one. Wait for the *whole document* to settle so duplicate
+  // theme previews are still detected, rather than hiding them with .first().
+  await expect.poll(
+    () => page.locator('[data-theme-preview]').evaluateAll((nodes) =>
+      nodes.map((node) => node.getAttribute('data-theme-preview'))),
+    { timeout: 15000 },
+  ).toEqual(["se", "light", "dark"]);
   const metrics = await page.evaluate(() => {
     const previews = Array.from(document.querySelectorAll<HTMLElement>('[data-theme-preview]'));
     return previews.map((preview) => {

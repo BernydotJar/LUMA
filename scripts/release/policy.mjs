@@ -6,7 +6,16 @@ export const REPOSITORY = 'BernydotJar/LUMA';
 export const PRODUCTION_URL = 'https://luma--luma-learning-intelligence.us-central1.hosted.app';
 export const PARENT = `projects/${PROJECT}/locations/${REGION}/backends/${BACKEND}`;
 export const SOURCE_BUCKET = `firebaseapphosting-sources-${PROJECT_NUMBER}-${REGION}`;
-export const REQUIRED_CHECKS = ['verify', 'security', 'firestore', 'identity-roles', 'browser'];
+// Revalidate every independent source/product gate even if someone runs
+// the deploy script directly inside an approved main-branch job. GitHub job
+// dependencies are necessary, but are not the deployment script's sole guard.
+export const REQUIRED_CHECKS = [
+  'verify', 'security', 'firestore', 'identity-roles', 'browser',
+  'coach-rbac', 'institution-intake', 'institution-browser',
+  'institution-approval', 'learning-auth-uat',
+  'Operational acceptance contract self-test (not a release approval)',
+  'product-acceptance-predeploy', 'release-readiness',
+];
 export function invariant(condition, message) {
   if (!condition) throw new Error(message);
 }

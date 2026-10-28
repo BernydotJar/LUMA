@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isRejectedFirebaseToken } from "@/lib/auth-token-error";
+import { requireCoachProgramGrant } from "@/lib/coach-program-authority";
 import { commerceEnrollments } from "@/lib/commerce/server";
 import {
   listScopedCoachLearnerIds,
@@ -13,11 +14,12 @@ export const runtime = "nodejs";
 
 export async function GET(request: Request) {
   try {
-    const { access } = await requireLearningCoachAccess(request);
+    const { access, decoded } = await requireLearningCoachAccess(request);
     const scope = resolveCoachLearningScope(access, request.headers);
+    const permitted = scope ? await requireCoachProgramGrant(access, decoded.uid, scope) : access;
     let results;
     if (scope) {
-      const ids = await listScopedCoachLearnerIds(access, scope, commerceEnrollments, 50);
+      const ids = await listScopedCoachLearnerIds(permitted, scope, commerceEnrollments, 50);
       const store = learningStoreForScope(scope);
       results = (await Promise.all(ids.map((uid) => store.get(uid))))
         .filter((item): item is NonNullable<typeof item> => Boolean(item))
@@ -59,6 +61,9 @@ export async function GET(request: Request) {
     }
     if (code === "COACH_REQUIRED" || code === "COACH_SCOPE_REQUIRED") {
       return NextResponse.json({ error: "coach_scope_required" }, { status: 403 });
+    }
+    if (code === "COACH_PROGRAM_CATALOG_TOO_LARGE") {
+      return NextResponse.json({ error: "coach_program_catalog_too_large" }, { status: 409 });
     }
     if (code === "LEARNING_PROGRAM_SELECTION_REQUIRED") {
       return NextResponse.json({ error: "program_selection_required" }, { status: 409 });
