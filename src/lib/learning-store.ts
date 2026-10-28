@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { FieldPath, type Firestore, type Transaction } from "firebase-admin/firestore";
 import { isActiveCommerceEnrollment, type CommerceEnrollmentRecord } from "./commerce/enrollment";
 import { validLearningScopeId, type LearningScope } from "./learning-entitlement";
+import { requireCurrentProgramAssessment } from "./program-assessment-registry";
 import {
   applyEventToPersistentLearner,
   createPersistentLearnerRecord,
@@ -229,6 +230,16 @@ export class FirestoreLearningStore {
 
     return this.firestore.runTransaction(async (transaction) => {
       await this.assertScopedEntitlementForWrite(transaction, learnerId);
+      if (event.type === "PROGRAM_ENTRY_ASSESSMENT_COMPLETED") {
+        if (!this.scope) throw new Error("ASSESSMENT_NOT_PUBLISHED");
+        await requireCurrentProgramAssessment(
+          transaction, this.firestore, this.scope, event.programAssessment,
+        );
+        if (event.sourceId !== event.programAssessment?.version ||
+            event.twinAuthority !== "none" || event.evidenceCategory !== "observed") {
+          throw new Error("ASSESSMENT_REGISTRY_CHANGED");
+        }
+      }
       const [eventSnapshot, learnerSnapshot] = await Promise.all([
         transaction.get(eventRef),
         transaction.get(learnerRef),

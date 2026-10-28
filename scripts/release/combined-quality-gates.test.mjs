@@ -26,7 +26,7 @@ test('learning QA is authenticated, source-bound and never product release appro
   assert.ok(steps.some(step => step.includes('firebase-tools') && step.includes('auth,firestore')));
   assert.ok(steps.some(step => step.includes('report.sourceSha, process.env.GITHUB_SHA')));
   assert.ok(steps.some(step => step.includes('report.signedIndependentReviewer, false')));
-  assert.ok(steps.some(step => step.includes('report.passed, 13')));
+  assert.ok(steps.some(step => step.includes('report.passed, 16')));
 });
 
 test('enterprise predeploy requires a protected environment and explicit signed evidence', () => {
