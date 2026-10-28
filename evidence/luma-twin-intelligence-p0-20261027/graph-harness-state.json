@@ -1,0 +1,74 @@
+{
+  "schema_version": "graph-harness.state.v1",
+  "project_id": "LUMA-TWIN-INTELLIGENCE-P0-20261027",
+  "mode": "SHIP",
+  "last_event_id": "fedfdf4e-a15a-42a9-b1aa-ff03aa9d67f6",
+  "event_count": 12,
+  "ready_nodes": [],
+  "nodes": [
+    {
+      "id": "p0-contracts",
+      "kind": "implementation",
+      "title": "Versioned Teaching Twin, human intervention and paired evaluation",
+      "status": "review",
+      "revision": 0,
+      "depends_on": [
+        "spec-072"
+      ],
+      "capability": "typescript-firebase",
+      "active_gates": {},
+      "active_evidence_ids": [
+        "14a6fb93-de15-4515-a9b1-803f4cca0a50",
+        "1de7724d-e7ed-402c-af7b-682bbf368b19",
+        "884c773a-455d-4864-af61-f8cbf4994d21",
+        "944b7432-2be1-4e76-b670-563f837c7d93",
+        "e15afd7a-9a31-46b5-9812-9d53c5a6e2cb"
+      ],
+      "approval_count": 0
+    },
+    {
+      "id": "pilot-uat",
+      "kind": "acceptance",
+      "title": "One approved program and educator: real tenant-safe twin pilot",
+      "status": "pending",
+      "revision": 0,
+      "depends_on": [
+        "p0-contracts"
+      ],
+      "capability": "authenticated-uat",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "production-release",
+      "kind": "release",
+      "title": "Independent production deploy authorization",
+      "status": "pending",
+      "revision": 0,
+      "depends_on": [
+        "pilot-uat"
+      ],
+      "capability": "release-engineering",
+      "active_gates": {},
+      "active_evidence_ids": [],
+      "approval_count": 0
+    },
+    {
+      "id": "spec-072",
+      "kind": "spec",
+      "title": "Preregister pilot protocol and human-first product boundaries",
+      "status": "done",
+      "revision": 0,
+      "depends_on": [],
+      "capability": "product-spec",
+      "active_gates": {},
+      "active_evidence_ids": [
+        "ca719df8-fb62-4ba8-ad2f-740bc4d9df1c"
+      ],
+      "approval_count": 0
+    }
+  ],
+  "checkpoint_count": 1,
+  "repair_plan_count": 0
+}
