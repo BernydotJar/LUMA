@@ -1,0 +1,19 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace/projects/LUMA-twin-intelligence-p0-20261027[39m
+
+ [32m✓[39m src/app/api/twin-intelligence/interventions/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/app/api/twin-intelligence/teaching-twin/route.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/lib/twin-intelligence/pilot-evaluation.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/app/api/twin-intelligence/next-action/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/lib/twin-intelligence/teaching-store.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/lib/twin-intelligence/contracts.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/twin-intelligence/human-store.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+[2m      Tests [22m [1m[32m39 passed[39m[22m[90m (39)[39m
+[2m   Start at [22m 05:24:05
+[2m   Duration [22m 4.25s[2m (import 93%, transform 4%, tests 1%, worker 1%)[22m
+
+[2m     Import [22m [33m22 modules were evaluated 34 times[39m[2m · 3.39s total, 93% of tracked time[22m
+[2m            [22m [2m~1.20s faster with [22m[33misolate: false[39m[2m — shared modules are evaluated once per worker instead of once per file[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-isolation[22m

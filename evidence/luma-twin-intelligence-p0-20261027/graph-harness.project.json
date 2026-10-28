@@ -1,0 +1,102 @@
+{
+  "schema_version": "graph-harness.project.v1",
+  "project_id": "LUMA-TWIN-INTELLIGENCE-P0-20261027",
+  "mode": "SHIP",
+  "gate_definitions": [
+    {
+      "id": "engineering-independent-review",
+      "required_evidence_kinds": [
+        "test",
+        "critic"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "real-educational-pilot",
+      "required_evidence_kinds": [
+        "assessment",
+        "human",
+        "security",
+        "cost",
+        "verification"
+      ],
+      "blocking": true
+    },
+    {
+      "id": "release-authorization",
+      "required_evidence_kinds": [
+        "reviewer_signature",
+        "build",
+        "e2e",
+        "a11y",
+        "security",
+        "deployment"
+      ],
+      "blocking": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "spec-072",
+      "kind": "spec",
+      "title": "Preregister pilot protocol and human-first product boundaries",
+      "status": "ready",
+      "depends_on": [],
+      "capability": "product-spec",
+      "allowed_paths": [
+        "specs/072-luma-twin-intelligence-p0.md",
+        "docs/products/luma-twin-intelligence.md",
+        "docs/qa/luma-twin-intelligence-pilot-runbook.md"
+      ]
+    },
+    {
+      "id": "p0-contracts",
+      "kind": "implementation",
+      "title": "Versioned Teaching Twin, human intervention and paired evaluation",
+      "status": "ready",
+      "depends_on": [
+        "spec-072"
+      ],
+      "capability": "typescript-firebase",
+      "gates": {
+        "done": [
+          "engineering-independent-review"
+        ]
+      },
+      "allowed_paths": [
+        "src/lib/twin-intelligence/",
+        "src/app/api/twin-intelligence/"
+      ]
+    },
+    {
+      "id": "pilot-uat",
+      "kind": "acceptance",
+      "title": "One approved program and educator: real tenant-safe twin pilot",
+      "status": "pending",
+      "depends_on": [
+        "p0-contracts"
+      ],
+      "capability": "authenticated-uat",
+      "gates": {
+        "done": [
+          "real-educational-pilot"
+        ]
+      }
+    },
+    {
+      "id": "production-release",
+      "kind": "release",
+      "title": "Independent production deploy authorization",
+      "status": "pending",
+      "depends_on": [
+        "pilot-uat"
+      ],
+      "capability": "release-engineering",
+      "gates": {
+        "done": [
+          "release-authorization"
+        ]
+      }
+    }
+  ]
+}
