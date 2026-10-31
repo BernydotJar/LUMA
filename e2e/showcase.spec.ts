@@ -7,9 +7,12 @@ async function expectNoA11yViolations(page: Page) {
 }
 
 test.describe("LUMA product showcase", () => {
-  test("showcase root enters the learner product immediately", async ({ page }) => {
+  test("showcase root presents the public Seres landing and keeps learner entry available", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveURL(/\/learn$/);
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByRole("heading", { name: /El primer paso es conocerte/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Ingresar a LUMA/i })).toHaveAttribute("href", "/login");
+    await page.goto("/learn");
     await expect(page.getByRole("heading", { name: /Aprender se nota en lo que haces/i })).toBeVisible();
     await expect(page.getByRole("link", { name: /Empezar práctica · 12 min/i })).toBeVisible();
   });
