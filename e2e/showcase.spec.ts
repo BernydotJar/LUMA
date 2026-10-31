@@ -270,11 +270,10 @@ test.describe("LUMA product showcase", () => {
       "/onboarding",
     ]) {
       await page.goto(path, { waitUntil: "domcontentloaded" });
-      if (path === "/") {
-        await page.waitForURL(/\/learn$/);
-      }
       await page.locator("body").waitFor({ state: "visible" });
-      if (path === "/" || path === "/learn") {
+      if (path === "/") {
+        await expect(page.getByRole("heading", { name: /El primer paso es conocerte/i })).toBeVisible();
+      } else if (path === "/learn") {
         await expect(page.getByRole("link", { name: "Accede para personalizar tu experiencia" })).toBeVisible();
       }
       await expectNoA11yViolations(page);
