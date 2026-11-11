@@ -5,6 +5,11 @@ test.describe("Seres de Excelencia public landing", () => {
   test("presents a simple, honest public journey", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveTitle(/Seres de Excelencia/);
+    const officialLogo = page
+      .getByRole("link", { name: "LUMA y Seres de Excelencia, inicio" })
+      .getByRole("img", { name: "Seres de Excelencia" });
+    await expect(officialLogo).toBeVisible();
+    await expect(officialLogo).toHaveAttribute("src", /seres-de-excelencia/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(/El primer paso es conocerte/);
     await expect(page.getByRole("heading", { name: "Biodescodificación" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Biocodificación" })).toBeVisible();

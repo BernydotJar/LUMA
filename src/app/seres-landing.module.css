@@ -1,8 +1,10 @@
 .page {
-  --ink: #30273b;
-  --muted: #675d71;
-  --lavender: #cfb1ef;
-  --paper: #fbf9fc;
+  --brand-blue: #00a2f1;
+  --brand-pink: #ff438c;
+  --brand-burgundy: #993366;
+  --ink: #333333;
+  --muted: #625966;
+  --paper: #fffafd;
   --serif: "Iowan Old Style", "Baskerville", Georgia, serif;
   min-height: 100vh;
   overflow-x: clip;
@@ -14,7 +16,7 @@
 .page * { box-sizing: border-box; }
 .page a { text-decoration: none; }
 .page a:focus-visible {
-  outline: 3px solid #d8b4ff;
+  outline: 3px solid var(--brand-blue);
   outline-offset: 4px;
 }
 .skipLink {
@@ -62,10 +64,10 @@
   gap: 28px;
 }
 .brand { display: inline-flex; align-items: center; gap: 11px; color: #fff; }
-.brand > svg { color: #f1deef; }
+.brandLogo { display: block; width: min(140px, 36vw); height: auto; padding: 4px 6px; border-radius: 8px; background: #fff; }
 .brandCopy { display: flex; flex-direction: column; gap: 2px; }
 .brandCopy strong { font-size: 1.42rem; font-weight: 600; line-height: 1.04; letter-spacing: .18em; }
-.brandCopy small { font-size: .67rem; letter-spacing: .04em; color: rgba(255,255,255,.84); }
+
 .navigation { display: flex; gap: 30px; align-items: center; margin-left: auto; }
 .navigation a {
   color: rgba(255,255,255,.91);
@@ -73,7 +75,7 @@
   font-weight: 550;
   transition: color 160ms ease;
 }
-.navigation a:hover { color: #fff; }
+.navigation a:hover { color: #ffd5e6; }
 .headerLogin {
   display: inline-flex;
   min-height: 43px;
@@ -103,7 +105,7 @@
 .heroCopy { max-width: 660px; }
 .eyebrow {
   display: block;
-  color: #f3dbee;
+  color: #ffd5e6;
   font-size: .71rem;
   font-weight: 740;
   letter-spacing: .17em;
@@ -119,7 +121,7 @@
   text-wrap: balance;
 }
 .heroCopy h1 em {
-  color: #e5c3ef;
+  color: #ffccdf;
   font-family: var(--serif);
   font-weight: 400;
   font-style: italic;
@@ -140,6 +142,7 @@
   justify-content: center;
   gap: 21px;
   padding: 0 25px;
+  border: 1px solid var(--brand-pink);
   border-radius: 99px;
   color: #31263c;
   background: #fff;
@@ -169,7 +172,7 @@
   padding: clamp(92px, 9vw, 143px) 42px;
   scroll-margin-top: 35px;
 }
-.sectionLabel { color: #73528b; font-size: .72rem; font-weight: 760; letter-spacing: .16em; }
+.sectionLabel { color: var(--brand-burgundy); font-size: .72rem; font-weight: 760; letter-spacing: .16em; }
 .approachIntro h2 {
   max-width: 570px;
   margin-top: 19px;
@@ -180,7 +183,7 @@
   text-wrap: balance;
 }
 .approachIntro h2 em {
-  color: #855da3;
+  color: var(--brand-burgundy);
   font-family: var(--serif);
   font-weight: 400;
   font-style: italic;
@@ -188,7 +191,7 @@
 .approachIntro > p { max-width: 385px; margin-top: 24px; color: var(--muted); font-size: .99rem; line-height: 1.8; }
 .perspectives { border-top: 1px solid #ded7e3; }
 .perspective { display: grid; grid-template-columns: 40px 1fr; gap: 20px; padding: 27px 0 29px; border-bottom: 1px solid #ded7e3; }
-.number { padding-top: 4px; color: #796089; font-size: .8rem; font-weight: 650; }
+.number { padding-top: 4px; color: var(--brand-burgundy); font-size: .8rem; font-weight: 650; }
 .perspective h3 { font-size: 1.27rem; font-weight: 620; letter-spacing: -.035em; }
 .perspective p { max-width: 405px; margin-top: 8px; color: var(--muted); font-size: .91rem; line-height: 1.65; }
 .disclaimer { max-width: 470px; margin-top: 26px; color: #6a6072; font-size: .76rem; line-height: 1.65; }
@@ -204,7 +207,7 @@
   border-top: 1px solid #e9e4eb;
 }
 .footerBrand { display: flex; gap: 13px; align-items: baseline; }
-.footerBrand strong { font-size: 1.04rem; font-weight: 700; letter-spacing: .16em; }
+.footerBrand strong { color: var(--brand-burgundy); font-size: 1.04rem; font-weight: 700; letter-spacing: .16em; }
 .footerBrand span { color: var(--muted); font-size: .84rem; }
 .footer nav { display: flex; align-items: center; gap: 22px; }
 .footer nav a { color: #584d63; font-size: .84rem; font-weight: 600; }
@@ -220,9 +223,9 @@
   .heroImage { object-position: 65% center; }
   .heroOverlay { background: linear-gradient(90deg, rgba(20,16,42,.81), rgba(23,17,44,.48)), linear-gradient(0deg,rgba(20,16,42,.48),transparent 40%); }
   .header { width: calc(100% - 42px); padding-top: 22px; gap: 13px; }
-  .brand > svg { width: 27px; height: 27px; }
+  .brandLogo { width: min(120px, 31vw); }
   .brandCopy strong { font-size: 1.18rem; }
-  .brandCopy small { font-size: .61rem; }
+
   .navigation { display: none; }
   .headerLogin { min-height: 40px; padding: 0 14px; font-size: .78rem; }
   .heroContent { width: calc(100% - 46px); min-height: 650px; padding: 85px 0 110px; }

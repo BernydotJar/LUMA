@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDownRight, ArrowUpRight, Flower2 } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { seresDeExcelenciaBrand } from "@/lib/institutions/public-brand";
 import styles from "./seres-landing.module.css";
 
@@ -55,10 +55,17 @@ export default function HomePage() {
 
           <header className={styles.header}>
             <Link className={styles.brand} href="/" aria-label="LUMA y Seres de Excelencia, inicio">
-              <Flower2 size={30} strokeWidth={1.2} aria-hidden="true" />
               <span className={styles.brandCopy}>
                 <strong>LUMA</strong>
-                <small>Seres de Excelencia</small>
+                <Image
+                  className={styles.brandLogo}
+                  src={seresDeExcelenciaBrand.logoPath}
+                  width={140}
+                  height={34}
+                  sizes="140px"
+                  alt={seresDeExcelenciaBrand.displayName}
+                  priority
+                />
               </span>
             </Link>
             <nav className={styles.navigation} aria-label="Navegación principal">
