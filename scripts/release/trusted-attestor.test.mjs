@@ -11,7 +11,9 @@ const needed=['verify','security','firestore','identity-roles','browser',
 const jobs=[...needed.map(name=>({name,conclusion:'success'})),
   {name:'release-readiness',conclusion:'failure'},
   {name:'product-acceptance-predeploy',conclusion:'skipped'},
-  {name:'deploy',conclusion:'skipped'}];
+  {name:'deploy',conclusion:'skipped'},
+  {name:'postdeploy-acceptance',conclusion:'skipped'},
+  {name:'rollback-on-failed-acceptance',conclusion:'skipped'}];
 
 test('trusted attestor accepts an actual Codex review receipt for exact SHA', () => {
   expect(authenticateExternalCodexReview([good],SHA)).toBe(true);
@@ -30,7 +32,7 @@ test('PR-authored self-reviews, stale SHAs, and unresolved findings cannot autho
   expect(()=>authenticateExternalCodexReview([],SHA)).toThrow();
 });
 
-test('protected attestor requires eleven completed technical checks and both PR-only skips', () => {
+test('protected attestor requires eleven completed technical checks and all protected PR-only skips', () => {
   const workflowId=375119015;
   const run={head_sha:SHA,event:'pull_request',conclusion:'failure',workflow_id:workflowId,
     path:'.github/workflows/quality.yml',repository:{full_name:'BernydotJar/LUMA'},

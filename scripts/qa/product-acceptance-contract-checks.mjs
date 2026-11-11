@@ -207,3 +207,40 @@ fixtureTest('external protected UAT proofs need explicit root and matching hashe
     rmSync(outside,{recursive:true,force:true});
   }
 });
+
+fixtureTest('protected artifact root cannot silently fall back to a checkout proof',ctx=>{
+  const external=mkdtempSync(join(tmpdir(),'luma-uat-empty-artifact-'));
+  const previous=process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT;
+  try{
+    process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT=external;
+    assert.equal(verify(ctx).verdict,'BLOCKED');
+  }finally{
+    if(previous===undefined)delete process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT;
+    else process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT=previous;
+    rmSync(external,{recursive:true,force:true});
+  }
+});
+fixtureTest('production receipts bind to promotion run, build and time',ctx=>{
+  const ledger=join(ctx.root,'promotion-ledger.json');
+  const previous=process.env.LUMA_ACCEPTANCE_PROMOTION_LEDGER;
+  try{
+    writeFileSync(ledger,JSON.stringify({gitSha:sha,runId:'3211234',buildId:'test-build',
+      events:[{phase:'PROMOTION_STARTED',at:'2026-10-19T07:00:00.000Z'}]}));
+    process.env.LUMA_ACCEPTANCE_PROMOTION_LEDGER=ledger;
+    assert.equal(verify(ctx).verdict,'BLOCKED');
+    for(const collection of ['productionActions','productionJourneys']){
+      for(const [name,proof] of Object.entries(ctx.receipts[collection])){
+        const {attestation,...unsigned}=proof;
+        ctx.receipts[collection][name]=ctx.signAs({...unsigned,promotionRunId:'3211234',
+          promotionBuildId:'test-build'},'independent-sdet');
+      }
+    }
+    assert.equal(verify(ctx).verdict,'PASS');
+    writeFileSync(ledger,JSON.stringify({gitSha:sha,runId:'3211234',buildId:'test-build',
+      events:[{phase:'PROMOTION_STARTED',at:'2026-10-19T08:00:00.000Z'}]}));
+    assert.equal(verify(ctx).verdict,'BLOCKED');
+  }finally{
+    if(previous===undefined)delete process.env.LUMA_ACCEPTANCE_PROMOTION_LEDGER;
+    else process.env.LUMA_ACCEPTANCE_PROMOTION_LEDGER=previous;
+  }
+});

@@ -10,7 +10,7 @@ login/guest-room checks, BUT IT IS NOT THE INDEPENDENT 13-CASE CUSTOMER UAT, LIV
 CLOUD TEST OR PROOF OF PRODUCTION READINESS.
 
 The independent product acceptance engine is copied as policy-only source from the
-existing PR #71 integration branch, including its 19 adversarial self-tests. A green
+existing PR #71 integration branch, including its 21 adversarial product-acceptance self-tests. A green
 Operational acceptance contract self-test job means the negative policy works; its
 9-module and 5-journey product inventory is explicitly BLOCKED.
 
@@ -41,3 +41,36 @@ customer business UAT and dual-origin postdeploy SHA parity.
   A missing run, absent artifact, mismatch, symlink escape or stale SHA fails closed.
 - No GitHub environment variable, private proof or signature is provisioned by this
   source PR. Until independent evidence exists, production remains NO-GO.
+
+## 2026-11-11 adversarial hardening / cross-run recovery
+
+- The current CI policy has 16 jobs: 11 real product/security checks, predeploy and
+  independent release-readiness, source promotion, postdeploy acceptance, and a separate
+  recovery job. Protected attestation code now expects the extra PR-only skipped jobs.
+- The candidate release promotion job never finalizes based on an HTTP 200 or green
+  build alone. It captures the current promotion ledger and returns. A separate bounded
+  postdeploy job must verify the deployed SHA, browser routes, signed customer journeys
+  performed after this exact PROMOTION_STARTED event, same build and GitHub run ID,
+  then and only then call finalize.
+- The separate rollback-on-failed-acceptance job uses the real promotion ledger to
+  recover the previously verified build when postdeploy checks fail, time out or are
+  cancelled. If the ledger is absent or the prior build cannot be independently
+  verified, recovery refuses to guess and requires an operator incident response.
+- Candidate checkout proof bytes are never trusted once an external protected UAT
+  artifact root is provided. Each artifact is constrained to that root and hashed.
+- A protected UAT artifact cannot be selected by number alone: verify registered
+  GitHub workflow ID and exact path, main branch, own repository identity, source SHA,
+  completed/successful workflow_dispatch, independently allowlisted actors, artifact
+  identity, unexpired status and creation after promotion (postdeploy).
+- Signed UAT action/journey receipts must declare the independently authenticated
+  workflow run ID. Production receipts also bind the current promotion GitHub run ID,
+  build ID, and execution after the promotion start event.
+- The protected variables LUMA_ACCEPTANCE_WORKFLOW_ID,
+  LUMA_ACCEPTANCE_WORKFLOW_PATH, LUMA_ACCEPTANCE_TRUSTED_ACTORS,
+  LUMA_ACCEPTANCE_ARTIFACT_RUN_ID (predeploy), and
+  LUMA_ACCEPTANCE_POSTDEPLOY_ARTIFACT_RUN_ID (postdeploy) are NOT provisioned by
+  this PR. No independent UAT receipt is fabricated; production remains fail closed.
+- The separate protected source-attestation check is observed in GitHub on the
+  exact current PR commit SHA with GitHub Actions app ID 15368, although it
+  legitimately fails without the independent signature. This is a live readback,
+  not an assertion that approval exists.

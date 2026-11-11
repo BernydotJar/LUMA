@@ -28,8 +28,10 @@ function checkArtifact(ref,root){
   if(!ref || !SHA64.test(ref.sha256||''))return false;
   // A protected workflow may mount independently signed UAT traces outside
   // the PR checkout; paths remain relative, bounded, realpathed and hashed.
-  const roots=[root];
-  if(process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT)roots.push(process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT);
+  // An external protected artifact root is exclusive, never a fallback.
+  // The checkout is acceptable only in offline contract unit tests.
+  const roots=process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT
+    ? [process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT] : [root];
   for(const base of roots){
     if(!validPath(ref.path,base))continue;
     const file=resolve(base,ref.path);
@@ -49,6 +51,20 @@ function timely(value,now,maxAgeMs){
     date>=reference-maxAgeMs;
 }
 function acceptableActor(proof,sha,environment,observedAt,trustStore){
+  if(!proof)return false;
+  const verifiedUatRun=process.env.LUMA_ACCEPTANCE_VERIFIED_ARTIFACT_RUN_ID;
+  if(verifiedUatRun && proof.exactRunId!==verifiedUatRun)return false;
+  if(environment==='production' && process.env.LUMA_ACCEPTANCE_PROMOTION_LEDGER){
+    try{
+      const ledger=JSON.parse(readFileSync(realpathSync(process.env.LUMA_ACCEPTANCE_PROMOTION_LEDGER),'utf8'));
+      const begun=ledger.events?.filter(event=>event.phase==='PROMOTION_STARTED').at(-1);
+      const at=Date.parse(proof.executedAt), began=Date.parse(begun?.at??'');
+      if(!Number.isFinite(at)||!Number.isFinite(began)||at<=began||
+          proof.promotionRunId!==ledger.runId||
+          proof.promotionBuildId!==ledger.buildId||
+          ledger.gitSha!==sha)return false;
+    }catch{return false;}
+  }
   return proof && proof.sourceSha===sha && proof.environment===environment &&
     typeof proof.producer==='string' && proof.producer.length>=3 &&
     typeof proof.independentVerifier==='string' && proof.independentVerifier.length>=3 &&
@@ -257,6 +273,14 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).hr
   if(phase!=='inventory' && sourceSha!==verifiedGitSha)throw Error('ACCEPTANCE_SOURCE_SHA_MUST_MATCH_CHECKOUT');
   const artifactRoot=process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT;
   if(phase!=='inventory'){
+    if(!process.env.LUMA_ACCEPTANCE_VERIFIED_ARTIFACT_RUN_ID || 
+       !/^[1-9][0-9]{3,19}$/.test(process.env.LUMA_ACCEPTANCE_VERIFIED_ARTIFACT_RUN_ID))
+      throw Error('ACCEPTANCE_AUTHENTICATED_EVIDENCE_RUN_REQUIRED');
+    if(phase==='postdeploy'){
+      const ledger=process.env.LUMA_ACCEPTANCE_PROMOTION_LEDGER;
+      if(!ledger || !isAbsolute(ledger) || !existsSync(ledger))
+        throw Error('ACCEPTANCE_CURRENT_PROMOTION_LEDGER_REQUIRED');
+    }
     if(!artifactRoot || !process.env.RUNNER_TEMP || !isAbsolute(artifactRoot) ||
        !realpathSync(artifactRoot).startsWith(realpathSync(process.env.RUNNER_TEMP)+sep) ||
        realpathSync(artifactRoot).startsWith(root+sep))
