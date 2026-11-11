@@ -16,8 +16,10 @@
 .page * { box-sizing: border-box; }
 .page a { text-decoration: none; }
 .page a:focus-visible {
-  outline: 3px solid var(--brand-blue);
-  outline-offset: 4px;
+  /* Burgundy ring over light panels; white halo over dark hero. */
+  outline: 3px solid #651e44;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px #fff;
 }
 .skipLink {
   position: absolute;

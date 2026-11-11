@@ -39,6 +39,39 @@ test.describe("Seres de Excelencia public landing", () => {
     expect(violations, JSON.stringify(violations, null, 2)).toEqual([]);
   });
 
+  test("keyboard focus has two contrasting colors on dark and light backgrounds", async ({ page }) => {
+    await page.goto("/");
+    for (const link of [
+      page.getByRole("link", { name: "Ingresar a LUMA" }),
+      page.getByRole("navigation", { name: "Enlaces del pie de página" })
+        .getByRole("link", { name: "Explorar" }),
+    ]) {
+      await link.focus();
+      await expect(link).toBeFocused();
+      const style = await link.evaluate(el => {
+        const css = getComputedStyle(el);
+        return { outline: css.outlineColor, width: css.outlineWidth, shadow: css.boxShadow };
+      });
+      expect(style.outline).toBe("rgb(101, 30, 68)");
+      expect(style.width).toBe("3px");
+      expect(style.shadow).toContain("rgb(255, 255, 255)");
+    }
+  });
+
+  test("captures official branding for visual audit", async ({ page }, testInfo) => {
+    const mobile = testInfo.project.name === "mobile";
+    await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 900 });
+    await page.goto("/");
+    await expect(page.getByRole("img", { name: "Seres de Excelencia" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await page.evaluate(async () => { await document.fonts.ready; });
+    const prefix = mobile ? "mobile" : "desktop";
+    await page.screenshot({ path: testInfo.outputPath(prefix + "-full.jpg"),
+      type: "jpeg", quality: 83, fullPage: true, animations: "disabled" });
+    await page.screenshot({ path: testInfo.outputPath(prefix + "-hero.jpg"),
+      type: "jpeg", quality: 83, animations: "disabled" });
+  });
+
   test("fits mobile and desktop viewports without horizontal overflow", async ({ page }, testInfo) => {
     await page.goto("/");
     const dimensions = await page.evaluate(() => ({

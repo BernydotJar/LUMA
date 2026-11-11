@@ -26,7 +26,6 @@ Replace root `/` redirect with a restrained, image-led public landing for Seres 
 - `npm run test:run` — PASS: **331** passed, **81** emulator-dependent tests skipped.
 - `npm run build` — PASS: root `/` statically rendered.
 - Playwright Chromium desktop + mobile for public content, navigation, Google sign-in entry, viewport overflow and Axe WCAG 2.0/2.1 A/AA serious/critical findings: **10/10 PASS**.
-- Visual captures at desktop **1440 x 900** and mobile **390 x 844**: hero image loaded, exactly one `main`, no horizontal overflow. Screenshots saved alongside this file (`desktop-full.jpg`, `mobile-full.jpg`, `desktop-hero.jpg`, `mobile-hero.jpg`). No DevTools overlay in final captures.
 
 ## Adversarial review and remaining gates
 
@@ -35,3 +34,8 @@ Replace root `/` redirect with a restrained, image-led public landing for Seres 
 - Challenge: typography and image can fail on small screens. Mitigation: responsive CSS, readable overlay, real mobile screenshot and Playwright overflow/Axe checks.
 - Challenge: root entry had earlier test expecting a `/learn` redirect. Mitigation: update that test to assert public root and independently verify `/learn` still works.
 - **Pending:** independent product/design acceptance and standard exact-SHA release/signature gate. Do not interpret local checks as permission to merge or deploy.
+
+## November 11 adversarial corrections
+The official customer logo/palette is restored, and the focus indicator now uses a two-color contrasting ring.
+October 31 screenshots in this directory remain historical: they predate those changes and are NOT evidence of the revised landing.
+November desktop/mobile screenshots must be regenerated against the updated candidate using the Playwright capture test before design acceptance.
