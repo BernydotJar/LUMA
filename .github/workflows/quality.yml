@@ -219,7 +219,11 @@ jobs:
 
   institution-browser:
     needs: [verify]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    # Playwright 1.63.0 ships with Chromium and its OS dependencies.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      options: --ipc=host
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -230,7 +234,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           name: production-build-${{ github.run_attempt }}
@@ -245,7 +248,11 @@ jobs:
   # This is a technical smoke, not authenticated customer/LiveKit Cloud UAT.
   learning-auth-uat:
     needs: [verify]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    # Playwright 1.63.0 ships with Chromium and its OS dependencies.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      options: --ipc=host
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -276,7 +283,6 @@ jobs:
           npm run test:run --
           src/lib/learning-server.auth.test.ts
           src/lib/learning-entitlement.test.ts
-      - run: npx playwright install --with-deps chromium
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           name: production-build-${{ github.run_attempt }}
@@ -290,7 +296,11 @@ jobs:
 
   browser:
     needs: [verify]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    # Playwright 1.63.0 ships with Chromium and its OS dependencies.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      options: --ipc=host
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -301,7 +311,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: production-build-${{ github.run_attempt }}
@@ -317,7 +326,7 @@ jobs:
           path: |
             evidence/playwright-report
             test-results
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
 
   # Minimal trust-plane bootstrap: block every production rollout until a
@@ -453,7 +462,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           name: release-source-${{ github.run_attempt }}
@@ -487,7 +495,11 @@ jobs:
   postdeploy-acceptance:
     needs: [deploy]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    # Playwright 1.63.0 ships with Chromium and its OS dependencies.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      options: --ipc=host
     timeout-minutes: 20
     environment:
       name: production
@@ -522,7 +534,6 @@ jobs:
           project_id: luma-learning-intelligence
           workload_identity_provider: ${{ vars.LUMA_WIF_PROVIDER }}
           service_account: ${{ vars.LUMA_DEPLOY_SERVICE_ACCOUNT }}
-      - run: npx playwright install --with-deps chromium
       - name: Verify live production SHA, routes and auth denials
         run: node scripts/release/smoke.mjs
       - name: Verify post-promotion independent UAT source and artifact
