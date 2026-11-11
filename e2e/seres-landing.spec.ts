@@ -54,7 +54,13 @@ test.describe("Seres de Excelencia public landing", () => {
       });
       expect(style.outline).toBe("rgb(101, 30, 68)");
       expect(style.width).toBe("3px");
-      expect(style.shadow).toContain("rgb(255, 255, 255)");
+      // The primary CTA animates box-shadow for 170ms: inspect the settled
+      // keyboard focus state rather than an intermediate translucent frame.
+      await expect
+        .poll(async () => link.evaluate(el => getComputedStyle(el).boxShadow), {
+          timeout: 3000,
+        })
+        .toMatch(/rgba?\(255,\s*255,\s*255(?:,\s*1)?\)\s+0px\s+0px\s+0px\s+6px/);
     }
   });
 
