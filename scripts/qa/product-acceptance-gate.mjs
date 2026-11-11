@@ -25,14 +25,22 @@ function validPath(p,root){
   return target.startsWith(resolve(root)+sep) && !relative(root,target).split(sep).includes('..');
 }
 function checkArtifact(ref,root){
-  if(!ref || !validPath(ref.path,root)||!SHA64.test(ref.sha256||''))return false;
-  const file=resolve(root,ref.path);
-  if(!existsSync(file))return false;
-  try{
-    const resolved=realpathSync(file), project=realpathSync(root);
-    if(!resolved.startsWith(project+sep)||!statSync(resolved).isFile()||statSync(resolved).size>20_000_000)return false;
-    return createHash('sha256').update(readFileSync(resolved)).digest('hex')===ref.sha256;
-  } catch{return false;}
+  if(!ref || !SHA64.test(ref.sha256||''))return false;
+  // A protected workflow may mount independently signed UAT traces outside
+  // the PR checkout; paths remain relative, bounded, realpathed and hashed.
+  const roots=[root];
+  if(process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT)roots.push(process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT);
+  for(const base of roots){
+    if(!validPath(ref.path,base))continue;
+    const file=resolve(base,ref.path);
+    if(!existsSync(file))continue;
+    try{
+      const resolved=realpathSync(file), trusted=realpathSync(base);
+      if(!resolved.startsWith(trusted+sep)||!statSync(resolved).isFile()||statSync(resolved).size>20_000_000)continue;
+      if(createHash('sha256').update(readFileSync(resolved)).digest('hex')===ref.sha256)return true;
+    }catch{continue;}
+  }
+  return false;
 }
 function timely(value,now,maxAgeMs){
   const date=typeof value==='string'?Date.parse(value):NaN;
@@ -247,6 +255,13 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).hr
   const sourceSha=argv['--candidate-sha']??verifiedGitSha;
   const phase=argv['--phase']??'inventory';
   if(phase!=='inventory' && sourceSha!==verifiedGitSha)throw Error('ACCEPTANCE_SOURCE_SHA_MUST_MATCH_CHECKOUT');
+  const artifactRoot=process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT;
+  if(phase!=='inventory'){
+    if(!artifactRoot || !process.env.RUNNER_TEMP || !isAbsolute(artifactRoot) ||
+       !realpathSync(artifactRoot).startsWith(realpathSync(process.env.RUNNER_TEMP)+sep) ||
+       realpathSync(artifactRoot).startsWith(root+sep))
+       throw Error('ACCEPTANCE_PROTECTED_ARTIFACT_ROOT_REQUIRED');
+  }
   const protectedTrustPath=process.env.LUMA_ACCEPTANCE_TRUST_STORE;
   if(protectedTrustPath && (!isAbsolute(protectedTrustPath)||
      realpathSync(protectedTrustPath).startsWith(root+sep)))throw Error('ACCEPTANCE_TRUST_STORE_MUST_BE_EXTERNAL');

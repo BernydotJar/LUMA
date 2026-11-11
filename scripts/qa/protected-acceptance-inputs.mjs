@@ -3,8 +3,8 @@
  * Materialize protected CI environment secrets outside the checkout.
  * Neither the trust anchors nor private/signed UAT receipts are part of a PR.
  */
-import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
-import { resolve, isAbsolute } from 'node:path';
+import { mkdirSync, writeFileSync, readFileSync, realpathSync, statSync } from 'node:fs';
+import { resolve, isAbsolute, sep } from 'node:path';
 
 const root=process.env.RUNNER_TEMP;
 const envFile=process.env.GITHUB_ENV;
@@ -33,3 +33,12 @@ for(const [secretName,exportName,fileName] of base64Fields){
 }
 if(readFileSync(resolve(out,'trusted-keyring.json'),'utf8').length<15)throw Error('ACCEPTANCE_KEYRING_EMPTY');
 console.log('Protected acceptance evidence provisioned outside repository (paths only).');
+
+
+// Independent UAT proof bytes come from a separate, protected workflow run;
+// the candidate PR may not provide them, and absent proof fails closed.
+const artifactPath=resolve(out,'artifacts');
+const realArtifact=realpathSync(artifactPath);
+if(!realArtifact.startsWith(realpathSync(root)+sep) || !statSync(realArtifact).isDirectory())
+  throw Error('ACCEPTANCE_EXTERNAL_ARTIFACTS_REQUIRED');
+writeFileSync(envFile,'LUMA_ACCEPTANCE_ARTIFACT_ROOT='+realArtifact+'\n',{flag:'a'});

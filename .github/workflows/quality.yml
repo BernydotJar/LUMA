@@ -360,6 +360,7 @@ jobs:
       name: enterprise-product-acceptance
     permissions:
       contents: read
+      actions: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -367,6 +368,19 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
+      - name: Require protected independently generated UAT artifacts
+        env:
+          UAT_RUN_ID: ${{ vars.LUMA_ACCEPTANCE_ARTIFACT_RUN_ID }}
+        run: |
+          test -n "$UAT_RUN_ID"
+          test "$UAT_RUN_ID" -gt 0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: luma-acceptance-private-evidence
+          repository: BernydotJar/LUMA
+          run-id: ${{ vars.LUMA_ACCEPTANCE_ARTIFACT_RUN_ID }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/luma-protected-acceptance/artifacts
       - name: Load independent acceptance trust and signed receipts from protected secrets
         env:
           LUMA_ACCEPTANCE_TRUST_STORE_B64: ${{ secrets.LUMA_ACCEPTANCE_TRUST_STORE_B64 }}
@@ -453,6 +467,33 @@ jobs:
         run: node scripts/release/apphosting.mjs deploy
       - name: Verify production SHA, routes, roles, appearance, and navigation
         run: node scripts/release/smoke.mjs
+      # Promotion remains reversible until the real signed customer journeys
+      # have passed against the published SHA and observed public interface.
+      - name: Require protected independently generated production UAT artifacts
+        env:
+          UAT_RUN_ID: ${{ vars.LUMA_ACCEPTANCE_ARTIFACT_RUN_ID }}
+        run: |
+          test -n "$UAT_RUN_ID"
+          test "$UAT_RUN_ID" -gt 0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: luma-acceptance-private-evidence
+          repository: BernydotJar/LUMA
+          run-id: ${{ vars.LUMA_ACCEPTANCE_ARTIFACT_RUN_ID }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/luma-protected-acceptance/artifacts
+      - name: Read protected customer receipt and reviewer trust material
+        env:
+          LUMA_ACCEPTANCE_TRUST_STORE_B64: ${{ secrets.LUMA_ACCEPTANCE_TRUST_STORE_B64 }}
+          LUMA_ACCEPTANCE_SIGNED_RECEIPTS_B64: ${{ secrets.LUMA_ACCEPTANCE_SIGNED_RECEIPTS_B64 }}
+        run: node scripts/qa/protected-acceptance-inputs.mjs
+      - name: Observe deployed customer routes and exact public SHA
+        run: node scripts/qa/product-public-inventory.mjs
+      - name: Require signed postdeploy product acceptance before finalization
+        run: >-
+          node scripts/qa/product-acceptance-gate.mjs
+          --phase postdeploy
+          --receipts "$LUMA_ACCEPTANCE_RECEIPTS"
       - name: Validate rollback without changing live traffic
         run: node scripts/release/apphosting.mjs rollback-validate
       - name: Finalize verified release

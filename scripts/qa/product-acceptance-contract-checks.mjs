@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync,mkdirSync,writeFileSync,rmSync } from 'node:fs';
+import { mkdtempSync,mkdirSync,writeFileSync,rmSync,copyFileSync } from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join,dirname} from 'node:path';
 import {createHash, generateKeyPairSync, sign} from 'node:crypto';
@@ -183,4 +183,27 @@ fixtureTest('business journey cannot pass with incomplete role handoffs or rever
   ctx.receipts.productionJourneys['AGRO-REAL'].actions=['create','edit'];
   ctx.receipts.productionJourneys['AGRO-REAL'].actorTransitionsVerified=false;
   assert.equal(verify(ctx).journeys[0].status,'BLOCKED');
+});
+
+fixtureTest('external protected UAT proofs need explicit root and matching hashes',ctx=>{
+  const outside=mkdtempSync(join(tmpdir(),'luma-protected-uat-proofs-'));
+  const previous=process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT;
+  try{
+    for(const ref of Object.values(ctx.files)){
+      const source=join(ctx.root,ref.path),destination=join(outside,ref.path);
+      mkdirSync(dirname(destination),{recursive:true});
+      copyFileSync(source,destination);
+      rmSync(source);
+    }
+    delete process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT;
+    assert.equal(verify(ctx).verdict,'BLOCKED');
+    process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT=outside;
+    assert.equal(verify(ctx).verdict,'PASS');
+    writeFileSync(join(outside,ctx.files.browserTrace.path),'tampered evidence');
+    assert.equal(verify(ctx).verdict,'BLOCKED');
+  }finally{
+    if(previous===undefined)delete process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT;
+    else process.env.LUMA_ACCEPTANCE_ARTIFACT_ROOT=previous;
+    rmSync(outside,{recursive:true,force:true});
+  }
 });
