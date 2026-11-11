@@ -339,7 +339,7 @@ jobs:
         run: >-
           node --test
           scripts/qa/product-acceptance-contract-checks.mjs
-          scripts/qa/verify-acceptance-artifact.test.mjs
+          scripts/qa/verify-acceptance-artifact-checks.mjs
       - name: Run negative inventory to demonstrate customer journeys are not approved
         run: node scripts/qa/product-acceptance-gate.mjs --phase inventory
       - name: Confirm incomplete product is blocked even with CI green
