@@ -6,6 +6,13 @@ test('deleted or modified security workflow never qualifies for public-only rele
     {status:'M',path:'src/app/page.tsx'}]).classification,'owner-risk-exception-required');
   assert.equal(classifyReviewRisk([{status:'D',path:'public/old-banner.png'}]).classification,'owner-risk-exception-required');
   assert.equal(classifyReviewRisk([{status:'M',path:'src/app/page.tsx'}]).classification,'public-landing');
+  assert.equal(classifyReviewRisk([{status:'M',path:'graph-harness.project.json'},
+    {status:'M',path:'src/app/page.tsx'}]).classification,'owner-risk-exception-required');
+  assert.equal(classifyReviewRisk([{status:'M',path:'evidence/cicd-enterprise/release-approval.json'},
+    {status:'M',path:'src/app/page.tsx'}]).classification,'owner-risk-exception-required');
+  assert.equal(classifyReviewRisk([{status:'M',path:'AGENTS.md'}]).classification,'owner-risk-exception-required');
+  assert.equal(classifyReviewRisk([{status:'A',path:'e2e/seres-landing.spec.ts'},
+    {status:'M',path:'src/app/seres-landing.module.css'}]).classification,'public-landing');
 });
 test('30 paths are supported without silently omitting deleted files',()=>{
   const many=Array.from({length:35},(_,i)=>({status:i===34?'D':'M',path:`src/app/page-${i}.tsx`}));

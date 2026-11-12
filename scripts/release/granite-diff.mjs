@@ -20,12 +20,21 @@ export function validateChangedPaths(entries) {
   return entries;
 }
 
-/** Deleted source and ALL auth/release/IAM paths are never public landing scope. */
+/** Explicitly allow only public home-page assets and associated E2E/evidence.
+ * Unknown configuration, Graph policy, permissions, release code or deletion is
+ * sensitive by default. Otherwise a malicious source tweak could be hidden
+ * alongside one innocent page change and incorrectly classified public-only.
+ */
 export function classifyReviewRisk(entries) {
   validateChangedPaths(entries);
+  const safeLanding = path =>
+    path === 'src/app/page.tsx' ||
+    path === 'src/app/seres-landing.module.css' ||
+    /^public\/media\/[a-zA-Z0-9_.-]+\.(?:webp|png|jpe?g|avif|svg)$/.test(path) ||
+    /^e2e\/(?:seres-landing|showcase|liquid-glass-v2)\.spec\.ts$/.test(path) ||
+    /^evidence\/seres-violet-landing-[0-9]{8}\/[a-zA-Z0-9_.-]+\.(?:md|json|png|jpe?g|webp)$/.test(path);
   const sensitive = entries.filter(({path,status}) =>
-    status === 'D' || status === 'T' ||
-    /^\.github\/|^AGENTS\.md$|^scripts\/release\/|^src\/(?:lib|app\/api)\/|^services\/|^firestore\.|^apphosting\.yaml$|^package(-lock)?\.json$/.test(path));
+    status !== 'A' && status !== 'M' || !safeLanding(path));
   return { classification: sensitive.length ? 'owner-risk-exception-required' : 'public-landing',
     sensitivePaths:sensitive.map(item=>item.path) };
 }
