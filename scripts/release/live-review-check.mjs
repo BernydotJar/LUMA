@@ -39,14 +39,15 @@ export function assertReceiptOnlyHeadAdvance(reviewedHead, currentHead, compare)
 
 /** Pure verification against already authenticated GitHub API responses. */
 export function assertCurrentIndependentReview(approval, pr, expectedHead,
-    comments, reviews, commits, reviewerAllowlist, authenticatedCompare = null) {
-  invariant(approval?.schemaVersion === 2 && approval.status === 'PASS' &&
+    comments, reviews, commits, reviewerAllowlist, authenticatedCompare = null, allowMerged = false) {
+  invariant([2,3].includes(approval?.schemaVersion) && approval.status === 'PASS' &&
     SHA.test(approval.review?.commitSha ?? '') &&
     approval.review.commitSha === approval.testedCommit,
     'Historical release receipt lacks a source-bound independent reviewer');
   invariant(SHA.test(expectedHead ?? '') && pr?.head?.sha === expectedHead &&
     pr.head.repo?.full_name === REPO && pr.base?.ref === 'main' &&
-    pr.state === 'open' && !pr.merged,
+    (pr.state === 'open' && !pr.merged ||
+      allowMerged && pr.state === 'closed' && pr.merged === true),
     'PR source, base, or current head changed after protected review event');
   invariant(commits.some(commit => commit.sha === approval.review.commitSha),
     'Signed reviewed SHA is no longer in the PR commit history');
@@ -66,10 +67,12 @@ export function assertCurrentIndependentReview(approval, pr, expectedHead,
   return current;
 }
 
-export function verifyCurrentIndependentReview(directory, prNumber, expectedHead) {
+export function verifyCurrentIndependentReview(directory, prNumber, expectedHead, options = {}) {
   invariant(Number.isSafeInteger(prNumber) && prNumber > 0 && SHA.test(expectedHead ?? ''),
     'Protected review check requires a real PR number and webhook SHA');
-  const approval = JSON.parse(readFileSync(resolve(directory,
+  invariant(process.env.GITHUB_ACTIONS !== 'true' || options.approval,
+    'Protected review check requires the externally verified approval');
+  const approval = options.approval ?? JSON.parse(readFileSync(resolve(directory,
     'evidence/cicd-enterprise/release-approval.json'), 'utf8'));
   const pr = gh(`repos/${REPO}/pulls/${prNumber}`);
   const comments = ghPages(`repos/${REPO}/issues/${prNumber}/comments?per_page=100`);
@@ -80,5 +83,6 @@ export function verifyCurrentIndependentReview(directory, prNumber, expectedHead
   const compare = approval.review.commitSha === expectedHead ? null :
     gh(`repos/${REPO}/compare/${approval.review.commitSha}...${expectedHead}`);
   return assertCurrentIndependentReview(approval, pr, expectedHead,
-    comments, reviews, commits, process.env.LUMA_RELEASE_TRUSTED_REVIEWERS, compare);
+    comments, reviews, commits, process.env.LUMA_RELEASE_TRUSTED_REVIEWERS,
+    compare, options.allowMerged === true);
 }

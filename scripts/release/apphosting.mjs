@@ -1,5 +1,8 @@
 import { GoogleAuth } from 'google-auth-library';
 import { verifyReview } from './review-gate.mjs';
+import { identifyGitHubSource } from './pr-readiness.mjs';
+import { findSignedReceipt, assertPolicyBoundReceipt, ghJson } from './remote-attestation.mjs';
+import { verifyCurrentIndependentReview } from './live-review-check.mjs';
 import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -79,8 +82,21 @@ function assertCapacity(build) {
   const config = build.config?.runConfig;
   invariant(config?.cpu === 1 && config.memoryMib === 512 && config.maxInstances === 2 && (config.minInstances ?? 0) === 0 && config.concurrency === 80, 'Production capacity drift; release blocked');
 }
+function requireExternallySignedMainApproval() {
+  const source=identifyGitHubSource('push',{ref:'refs/heads/main'},process.env.GITHUB_SHA);
+  const signed=findSignedReceipt(source.prNumber,source.head,
+    process.env.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64).approval;
+  const current=ghJson('repos/BernydotJar/LUMA/git/ref/heads/main').object.sha;
+  invariant(current===process.env.GITHUB_SHA,'Current main moved after approval preflight');
+  const commit=ghJson('repos/BernydotJar/LUMA/commits/'+current);
+  assertPolicyBoundReceipt(signed,commit.parents?.[0]?.sha);
+  const approval=verifyReview(undefined,{approval:signed});
+  verifyCurrentIndependentReview(resolve(import.meta.dirname,'../..'),
+    source.prNumber,source.head,{approval:signed,allowMerged:true});
+  return approval;
+}
 async function deploy() {
-  const approval = verifyReview();
+  const approval = requireExternallySignedMainApproval();
   record('INDEPENDENT_GRAPH_GATE_VERIFIED', { sourceDigest: approval.sourceDigest, graphEventId: approval.graphEventId });
   await verifyGitHub();
   const backend = await cloud(PARENT);
@@ -126,6 +142,8 @@ async function deploy() {
   invariant(build.labels?.['git-sha'] === manifest.gitSha, 'Build lost commit provenance');
   record('BUILD_READY', { buildId, image: build.image, buildLogsUri: build.buildLogsUri });
   await verifyGitHub();
+  // Build may take minutes: a dismissed reviewer must revoke promotion.
+  requireExternallySignedMainApproval();
   invariant(singleServingBuild(await cloud(`${PARENT}/traffic`)) === previousId, 'Another deployment changed production during this build');
   ledger.status = 'PROMOTING';
   record('PROMOTION_STARTED');

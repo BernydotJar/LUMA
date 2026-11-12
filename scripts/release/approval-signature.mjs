@@ -4,6 +4,7 @@ import { createPublicKey, createPrivateKey, sign, verify } from 'node:crypto';
 import { invariant } from './policy.mjs';
 
 export const RELEASE_SIGNER_ID = 'luma-independent-attestor-v2';
+export const RELEASE_SIGNER_ID_V3 = 'luma-independent-attestor-v3';
 const SHA256 = /^[a-f0-9]{64}$/;
 const COMMIT = /^[a-f0-9]{40}$/;
 const DETAILED_KEYS = ['schemaVersion','status','sourceDigest','testedCommit','ciRunId',
@@ -12,7 +13,11 @@ const DETAILED_KEYS = ['schemaVersion','status','sourceDigest','testedCommit','c
 
 /** Fixed-order, length-delimited values to avoid ambiguous JSON serialization. */
 export function approvalSigningBytes(approval) {
-  invariant(approval?.schemaVersion === 2 && approval.status === 'PASS', 'Unsigned release approval is invalid');
+  const v3=approval?.schemaVersion===3;
+  invariant((v3||approval?.schemaVersion===2)&&approval.status==='PASS',
+    'Unsigned release approval is invalid');
+  if(v3)invariant(COMMIT.test(approval.policySha||''),
+    'External signature requires protected main policy SHA');
   invariant(SHA256.test(approval.sourceDigest) && COMMIT.test(approval.testedCommit), 'Signature requires exact source/commit');
   invariant(/^\d+$/.test(String(approval.ciRunId ?? '')) && Number(approval.ciRunId) > 0, 'Signature requires a concrete successful QA run');
   invariant(approval.graphEventId && SHA256.test(approval.graphEventHash), 'Signature requires the Graph receipt');
@@ -23,11 +28,16 @@ export function approvalSigningBytes(approval) {
     Number.isSafeInteger(review.reviewId) && review.reviewId > 0 &&
     review.commitSha === approval.testedCommit,
     'Signature requires exact-SHA authenticated external reviewer provenance');
-  const values = [2,'PASS',approval.sourceDigest,approval.testedCommit,String(approval.ciRunId),
-    approval.graphEventId,approval.graphEventHash,approval.critic.sha256,approval.verifier.sha256,
+  const values = [approval.schemaVersion,'PASS',approval.sourceDigest,approval.testedCommit,
+    String(approval.ciRunId),approval.graphEventId,approval.graphEventHash,
+    approval.critic.sha256,approval.verifier.sha256,
     review.method,review.reviewer,String(review.reviewId),review.commitSha];
-  return Buffer.from('LUMA\0SOURCE-RELEASE-ATTESTATION\0v2\0'+
-    DETAILED_KEYS.map((key,index)=>`${key}:${Buffer.byteLength(String(values[index]))}:${values[index]}`).join('\n')+'\n');
+  const keys=v3?[...DETAILED_KEYS,'protectedPolicySha']:DETAILED_KEYS;
+  if(v3)values.push(approval.policySha);
+  return Buffer.from('LUMA'+String.fromCharCode(0)+'SOURCE-RELEASE-ATTESTATION'+
+    String.fromCharCode(0)+(v3?'v3':'v2')+String.fromCharCode(0)+
+    keys.map((key,index)=>key+':'+Buffer.byteLength(String(values[index]))+':'+
+      String(values[index])).join('\n')+'\n');
 }
 
 function readTrustedPublicKey(base64) {
@@ -40,7 +50,7 @@ function readTrustedPublicKey(base64) {
 
 export function verifyApprovalSignature(approval, trustedPublicKeyBase64) {
   const signature = approval?.signature;
-  invariant(signature?.algorithm === 'Ed25519' && signature.keyId === RELEASE_SIGNER_ID &&
+  invariant(signature?.algorithm === 'Ed25519' && signature.keyId === (approval.schemaVersion===3?RELEASE_SIGNER_ID_V3:RELEASE_SIGNER_ID) &&
     typeof signature.value === 'string' && /^[A-Za-z0-9+/]{86}==$/.test(signature.value),
     'Missing or malformed independent CI signature');
   const key = readTrustedPublicKey(trustedPublicKeyBase64);
@@ -55,6 +65,6 @@ export function signApproval(approval, privateKeyBase64) {
     'Protected signing key is unavailable');
   const key = createPrivateKey(Buffer.from(privateKeyBase64,'base64').toString('utf8'));
   invariant(key.asymmetricKeyType === 'ed25519', 'Signing key must be Ed25519');
-  return { ...approval, signature: { algorithm:'Ed25519', keyId:RELEASE_SIGNER_ID,
+  return { ...approval, signature: { algorithm:'Ed25519', keyId:approval.schemaVersion===3?RELEASE_SIGNER_ID_V3:RELEASE_SIGNER_ID,
     value:sign(null,approvalSigningBytes(approval),key).toString('base64') } };
 }

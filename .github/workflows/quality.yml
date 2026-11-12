@@ -52,6 +52,20 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  attestation-contract:
+    needs: [verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Audit external Ed25519 receipt and reviewer revocation
+        run: node --test scripts/release/external-attestation-checks.mjs
+
   security:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -165,11 +179,13 @@ jobs:
   # trusted, exact-SHA Ed25519 release attestation exists. All source-review
   # scripts run fail-closed, and the protected signer is dispatched only on main.
   release-readiness:
-    needs: [verify, security, firestore, identity-roles, browser]
+    needs: [verify, security, firestore, identity-roles, browser, attestation-contract]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read
+      issues: read
+      pull-requests: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -179,7 +195,9 @@ jobs:
           node-version: 22
       - name: Verify protected exact-source review and signed Graph release gate
         env:
+          GH_TOKEN: ${{ github.token }}
           LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
+          LUMA_RELEASE_TRUSTED_REVIEWERS: ${{ vars.LUMA_RELEASE_TRUSTED_REVIEWERS }}
         run: node scripts/release/pr-readiness.mjs
 
   deploy:
@@ -195,6 +213,8 @@ jobs:
       cancel-in-progress: false
     permissions:
       contents: read
+      issues: read
+      pull-requests: read
       actions: read
       id-token: write
     steps:
@@ -229,6 +249,8 @@ jobs:
         id: promote
         env:
           GH_TOKEN: ${{ github.token }}
+          LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
+          LUMA_RELEASE_TRUSTED_REVIEWERS: ${{ vars.LUMA_RELEASE_TRUSTED_REVIEWERS }}
         run: node scripts/release/apphosting.mjs deploy
       - name: Verify production SHA, routes, roles, appearance, and navigation
         run: node scripts/release/smoke.mjs

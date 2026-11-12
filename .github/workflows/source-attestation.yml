@@ -25,10 +25,10 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           path: protected-policy
           persist-credentials: false
-      - name: Checkout candidate merge as untrusted data only
+      - name: Checkout exact candidate head as untrusted data only
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+          ref: refs/pull/${{ github.event.pull_request.number }}/head
           path: candidate-data
           persist-credentials: false
       - name: Set up Node.js (no npm install, no PR code execution)

@@ -1,0 +1,186 @@
+# LUMA External Ed25519 Source Attestation — Controlled Migration
+
+**Tracking:** Issue #104; protected trust-plane migration, not a production deployment.
+**Change boundary:** GitHub Actions workflows and the source release-policy modules.
+**Production authorization:** Retained separately; production deployment remains NO-GO.
+
+## Root cause
+
+The original signer required a file tracked within candidate commit C to contain
+the exact SHA of C. Any attempt to write that SHA changes the commit itself.
+A stable self-referential commit cannot be produced by normal Git operations.
+The stored source-approval file also uses the obsolete approval schema 1,
+while protected validation requires schema 2.
+
+## New contract
+
+1. Protected main resolves the exact PR head SHA, registered workflow identity,
+   CI run and current reviewer directly from authenticated GitHub API data.
+2. An external, allowlisted reviewer or authenticated clean Codex review must
+   cover that exact SHA. Revocation and change-request veto remain effective.
+3. Current critic, independent verifier and append-only Graph gate must be
+   valid for the source digest. No prompt or a green CI check alone can grant GO.
+4. The signer uses a private Ed25519 key scoped to the protected
+   independent-attestation environment. It cannot run from untrusted PR code.
+5. The v3 domain-separated signed receipt contains the exact protected-main\n   policy SHA as well as the PR SHA, source digest and reviewer identity.\n   The signer checks current main twice and refuses stale policy.\n6. The signed receipt is published outside the Git tree as a bot-authored PR
+   comment with an Actions artifact mirror. Both are externally inspectable.
+   The comment is a lookup carrier, not authority: consumers require the
+   correct publisher, exact PR/head, protected public key signature,
+   matching source digest, current reviewer and Graph-chain provenance.
+7. The protected signer queues a rerun of the existing source-attestation check on the PR head;
+   the signer also queues the failed PR release-readiness job to consume the same signed
+   proof. Merge does not eliminate validation: main release checks also verify
+   an authenticated unique merged PR and exact resulting code digest.
+8. Source integration and business production acceptance are independent.
+   Enterprise UAT, verified previous serving build and guarded postdeploy
+   approval remain mandatory; no feature flags are switched by this patch.
+
+## Controlled one-time bootstrap
+
+**BLOCKED unless explicitly approved by an authorized administrator.**
+The current protected main validator contains the defect being repaired.
+Therefore, this policy PR cannot issue its own first signature and cannot
+legitimately pass the original required check through normal automation.
+Never claim that a green test run constitutes that missing approval.
+
+A one-time repository governance transition is required:
+
+1. Obtain independent review of the exact trust-policy change SHA. Retain its
+   real GitHub identity, review ID, inspection findings and audit decision.
+2. Approve a narrowly scoped change to the currently protected main policy
+   with an authorized operator, documented exact SHA/files, audit evidence,
+   expiration and independently verified post-change checks. Stop when no
+   supported, explicitly authorized path exists. Do not silently disable
+   protections or mint the PR author's approval.
+3. Verify the protected-main source, private-key environment, public-key
+   trust anchor, required status contexts and original protections after
+   installing the new policy.
+4. Only then independently regenerate and review the final source-bound
+   critic/verifier/Graph evidence on PR #102 and PR #101 as applicable.
+   Every amended or rebased SHA requires new review.
+5. Dispatch protected independent signing with a concrete PR number. Verify
+   its GitHub Actions bot comment and signed artifact, and re-run previously
+   failed quality release-readiness jobs. Confirm the protected attestation
+   check belongs to the exact final PR head.
+6. Merge the release-policy/CI changes in the authorized order, then rebase
+   the landing and revalidate its user paths. Run one guarded production
+   deployment only when the separate business and release gates permit it.
+7. Verify the exact published SHA and the full customer interface on both
+   public origins, with monitored rollback readiness and an incident record
+   for any discrepancy.
+
+## Scope / evidence
+
+A local contract test uses a disposable keypair. It validates verified
+signature transport, untrusted publishers, wrong source SHAs, altered
+signatures, source digest mismatch, revoked reviewer decisions, merged PR
+constraints, protected-only signer workflow, and PR head checkout.
+The disposable private key is never committed.
+
+The module itself is source-only. It cannot independently prove successful
+cloud dispatch, real protected signing, a passing branch-protection status,
+an independent human review, or a completed production rollout.
+
+## No silent bypass
+
+No GitHub branch protection has been relaxed; no production traffic, cloud
+resource or reviewer allowlist has been modified by this policy PR.
+The first governance migration is explicitly a separate administrative
+decision, not implicit authorization to force-merge another PR.
+
+## Adversarial P1/P2 remediation
+
+The external review on the first migration candidate found that deploy lacked
+read permissions for issue comments and PR reviews, that a long Cloud Build
+could outlive a revoked approval, and that the protected policy itself was
+not signed. Those findings are corrected by explicit read-only job rights,
+rechecking the current independent review before rollout, and a v3
+domain-separated Ed25519 signature over the main policy SHA. On a PR the
+policy SHA must equal current protected main; for an approved merge commit
+it must match the authenticated parent protected-main revision. In both
+cases, a stale signer policy fails closed.
+
+## Reviewer feedback: protected-base execution and GitHub run identity
+
+A second adversarial review found two more risk paths. On
+pull_request_review the workflow's generic github.sha can denote a merge
+revision rather than trusted main. Source-attestation now explicitly checks
+out github.event.pull_request.base.sha as the protected, executable policy;
+the candidate is separately checked out from refs/pull/<number>/head as inert
+data, and no PR dependencies/scripts run under the privileged token.
+
+GitHub's actual workflow-run REST responses were inspected for LUMA's source
+checks: run 43147534636 (pull_request_target on PR 101), run 43148450919
+(pull_request_target on PR 102) and run 43149011621
+(pull_request_review on PR 102) all report the logical candidate SHA in
+head_sha with the PR head/base references in pull_requests. Some GitHub
+event variants may instead report base or synthetic merge SHA. Protected
+source check reexecution therefore requires a registered workflow ID,
+completed event of allowed kind, an authenticated pull_requests payload with
+exact PR number/source head/current protected base, and an allowed event
+head_sha (candidate or protected base only for pull_request_target).
+A synthetic or foreign head, stale base, changed PR, wrong event or wrong
+workflow is rejected. This is covered by local adversarial tests; live
+protected reexecution requires the separate approved bootstrap.
+
+## Quality job registry reconciliation
+
+The protected signer no longer hardcodes an enterprise-only eleven-job profile
+when the protected main workflow currently defines seven jobs. Instead, it
+loads the registered quality.yml source at the exact trusted main policy SHA
+from authenticated GitHub and parses its static job IDs/display labels
+without executing YAML, npm, or PR-supplied code. Every job declared in
+protected main must appear in the real GitHub CI run with the required status.
+Every additional candidate technical job must succeed; every production-only
+job must remain skipped on PR. The release-readiness gate may fail before
+signing, as designed, but may not be missing.
+
+This contract permits the current protected seven-job baseline and refuses
+to downgrade a future protected sixteen-job enterprise pipeline to seven.
+It is backed by negative tests for missing protected jobs, failed candidate
+jobs, duplicates and skipped authenticated-learning checks.
+
+## Authenticated workflow execution, PR identity, and exact-head pagination
+
+An independent review identified three additional signed-CI provenance hazards,
+all fixed in the candidate governance workflow:
+
+- The official GitHub quality run is accepted only when authenticated run
+  metadata contains the exact requested PR number, candidate head SHA, main
+  base ref and the current trusted protected-main SHA. Reusing a run from a
+  different PR or base branch is rejected.
+- The signer fetches the trusted quality.yml at the protected policy SHA and
+  compares top-level workflow triggers/permissions plus every original
+  protected technical job block to the inert candidate source. Executing
+  modified, shortened or no-op technical validation is not sufficient just
+  because GitHub reports a success label. New contract checks are scheduled
+  as a separate additive attestation-contract job, preserving the exact
+  original five protected technical jobs.
+- Quality run discovery filters GitHub REST by exact head_sha and paginates
+  up to a bounded limit, rather than assuming the reviewed run appears
+  among the first 100 recent PR runs.
+
+The external signer demands successful technical checks for every protected
+main declared job and every extra candidate technical job. A new enterprise
+quality workflow cannot be reduced to a minimal legacy job list, and
+production-only jobs cannot run on an untrusted PR. The native test harness
+checks cross-PR replay, source workflow tampering, missing enterprise jobs,
+duplicate status labels and altered gate outcomes.
+
+## November 11 — protected execution audit after independent findings
+
+The protected signer now verifies workflow-wide YAML controls regardless of
+whether they appear before or after the jobs section. It checks every
+protected-main job definition, not merely the five historical tests. During
+this one migration, the only approved differences to the pre-existing
+release-readiness/deploy jobs are exact GitHub read privileges, exact
+external receipt environment variables, and a new dependency on the separate
+attestation-contract test. Every other step, job and permission remains
+unchanged. The independent contract must be successful before
+release-readiness (and therefore production deploy) can run.
+
+The protected signer also searches source-attestation run history with bounded
+GitHub API pagination, rather than depending on the most recent 100 runs.
+Native negative tests cover modified global defaults after jobs, failed
+attestation gating, altered readiness and deploy commands, changed protected
+technical jobs, incorrect PR/base, stale signature and reviewer revocation.
