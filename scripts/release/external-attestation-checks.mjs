@@ -228,6 +228,16 @@ test('candidate cannot replace protected main test steps with no-op successes',(
  assert.throws(()=>assertProtectedQualityCore(baseline,
    full+'\ndefaults:\n  run:\n    shell: bash\n'),
    /workflow-wide execution controls/);
+ for(const injected of [
+   "'defaults':\n  run:\n    shell: sh\n",
+   '"defaults":\n  run:\n    shell: sh\n',
+   "? defaults\n: {run: {shell: sh}}\n",
+   '"on": pull_request\n',
+   "   \n'permissions': write\n"
+ ]){
+   assert.throws(()=>assertProtectedQualityCore(baseline,injected+full),
+     /workflow-wide execution controls|Missing protected/);
+ }
  assert.throws(()=>assertProtectedQualityCore(baseline,
    full.replace('run: node scripts/release/pr-readiness.mjs','run: echo bypass')),
    /protected job definition: release-readiness/);

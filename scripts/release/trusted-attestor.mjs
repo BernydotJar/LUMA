@@ -193,17 +193,26 @@ export function assertProtectedQualityCore(mainYaml,candidateYaml){
     'Protected quality workflow source must be present');
   function globalBlocks(source){
     const blocks=new Map();
-    let key=null,buffer=[];
+    let key=null,buffer=[],prologue=[];
     for(const line of source.split(/\r?\n/)){
-      const found=line.match(/^([A-Za-z][\w-]*):(?:\s.*)?$/);
+      // Match quoted and otherwise unusual YAML root keys: ignoring an
+      // unrecognized root property can bypass workflow-wide run controls.
+      const found=line.match(/^([^\s#][^:]*):(?:\s.*)?$/);
       if(found){
         if(key!==null)blocks.set(key,buffer.join('\n').trimEnd());
         key=found[1];
         invariant(!blocks.has(key),'Duplicate top-level quality workflow key: '+key);
         buffer=[line];
-      }else if(key!==null)buffer.push(line);
+      }else if(key!==null){
+        buffer.push(line);
+      }else{
+        // Fail closed for alternative YAML document/key syntax preceding
+        // the first standard mapping key; exact matching includes comments.
+        prologue.push(line);
+      }
     }
     if(key!==null)blocks.set(key,buffer.join('\n').trimEnd());
+    blocks.set('__preamble__',prologue.join('\n').trimEnd());
     invariant(blocks.has('jobs')&&blocks.has('on')&&blocks.has('permissions'),
       'Missing protected workflow-wide execution controls');
     return blocks;
