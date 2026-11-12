@@ -166,3 +166,21 @@ quality workflow cannot be reduced to a minimal legacy job list, and
 production-only jobs cannot run on an untrusted PR. The native test harness
 checks cross-PR replay, source workflow tampering, missing enterprise jobs,
 duplicate status labels and altered gate outcomes.
+
+## November 11 — protected execution audit after independent findings
+
+The protected signer now verifies workflow-wide YAML controls regardless of
+whether they appear before or after the jobs section. It checks every
+protected-main job definition, not merely the five historical tests. During
+this one migration, the only approved differences to the pre-existing
+release-readiness/deploy jobs are exact GitHub read privileges, exact
+external receipt environment variables, and a new dependency on the separate
+attestation-contract test. Every other step, job and permission remains
+unchanged. The independent contract must be successful before
+release-readiness (and therefore production deploy) can run.
+
+The protected signer also searches source-attestation run history with bounded
+GitHub API pagination, rather than depending on the most recent 100 runs.
+Native negative tests cover modified global defaults after jobs, failed
+attestation gating, altered readiness and deploy commands, changed protected
+technical jobs, incorrect PR/base, stale signature and reviewer revocation.

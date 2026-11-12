@@ -206,14 +206,44 @@ test('candidate cannot replace protected main test steps with no-op successes',(
  const begin=full.indexOf('  attestation-contract:');
  const next=full.indexOf('  security:',begin);
  assert.ok(begin>0&&next>begin);
- const baseline=full.slice(0,begin)+full.slice(next);
+ const stripped=full.slice(0,begin)+full.slice(next);
+ // Remove only the exact sanctioned migration additions from each job.
+ const first=stripped.indexOf('  release-readiness:');
+ const second=stripped.indexOf('  deploy:',first);
+ const release=stripped.slice(first,second)
+   .replace('    needs: [verify, security, firestore, identity-roles, browser, attestation-contract]',
+     '    needs: [verify, security, firestore, identity-roles, browser]')
+   .replace('      issues: read\n','')
+   .replace('      pull-requests: read\n','')
+   .replace('          GH_TOKEN: ${{ github.token }}\n','')
+   .replace('          LUMA_RELEASE_TRUSTED_REVIEWERS: ${{ vars.LUMA_RELEASE_TRUSTED_REVIEWERS }}\n','');
+ const deploy=stripped.slice(second)
+   .replace('      issues: read\n','')
+   .replace('      pull-requests: read\n','')
+   .replace('          LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}\n','')
+   .replace('          LUMA_RELEASE_TRUSTED_REVIEWERS: ${{ vars.LUMA_RELEASE_TRUSTED_REVIEWERS }}\n','');
+ const baseline=stripped.slice(0,first)+release+deploy;
  assert.equal(assertProtectedQualityCore(baseline,full),true);
+ assert.equal(assertProtectedQualityCore(full,full),true);
+ assert.throws(()=>assertProtectedQualityCore(baseline,
+   full+'\ndefaults:\n  run:\n    shell: bash\n'),
+   /workflow-wide execution controls/);
+ assert.throws(()=>assertProtectedQualityCore(baseline,
+   full.replace('run: node scripts/release/pr-readiness.mjs','run: echo bypass')),
+   /protected job definition: release-readiness/);
+ assert.throws(()=>assertProtectedQualityCore(baseline,
+   full.replace('run: node scripts/release/apphosting.mjs deploy','run: echo bypass')),
+   /protected job definition: deploy/);
+ assert.throws(()=>assertProtectedQualityCore(baseline,
+   full.replace('needs: [verify, security, firestore, identity-roles, browser, attestation-contract]',
+     'needs: [verify, security, firestore, identity-roles, browser]')),
+   /Attestation contract must gate/);
  assert.throws(()=>assertProtectedQualityCore(baseline,
    full.replace('      - run: npm run test:run','      - run: echo PASS')),
-   /altered protected technical job/);
+   /altered protected job definition/);
  assert.throws(()=>assertProtectedQualityCore(baseline,
    full.replace('  pull_request:', '  pull_request_target:')),
-   /triggers or permissions/);
+   /workflow-wide execution controls/);
 });
 test('future protected enterprise jobs cannot be removed from the candidate run',()=>{
  const enterprise=['verify','security','firestore','identity-roles','browser',

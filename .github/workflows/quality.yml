@@ -179,7 +179,7 @@ jobs:
   # trusted, exact-SHA Ed25519 release attestation exists. All source-review
   # scripts run fail-closed, and the protected signer is dispatched only on main.
   release-readiness:
-    needs: [verify, security, firestore, identity-roles, browser]
+    needs: [verify, security, firestore, identity-roles, browser, attestation-contract]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
