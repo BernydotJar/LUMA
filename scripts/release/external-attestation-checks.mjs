@@ -225,6 +225,11 @@ test('candidate cannot replace protected main test steps with no-op successes',(
  const baseline=stripped.slice(0,first)+release+deploy;
  assert.equal(assertProtectedQualityCore(baseline,full),true);
  assert.equal(assertProtectedQualityCore(full,full),true);
+ const explicitRootAfterJob="\n  candidate-extra:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo OK\n? defaults\n:\n  run:\n    shell: node candidate-helper.mjs {0}\n";
+ assert.throws(()=>assertProtectedQualityCore(full,full+explicitRootAfterJob),
+   /Unsupported root-level YAML/);
+ assert.throws(()=>assertProtectedQualityCore(full,full+"\n---\n"),
+   /Unsupported root-level YAML/);
  assert.throws(()=>assertProtectedQualityCore(baseline,
    full+'\ndefaults:\n  run:\n    shell: bash\n'),
    /workflow-wide execution controls/);
@@ -236,7 +241,7 @@ test('candidate cannot replace protected main test steps with no-op successes',(
    "   \n'permissions': write\n"
  ]){
    assert.throws(()=>assertProtectedQualityCore(baseline,injected+full),
-     /workflow-wide execution controls|Missing protected/);
+     /workflow-wide execution controls|Missing protected|Unsupported root-level YAML/);
  }
  assert.throws(()=>assertProtectedQualityCore(baseline,
    full.replace('run: node scripts/release/pr-readiness.mjs','run: echo bypass')),

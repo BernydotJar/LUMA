@@ -192,6 +192,17 @@ export function assertProtectedQualityCore(mainYaml,candidateYaml){
   invariant(typeof mainYaml==='string'&&typeof candidateYaml==='string',
     'Protected quality workflow source must be present');
   function globalBlocks(source){
+    // This protected CI policy uses canonical, unquoted root keys only.
+    // A column-zero YAML explicit-key form ('? key', ':'), document marker,
+    // or any other noncanonical root syntax must fail closed, including
+    // when it appears *after* additional candidate-owned jobs.
+    for(const line of source.split(/\r?\n/)){
+      if(line.length>0 && !/^[\s#]/.test(line) &&
+         !/^[A-Za-z][A-Za-z0-9_-]*:(?:\s.*)?$/.test(line))
+        throw Error('Unsupported root-level YAML execution control syntax');
+      if(line.startsWith('\t'))
+        throw Error('Unsupported YAML tab indentation in protected workflow');
+    }
     const blocks=new Map();
     let key=null,buffer=[],prologue=[];
     for(const line of source.split(/\r?\n/)){
