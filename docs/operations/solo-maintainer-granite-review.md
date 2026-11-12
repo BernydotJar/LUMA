@@ -69,3 +69,35 @@ The proposed independence is **execution and model separation, not human or orga
 ## Evidence from the first practical pilot
 
 For PR #101 at `dbe4acb8629c0bfb38a6010d7b824a273ef7992d`, Granite generated well-formed JSON `PASS` for the public landing and its UI/E2E tests. It also generated malformed initial responses and unsupported high-severity findings on release policy. Those attempts were **rejected and preserved**, not promoted to an attestation. The model's unverified claim of no findings cannot override a real red CI check or missing Graph evidence.
+
+## Implementation change set after initial ADR
+
+The follow-up increment adds: `granite-protected-review.yml` on protected main,
+`protected-granite-review.mjs` that reads PR files without executing them,
+strict source-line citation checks, official digest-pinned Ollama v0.13.2,
+exact registered model registry digest, and a signed release-approval v3
+contract. The corresponding owner decision is an authenticated GitHub PR
+comment posted **after** the protected model run, with this exact form:
+
+```
+LUMA_SOLO_RELEASE_APPROVAL_V1 sha=<40-char-PR-HEAD> scope=public-landing
+```
+
+For genuinely sensitive changes, the only admissible separate owner decision
+uses `scope=owner-risk-exception`; **product-acceptance-predeploy will reject
+that scope** pending an enhanced independent validation route. Do not reduce
+security coverage by claiming an ordinary landing scope for a workflow/IAM
+change.
+
+A registered protected model run is selected by its **exact GitHub run ID**;
+its compressed artifact is fetched via GitHub's authenticated API, verified
+against the immutable SHA-256 artifact digest, validated for expected SHA,
+model and the trusted workflow, and never executed.
+
+**Rollout limitation:** this implementation is in a Draft PR, not `main`.
+Existing protected signer expects a fully formed Graph-runtime evidence chain,
+source-bound critic/verifier files, and a pre-existing unsigned candidate
+receipt. The v3 receipt-generation bootstrap still needs end-to-end
+integration and testing before a v3 release can be signed, even though pure
+Ed25519 v3 signing/verification tests pass. Preserve the old v2 path and
+prohibit production GO until that migration is fully verified.

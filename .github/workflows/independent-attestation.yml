@@ -9,6 +9,10 @@ on:
         description: 'Reviewed LUMA pull request number'
         required: true
         type: string
+      granite_review_run_id:
+        description: 'Protected Granite review run ID; empty for external Codex/human v2'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -40,13 +44,15 @@ jobs:
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
-      - name: Inspect real Codex review, CI, source, Graph and sign exact approval
+      - name: Inspect exact GitHub-reviewed Codex or Granite+owner evidence; sign only protected approval
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ inputs.pr_number }}
           LUMA_RELEASE_ATTESTATION_PRIVATE_KEY_B64: ${{ secrets.LUMA_RELEASE_ATTESTATION_PRIVATE_KEY_B64 }}
           LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
           LUMA_RELEASE_TRUSTED_REVIEWERS: ${{ vars.LUMA_RELEASE_TRUSTED_REVIEWERS }}
+          LUMA_GRANITE_MODEL_DIGEST: ${{ vars.LUMA_GRANITE_MODEL_DIGEST }}
+          LUMA_GRANITE_REVIEW_RUN_ID: ${{ inputs.granite_review_run_id }}
         run: node protected-policy/scripts/release/trusted-attestor.mjs "$GITHUB_WORKSPACE/candidate-data" "$PR_NUMBER"
       - name: Export signed approval without any private key material
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

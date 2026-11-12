@@ -22,12 +22,31 @@ export function reviewedSourceDigest(directory = root) {
   return digest.digest('hex');
 }
 export function assertReviewAttestation(attestation, digest) {
-  invariant(attestation?.schemaVersion === 2 && attestation.status === 'PASS', 'Independent Graph release approval is absent or blocked');
+  invariant([2,3].includes(attestation?.schemaVersion) && attestation.status === 'PASS',
+    'Signed Graph release approval is absent or blocked');
   invariant(/^[a-f0-9]{64}$/.test(digest) && attestation.sourceDigest === digest, 'Source changed since independent review');
   invariant(attestation.unresolvedCritical === 0 && attestation.unresolvedHigh === 0, 'Blocking adversarial findings remain');
-  invariant(attestation.review?.commitSha === attestation.testedCommit &&
-    Number.isSafeInteger(attestation.review?.reviewId) && attestation.review.reviewId > 0,
-    'External review provenance is missing or signed for another source SHA');
+  if (attestation.schemaVersion === 3) {
+    const review = attestation.review;
+    const owner = attestation.ownerAuthorization;
+    invariant(review?.method === 'protected-granite-owner-v1' &&
+      review.reviewerType === 'automated-model-critic' && review.humanIndependent === false &&
+      review.model === 'ibm/granite3.3:2b' &&
+      review.commitSha === attestation.testedCommit &&
+      Number.isSafeInteger(review.workflowRunId) && review.workflowRunId > 0 &&
+      /^[a-f0-9]{64}$/.test(review.artifactDigestSha256 ?? '') &&
+      /^[a-f0-9]{64}$/.test(review.modelDigest ?? '') &&
+      owner?.method === 'github-issue-comment' && owner.login === 'BernydotJar' &&
+      owner.humanIndependent === false &&
+      Number.isSafeInteger(owner.commentId) && owner.commentId > 0 &&
+      owner.commitSha === attestation.testedCommit &&
+      ['public-landing','owner-risk-exception'].includes(owner.scope),
+      'V3 model review or sole-owner acceptance lacks protected exact-SHA provenance');
+  } else {
+    invariant(attestation.review?.commitSha === attestation.testedCommit &&
+      Number.isSafeInteger(attestation.review?.reviewId) && attestation.review.reviewId > 0,
+      'External review provenance is missing or signed for another source SHA');
+  }
   invariant(typeof attestation.graphEventId === 'string' && /^[a-f0-9]{64}$/.test(attestation.graphEventHash ?? ''), 'Missing Graph gate receipt');
   for (const item of ['critic', 'verifier']) invariant(/^[a-f0-9]{64}$/.test(attestation[item]?.sha256 ?? ''), `Missing ${item} evidence digest`);
 }
@@ -60,13 +79,15 @@ for line in (root/'graph-harness.events.jsonl').read_text().splitlines():
 gates=[e for e in events if e['node_id']=='LUMA-CICD-002-release-pipeline' and e['event_type']=='gate.evaluated' and e['payload']['gate_id']=='cicd-release']
 assert gates and gates[-1]['event_id']==expected and gates[-1]['payload']['result']=='PASS', 'Release gate is missing, stale or blocked'
 gate=gates[-1]
-assert gate['actor']=='independent-verifier', 'Wrong gate actor'
+assert gate['actor']==('automated-evidence-verifier' if sys.argv[3]=='3' else 'independent-verifier'), 'Wrong gate actor'
+if sys.argv[3]=='3':
+    assert gate['payload'].get('sourceDigest')==sys.argv[4], 'Model Graph gate is not source digest-bound'
 assert not any(e['node_id']==gate['node_id'] and e['sequence']>gate['sequence'] and e['event_type'] in ('node.invalidated','failure.recorded') for e in events), 'Release was invalidated'
 proofs=[e for e in events if e['event_id'] in gate['payload']['evidence_ids']]
 assert {'critic','verification','ci'}.issubset({e['payload'].get('kind') for e in proofs}), 'Required Graph evidence missing'
 assert all(e['node_id']==gate['node_id'] and e['node_revision']==gate['node_revision'] and e['payload']['result']=='PASS' for e in proofs), 'Graph evidence is failed or stale'
 print(gate['event_hash'])
-`, directory, attestation.graphEventId], { encoding: 'utf8' }).trim();
+`, directory, attestation.graphEventId, String(attestation.schemaVersion), attestation.sourceDigest], { encoding: 'utf8' }).trim();
   invariant(proof === attestation.graphEventHash, 'Graph gate digest differs from approval');
   return attestation;
 }

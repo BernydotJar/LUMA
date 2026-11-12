@@ -8,6 +8,8 @@ import { createHash } from 'node:crypto';
 import { reviewedSourceDigest, verifyReview } from './review-gate.mjs';
 import { signApproval, verifyApprovalSignature } from './approval-signature.mjs';
 import { invariant } from './policy.mjs';
+import { obtainProtectedGraniteReview } from './protected-granite-artifact.mjs';
+import { authenticateOwnerAuthorization } from './solo-release-provenance.mjs';
 
 const ROOT = resolve(import.meta.dirname, '../..');
 const REPO = 'BernydotJar/LUMA';
@@ -207,10 +209,30 @@ async function main() {
   const commits=ghPages(`repos/${REPO}/pulls/${prArg}/commits?per_page=100`);
   const contributors=commits.flatMap(commit =>
     [commit.author?.login,commit.committer?.login].filter(Boolean));
-  const independent=authenticateIndependentSourceReview(comments,reviews,
-    approval.testedCommit,pr.user.login,process.env.LUMA_RELEASE_TRUSTED_REVIEWERS,
-    contributors);
-  console.log('EXTERNAL_REVIEW_VERIFIED',JSON.stringify(independent));
+  let independent; let ownerAuthorization;
+  if (approval.schemaVersion === 3) {
+    const protectedModel = await obtainProtectedGraniteReview({prNumber:Number(prArg),
+      reviewedCommit:head,sourceDigest:source,
+      trustedModelDigest:process.env.LUMA_GRANITE_MODEL_DIGEST});
+    const scope = protectedModel.report.riskClassification === 'public-landing'
+      ? 'public-landing' : 'owner-risk-exception';
+    ownerAuthorization=authenticateOwnerAuthorization(comments,head,
+      protectedModel.run.updated_at,scope);
+    independent={ method:'protected-granite-owner-v1',
+      reviewerType:'automated-model-critic', humanIndependent:false,
+      model:'ibm/granite3.3:2b', modelDigest:protectedModel.provenance.modelDigest,
+      workflowRunId:protectedModel.run.id,
+      artifactDigestSha256:protectedModel.provenance.artifactDigestSha256,
+      commitSha:head };
+    console.log('PROTECTED_MODEL_REVIEW_VERIFIED',JSON.stringify({
+      method:independent.method,runId:independent.workflowRunId,
+      ownerApprovalId:ownerAuthorization.commentId,scope:ownerAuthorization.scope}));
+  } else {
+    independent=authenticateIndependentSourceReview(comments,reviews,
+      approval.testedCommit,pr.user.login,process.env.LUMA_RELEASE_TRUSTED_REVIEWERS,
+      contributors);
+    console.log('EXTERNAL_REVIEW_VERIFIED',JSON.stringify(independent));
+  }
   const criticPath=resolve(directory,'evidence/cicd-enterprise/granite-review.json');
   const verifierPath=resolve(directory,'evidence/cicd-enterprise/independent-review.json');
   invariant(sha(criticPath) === approval.critic?.sha256 && sha(verifierPath) === approval.verifier?.sha256,
@@ -235,6 +257,7 @@ async function main() {
   // identity/status was independently authenticated from GitHub above.
   const signed=signApproval({ ...approval,
     review: { ...independent, commitSha: approval.testedCommit },
+    ...(ownerAuthorization ? {ownerAuthorization} : {}),
   },process.env.LUMA_RELEASE_ATTESTATION_PRIVATE_KEY_B64);
   verifyApprovalSignature(signed,process.env.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64);
   writeFileSync(approvalPath,JSON.stringify(signed,null,2)+'\n');

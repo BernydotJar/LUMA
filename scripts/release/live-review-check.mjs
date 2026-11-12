@@ -5,6 +5,9 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { invariant } from './policy.mjs';
+export { assertReceiptOnlyHeadAdvance } from './receipt-only.mjs';
+import { assertReceiptOnlyHeadAdvance } from './receipt-only.mjs';
+import { assertCurrentSoloApproval } from './solo-release-provenance.mjs';
 import { ghPages, authenticateIndependentSourceReview } from './trusted-attestor.mjs';
 
 const REPO = 'BernydotJar/LUMA';
@@ -12,29 +15,6 @@ const SHA = /^[a-f0-9]{40}$/;
 function gh(path) {
   return JSON.parse(execFileSync('gh', ['api', path],
     { encoding:'utf8', timeout:20000, maxBuffer:8*1024*1024 }));
-}
-
-/** A signed approval may be imported via ONE strictly receipt-only commit.
- * Never treat an arbitrary descendant, a docs/catalog change, or a new source
- * tree as an already reviewed and approved SHA. `compare` comes from GitHub's
- * authenticated REST API, not candidate source or Graph/PR JSON.
- */
-export function assertReceiptOnlyHeadAdvance(reviewedHead, currentHead, compare) {
-  invariant(SHA.test(reviewedHead ?? '') && SHA.test(currentHead ?? ''),
-    'Receipt-only head policy requires full source commit SHAs');
-  if (reviewedHead === currentHead) return 'EXACT_REVIEWED_HEAD';
-  const changed = compare?.files;
-  const later = compare?.commits;
-  invariant(compare?.status === 'ahead' && compare.ahead_by === 1 &&
-    compare.behind_by === 0 && compare.base_commit?.sha === reviewedHead &&
-    Array.isArray(later) && later.length === 1 &&
-    later[0]?.sha === currentHead &&
-    later[0]?.parents?.length === 1 && later[0].parents[0].sha === reviewedHead &&
-    Array.isArray(changed) && changed.length === 1 &&
-    changed[0]?.filename === 'evidence/cicd-enterprise/release-approval.json' &&
-    changed[0]?.status === 'modified',
-    'Unreviewed source or non-receipt changes after signed approval');
-  return 'SINGLE_SIGNED_RECEIPT_IMPORT';
 }
 
 /** Pure verification against already authenticated GitHub API responses. */
@@ -79,6 +59,24 @@ export function verifyCurrentIndependentReview(directory, prNumber, expectedHead
     'Protected source check requires a valid signed reviewed commit');
   const compare = approval.review.commitSha === expectedHead ? null :
     gh(`repos/${REPO}/compare/${approval.review.commitSha}...${expectedHead}`);
+  if (approval.schemaVersion === 3) {
+    const runId = approval.review.workflowRunId;
+    invariant(Number.isSafeInteger(runId) && runId > 0,
+      'Signed model review run ID invalid');
+    const run = gh(`repos/${REPO}/actions/runs/${runId}`);
+    const jobs = gh(`repos/${REPO}/actions/runs/${runId}/jobs?filter=latest&per_page=100`).jobs;
+    const artifacts = gh(`repos/${REPO}/actions/runs/${runId}/artifacts?per_page=100`).artifacts;
+    const workflow = gh(`repos/${REPO}/actions/workflows/granite-protected-review.yml`);
+    invariant(workflow?.state === 'active' &&
+      workflow.path === '.github/workflows/granite-protected-review.yml',
+      'Protected Granite review workflow not active');
+    const artifact = artifacts.filter(a => a.name ===
+      `granite-protected-${prNumber}-${runId}`);
+    invariant(artifact.length === 1, 'Missing or duplicated current model artifact');
+    return assertCurrentSoloApproval({ approval,pr,expectedHead,commits,compare,
+      comments,run,jobs,artifact:artifact[0],trustedWorkflowId:workflow.id,
+      trustedModelDigest:process.env.LUMA_GRANITE_MODEL_DIGEST });
+  }
   return assertCurrentIndependentReview(approval, pr, expectedHead,
     comments, reviews, commits, process.env.LUMA_RELEASE_TRUSTED_REVIEWERS, compare);
 }
