@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
+import { validatePromotableLedger, validatePreparedLedger } from './recovery-ledger.mjs';
 import { assertDeployContext, assertManifest, assertQualityJobs, buildIdFromName, invariant, PARENT, PROJECT, PRODUCTION_URL, REPOSITORY, singleServingBuild, SOURCE_BUCKET } from './policy.mjs';
 
 const apiRoot = 'https://firebaseapphosting.googleapis.com/v1beta/';
@@ -79,7 +80,7 @@ function assertCapacity(build) {
   const config = build.config?.runConfig;
   invariant(config?.cpu === 1 && config.memoryMib === 512 && config.maxInstances === 2 && (config.minInstances ?? 0) === 0 && config.concurrency === 80, 'Production capacity drift; release blocked');
 }
-async function deploy() {
+async function prepare() {
   const approval = verifyReview();
   record('INDEPENDENT_GRAPH_GATE_VERIFIED', { sourceDigest: approval.sourceDigest, graphEventId: approval.graphEventId });
   await verifyGitHub();
@@ -100,6 +101,8 @@ async function deploy() {
   }
   ledger.previous = { buildId: previousId, gitSha: version?.gitSha ?? null, knownGood };
   record('PREFLIGHT_PASSED', { previous: ledger.previous });
+  invariant(knownGood,
+    'No independently verified last-known-good build: preserve production and certify the current serving baseline before promotion');
   const bytes = readFileSync(resolve(out, 'source.zip'));
   const digest = createHash('sha256').update(bytes).digest('hex');
   invariant(digest === manifest.archiveSha256, 'Source artifact digest mismatch');
@@ -124,18 +127,37 @@ async function deploy() {
   const build = await poll(() => cloud(`${PARENT}/builds/${buildId}`), value => value.state === 'READY', value => ['FAILED', 'CANCELLED', 'SKIPPED'].includes(value.state), 'Cloud build');
   assertCapacity(build);
   invariant(build.labels?.['git-sha'] === manifest.gitSha, 'Build lost commit provenance');
+  ledger.status = 'READY_FOR_PROMOTION';
   record('BUILD_READY', { buildId, image: build.image, buildLogsUri: build.buildLogsUri });
+}
+
+async function promote() {
+  assertDeployContext(process.env, manifest);
+  verifyReview();
+  validatePromotableLedger(ledger,manifest,process.env.GITHUB_RUN_ATTEMPT);
+  const backend = await cloud(PARENT);
+  invariant(backend.uri === new URL(PRODUCTION_URL).host && !backend.reconciling &&
+    !backend.codebase?.repository, 'Production backend drift after preparation');
+  const build = await cloud(PARENT + '/builds/' + ledger.buildId);
+  invariant(build.state === 'READY' && build.labels?.['git-sha'] === manifest.gitSha &&
+    build.labels?.['github-run'] === manifest.runId &&
+    build.labels?.['deployment-tool'] === 'luma-gated-actions',
+    'Prepared candidate provenance or state changed');
+  assertCapacity(build);
   await verifyGitHub();
-  invariant(singleServingBuild(await cloud(`${PARENT}/traffic`)) === previousId, 'Another deployment changed production during this build');
+  invariant(singleServingBuild(await cloud(`${PARENT}/traffic`)) === ledger.previous.buildId, 'Another deployment changed production during this build');
   ledger.status = 'PROMOTING';
   record('PROMOTION_STARTED');
-  await waitOperation(await cloud(`${PARENT}/rollouts`, 'POST', { build: `${PARENT}/builds/${buildId}`, labels: { 'git-sha': manifest.gitSha } }, { rolloutId: buildId }));
-  const rollout = await poll(() => cloud(`${PARENT}/rollouts/${buildId}`), value => value.state === 'SUCCEEDED', value => ['FAILED', 'CANCELLED'].includes(value.state), 'Rollout');
-  invariant(buildIdFromName(rollout.build) === buildId, 'Unexpected rollout build');
-  await waitServing(buildId, manifest.gitSha);
+  await waitOperation(await cloud(`${PARENT}/rollouts`, 'POST', { build: `${PARENT}/builds/${ledger.buildId}`, labels: { 'git-sha': manifest.gitSha } }, { rolloutId: ledger.buildId }));
+  const rollout = await poll(() => cloud(`${PARENT}/rollouts/${ledger.buildId}`), value => value.state === 'SUCCEEDED', value => ['FAILED', 'CANCELLED'].includes(value.state), 'Rollout');
+  invariant(buildIdFromName(rollout.build) === ledger.buildId, 'Unexpected rollout build');
+  await waitServing(ledger.buildId, manifest.gitSha);
   ledger.status = 'AWAITING_BROWSER_VERIFICATION';
   record('EXPECTED_SHA_SERVING', { rollout: rollout.name });
 }
+
+async function deploy() { await prepare(); await promote(); }
+
 async function rollbackValidate() {
   const previousId = ledger.previous?.buildId ?? singleServingBuild(await cloud(`${PARENT}/traffic`));
   buildIdFromName(`${PARENT}/builds/${previousId}`);
@@ -146,6 +168,7 @@ async function rollbackValidate() {
 }
 async function recover() {
   assertDeployContext(process.env, manifest);
+  validatePreparedLedger(ledger,manifest,process.env.GITHUB_RUN_ATTEMPT);
   const current = singleServingBuild(await cloud(`${PARENT}/traffic`));
   if (current === ledger.previous?.buildId) { record('RECOVERY_NOT_NEEDED_PRIOR_BUILD_STILL_SERVING'); return; }
   invariant(current === ledger.buildId, 'Recovery refused: another release changed traffic');
@@ -159,8 +182,10 @@ async function recover() {
 }
 try {
   const command = process.argv[2];
-  if (command !== 'deploy') ledger = JSON.parse(readFileSync(ledgerPath, 'utf8'));
+  if (command !== 'deploy' && command !== 'prepare') ledger = JSON.parse(readFileSync(ledgerPath, 'utf8'));
   if (command === 'deploy') await deploy();
+  else if (command === 'prepare') await prepare();
+  else if (command === 'promote') await promote();
   else if (command === 'rollback-validate') await rollbackValidate();
   else if (command === 'recover') await recover();
   else if (command === 'finalize') {
@@ -169,7 +194,7 @@ try {
     invariant(ledger.status === 'AWAITING_BROWSER_VERIFICATION', 'Invalid release finalization state');
     await waitServing(ledger.buildId, manifest.gitSha);
     ledger.status = 'VERIFIED'; record('PRODUCTION_VERIFIED');
-  } else throw new Error('Expected deploy, rollback-validate, recover, or finalize');
+  } else throw new Error('Expected prepare, promote, deploy, rollback-validate, recover, or finalize');
 } catch (error) {
   ledger.status = 'FAILED';
   record('RELEASE_FAILED', { error: error.message });

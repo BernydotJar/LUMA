@@ -50,14 +50,17 @@ if (!apply) {
     assert.equal(current.enforce_admins.enabled, true);
     assert.equal(current.required_status_checks.strict, true);
     const existing = current.required_status_checks.checks;
-    const next = [...existing];
+    let next = [...existing];
     for (const name of REQUIRED_CHECKS) {
-      if (!next.some(item => item.context === name)) {
+      if (!next.some(item => item.context === name && item.app_id === 15368)) {
+        // An entry with the correct context but a different app cannot
+        // satisfy the verified GitHub Actions required check.
+        next = next.filter(item => item.context !== name);
         next.push({ context: name, app_id: 15368 });
       }
     }
-    // Additive only: never remove required contexts during governance repair.
-    if (next.length !== existing.length) {
+    // Preserve unrelated contexts and correct managed bindings only.
+    if (JSON.stringify(next) !== JSON.stringify(existing)) {
       api('branches/main/protection/required_status_checks',
           { strict: true, checks: next }, 'PATCH');
     }

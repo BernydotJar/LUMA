@@ -74,3 +74,38 @@ customer business UAT and dual-origin postdeploy SHA parity.
   exact current PR commit SHA with GitHub Actions app ID 15368, although it
   legitimately fails without the independent signature. This is a live readback,
   not an assertion that approval exists.
+
+## 2026-11-11 release reliability and provenance repair
+
+App Hosting is split into prepare and promote. Preparation completes Cloud
+Build, captures the last verified serving build and its provenance, and
+persists an artifact before any rollout begins. The independent recovery job
+downloads that pre-promotion ledger; it no longer depends on a postpromotion
+artifact that could fail to upload. Recovery rejects foreign run/SHA/build
+and refuses to guess an unverified rollback target.
+
+Postdeploy waits for a separately dispatched, trusted UAT workflow created
+after PROMOTION_STARTED. It validates workflow identity and path, main branch,
+exact source SHA, actors, success, artifact identity and timestamp; it then
+passes the verified run ID to the existing evidence checker. Absent a genuine
+independent run, the bounded wait fails and guarded recovery is scheduled.
+No user impersonation, synthetic customer evidence, secret or signature is
+created by this patch. A real protected UAT workflow and reviewer identity
+must be configured separately before any product production GO.
+
+Branch protection reconciliation now matches both required context and the
+GitHub Actions app ID 15368, replacing only incorrect bindings while
+preserving unrelated required contexts.
+
+All of these changes are source-only pending GitHub Actions on the new SHA,
+independent source review and a real customer UAT.
+
+### One-time serving baseline risk
+
+The live /api/version points to historical GitHub run 40066291759, which
+currently reports overall FAILURE. Source-only changes do not establish it
+as a verified rollback target. The preflight therefore FAILS CLOSED when
+previous.knownGood cannot be established from the current production build
+labels and authenticated successful main-branch release. A separate baseline
+certification or independently reviewed recovery policy is needed to promote
+safely for the first time; do not reinterpret live HTTP 200 as acceptance.
