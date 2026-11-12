@@ -153,3 +153,24 @@ records both. None of this creates a second human or falsely claims that
 Granite itself passed. Missing clean Codex, untrusted provenance, incompatible
 scope, incomplete model output or any unresolved current review thread is a
 **NO-GO**. This policy keeps an inspectable fallback rather than a silent waiver.
+
+### Codex revocation and live status refresh
+
+**A previously signed clean Codex comment is not a permanent approval.**
+Protected source attestation parses authenticated review-state receipts, chooses
+the latest one relevant to C0 (or to C1 only after proving it is a single
+five-file signed evidence-only successor), and requires that same exact
+signed bot comment ID to remain clean. A newly adverse review, an edited bot
+summary, a missing comment or owner revocation forces NO-GO.
+
+The trusted `.github/workflows/source-attestation.yml` now listens to
+`issue_comment` `created|edited|deleted` by the Codex bot or owner as well as
+`pull_request_target` and `pull_request_review`. Because issue-comment
+workflow runs are attached to protected `main` rather than automatically to
+the PR HEAD, the protected job must additionally create an authenticated
+GitHub Actions **check-run on the actual PR HEAD SHA** with the same required
+`source-attestation` context and the real PASS/FAIL of live validation.
+The check-run is created using a read-only candidate and an explicitly scoped
+`checks: write` GitHub token: no unreviewed PR scripts or private signer keys
+are executed. A final merge must still recheck the live owner+Codex decision
+to guard against webhook and merge races.

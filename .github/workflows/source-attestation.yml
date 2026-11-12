@@ -6,6 +6,10 @@ on:
   # Revoking an approval must re-run this required protected-base check.
   pull_request_review:
     types: [submitted, edited, dismissed]
+  # Codex is authenticated through issue comments. Edits, new bot decisions,
+  # owner revocations and deletions must also invoke the protected-base verifier.
+  issue_comment:
+    types: [created, edited, deleted]
 
 # Run trusted, protected-base code only. Never execute checked-out PR scripts,
 # install PR dependencies, or expose deployment credentials to PR contents.
@@ -13,22 +17,46 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
+  checks: write # Protected-base only: stamp current PR SHA after Codex/owner comment changes.
+
+concurrency:
+  group: luma-live-source-attestation-${{ github.event.pull_request.number || github.event.issue.number }}
+  cancel-in-progress: false
 
 jobs:
   source-attestation:
+    if: >-
+      github.event_name != 'issue_comment' ||
+      (github.event.issue.pull_request != null &&
+       (github.event.comment.user.login == 'chatgpt-codex-connector[bot]' ||
+        github.event.comment.user.login == 'BernydotJar'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: Checkout protected review policy (base branch)
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: ${{ github.event.pull_request.base.sha }}
+          ref: ${{ github.event.pull_request.base.sha || github.sha }}
           path: protected-policy
           persist-credentials: false
+      - name: Resolve candidate identity and reject mismatched pull request events
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_PR: ${{ github.event.pull_request.number || github.event.issue.number }}
+          EVENT_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          [[ "$EVENT_PR" =~ ^[0-9]+$ ]]
+          base=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$EVENT_PR" --jq '.base.ref')
+          test "$base" = main
+          actual=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$EVENT_PR" --jq '.head.sha')
+          [[ "$actual" =~ ^[0-9a-f]{40}$ ]]
+          if test -n "$EVENT_SHA"; then test "$EVENT_SHA" = "$actual"; fi
+          printf 'number=%s\nsha=%s\n' "$EVENT_PR" "$actual" >> "$GITHUB_OUTPUT"
       - name: Checkout candidate merge as untrusted data only
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+          ref: refs/pull/${{ steps.pr.outputs.number }}/merge
           path: candidate-data
           persist-credentials: false
       - name: Set up Node.js (no npm install, no PR code execution)
@@ -36,11 +64,20 @@ jobs:
         with:
           node-version: 22
       - name: Verify exact-source evidence, protected signature and Graph gate
+        id: verification
         env:
           GH_TOKEN: ${{ github.token }}
           LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
           LUMA_RELEASE_TRUSTED_REVIEWERS: ${{ vars.LUMA_RELEASE_TRUSTED_REVIEWERS }}
           LUMA_GRANITE_MODEL_DIGEST: ${{ vars.LUMA_GRANITE_MODEL_DIGEST }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          EXPECTED_PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          EXPECTED_PR_HEAD: ${{ steps.pr.outputs.sha }}
         run: node protected-policy/scripts/release/pr-readiness.mjs --candidate "$GITHUB_WORKSPACE/candidate-data" --pr "$PR_NUMBER" --head "$EXPECTED_PR_HEAD"
+      - name: Publish actual comment-recheck result onto the candidate PR HEAD
+        if: github.event_name == 'issue_comment' && always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REVIEW_PR_NUMBER: ${{ steps.pr.outputs.number }}
+          REVIEW_PR_SHA: ${{ steps.pr.outputs.sha }}
+          REVIEW_VERIFIED: ${{ steps.verification.outcome == 'success' }}
+        run: node protected-policy/scripts/release/post-live-check.mjs

@@ -82,3 +82,33 @@ test('public-only advisory requires a real authenticated clean Codex bot receipt
   assert.throws(()=>assertCurrentSoloApproval({...amended,approval:{...amended.approval,
     ownerAuthorization:{...amended.approval.ownerAuthorization,scope:'owner-risk-exception'}}}));
 });
+
+test('newer adverse Codex opinion supersedes an older signed clean opinion',()=>{
+  const d=input();const state=(sha,hasFindings)=>`<!-- codex-review-state:v1 ${JSON.stringify({code_review:{commit_sha:sha,status:'completed',has_any_findings:hasFindings,has_unresolved_findings:hasFindings}})} -->`;
+  const clean={id:951,user:{login:'chatgpt-codex-connector[bot]',type:'Bot'},
+    created_at:'2026-11-11T16:00:00Z',updated_at:'2026-11-11T16:00:00Z',body:state(SHA,false)};
+  const adverse={...clean,id:952,created_at:'2026-11-11T16:01:00Z',updated_at:'2026-11-11T16:01:00Z',body:state(SHA,true)};
+  const signed={...d,approval:{...d.approval,review:{...d.approval.review,
+    modelVerdict:'NEEDS_REVIEW',codexReviewCommentId:951}},comments:[...d.comments,clean]};
+  assert.equal(assertCurrentSoloApproval(signed).codexReviewCommentId,951);
+  assert.throws(()=>assertCurrentSoloApproval({...signed,comments:[...signed.comments,adverse]}));
+  assert.throws(()=>assertCurrentSoloApproval({...signed,comments:[...d.comments,
+    {...clean,body:state(SHA,true)}]}));
+});
+test('receipt-only C1 may use latest clean Codex review on identical source with updated commit',()=>{
+  const d=input(),C1='c'.repeat(40);
+  const paths=['graph-harness.events.jsonl','evidence/cicd-enterprise/granite-review.json',
+    'evidence/cicd-enterprise/independent-review.json','evidence/cicd-enterprise/release-ci.json',
+    'evidence/cicd-enterprise/release-approval.json'];
+  const comment={id:951,user:{login:'chatgpt-codex-connector[bot]',type:'Bot'},
+    created_at:'2026-11-11T16:00:00Z',updated_at:'2026-11-11T16:05:00Z',
+    body:`<!-- codex-review-state:v1 ${JSON.stringify({code_review:{commit_sha:C1,status:'completed',has_any_findings:false,has_unresolved_findings:false}})} -->`};
+  const compare={status:'ahead',ahead_by:1,behind_by:0,base_commit:{sha:SHA},
+    commits:[{sha:C1,parents:[{sha:SHA}]}],files:paths.map(filename=>({filename,status:'modified'}))};
+  const updated={...d,approval:{...d.approval,review:{...d.approval.review,
+    modelVerdict:'NEEDS_REVIEW',codexReviewCommentId:951}},
+    pr:{...d.pr,head:{...d.pr.head,sha:C1}},expectedHead:C1,
+    commits:[{sha:SHA},{sha:C1}],compare,comments:[...d.comments,comment]};
+  assert.equal(assertCurrentSoloApproval(updated).codexReviewCommentId,951);
+  assert.throws(()=>assertCurrentSoloApproval({...updated,compare:null}));
+});
