@@ -12,15 +12,11 @@ import { receiptCommentBody } from './remote-attestation.mjs';
 
 const ROOT = resolve(import.meta.dirname, '../..');
 const REPO = 'BernydotJar/LUMA';
-// Every independently named quality job on the reviewed PR SHA is material.
-// A legacy nine-job PASS is insufficient after the authenticated learning and
-// independently protected enterprise-acceptance gates were introduced.
-const REQUIRED = ['verify','security','firestore','identity-roles','browser',
-  'coach-rbac','institution-intake','institution-browser','institution-approval',
-  'learning-auth-uat',
-  'Operational acceptance contract self-test (not a release approval)'];
-const SKIPPED_ON_PR = ['product-acceptance-predeploy','deploy'];
-const EXTRA_POSTDEPLOY_PR_SKIPS=['postdeploy-acceptance','rollback-on-failed-acceptance'];
+// A candidate must satisfy all jobs declared by the authenticated protected
+// main workflow. Extra candidate jobs must also succeed or skip as specified.
+const CORE_TECHNICAL=['verify','security','firestore','identity-roles','browser'];
+const PRODUCTION_ONLY=new Set(['product-acceptance-predeploy','deploy',
+  'postdeploy-acceptance','rollback-on-failed-acceptance']);
 function gh(path) {
   return JSON.parse(execFileSync('gh', ['api',path], { encoding:'utf8',timeout:20000,maxBuffer:8*1024*1024 }));
 }
@@ -158,30 +154,73 @@ export function requireExactReviewedHead(testedCommit, candidateHead, prHead) {
   return true;
 }
 
-export function validateQualityRun(run,jobs,commit,registeredWorkflowId) {
-  invariant(Number.isSafeInteger(registeredWorkflowId) && registeredWorkflowId > 0 &&
-    run.workflow_id === registeredWorkflowId && run.path === '.github/workflows/quality.yml' &&
-    run.repository?.full_name === REPO && run.head_repository?.full_name === REPO &&
-    run.head_sha === commit && run.event === 'pull_request' &&
+export function protectedQualityJobNames(yaml) {
+  invariant(typeof yaml==='string'&&yaml.length>100&&yaml.length<150000,
+    'Missing protected main quality workflow definition');
+  const jobs=[];
+  let inJobs=false;
+  for(const line of yaml.split(/\r?\n/)){
+    if(!inJobs){if(/^jobs:\s*(?:#.*)?$/.test(line))inJobs=true;continue;}
+    if(/^[A-Za-z][\w-]*:/.test(line))break;
+    const start=line.match(/^  ([a-z][a-z0-9-]*):\s*(?:#.*)?$/);
+    if(start){jobs.push({id:start[1],name:start[1]});continue;}
+    if(!jobs.length)continue;
+    const explicit=line.match(/^    name:\s*(.+?)\s*$/);
+    if(explicit){
+      let name=explicit[1].replace(/\s+#.*$/,'').trim();
+      if(name.startsWith('"')&&name.endsWith('"')||
+        name.startsWith("'")&&name.endsWith("'"))name=name.slice(1,-1);
+      invariant(name.length>0&&name.length<100&&!name.includes(String.fromCharCode(36)+'{'),
+        'Protected workflow job name must be a static literal');
+      jobs.at(-1).name=name;
+    }
+  }
+  const result=jobs.map(job=>job.name);
+  invariant(inJobs && result.length>=7&&result.length===new Set(result).size&&
+    CORE_TECHNICAL.every(name=>result.includes(name))&&
+    result.includes('release-readiness')&&result.includes('deploy'),
+    'Protected main workflow is missing mandatory QA/release jobs');
+  return result;
+}
+export function validateQualityRun(run,jobs,commit,registeredWorkflowId,protectedJobs) {
+  invariant(Number.isSafeInteger(registeredWorkflowId)&&registeredWorkflowId>0&&
+    run.workflow_id===registeredWorkflowId&&run.path==='.github/workflows/quality.yml'&&
+    run.repository?.full_name===REPO&&run.head_repository?.full_name===REPO&&
+    run.head_sha===commit&&run.event==='pull_request'&&
     ['failure','success'].includes(run.conclusion),
-    'CI must use the registered Product quality workflow on the exact reviewed PR HEAD');
-  for (const name of REQUIRED) {
-    const found = jobs.filter(job => job.name === name);
-    invariant(found.length === 1 && found[0].conclusion === 'success', `Quality job not approved: ${name}`);
+    'CI must use registered Product quality workflow on exact reviewed PR HEAD');
+  invariant(Array.isArray(protectedJobs)&&protectedJobs.length>=7&&
+    protectedJobs.length===new Set(protectedJobs).size&&
+    CORE_TECHNICAL.every(name=>protectedJobs.includes(name))&&
+    protectedJobs.includes('release-readiness')&&protectedJobs.includes('deploy'),
+    'Trusted main expected job contract is invalid');
+  const observed=new Map();
+  for(const job of jobs){
+    invariant(typeof job?.name==='string'&&!observed.has(job.name),
+      'Duplicate or unnamed quality job in authenticated CI');
+    observed.set(job.name,job);
   }
-  const releaseJobs = jobs.filter(job => job.name === 'release-readiness');
-  invariant(releaseJobs.length === 1 && ['failure','success'].includes(releaseJobs[0].conclusion),
-    'Release-readiness must run and fail closed until independently signed');
-  const extra=jobs.some(job=>EXTRA_POSTDEPLOY_PR_SKIPS.includes(job.name))
-    ? EXTRA_POSTDEPLOY_PR_SKIPS: [];
-  for (const name of [...SKIPPED_ON_PR,...extra]) {
-    const matches = jobs.filter(job => job.name === name);
-    invariant(matches.length === 1 && matches[0].conclusion === 'skipped',
-      'Protected production-only job must stay skipped on a PR: '+name);
+  for(const name of protectedJobs)
+    invariant(observed.has(name),'Required protected-main quality job missing: '+name);
+  for(const [name,job] of observed){
+    if(name==='release-readiness'){
+      invariant(['failure','success'].includes(job.conclusion),
+        'Release-readiness has no explicit result');
+    }else if(PRODUCTION_ONLY.has(name)){
+      invariant(job.conclusion==='skipped',
+        'Production-only job must be skipped on PR: '+name);
+    }else{
+      invariant(job.conclusion==='success','Technical quality job not approved: '+name);
+    }
   }
-  invariant(jobs.length === REQUIRED.length + SKIPPED_ON_PR.length + extra.length + 1,
-    'Unexpected or duplicated GitHub quality jobs');
   return true;
+}
+function protectedWorkflowJobsAtMain(policySha){
+  invariant(/^[a-f0-9]{40}$/.test(policySha),'Trusted policy SHA is invalid');
+  const source=gh('repos/'+REPO+'/contents/.github/workflows/quality.yml?ref='+policySha);
+  invariant(source.type==='file'&&source.encoding==='base64'&&
+    typeof source.content==='string','Protected main workflow fetch failed');
+  return protectedQualityJobNames(Buffer.from(source.content,'base64').toString('utf8'));
 }
 
 /** Exact source and successful technical jobs are obtained from GitHub,
@@ -208,7 +247,7 @@ export function buildUnsignedProtectedApproval(template,source,head,run,criticSh
     review:{...review,commitSha:head},
   };
 }
-function findExactSuccessfulQualityRun(head,workflowId) {
+function findExactSuccessfulQualityRun(head,workflowId,protectedJobs) {
   const discovered=gh('repos/'+REPO+'/actions/workflows/quality.yml/runs?event=pull_request&per_page=100');
   const runs=(discovered.workflow_runs??[]).filter(run=>
     run.head_sha===head && run.status==='completed' &&
@@ -217,7 +256,7 @@ function findExactSuccessfulQualityRun(head,workflowId) {
   for(const run of runs){
     const jobs=gh('repos/'+REPO+'/actions/runs/'+run.id+'/jobs?filter=latest&per_page=100').jobs;
     try {
-      validateQualityRun(run,jobs,head,workflowId);
+      validateQualityRun(run,jobs,head,workflowId,protectedJobs);
       return run;
     }catch(error){ console.error('QUALITY_RUN_REJECTED',run.id,error.message); }
   }
@@ -281,7 +320,7 @@ async function main() {
     'Protected signer policy changed after workflow dispatch; refuse stale policy');
   const source=reviewedSourceDigest(directory);
   const workflow=gh('repos/'+REPO+'/actions/workflows/quality.yml');
-  const run=findExactSuccessfulQualityRun(head,workflow.id);
+  const run=findExactSuccessfulQualityRun(head,workflow.id,protectedWorkflowJobsAtMain(mainHead));
   const comments=ghPages('repos/'+REPO+'/issues/'+prArg+'/comments?per_page=100');
   const reviews=ghPages('repos/'+REPO+'/pulls/'+prArg+'/reviews?per_page=100');
   const commits=ghPages('repos/'+REPO+'/pulls/'+prArg+'/commits?per_page=100');

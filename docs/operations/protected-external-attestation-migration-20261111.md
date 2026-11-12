@@ -122,3 +122,20 @@ head_sha (candidate or protected base only for pull_request_target).
 A synthetic or foreign head, stale base, changed PR, wrong event or wrong
 workflow is rejected. This is covered by local adversarial tests; live
 protected reexecution requires the separate approved bootstrap.
+
+## Quality job registry reconciliation
+
+The protected signer no longer hardcodes an enterprise-only eleven-job profile
+when the protected main workflow currently defines seven jobs. Instead, it
+loads the registered quality.yml source at the exact trusted main policy SHA
+from authenticated GitHub and parses its static job IDs/display labels
+without executing YAML, npm, or PR-supplied code. Every job declared in
+protected main must appear in the real GitHub CI run with the required status.
+Every additional candidate technical job must succeed; every production-only
+job must remain skipped on PR. The release-readiness gate may fail before
+signing, as designed, but may not be missing.
+
+This contract permits the current protected seven-job baseline and refuses
+to downgrade a future protected sixteen-job enterprise pipeline to seven.
+It is backed by negative tests for missing protected jobs, failed candidate
+jobs, duplicates and skipped authenticated-learning checks.

@@ -7,7 +7,7 @@ import { signApproval } from './approval-signature.mjs';
 import { receiptCommentBody,parseReceiptComment,selectSignedReceipt,assertPolicyBoundReceipt } from './remote-attestation.mjs';
 import { assertReviewAttestation,verifyReview } from './review-gate.mjs';
 import { assertCurrentIndependentReview } from './live-review-check.mjs';
-import { buildUnsignedProtectedApproval,selectAuthenticSourceCheckRun } from './trusted-attestor.mjs';
+import { buildUnsignedProtectedApproval,selectAuthenticSourceCheckRun,validateQualityRun,protectedQualityJobNames } from './trusted-attestor.mjs';
 import { identifyGitHubSource } from './pr-readiness.mjs';
 
 const head='a'.repeat(40),digest='b'.repeat(64),policySha='c'.repeat(40);
@@ -162,4 +162,42 @@ test('signed policy must match the exact protected main policy revision',()=>{
  assert.equal(assertPolicyBoundReceipt(signed,policySha),true);
  assert.throws(()=>assertPolicyBoundReceipt(signed,'f'.repeat(40)),/stale/);
  assert.throws(()=>assertPolicyBoundReceipt({...signed,policySha:undefined},policySha),/stale/);
+});
+
+test('current protected main seven-job baseline is enforced exactly',()=>{
+ const src=readFileSync(resolve(import.meta.dirname,'../../.github/workflows/quality.yml'),'utf8');
+ const names=protectedQualityJobNames(src);
+ assert.deepEqual(names,['verify','security','firestore','identity-roles','browser',
+   'release-readiness','deploy']);
+ const run={workflow_id:11,path:'.github/workflows/quality.yml',
+   repository:{full_name:'BernydotJar/LUMA'},head_repository:{full_name:'BernydotJar/LUMA'},
+   head_sha:head,event:'pull_request',conclusion:'failure'};
+ const jobs=names.map(name=>({name,conclusion:name==='release-readiness'?'failure':
+   name==='deploy'?'skipped':'success'}));
+ assert.equal(validateQualityRun(run,jobs,head,11,names),true);
+ assert.throws(()=>validateQualityRun(run,jobs,head,11,
+   [...names,'institution-browser']),/missing/);
+ assert.throws(()=>validateQualityRun(run,[...jobs,{name:'extra',conclusion:'failure'}],
+   head,11,names),/not approved/);
+ assert.throws(()=>validateQualityRun(run,[...jobs,jobs[0]],head,11,names),/Duplicate/);
+});
+test('new enterprise quality jobs cannot be stripped from candidate CI',()=>{
+ const enterprise=['verify','security','firestore','identity-roles','browser',
+  'coach-rbac','institution-intake','institution-browser','institution-approval',
+  'learning-auth-uat','Operational acceptance contract self-test (not a release approval)',
+  'release-readiness','product-acceptance-predeploy','deploy',
+  'postdeploy-acceptance','rollback-on-failed-acceptance'];
+ const old=['verify','security','firestore','identity-roles','browser','release-readiness','deploy'];
+ const run={workflow_id:12,path:'.github/workflows/quality.yml',
+   repository:{full_name:'BernydotJar/LUMA'},head_repository:{full_name:'BernydotJar/LUMA'},
+   head_sha:head,event:'pull_request',conclusion:'failure'};
+ const jobs=old.map(name=>({name,conclusion:name==='release-readiness'?'failure':
+   name==='deploy'?'skipped':'success'}));
+ assert.throws(()=>validateQualityRun(run,jobs,head,12,enterprise),/missing/);
+ const full=enterprise.map(name=>({name,conclusion:name==='release-readiness'?'failure':
+   ['deploy','product-acceptance-predeploy','postdeploy-acceptance',
+     'rollback-on-failed-acceptance'].includes(name)?'skipped':'success'}));
+ assert.equal(validateQualityRun(run,full,head,12,enterprise),true);
+ assert.throws(()=>validateQualityRun(run,full.map(job=>job.name==='learning-auth-uat'?
+   {...job,conclusion:'skipped'}:job),head,12,enterprise),/not approved/);
 });

@@ -8,6 +8,8 @@ const needed=['verify','security','firestore','identity-roles','browser',
   'coach-rbac','institution-intake','institution-browser','institution-approval',
   'learning-auth-uat',
   'Operational acceptance contract self-test (not a release approval)'];
+const checkQualityRun=(run,jobs,sha,workflowId)=>validateQualityRun(run,jobs,sha,workflowId,
+  [...needed,'release-readiness','product-acceptance-predeploy','deploy']);
 const jobs=[...needed.map(name=>({name,conclusion:'success'})),
   {name:'release-readiness',conclusion:'failure'},
   {name:'product-acceptance-predeploy',conclusion:'skipped'},
@@ -35,26 +37,26 @@ test('protected attestor requires eleven completed technical checks and both PR-
   const run={head_sha:SHA,event:'pull_request',conclusion:'failure',workflow_id:workflowId,
     path:'.github/workflows/quality.yml',repository:{full_name:'BernydotJar/LUMA'},
     head_repository:{full_name:'BernydotJar/LUMA'}};
-  expect(validateQualityRun(run,jobs,SHA,workflowId)).toBe(true);
-  expect(()=>validateQualityRun({...run,head_sha:'b'.repeat(40)},jobs,SHA,workflowId)).toThrow();
-  expect(()=>validateQualityRun({...run,workflow_id:workflowId+1},jobs,SHA,workflowId)).toThrow();
-  expect(()=>validateQualityRun({...run,path:'.github/workflows/fake-quality.yml'},jobs,SHA,workflowId)).toThrow();
-  expect(()=>validateQualityRun({...run,repository:{full_name:'other/repo'}},jobs,SHA,workflowId)).toThrow();
-  expect(()=>validateQualityRun(run,jobs,SHA,undefined)).toThrow();
-  expect(()=>validateQualityRun(run,jobs.map(j=>j.name==='coach-rbac'?{...j,conclusion:'failure'}:j),SHA,workflowId)).toThrow();
-  expect(()=>validateQualityRun(run,[...jobs,{name:'unknown-check',conclusion:'failure'}],SHA,workflowId)).toThrow();
+  expect(checkQualityRun(run,jobs,SHA,workflowId)).toBe(true);
+  expect(()=>checkQualityRun({...run,head_sha:'b'.repeat(40)},jobs,SHA,workflowId)).toThrow();
+  expect(()=>checkQualityRun({...run,workflow_id:workflowId+1},jobs,SHA,workflowId)).toThrow();
+  expect(()=>checkQualityRun({...run,path:'.github/workflows/fake-quality.yml'},jobs,SHA,workflowId)).toThrow();
+  expect(()=>checkQualityRun({...run,repository:{full_name:'other/repo'}},jobs,SHA,workflowId)).toThrow();
+  expect(()=>checkQualityRun(run,jobs,SHA,undefined)).toThrow();
+  expect(()=>checkQualityRun(run,jobs.map(j=>j.name==='coach-rbac'?{...j,conclusion:'failure'}:j),SHA,workflowId)).toThrow();
+  expect(()=>checkQualityRun(run,[...jobs,{name:'unknown-check',conclusion:'failure'}],SHA,workflowId)).toThrow();
   for(const name of ['learning-auth-uat',
     'Operational acceptance contract self-test (not a release approval)']) {
-    expect(()=>validateQualityRun(run,jobs.filter(j=>j.name!==name),SHA,workflowId)).toThrow();
+    expect(()=>checkQualityRun(run,jobs.filter(j=>j.name!==name),SHA,workflowId)).toThrow();
     for(const conclusion of ['skipped','failure',null,'in_progress']) {
-      expect(()=>validateQualityRun(run,jobs.map(j=>j.name===name?{...j,conclusion}:j),SHA,workflowId)).toThrow();
+      expect(()=>checkQualityRun(run,jobs.map(j=>j.name===name?{...j,conclusion}:j),SHA,workflowId)).toThrow();
     }
   }
-  expect(()=>validateQualityRun(run,jobs.map(j=>j.name==='product-acceptance-predeploy'
+  expect(()=>checkQualityRun(run,jobs.map(j=>j.name==='product-acceptance-predeploy'
     ?{...j,conclusion:'success'}:j),SHA,workflowId)).toThrow();
-  expect(()=>validateQualityRun(run,jobs.filter(j=>j.name!=='product-acceptance-predeploy'),SHA,workflowId)).toThrow();
-  expect(()=>validateQualityRun(run,[...jobs,jobs[0]],SHA,workflowId)).toThrow();
-  expect(()=>validateQualityRun(run,jobs.map(j=>j.name==='security'
+  expect(()=>checkQualityRun(run,jobs.filter(j=>j.name!=='product-acceptance-predeploy'),SHA,workflowId)).toThrow();
+  expect(()=>checkQualityRun(run,[...jobs,jobs[0]],SHA,workflowId)).toThrow();
+  expect(()=>checkQualityRun(run,jobs.map(j=>j.name==='security'
     ?{...j,conclusion:null,status:'in_progress'}:j),SHA,workflowId)).toThrow();
 });
 
