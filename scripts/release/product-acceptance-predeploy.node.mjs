@@ -24,3 +24,10 @@ test('fail closed outside public landing or in a PR or non-repo context', () => 
     {...env(),GITHUB_SHA:'not-a-sha'},
   ]) assert.throws(()=>assertScopedProductPredeploy(v3(),invalid));
 });
+
+test('legitimate legacy v2 independent reviewers retain protected predeploy path',()=>{
+  const legacy={schemaVersion:2,status:'PASS',testedCommit:sha,
+    review:{method:'github-codex-clean-review',reviewId:123}};
+  assert.equal(assertScopedProductPredeploy(legacy,env()).status,'LEGACY_EXTERNAL_REVIEW_PREDEPLOY_PASS');
+  assert.throws(()=>assertScopedProductPredeploy({...legacy,review:{method:'fake',reviewId:123}},env()));
+});

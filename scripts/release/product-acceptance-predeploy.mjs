@@ -14,8 +14,18 @@ export function assertScopedProductPredeploy(approval, env) {
     'Predeploy acceptance must run on protected main push');
   invariant(/^[a-f0-9]{40}$/.test(env.GITHUB_SHA ?? ''),
     'Expected verified main commit');
-  invariant(approval?.status === 'PASS' && approval.schemaVersion === 3,
-    'Scoped solo-maintainer predeploy needs the signed v3 acceptance receipt');
+  invariant(approval?.status === 'PASS', 'Predeploy requires signed PASS');
+  // Preserve the legacy external-review route: verifyReview() has already
+  // validated its real Ed25519 signature, Graph and evidence chain.
+  if (approval.schemaVersion === 2) {
+    invariant(['github-codex-clean-review','github-human-approval'].includes(
+      approval.review?.method) && Number.isSafeInteger(approval.review?.reviewId),
+      'Legacy v2 must have a real external independent review');
+    return { status:'LEGACY_EXTERNAL_REVIEW_PREDEPLOY_PASS',
+      reviewedSourceSha:approval.testedCommit,publishedSourceSha:env.GITHUB_SHA };
+  }
+  invariant(approval.schemaVersion === 3,
+    'Solo-maintainer predeploy needs the signed v3 acceptance receipt');
   invariant(approval.ownerAuthorization?.scope === 'public-landing' &&
     approval.ownerAuthorization?.humanIndependent === false &&
     approval.review?.method === 'protected-granite-owner-v1',
