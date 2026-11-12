@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "kind": "ai-adversarial-code-review",
+  "scope": "governance",
+  "sourceSHA": "dbe4acb8629c0bfb38a6010d7b824a273ef7992d",
+  "sourceDigest": "d05236ee7d1e21efccf552b96432a4ed3644353796809ef315a1aff003a8fc9c",
+  "model": "ibm/granite3.3:2b",
+  "modelDigest": "b7b711f14c0156353ebfcb24cda357ebed9c7f337172927d82fccdde597fb3ab",
+  "promptSha256": "e3f70385e0454ce2d12d1004efdf045fe2c56e67bd20c3d5ca96e7ea6bd335aa",
+  "inputSha256": "3d9fcec99e483e3f75a5aefb080cc7ff02b3e5734e906ef3811598103a07b6ae",
+  "generatedAt": "2026-11-12T03:24:14Z",
+  "options": {
+    "temperature": 0,
+    "seed": 101,
+    "num_ctx": 8192,
+    "num_predict": 600
+  },
+  "independence": "model-only; no human independent reviewer",
+  "status": "REVIEW_COMPLETE",
+  "rawResponse": "{\n  \"verdict\": \"BLOCKED\",\n  \"findings\": [\n    {\n      \"id\": \"G1\",\n      \"severity\": \"critical\",\n      \"path\": \"scripts/release/trusted-attestor.mjs\",\n      \"line\": 42,\n      \"evidence\": \"The script `ghPages` reads GitHub review history without pagination checks, potentially exposing a denial-of-service vulnerability.\",\n      \"risk\": \"integrity\",\n      \"recommendation\": \"Implement pagination checks to prevent excessive resource consumption.\"\n    },\n    {\n      \"id\": \"G2\",\n      \"severity\": \"high\",\n      \"path\": \"scripts/release/trusted-attestor.mjs\",\n      \"line\": 138,\n      \"evidence\": \"The `authenticateExternalCodexReview` function does not handle potential errors when parsing the Codex review receipt, potentially leading to unexpected behavior.\",\n      \"risk\": \"availability\",\n      \"recommendation\": \"Add error handling for parsing the Codex review receipt to ensure the function behaves predictably.\"\n    },\n    {\n      \"id\": \"G3\",\n      \"severity\": \"medium\",\n      \"path\": \"scripts/release/pr-readiness.mjs\",\n      \"line\": 36,\n      \"evidence\": \"The `evaluateReleaseReadiness` function does not handle potential errors when verifying the release approval, potentially leading to incorrect status reporting.\",\n      \"risk\": \"correctness\",\n      \"recommendation\": \"Add error handling for the verification process to ensure accurate status reporting.\"\n    },\n    {\n      \"id\": \"G4\",\n      \"severity\": \"low\",\n      \"path\": \"scripts/release/trusted-attestor.mjs\",\n      \"line\": 186,\n      \"evidence\": \"The script relies on the `process.env.GITHUB_REF` and `process.env.GITHUB_REPOSITORY` environment variables, which could be manipulated by an attacker.\",\n      \"risk\": \"authenticity\",\n      \"recommendation\": \"Consider using a more secure method for verifying the current repository and pull request, such as a signed webhook or a trusted API endpoint.\"\n    }\n  ],\n  \"limitations\": [\"This review is based on untrusted code and repository content. Actual security gaps may vary.\"]\n}",
+  "doneReason": "stop",
+  "promptEvalCount": 4404,
+  "evalCount": 485,
+  "result": {
+    "verdict": "BLOCKED",
+    "findings": [
+      {
+        "id": "G1",
+        "severity": "critical",
+        "path": "scripts/release/trusted-attestor.mjs",
+        "line": 42,
+        "evidence": "The script `ghPages` reads GitHub review history without pagination checks, potentially exposing a denial-of-service vulnerability.",
+        "risk": "integrity",
+        "recommendation": "Implement pagination checks to prevent excessive resource consumption."
+      },
+      {
+        "id": "G2",
+        "severity": "high",
+        "path": "scripts/release/trusted-attestor.mjs",
+        "line": 138,
+        "evidence": "The `authenticateExternalCodexReview` function does not handle potential errors when parsing the Codex review receipt, potentially leading to unexpected behavior.",
+        "risk": "availability",
+        "recommendation": "Add error handling for parsing the Codex review receipt to ensure the function behaves predictably."
+      },
+      {
+        "id": "G3",
+        "severity": "medium",
+        "path": "scripts/release/pr-readiness.mjs",
+        "line": 36,
+        "evidence": "The `evaluateReleaseReadiness` function does not handle potential errors when verifying the release approval, potentially leading to incorrect status reporting.",
+        "risk": "correctness",
+        "recommendation": "Add error handling for the verification process to ensure accurate status reporting."
+      },
+      {
+        "id": "G4",
+        "severity": "low",
+        "path": "scripts/release/trusted-attestor.mjs",
+        "line": 186,
+        "evidence": "The script relies on the `process.env.GITHUB_REF` and `process.env.GITHUB_REPOSITORY` environment variables, which could be manipulated by an attacker.",
+        "risk": "authenticity",
+        "recommendation": "Consider using a more secure method for verifying the current repository and pull request, such as a signed webhook or a trusted API endpoint."
+      }
+    ],
+    "limitations": [
+      "This review is based on untrusted code and repository content. Actual security gaps may vary."
+    ]
+  },
+  "elapsedSeconds": 10.7
+}
