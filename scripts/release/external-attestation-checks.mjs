@@ -130,6 +130,8 @@ test('protected source check remains attached to the exact PR head event',()=>{
  assert.match(workflow,/pull_request_review:/);
  assert.doesNotMatch(workflow,/issue_comment:/);
  assert.match(workflow,/\/head/);
+ assert.match(workflow,/github.event.pull_request.base.sha/);
+ assert.doesNotMatch(workflow,/ref:.*github.sha/);
  assert.doesNotMatch(workflow,/\/merge/);
 });
 test('signer can rerun only authenticated original exact-PR source checks',()=>{
@@ -138,6 +140,12 @@ test('signer can rerun only authenticated original exact-PR source checks',()=>{
    path:'.github/workflows/source-attestation.yml',event:'pull_request_target',
    pull_requests:[{number:104,head:{sha:head},base:{ref:'main',sha:mainSha}}]};
  assert.equal(selectAuthenticSourceCheckRun([base],w,104,head,mainSha).id,50);
+ assert.equal(selectAuthenticSourceCheckRun([
+   {...base,head_sha:mainSha,event:'pull_request_target'}
+ ],w,104,head,mainSha).id,50);
+ assert.throws(()=>selectAuthenticSourceCheckRun([
+   {...base,head_sha:mainSha,event:'pull_request_review'}
+ ],w,104,head,mainSha));
  for(const changed of [
    {head_sha:'f'.repeat(40)},
    {workflow_id:w+1},

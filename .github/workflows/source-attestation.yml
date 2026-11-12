@@ -22,7 +22,7 @@ jobs:
       - name: Checkout protected review policy (base branch)
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event.pull_request.base.sha }}
           path: protected-policy
           persist-credentials: false
       - name: Checkout exact candidate head as untrusted data only

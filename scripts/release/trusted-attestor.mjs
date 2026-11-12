@@ -230,8 +230,12 @@ export function selectAuthenticSourceCheckRun(runs,workflowId,prNumber,head,main
   invariant(/^[a-f0-9]{40}$/.test(mainSha||''),'Main policy SHA is required');
   const matches=runs.filter(run=>run.workflow_id===workflowId &&
     run.path==='.github/workflows/source-attestation.yml' &&
-    run.head_sha===head && run.status==='completed' &&
+    run.status==='completed' &&
     ['pull_request_target','pull_request_review'].includes(run.event) &&
+    // REST workflow-run head may report candidate SHA or the protected base.
+    // The authenticated PR object must always identify exact head and base.
+    (run.head_sha===head ||
+      run.event==='pull_request_target' && run.head_sha===mainSha) &&
     run.pull_requests?.some(pr=>pr.number===prNumber && pr.head?.sha===head &&
       pr.base?.ref==='main' && pr.base?.sha===mainSha));
   invariant(matches.length>0,'No exact-head protected source-attestation run to rerun');

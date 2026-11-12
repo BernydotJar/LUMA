@@ -99,3 +99,26 @@ domain-separated Ed25519 signature over the main policy SHA. On a PR the
 policy SHA must equal current protected main; for an approved merge commit
 it must match the authenticated parent protected-main revision. In both
 cases, a stale signer policy fails closed.
+
+## Reviewer feedback: protected-base execution and GitHub run identity
+
+A second adversarial review found two more risk paths. On
+pull_request_review the workflow's generic github.sha can denote a merge
+revision rather than trusted main. Source-attestation now explicitly checks
+out github.event.pull_request.base.sha as the protected, executable policy;
+the candidate is separately checked out from refs/pull/<number>/head as inert
+data, and no PR dependencies/scripts run under the privileged token.
+
+GitHub's actual workflow-run REST responses were inspected for LUMA's source
+checks: run 43147534636 (pull_request_target on PR 101), run 43148450919
+(pull_request_target on PR 102) and run 43149011621
+(pull_request_review on PR 102) all report the logical candidate SHA in
+head_sha with the PR head/base references in pull_requests. Some GitHub
+event variants may instead report base or synthetic merge SHA. Protected
+source check reexecution therefore requires a registered workflow ID,
+completed event of allowed kind, an authenticated pull_requests payload with
+exact PR number/source head/current protected base, and an allowed event
+head_sha (candidate or protected base only for pull_request_target).
+A synthetic or foreign head, stale base, changed PR, wrong event or wrong
+workflow is rejected. This is covered by local adversarial tests; live
+protected reexecution requires the separate approved bootstrap.
