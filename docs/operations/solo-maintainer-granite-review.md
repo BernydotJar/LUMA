@@ -118,3 +118,38 @@ returned schema v3; subsequent evidence tampering was rejected. This is a
 The actual deployment and one-time bootstrap procedure, with the exact allowed
 scope and rollback/readback requirements, is documented in
 `docs/operations/granite-solo-release-runbook.md`.
+
+## Granular adversarial critic verdict and adjudication (reliability policy v3.1)
+
+Actual pilot of Granite 3.3:2b on the public landing produced repeated **ungrounded
+high-severity assertions** about innocuous `/login` links and test comments.
+These responses were rejected; they are not relabeled as a clean automated PASS.
+The improved protected critic instead records succinct, deterministic-classifier
+opinions `PASS`, `REVIEW`, or `UNCERTAIN` on every changed runtime-code chunk.
+Changed `e2e/**` test paths are disclosed in `qaValidatedPaths` and must be
+covered by the independently authenticated real GitHub browser, institution
+browser and authenticated learner UAT jobs. Runtime source and release policy
+remain guarded by a pinned Ollama model digest, exact input SHA, source SHA,
+byte-limited context, reproducible options and authenticated protected workflow.
+
+If any Granite chunk yields `REVIEW` or `UNCERTAIN`, the actual collective
+model verdict is **`NEEDS_REVIEW`**. A protected artifact contains those exact
+raw opinions and a clearly labeled `ADVISORY_REVIEW_COMPLETE` state, not `PASS`.
+This status is eligible **only** for a strictly whitelisted public-landing
+change, and can never automatically release IAM, security, Graph policy,
+releases, billing, tenant controls or other sensitive code.
+
+For an eligible public landing with such warnings, a second authenticated
+*AI* reviewer, the GitHub Codex connector bot, must independently produce
+`completed`, `has_any_findings=false`, `has_unresolved_findings=false` for
+exactly the same source SHA. Its GitHub issue-comment ID is bound by Ed25519
+inside v3. The owner must also comment after the protected Granite run,
+accepting that exact source SHA and `public-landing` scope. Both decisions
+must still exist and remain unrevoked at GitHub source-attestation time.
+
+The Graph receipt explicitly says `modelVerdict=NEEDS_REVIEW`, the verifier
+records `codexReviewCommentId` and `ownerCommentId`, and the signed approval
+records both. None of this creates a second human or falsely claims that
+Granite itself passed. Missing clean Codex, untrusted provenance, incompatible
+scope, incomplete model output or any unresolved current review thread is a
+**NO-GO**. This policy keeps an inspectable fallback rather than a silent waiver.

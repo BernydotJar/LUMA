@@ -26,11 +26,21 @@ export function validateGraniteModelReview(evidence, expected) {
     'Incorrect or unpinned model');
   requireCondition(SHA64.test(evidence.promptSha256 ?? '') &&
     SHA64.test(evidence.inputSha256 ?? ''), 'Missing prompt or source-input provenance');
-  requireCondition(evidence.status === 'REVIEW_COMPLETE' && evidence.doneReason === 'stop',
-    'Model did not finish a valid structured review');
-  requireCondition(evidence.result?.verdict === 'PASS' &&
-    Array.isArray(evidence.result?.findings) &&
-    Array.isArray(evidence.result?.limitations), 'Granite review is blocked or inconclusive');
+  requireCondition(['REVIEW_COMPLETE','ADVISORY_REVIEW_COMPLETE'].includes(evidence.status) &&
+    evidence.doneReason === 'stop', 'Model did not finish a structured opinion');
+  const advisory = evidence.status === 'ADVISORY_REVIEW_COMPLETE';
+  requireCondition(evidence.result?.verdict === (advisory?'NEEDS_REVIEW':'PASS') &&
+    Array.isArray(evidence.result?.findings) && evidence.result.findings.length===0 &&
+    Array.isArray(evidence.result?.limitations), 'Model technical opinion contract malformed');
+  requireCondition(!advisory || evidence.riskClassification === 'public-landing',
+    'Sensitive changes cannot be accepted with an inconclusive model assessment');
+  requireCondition(Array.isArray(evidence.fileReviews) && evidence.fileReviews.length>0 &&
+    evidence.fileReviews.every(r=>['PASS','REVIEW','UNCERTAIN'].includes(r.opinion) &&
+      /^[a-f0-9]{64}$/.test(r.sourceChunkHash??'') &&
+      Array.isArray(r.attempts) && r.attempts.some(a=>a.status==='VALID')),
+    'Missing verified model classifier opinions or source chunk hashes');
+  requireCondition(advisory === evidence.fileReviews.some(r=>r.opinion!=='PASS'),
+    'Model advisory flag is inconsistent with actual recorded opinions');
   requireCondition(evidence.options?.temperature === 0,
     'Review must use reproducible configured temperature');
   requireCondition(evidence.independence === 'model-only; no human independent reviewer',
@@ -39,8 +49,8 @@ export function validateGraniteModelReview(evidence, expected) {
     ['critical', 'high'].includes(f?.severity)), 'Unresolved critical/high model findings');
   return { reviewerType: 'automated-model-critic', model: MODEL,
     sourceSha: evidence.sourceSHA, sourceDigest: evidence.sourceDigest,
-    modelDigest: evidence.modelDigest, verdict: 'PASS',
-    humanIndependent: false };
+    modelDigest:evidence.modelDigest,verdict:evidence.result.verdict,
+    requiresCodex:advisory,humanIndependent:false };
 }
 
 /** Inputs run, jobs and artifactSource are required to be fetched by a protected

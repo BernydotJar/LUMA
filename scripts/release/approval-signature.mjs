@@ -54,6 +54,9 @@ export function soloApprovalSigningBytes(approval) {
     review.model === 'ibm/granite3.3:2b' &&
     review.humanIndependent === false &&
     review.commitSha === approval.testedCommit &&
+    ['PASS','NEEDS_REVIEW'].includes(review.modelVerdict) &&
+    Number.isSafeInteger(review.codexReviewCommentId) &&
+    (review.modelVerdict === 'PASS' ? review.codexReviewCommentId === 0 : review.codexReviewCommentId > 0) &&
     COMMIT.test(review.trustedWorkflowCommit ?? '') &&
     SHA256.test(review.modelDigest ?? '') && SHA256.test(review.artifactDigestSha256 ?? '') &&
     Number.isSafeInteger(review.workflowRunId) && review.workflowRunId > 0,
@@ -74,7 +77,9 @@ export function soloApprovalSigningBytes(approval) {
     ['verifierSha256',approval.verifier.sha256], ['ciSha256',approval.ci.sha256],
     ['unresolvedCritical','0'], ['unresolvedHigh','0'],
     ['reviewMethod',review.method], ['reviewerType',review.reviewerType],
-    ['reviewModel',review.model], ['modelDigest',review.modelDigest],
+    ['reviewModel',review.model], ['modelVerdict',review.modelVerdict],
+    ['codexReviewCommentId',String(review.codexReviewCommentId)],
+    ['modelDigest',review.modelDigest],
     ['reviewCommitSha',review.commitSha], ['reviewWorkflowRunId',String(review.workflowRunId)],
     ['trustedWorkflowCommit',review.trustedWorkflowCommit],
     ['reviewArtifactSha256',review.artifactDigestSha256], ['humanIndependent','false'],

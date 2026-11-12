@@ -29,6 +29,29 @@ export function authenticateOwnerAuthorization(comments,sha,runCompletion,requir
     commitSha:sha, scope:requiredScope, humanIndependent:false };
 }
 
+/** A protected model REVIEW is never rewritten as PASS. An additional
+ * authenticated GitHub Codex bot clean receipt, pinned by comment ID and SHA,
+ * is required before owner risk acceptance can lead to a signed release. */
+export function authenticateCodexModelAdjudication(comments,sourceCommit,commentId){
+  block(FULL_SHA.test(sourceCommit??'') &&
+    Number.isSafeInteger(commentId) && commentId>0,
+    'Codex adjudication must bind an authenticated source SHA and comment');
+  const candidates=(comments??[]).filter(c=>c.id===commentId &&
+    c.user?.login==='chatgpt-codex-connector[bot]' &&
+    c.user?.type==='Bot' && typeof c.body==='string' &&
+    c.body.includes('<!-- codex-review-state:v1 '));
+  block(candidates.length===1,'Authenticated Codex bot review receipt unavailable');
+  const m=candidates[0].body.match(/<!-- codex-review-state:v1 (\{[^\n]*\}) -->/);
+  block(m,'Codex receipt state is malformed');
+  let state;
+  try{state=JSON.parse(m[1]).code_review;}catch{}
+  block(state?.commit_sha===sourceCommit && state?.status==='completed' &&
+    state.has_any_findings===false && state.has_unresolved_findings===false,
+    'Adjudicating Codex review does not cleanly cover the exact source SHA');
+  return {reviewer:'chatgpt-codex-connector[bot]',reviewCommentId:commentId,
+    reviewedCommit:sourceCommit,humanIndependent:false};
+}
+
 export function assertCurrentSoloApproval({ approval, pr, expectedHead, commits, compare,
   comments, run, jobs, artifact, trustedWorkflowId, trustedModelDigest, expectedProtectedPolicySha }) {
   block(approval?.schemaVersion === 3 && approval.status === 'PASS' &&
@@ -62,6 +85,14 @@ export function assertCurrentSoloApproval({ approval, pr, expectedHead, commits,
     artifact.digest === `sha256:${approval.review.artifactDigestSha256}` &&
     SHA256.test(approval.review.artifactDigestSha256 ?? ''),
     'Signed model artifact is unavailable or changed');
+  block(['PASS','NEEDS_REVIEW'].includes(approval.review.modelVerdict) &&
+    Number.isSafeInteger(approval.review.codexReviewCommentId) &&
+    (approval.review.modelVerdict==='PASS' ? approval.review.codexReviewCommentId===0 :
+      approval.review.codexReviewCommentId>0 && approval.ownerAuthorization.scope==='public-landing'),
+    'Model warning without exact-source protected Codex adjudication cannot be accepted');
+  if(approval.review.modelVerdict==='NEEDS_REVIEW')
+    authenticateCodexModelAdjudication(comments,approval.testedCommit,
+      approval.review.codexReviewCommentId);
   block(approval.review.modelDigest === trustedModelDigest &&
     SHA256.test(trustedModelDigest ?? ''),
     'Trusted model digest changed since signing');
@@ -72,5 +103,7 @@ export function assertCurrentSoloApproval({ approval, pr, expectedHead, commits,
     granted.method === approval.ownerAuthorization.method,
     'Owner authorization was revoked, deleted, or superseded');
   return { ...granted, modelReviewRunId: run.id,
+    modelVerdict:approval.review.modelVerdict,
+    codexReviewCommentId:approval.review.codexReviewCommentId,
     reviewerType:'automated-model-critic', humanIndependent:false };
 }

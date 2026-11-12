@@ -26,7 +26,8 @@ const run=()=>({id:42,workflow_id:400, path:'.github/workflows/granite-protected
   event:'workflow_dispatch',head_branch:'main',status:'completed',conclusion:'success',
   updated_at:date, head_sha:SHA, repository:{full_name:'BernydotJar/LUMA'},head_repository:{full_name:'BernydotJar/LUMA'}});
 const receipt=()=>({schemaVersion:3,status:'PASS',testedCommit:SHA,
-  review:{commitSha:SHA, workflowRunId:42,artifactDigestSha256:DIGEST,modelDigest:DIGEST,trustedWorkflowCommit:SHA},
+  review:{commitSha:SHA, workflowRunId:42,artifactDigestSha256:DIGEST,modelDigest:DIGEST,trustedWorkflowCommit:SHA,
+    modelVerdict:'PASS',codexReviewCommentId:0},
   ownerAuthorization:{commitSha:SHA,commentId:77,login:'BernydotJar',method:'github-issue-comment',scope:'public-landing'}});
 const pr=()=>({number:101,head:{sha:SHA,repo:{full_name:'BernydotJar/LUMA'}},base:{ref:'main'},state:'open',merged:false});
 const input=()=>({approval:receipt(),pr:pr(),expectedHead:SHA,commits:[{sha:SHA}],compare:null,
@@ -67,4 +68,17 @@ test('v3 imports precisely the five signed evidence files in a single evidence-o
     [...changes.slice(0,4),{filename:changes[4].filename,status:'added'}]]) {
     assert.throws(()=>assertCurrentSoloApproval({...proof,compare:{...compare,files:altered}}));
   }
+});
+
+test('public-only advisory requires a real authenticated clean Codex bot receipt on the same SHA',()=>{
+  const d=input();const review={...d.approval.review,modelVerdict:'NEEDS_REVIEW',codexReviewCommentId:951};
+  const commentBody=`<!-- codex-review-state:v1 ${JSON.stringify({code_review:{commit_sha:SHA,status:'completed',has_any_findings:false,has_unresolved_findings:false}})} -->`;
+  const bot={id:951,user:{login:'chatgpt-codex-connector[bot]',type:'Bot'},body:commentBody};
+  const amended={...d,approval:{...d.approval,review},comments:[...d.comments,bot]};
+  assert.equal(assertCurrentSoloApproval(amended).codexReviewCommentId,951);
+  assert.throws(()=>assertCurrentSoloApproval({...amended,comments:d.comments}));
+  assert.throws(()=>assertCurrentSoloApproval({...amended,comments:[...d.comments,{...bot,user:{login:'random-bot',type:'Bot'}}]}));
+  assert.throws(()=>assertCurrentSoloApproval({...amended,comments:[...d.comments,{...bot,body:commentBody.replace('false','true')}]}));
+  assert.throws(()=>assertCurrentSoloApproval({...amended,approval:{...amended.approval,
+    ownerAuthorization:{...amended.approval.ownerAuthorization,scope:'owner-risk-exception'}}}));
 });

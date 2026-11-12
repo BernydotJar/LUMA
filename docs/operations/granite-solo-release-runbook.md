@@ -49,3 +49,13 @@ The temporary policy exception is not a production release exception: the `main`
 - Source PR with authentication, tenant isolation, Firestore rules, release controls, billing or other privileged changes: `owner-risk-exception` requires separate enhanced approval and cannot automatically pass public-only predeploy.
 - No private Ed25519 key may leave GitHub Environment `independent-attestation`.
 - Do not merge PR #101 based on old main or claim a production SHA before observing it live.
+
+### Granada/Granite advisory adjudication
+
+Granite is a real technical *critic* and may emit `NEEDS_REVIEW`, not
+`PASS`. For a strictly scoped public landing, require an authenticated GitHub
+Codex clean review on the exact C0 source SHA (its comment ID is in the v3
+Ed25519 signature), and the owner's exact-SHA approval *after* the protected
+model run. `public-landing` never permits privileged changes. For sensitive
+changes, a model warning is NO-GO, not an automatic exception. The protected
+Graph gate and CI/owner verifier disclose the model's original verdict.
