@@ -201,6 +201,8 @@ jobs:
       cancel-in-progress: false
     permissions:
       contents: read
+      issues: read
+      pull-requests: read
       actions: read
       id-token: write
     steps:

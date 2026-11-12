@@ -13,7 +13,7 @@ const SHA40=/^[a-f0-9]{40}$/;
 const FENCE=String.fromCharCode(96).repeat(3);
 export function receiptCommentBody(prNumber,approval){
   invariant(Number.isSafeInteger(prNumber)&&prNumber>0,'Invalid PR for signed receipt');
-  invariant(approval?.schemaVersion===2 && approval?.signature,
+  invariant(approval?.schemaVersion===3 && /^[a-f0-9]{40}$/.test(approval.policySha||'') && approval?.signature,
     'Only protected signed approvals may be published');
   const envelope={ schemaVersion:1, repository:REPOSITORY,prNumber,
     reviewedHead:approval.testedCommit,approval };
@@ -37,7 +37,9 @@ export function selectSignedReceipt(comments,prNumber,head,publicKey){
     const envelope=parseReceiptComment(comment);
     if(!envelope||envelope.schemaVersion!==1||envelope.repository!==REPOSITORY ||
        envelope.prNumber!==prNumber || envelope.reviewedHead!==head ||
-       envelope.approval?.testedCommit!==head)return [];
+       envelope.approval?.testedCommit!==head||
+       envelope.approval?.schemaVersion!==3 ||
+       !SHA40.test(envelope.approval.policySha||''))return [];
     return [{comment,approval:envelope.approval}];
   }).sort((a,b)=>(a.comment.created_at||'').localeCompare(b.comment.created_at||'')||
       a.comment.id-b.comment.id);
@@ -45,6 +47,12 @@ export function selectSignedReceipt(comments,prNumber,head,publicKey){
   const chosen=matching.at(-1);
   verifyApprovalSignature(chosen.approval,publicKey);
   return {approval:chosen.approval,commentId:chosen.comment.id};
+}
+export function assertPolicyBoundReceipt(approval,expectedPolicySha){
+  invariant(/^[a-f0-9]{40}$/.test(expectedPolicySha||'') &&
+    approval?.schemaVersion===3 && approval.policySha===expectedPolicySha,
+    'Signed approval belongs to a stale or different protected main policy');
+  return true;
 }
 export function ghJson(path){
   return JSON.parse(execFileSync('gh',['api',path],{encoding:'utf8',

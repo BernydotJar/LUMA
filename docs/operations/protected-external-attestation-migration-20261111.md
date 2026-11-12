@@ -22,16 +22,16 @@ while protected validation requires schema 2.
    valid for the source digest. No prompt or a green CI check alone can grant GO.
 4. The signer uses a private Ed25519 key scoped to the protected
    independent-attestation environment. It cannot run from untrusted PR code.
-5. The signed receipt is published outside the Git tree as a bot-authored PR
+5. The v3 domain-separated signed receipt contains the exact protected-main\n   policy SHA as well as the PR SHA, source digest and reviewer identity.\n   The signer checks current main twice and refuses stale policy.\n6. The signed receipt is published outside the Git tree as a bot-authored PR
    comment with an Actions artifact mirror. Both are externally inspectable.
    The comment is a lookup carrier, not authority: consumers require the
    correct publisher, exact PR/head, protected public key signature,
    matching source digest, current reviewer and Graph-chain provenance.
-6. The protected signer queues a rerun of the existing source-attestation check on the PR head;
+7. The protected signer queues a rerun of the existing source-attestation check on the PR head;
    the signer also queues the failed PR release-readiness job to consume the same signed
    proof. Merge does not eliminate validation: main release checks also verify
    an authenticated unique merged PR and exact resulting code digest.
-7. Source integration and business production acceptance are independent.
+8. Source integration and business production acceptance are independent.
    Enterprise UAT, verified previous serving build and guarded postdeploy
    approval remain mandatory; no feature flags are switched by this patch.
 
@@ -87,3 +87,15 @@ No GitHub branch protection has been relaxed; no production traffic, cloud
 resource or reviewer allowlist has been modified by this policy PR.
 The first governance migration is explicitly a separate administrative
 decision, not implicit authorization to force-merge another PR.
+
+## Adversarial P1/P2 remediation
+
+The external review on the first migration candidate found that deploy lacked
+read permissions for issue comments and PR reviews, that a long Cloud Build
+could outlive a revoked approval, and that the protected policy itself was
+not signed. Those findings are corrected by explicit read-only job rights,
+rechecking the current independent review before rollout, and a v3
+domain-separated Ed25519 signature over the main policy SHA. On a PR the
+policy SHA must equal current protected main; for an approved merge commit
+it must match the authenticated parent protected-main revision. In both
+cases, a stale signer policy fails closed.

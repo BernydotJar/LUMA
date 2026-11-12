@@ -40,7 +40,7 @@ export function assertReceiptOnlyHeadAdvance(reviewedHead, currentHead, compare)
 /** Pure verification against already authenticated GitHub API responses. */
 export function assertCurrentIndependentReview(approval, pr, expectedHead,
     comments, reviews, commits, reviewerAllowlist, authenticatedCompare = null, allowMerged = false) {
-  invariant(approval?.schemaVersion === 2 && approval.status === 'PASS' &&
+  invariant([2,3].includes(approval?.schemaVersion) && approval.status === 'PASS' &&
     SHA.test(approval.review?.commitSha ?? '') &&
     approval.review.commitSha === approval.testedCommit,
     'Historical release receipt lacks a source-bound independent reviewer');

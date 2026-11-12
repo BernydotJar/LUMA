@@ -4,19 +4,19 @@ import { generateKeyPairSync } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { signApproval } from './approval-signature.mjs';
-import { receiptCommentBody,parseReceiptComment,selectSignedReceipt } from './remote-attestation.mjs';
+import { receiptCommentBody,parseReceiptComment,selectSignedReceipt,assertPolicyBoundReceipt } from './remote-attestation.mjs';
 import { assertReviewAttestation,verifyReview } from './review-gate.mjs';
 import { assertCurrentIndependentReview } from './live-review-check.mjs';
 import { buildUnsignedProtectedApproval,selectAuthenticSourceCheckRun } from './trusted-attestor.mjs';
 import { identifyGitHubSource } from './pr-readiness.mjs';
 
-const head='a'.repeat(40),digest='b'.repeat(64);
+const head='a'.repeat(40),digest='b'.repeat(64),policySha='c'.repeat(40);
 const {publicKey,privateKey}=generateKeyPairSync('ed25519');
 const pemPublic=Buffer.from(publicKey.export({type:'spki',format:'pem'})).toString('base64');
 const pemPrivate=Buffer.from(privateKey.export({type:'pkcs8',format:'pem'})).toString('base64');
 const review={method:'github-codex-clean-review',reviewer:'chatgpt-codex-connector[bot]',
  reviewId:1501,commitSha:head};
-const bare={schemaVersion:2,status:'PASS',sourceDigest:digest,testedCommit:head,
+const bare={schemaVersion:3,status:'PASS',policySha,sourceDigest:digest,testedCommit:head,
  ciRunId:'900045',graphEventId:'external-graph-event',graphEventHash:'c'.repeat(64),
  critic:{sha256:'d'.repeat(64)},verifier:{sha256:'e'.repeat(64)},
  unresolvedCritical:0,unresolvedHigh:0,review};
@@ -47,6 +47,11 @@ test('unauthorized commenter cannot publish an approval even with real signature
 test('wrong GitHub app cannot impersonate the protected signer',()=>{
  const forged={...comment,performed_via_github_app:{slug:'untrusted-pr-app'}};
  assert.throws(()=>selection([forged]),/No protected/);
+});
+test('policy SHA tampering invalidates a v3 signature',()=>{
+ assert.throws(()=>selectSignedReceipt([
+   {...comment,body:receiptCommentBody(104,{...signed,policySha:'f'.repeat(40)})}
+ ],104,head,pemPublic),/signature/);
 });
 test('modified signed payload is rejected cryptographically',()=>{
  const envelope=parseReceiptComment(comment);
@@ -86,17 +91,19 @@ test('protected signer derives commit and CI run instead of believing PR templat
  const template={testedCommit:'e'.repeat(40),sourceDigest:'f'.repeat(64),
  ciRunId:'456',graphEventId:'external-graph-event',graphEventHash:'c'.repeat(64)};
  const built=buildUnsignedProtectedApproval(template,digest,head,{id:900045},
-   'd'.repeat(64),'e'.repeat(64),{status:'PASS',unresolvedCritical:0,unresolvedHigh:0},review);
+   'd'.repeat(64),'e'.repeat(64),{status:'PASS',unresolvedCritical:0,unresolvedHigh:0},review,policySha);
  assert.equal(built.testedCommit,head);
  assert.equal(built.sourceDigest,digest);
  assert.equal(built.ciRunId,'900045');
+ assert.equal(built.policySha,policySha);
+ assert.equal(built.schemaVersion,3);
 });
 test('reject missing independent verified Graph evidence or unresolved critic',()=>{
  const input={graphEventId:'',graphEventHash:'0'.repeat(64)};
  assert.throws(()=>buildUnsignedProtectedApproval(input,digest,head,{id:900045},
-   'd'.repeat(64),'e'.repeat(64),{status:'PASS',unresolvedCritical:0,unresolvedHigh:0},review));
+   'd'.repeat(64),'e'.repeat(64),{status:'PASS',unresolvedCritical:0,unresolvedHigh:0},review,policySha));
  assert.throws(()=>buildUnsignedProtectedApproval(bare,digest,head,{id:900045},
-   'd'.repeat(64),'e'.repeat(64),{status:'PASS',unresolvedCritical:1,unresolvedHigh:0},review));
+   'd'.repeat(64),'e'.repeat(64),{status:'PASS',unresolvedCritical:1,unresolvedHigh:0},review,policySha));
 });
 test('PR webhook source identity must match exact Github head and positive PR number',()=>{
  assert.deepEqual(identifyGitHubSource('pull_request',
@@ -141,4 +148,10 @@ test('signer can rerun only authenticated original exact-PR source checks',()=>{
  ]){
    assert.throws(()=>selectAuthenticSourceCheckRun([{...base,...changed}],w,104,head,mainSha));
  }
+});
+
+test('signed policy must match the exact protected main policy revision',()=>{
+ assert.equal(assertPolicyBoundReceipt(signed,policySha),true);
+ assert.throws(()=>assertPolicyBoundReceipt(signed,'f'.repeat(40)),/stale/);
+ assert.throws(()=>assertPolicyBoundReceipt({...signed,policySha:undefined},policySha),/stale/);
 });

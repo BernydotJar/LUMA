@@ -187,9 +187,10 @@ export function validateQualityRun(run,jobs,commit,registeredWorkflowId) {
 /** Exact source and successful technical jobs are obtained from GitHub,
  * never from a PR-controlled claim about its own commit ID.
  */
-export function buildUnsignedProtectedApproval(template,source,head,run,criticSha,verifierSha,verifier,review){
-  invariant(/^[a-f0-9]{64}$/.test(source)&&/^[a-f0-9]{40}$/.test(head),
-    'Signer must derive a concrete source digest and commit from GitHub');
+export function buildUnsignedProtectedApproval(template,source,head,run,criticSha,verifierSha,verifier,review,policySha){
+  invariant(/^[a-f0-9]{64}$/.test(source)&&/^[a-f0-9]{40}$/.test(head) &&
+    /^[a-f0-9]{40}$/.test(policySha||''),
+    'Signer must derive source, PR head and trusted policy SHA from GitHub');
   invariant(Number.isSafeInteger(run?.id)&&run.id>0 &&
     /^[a-f0-9]{64}$/.test(criticSha)&&/^[a-f0-9]{64}$/.test(verifierSha),
     'Verified quality run and adversarial evidence are mandatory');
@@ -199,7 +200,7 @@ export function buildUnsignedProtectedApproval(template,source,head,run,criticSh
     typeof template.graphEventId==='string' && template.graphEventId.length>0,
     'Current independently generated Graph evidence is required');
   return {
-    schemaVersion:2,status:'PASS',sourceDigest:source,testedCommit:head,
+    schemaVersion:3,status:'PASS',policySha,sourceDigest:source,testedCommit:head,
     ciRunId:String(run.id),graphEventId:template.graphEventId,
     graphEventHash:template.graphEventHash,
     critic:{sha256:criticSha},verifier:{sha256:verifierSha},
@@ -271,6 +272,9 @@ async function main() {
   invariant(pr.base?.ref==='main'&&pr.state==='open'&&!pr.merged &&
     pr.head?.repo?.full_name===REPO,
     'Protected signer refuses an unrelated, closed or cross-repository PR');
+  const mainHead=gh('repos/'+REPO+'/git/ref/heads/main').object.sha;
+  invariant(mainHead===process.env.GITHUB_SHA,
+    'Protected signer policy changed after workflow dispatch; refuse stale policy');
   const source=reviewedSourceDigest(directory);
   const workflow=gh('repos/'+REPO+'/actions/workflows/quality.yml');
   const run=findExactSuccessfulQualityRun(head,workflow.id);
@@ -302,7 +306,7 @@ async function main() {
   // The candidate can supply Graph references and unsigned evidence, but no
   // source SHA, CI-run ID, approval identity or signature is trusted from it.
   const unsigned=buildUnsignedProtectedApproval(template,source,head,run,
-    criticSha,verifierSha,verifier,independent);
+    criticSha,verifierSha,verifier,independent,mainHead);
   const signed=signApproval(unsigned,process.env.LUMA_RELEASE_ATTESTATION_PRIVATE_KEY_B64);
   verifyApprovalSignature(signed,process.env.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64);
   verifyReview(directory,{approval:signed}); // Authenticates append-only Graph history.
@@ -310,6 +314,8 @@ async function main() {
     JSON.stringify(signed,null,2)+'\n');
   // Publish the receipt to a GitHub-owned channel, never modify the candidate
   // checkout or create a self-referential commit. Public key verifies contents.
+  invariant(gh('repos/'+REPO+'/git/ref/heads/main').object.sha===mainHead,
+    'Protected policy changed after verification and before receipt publication');
   const body=receiptCommentBody(Number(prArg),signed);
   const published=JSON.parse(execFileSync('gh',['api','-X','POST',
     'repos/'+REPO+'/issues/'+prArg+'/comments','-f','body='+body],

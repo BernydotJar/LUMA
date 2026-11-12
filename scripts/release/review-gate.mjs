@@ -22,7 +22,10 @@ export function reviewedSourceDigest(directory = root) {
   return digest.digest('hex');
 }
 export function assertReviewAttestation(attestation, digest) {
-  invariant(attestation?.schemaVersion === 2 && attestation.status === 'PASS', 'Independent Graph release approval is absent or blocked');
+  invariant([2,3].includes(attestation?.schemaVersion) && attestation.status === 'PASS',
+    'Independent Graph release approval is absent or blocked');
+  if(attestation.schemaVersion===3)invariant(/^[a-f0-9]{40}$/.test(attestation.policySha||''),
+    'Externally signed approval is not bound to a protected policy SHA');
   invariant(/^[a-f0-9]{64}$/.test(digest) && attestation.sourceDigest === digest, 'Source changed since independent review');
   invariant(attestation.unresolvedCritical === 0 && attestation.unresolvedHigh === 0, 'Blocking adversarial findings remain');
   invariant(attestation.review?.commitSha === attestation.testedCommit &&
@@ -34,8 +37,9 @@ export function assertReviewAttestation(attestation, digest) {
 export function verifyReview(directory = root, options = {}) {
   // Protected CI accepts only a separately signed, externally retrieved
   // receipt. A candidate-authored JSON file can never approve its own SHA.
-  invariant(process.env.GITHUB_ACTIONS !== 'true' || options.approval,
-    'Protected CI requires an external independently signed release receipt');
+  invariant(process.env.GITHUB_ACTIONS !== 'true' ||
+    options.approval?.schemaVersion===3,
+    'Protected CI requires a v3 external independently signed policy-bound receipt');
   const attestation = options.approval ?? JSON.parse(readFileSync(resolve(directory,
     'evidence/cicd-enterprise/release-approval.json'), 'utf8'));
   assertReviewAttestation(attestation, reviewedSourceDigest(directory));

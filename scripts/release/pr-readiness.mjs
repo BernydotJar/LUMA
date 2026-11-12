@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { reviewedSourceDigest, verifyReview } from './review-gate.mjs';
 import { verifyCurrentIndependentReview } from './live-review-check.mjs';
-import { findSignedReceipt, ghJson, REPOSITORY } from './remote-attestation.mjs';
+import { findSignedReceipt, assertPolicyBoundReceipt, ghJson, REPOSITORY } from './remote-attestation.mjs';
 
 const root = resolve(import.meta.dirname, '../..');
 
@@ -77,6 +77,19 @@ export function evaluateExternalReadiness(directory,source,options={}){
     source.prNumber,source.head,publicKey).approval;
   if(signed.testedCommit!==source.head)
     throw Error('External attestation is not bound to the current PR head');
+  let expectedPolicySha=options.expectedPolicySha;
+  if(!expectedPolicySha){
+    const currentMain=ghJson('repos/'+REPOSITORY+'/git/ref/heads/main').object.sha;
+    if(source.allowMerged===true){
+      if(currentMain!==process.env.GITHUB_SHA)
+        throw Error('A newer main commit superseded this release verification');
+      const commit=ghJson('repos/'+REPOSITORY+'/commits/'+currentMain);
+      expectedPolicySha=commit.parents?.[0]?.sha;
+    }else{
+      expectedPolicySha=currentMain;
+    }
+  }
+  assertPolicyBoundReceipt(signed,expectedPolicySha);
   const verify=dir=>verifyReview(dir,{approval:signed});
   const liveReview=(dir,number,head)=>verifyCurrentIndependentReview(dir,number,head,{
     approval:signed,allowMerged:source.allowMerged===true,
