@@ -225,14 +225,22 @@ test('candidate cannot replace protected main test steps with no-op successes',(
  const baseline=stripped.slice(0,first)+release+deploy;
  assert.equal(assertProtectedQualityCore(baseline,full),true);
  assert.equal(assertProtectedQualityCore(full,full),true);
+ const nonAsciiRootAfterJob="\n  candidate-extra:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo OK\u0085defaults:\n  run:\n    shell: node candidate-helper.mjs {0}\n";
+ assert.throws(()=>assertProtectedQualityCore(full,full+nonAsciiRootAfterJob),
+   /Unauthorized/);
+ for(const separator of ['\u2028','\u2029']){
+   assert.throws(()=>assertProtectedQualityCore(full,full+'\n  attacker:\n    runs-on: ubuntu-latest'+separator+'defaults:\n  run:\n    shell: sh\n'),
+     /Unauthorized/);
+ }
+
  const explicitRootAfterJob="\n  candidate-extra:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo OK\n? defaults\n:\n  run:\n    shell: node candidate-helper.mjs {0}\n";
  assert.throws(()=>assertProtectedQualityCore(full,full+explicitRootAfterJob),
-   /Unsupported root-level YAML/);
+   /Unauthorized/);
  assert.throws(()=>assertProtectedQualityCore(full,full+"\n---\n"),
-   /Unsupported root-level YAML/);
+   /Unauthorized/);
  assert.throws(()=>assertProtectedQualityCore(baseline,
    full+'\ndefaults:\n  run:\n    shell: bash\n'),
-   /workflow-wide execution controls/);
+   /Unauthorized/);
  for(const injected of [
    "'defaults':\n  run:\n    shell: sh\n",
    '"defaults":\n  run:\n    shell: sh\n',
@@ -241,24 +249,24 @@ test('candidate cannot replace protected main test steps with no-op successes',(
    "   \n'permissions': write\n"
  ]){
    assert.throws(()=>assertProtectedQualityCore(baseline,injected+full),
-     /workflow-wide execution controls|Missing protected|Unsupported root-level YAML/);
+     /Unauthorized/);
  }
  assert.throws(()=>assertProtectedQualityCore(baseline,
    full.replace('run: node scripts/release/pr-readiness.mjs','run: echo bypass')),
-   /protected job definition: release-readiness/);
+   /Unauthorized/);
  assert.throws(()=>assertProtectedQualityCore(baseline,
    full.replace('run: node scripts/release/apphosting.mjs deploy','run: echo bypass')),
-   /protected job definition: deploy/);
+   /Unauthorized/);
  assert.throws(()=>assertProtectedQualityCore(baseline,
    full.replace('needs: [verify, security, firestore, identity-roles, browser, attestation-contract]',
      'needs: [verify, security, firestore, identity-roles, browser]')),
-   /Attestation contract must gate/);
+   /Unauthorized/);
  assert.throws(()=>assertProtectedQualityCore(baseline,
    full.replace('      - run: npm run test:run','      - run: echo PASS')),
-   /altered protected job definition/);
+   /Unauthorized/);
  assert.throws(()=>assertProtectedQualityCore(baseline,
    full.replace('  pull_request:', '  pull_request_target:')),
-   /workflow-wide execution controls/);
+   /Unauthorized/);
 });
 test('future protected enterprise jobs cannot be removed from the candidate run',()=>{
  const enterprise=['verify','security','firestore','identity-roles','browser',

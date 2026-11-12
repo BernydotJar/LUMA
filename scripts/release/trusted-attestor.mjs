@@ -191,90 +191,66 @@ export function protectedQualityJobNames(yaml) {
 export function assertProtectedQualityCore(mainYaml,candidateYaml){
   invariant(typeof mainYaml==='string'&&typeof candidateYaml==='string',
     'Protected quality workflow source must be present');
-  function globalBlocks(source){
-    // This protected CI policy uses canonical, unquoted root keys only.
-    // A column-zero YAML explicit-key form ('? key', ':'), document marker,
-    // or any other noncanonical root syntax must fail closed, including
-    // when it appears *after* additional candidate-owned jobs.
-    for(const line of source.split(/\r?\n/)){
-      if(line.length>0 && !/^[\s#]/.test(line) &&
-         !/^[A-Za-z][A-Za-z0-9_-]*:(?:\s.*)?$/.test(line))
-        throw Error('Unsupported root-level YAML execution control syntax');
-      if(line.startsWith('\t'))
-        throw Error('Unsupported YAML tab indentation in protected workflow');
-    }
-    const blocks=new Map();
-    let key=null,buffer=[],prologue=[];
-    for(const line of source.split(/\r?\n/)){
-      // Match quoted and otherwise unusual YAML root keys: ignoring an
-      // unrecognized root property can bypass workflow-wide run controls.
-      const found=line.match(/^([^\s#][^:]*):(?:\s.*)?$/);
-      if(found){
-        if(key!==null)blocks.set(key,buffer.join('\n').trimEnd());
-        key=found[1];
-        invariant(!blocks.has(key),'Duplicate top-level quality workflow key: '+key);
-        buffer=[line];
-      }else if(key!==null){
-        buffer.push(line);
-      }else{
-        // Fail closed for alternative YAML document/key syntax preceding
-        // the first standard mapping key; exact matching includes comments.
-        prologue.push(line);
-      }
-    }
-    if(key!==null)blocks.set(key,buffer.join('\n').trimEnd());
-    blocks.set('__preamble__',prologue.join('\n').trimEnd());
-    invariant(blocks.has('jobs')&&blocks.has('on')&&blocks.has('permissions'),
-      'Missing protected workflow-wide execution controls');
-    return blocks;
+  // Identical source needs no translation, including after the migration
+  // itself becomes the trusted main policy.
+  if(mainYaml===candidateYaml)return true;
+
+  // Migration allowlist: exact audited new job, never a regex-parsed YAML
+  // subsection. Malformed root keys, Unicode separators, anchors, defaults,
+  // unknown global fields, changed technical commands and added jobs are
+  // rejected by whole-file byte-for-byte comparison.
+  const contract=[
+    '  attestation-contract:',
+    '    needs: [verify]',
+    '    runs-on: ubuntu-latest',
+    '    timeout-minutes: 5',
+    '    steps:',
+    '      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262',
+    '        with:',
+    '          persist-credentials: false',
+    '      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020',
+    '        with:',
+    '          node-version: 22',
+    '      - name: Audit external Ed25519 receipt and reviewer revocation',
+    '        run: node --test scripts/release/external-attestation-checks.mjs',
+  ].join('\n');
+  const contractWithSpacing='\n'+contract+'\n';
+  invariant(candidateYaml.indexOf(contractWithSpacing)>=0 &&
+    candidateYaml.indexOf(contractWithSpacing)===candidateYaml.lastIndexOf(contractWithSpacing),
+    'Unauthorized candidate quality workflow change: attestation contract');
+  let normalized=candidateYaml.replace(contractWithSpacing,'');
+  const first=normalized.indexOf('  release-readiness:\n');
+  const second=normalized.indexOf('  deploy:\n',first);
+  invariant(first>=0&&second>first&&
+    normalized.indexOf('  release-readiness:\n',first+1)<0 &&
+    normalized.indexOf('  deploy:\n',second+1)<0,
+    'Unauthorized candidate quality workflow structure');
+  let release=normalized.slice(first,second);
+  let deploy=normalized.slice(second);
+  const dollar=String.fromCharCode(36);
+  function exactReplace(body,original,replacement,label){
+    invariant(body.indexOf(original)>=0 &&
+      body.indexOf(original)===body.lastIndexOf(original),
+      'Unauthorized governance migration deviation: '+label);
+    return body.replace(original,replacement);
   }
-  const protectedGlobal=globalBlocks(mainYaml), candidateGlobal=globalBlocks(candidateYaml);
-  invariant(protectedGlobal.size===candidateGlobal.size &&
-    [...protectedGlobal].every(([key,value])=>
-      key==='jobs'||candidateGlobal.get(key)===value),
-    'Untrusted candidate altered workflow-wide execution controls');
-  const protectedJobsSection=protectedGlobal.get('jobs');
-  const candidateJobsSection=candidateGlobal.get('jobs');
-  function job(source,name){
-    const lines=source.split(/\r?\n/);
-    const start=lines.findIndex(line=>line==='  '+name+':');
-    invariant(start>=0,'Required protected job missing: '+name);
-    let end=start+1;
-    while(end<lines.length&&!/^  [a-z][a-z0-9-]*:\s*(?:#.*)?$/.test(lines[end]))end++;
-    return lines.slice(start,end).join('\n').trimEnd();
-  }
-  const protectedIds=[...protectedJobsSection.matchAll(/^  ([a-z][a-z0-9-]*):\s*(?:#.*)?$/gm)]
-    .map(match=>match[1]);
-  invariant(protectedIds.length>=7 && protectedIds.length===new Set(protectedIds).size,
-    'Protected main technical job inventory invalid');
-  for(const id of protectedIds){
-    const before=job(protectedJobsSection,id);
-    let after=job(candidateJobsSection,id);
-    if(before!==after && (id==='release-readiness'||id==='deploy')){
-      // Exactly sanctioned policy migration additions. A changed validation
-      // step or deployment command remains forbidden.
-      if(id==='release-readiness'){
-        const withGate='    needs: [verify, security, firestore, identity-roles, browser, attestation-contract]';
-        invariant(after.includes(withGate),'Attestation contract must gate release-readiness');
-        after=after.replace(withGate,'    needs: [verify, security, firestore, identity-roles, browser]');
-      }
-      const additions=[
-        '      issues: read\n','      pull-requests: read\n',
-        '          LUMA_RELEASE_TRUSTED_REVIEWERS: DOLLAR{{ vars.LUMA_RELEASE_TRUSTED_REVIEWERS }}\n',
-      ].map(line=>line.replace('DOLLAR','$'));
-      if(id==='release-readiness')additions.push(
-        '          GH_TOKEN: DOLLAR{{ github.token }}\n'.replace('DOLLAR','$'));
-      if(id==='deploy')additions.push(
-        '          LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: DOLLAR{{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}\n'
-          .replace('DOLLAR','$'));
-      for(const line of additions){
-        invariant(after.includes(line),'Expected exact protected governance migration addition missing: '+id);
-        after=after.replace(line,'');
-      }
-    }
-    invariant(before===after,
-      'Untrusted candidate altered protected job definition: '+id);
-  }
+  release=exactReplace(release,
+    '    needs: [verify, security, firestore, identity-roles, browser, attestation-contract]\n',
+    '    needs: [verify, security, firestore, identity-roles, browser]\n',
+    'gated release-readiness');
+  for(const field of [
+    '      issues: read\n','      pull-requests: read\n',
+    '          GH_TOKEN: '+dollar+'{{ github.token }}\n',
+    '          LUMA_RELEASE_TRUSTED_REVIEWERS: '+dollar+'{{ vars.LUMA_RELEASE_TRUSTED_REVIEWERS }}\n',
+  ])release=exactReplace(release,field,'','release-readiness permissions/identity');
+  for(const field of [
+    '      issues: read\n','      pull-requests: read\n',
+    '          LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: '+dollar+'{{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}\n',
+    '          LUMA_RELEASE_TRUSTED_REVIEWERS: '+dollar+'{{ vars.LUMA_RELEASE_TRUSTED_REVIEWERS }}\n',
+  ])deploy=exactReplace(deploy,field,'','deploy receipt permissions/identity');
+  normalized=normalized.slice(0,first)+release+deploy;
+  invariant(normalized===mainYaml,
+    'Unauthorized candidate quality workflow change: protected source bytes differ');
   return true;
 }
 export function assertQualityRunPr(run,prNumber,commit,policySha){
