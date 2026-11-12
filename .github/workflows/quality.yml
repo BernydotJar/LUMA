@@ -304,10 +304,7 @@ jobs:
         with:
           node-version: 22
       - name: Reject spoofed model approvals, stale source and wrong signer
-        run: >-
-          node --test
-          scripts/release/model-review-contract.node.mjs
-          scripts/release/solo-approval-signature.node.mjs
+        run: node --test scripts/release/*.node.mjs
 
   product-acceptance-predeploy:
     needs: [verify, security, firestore, identity-roles, browser,

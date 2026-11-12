@@ -57,6 +57,25 @@ function modelPrompt(chunk) {
   return prompt;
 }
 
+/** Bind the complete ordered set of actually reviewed diff chunks, paths and indexes.
+ * A missing sourceChunkHash or a repeated/missing chunk must never collapse into
+ * the constant SHA-256 of an empty string.
+ */
+export function hashActualReviewInput(reviews) {
+  assert(Array.isArray(reviews) && reviews.length > 0, 'No Granite review chunks provided');
+  const normalized=[];
+  const seen=new Set();
+  for(const r of reviews){
+    assert(typeof r?.path==='string' && r.path.length>0 &&
+      Number.isSafeInteger(r.chunkIndex) && r.chunkIndex>=0 &&
+      SHA64.test(r.sourceChunkHash??''), 'Granite review input chunk is not source-hashed');
+    const key=`${r.path}#${r.chunkIndex}`;
+    assert(!seen.has(key), 'Duplicate Granite diff chunk');seen.add(key);
+    normalized.push([r.path,r.chunkIndex,r.sourceChunkHash]);
+  }
+  return digest(JSON.stringify(normalized));
+}
+
 const STRUCTURE = { type: 'object', properties: {
   verdict: { type: 'string', enum: ['PASS','BLOCKED','NEEDS_REVIEW'] },
   findings: { type: 'array', items: { type: 'object', properties: {
@@ -105,7 +124,7 @@ async function evaluate({ candidate, prNumber, out, ollamaUrl, modelDigest }) {
   }
   const work = [];
   for (const {status,path} of entries) {
-    const reviewable = /^(src\/|scripts\/|services\/|e2e\/|\.github\/|public\/.*\.(?:svg|json|css|js|html)$|AGENTS\.md$|apphosting\.yaml$|firebase\.json$|firestore\.|package(?:-lock)?\.json$)/.test(path);
+    const reviewable = /^(src\/|scripts\/|services\/|e2e\/|\.github\/|public\/.*\.(?:svg|json|css|js|html)$|AGENTS\.md$|\.gitignore$|graph-harness\.(?:project\.json|events\.jsonl)$|apphosting\.yaml$|firebase\.json$|firestore\.|package(?:-lock)?\.json$|next\.config\.ts$|tsconfig\.json$|playwright\.config\.ts$|vitest\.config\.ts$|eslint\.config\.mjs$|postcss\.config\.mjs$)/.test(path);
     if (!reviewable) continue;
     const changes = command(candidate,'git','diff','--no-ext-diff','--no-textconv',
       '--no-color','--no-renames','--unified=5',`${base}...HEAD`,'--',path);
@@ -155,7 +174,7 @@ async function evaluate({ candidate, prNumber, out, ollamaUrl, modelDigest }) {
     schemaVersion: 1, kind: 'ai-adversarial-code-review',
     sourceSHA: sha, sourceDigest: digestOfSource,
     model: MODEL, modelDigest, promptSha256: digest(reviews.map(x=>x.promptHash).join('\n')),
-    inputSha256: digest(reviews.map(x=>x.sourceHash).join('\n')),
+    inputSha256: hashActualReviewInput(reviews),
     status: anyBlocked ? 'BLOCKED' : 'REVIEW_COMPLETE', doneReason: 'stop',
     options: { temperature: 0 },
     independence: 'model-only; no human independent reviewer',
