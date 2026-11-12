@@ -101,3 +101,20 @@ receipt. The v3 receipt-generation bootstrap still needs end-to-end
 integration and testing before a v3 release can be signed, even though pure
 Ed25519 v3 signing/verification tests pass. Preserve the old v2 path and
 prohibit production GO until that migration is fully verified.
+
+## Second increment and tested bootstrap design
+
+The protected signer now creates the v3 critic/verifier/CI artifacts and a new
+Graph `cicd-release` gate **atomically**, then signs a v3 Ed25519 receipt for
+frozen C0. The Graph Harness library is checked out by pinned, trusted commit,
+not executed from candidate PR source. A separate controlled import permits
+exactly five evidence files in one C1 commit, with no executable-code drift.
+
+Observed isolated verification: real GraphRuntime appended four events to the
+existing 685-event chain; v3 Ed25519 verified; protected source/Graph proof
+returned schema v3; subsequent evidence tampering was rejected. This is a
+**local isolated integration proof, not yet a protected GitHub signature**.
+
+The actual deployment and one-time bootstrap procedure, with the exact allowed
+scope and rollback/readback requirements, is documented in
+`docs/operations/granite-solo-release-runbook.md`.

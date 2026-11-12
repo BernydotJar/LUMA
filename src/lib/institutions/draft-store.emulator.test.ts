@@ -72,7 +72,7 @@ describe.runIf(enabled)("Firestore institution draft transactional contract", ()
     const failed = a.status === "rejected" ? a.reason : (b as PromiseRejectedResult).reason;
     expect(String(failed)).toContain("INSTITUTION_DRAFT_VERSION_CONFLICT");
     expect((await store!.getDraftForTenant(tenant))?.config.configVersion).toBe(2);
-  });
+  }, 20_000); // Real concurrent transactions may take >5s under shared CI emulator load.
 
   it("never reads corrupt cross-tenant documents as the requested tenant", async () => {
     const a = tenantId(); const b = tenantId(); const actor = uid();

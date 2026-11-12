@@ -43,6 +43,7 @@ const proven = ({ runValue = run(), jobs = [{ name: 'granite-adversarial-review'
   artifact = artifactSource(), workflowId = 789 } = {}) => validateProtectedGraniteProvenance({
     run: runValue, jobs, artifactSource: artifact, expectedWorkflowId: workflowId,
     expectedSourceSha: s, expectedSourceDigest: d, trustedModelDigest: m,
+    expectedTrustedWorkflowCommit:s,
   });
 test('accepts GitHub-authenticated protected-run provenance only', () => {
   const result = proven();

@@ -30,7 +30,7 @@ export function authenticateOwnerAuthorization(comments,sha,runCompletion,requir
 }
 
 export function assertCurrentSoloApproval({ approval, pr, expectedHead, commits, compare,
-  comments, run, jobs, artifact, trustedWorkflowId, trustedModelDigest }) {
+  comments, run, jobs, artifact, trustedWorkflowId, trustedModelDigest, expectedProtectedPolicySha }) {
   block(approval?.schemaVersion === 3 && approval.status === 'PASS' &&
     FULL_SHA.test(approval.testedCommit ?? '') &&
     approval.review?.commitSha === approval.testedCommit &&
@@ -42,14 +42,16 @@ export function assertCurrentSoloApproval({ approval, pr, expectedHead, commits,
     'PR no longer points at the signed review source');
   block(Array.isArray(commits) && commits.some(c=>c.sha === approval.testedCommit),
     'Signed review no longer belongs to PR history');
-  assertReceiptOnlyHeadAdvance(approval.testedCommit,expectedHead,compare);
+  assertReceiptOnlyHeadAdvance(approval.testedCommit,expectedHead,compare,'v3');
   block(run?.id === approval.review.workflowRunId &&
     run.workflow_id === trustedWorkflowId &&
     run.path === '.github/workflows/granite-protected-review.yml' &&
     run.event === 'workflow_dispatch' && run.head_branch === 'main' &&
     run.status === 'completed' && run.conclusion === 'success' &&
     run.repository?.full_name === REPO &&
-    run.head_repository?.full_name === REPO,
+    run.head_repository?.full_name === REPO &&
+    run.head_sha === approval.review.trustedWorkflowCommit &&
+    run.head_sha === expectedProtectedPolicySha,
     'Protected model reviewer is not currently authenticated and successful');
   block((jobs ?? []).filter(j => j.name === 'granite-adversarial-review' &&
     j.conclusion === 'success').length === 1,

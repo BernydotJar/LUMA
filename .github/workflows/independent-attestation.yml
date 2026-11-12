@@ -9,8 +9,18 @@ on:
         description: 'Reviewed LUMA pull request number'
         required: true
         type: string
+      release_mode:
+        description: 'Choose legacy externally reviewed v2 or solo owner+Granite v3'
+        required: true
+        default: external-v2
+        type: choice
+        options: [external-v2, solo-v3]
       granite_review_run_id:
-        description: 'Protected Granite review run ID; empty for external Codex/human v2'
+        description: 'Required protected Granite review run ID when release_mode=solo-v3'
+        required: false
+        type: string
+      quality_run_id:
+        description: 'Exact completed Product quality run ID for the frozen PR head'
         required: false
         type: string
 
@@ -40,6 +50,19 @@ jobs:
           fetch-depth: 0
           path: candidate-data
           persist-credentials: false
+      - name: Retrieve pinned, public Graph Harness runtime for trusted event creation
+        if: inputs.release_mode == 'solo-v3'
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: BernydotJar/Graph-harness-sdlc
+          ref: f8bb28ec0933f54df5ff2e0d2c06a731471ec47e
+          path: trusted-graph
+          persist-credentials: false
+      - name: Use Python 3.12 for trusted GraphRuntime only
+        if: inputs.release_mode == 'solo-v3'
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
       - name: Use Node 22 (no candidate npm install or execution)
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
@@ -53,11 +76,25 @@ jobs:
           LUMA_RELEASE_TRUSTED_REVIEWERS: ${{ vars.LUMA_RELEASE_TRUSTED_REVIEWERS }}
           LUMA_GRANITE_MODEL_DIGEST: ${{ vars.LUMA_GRANITE_MODEL_DIGEST }}
           LUMA_GRANITE_REVIEW_RUN_ID: ${{ inputs.granite_review_run_id }}
-        run: node protected-policy/scripts/release/trusted-attestor.mjs "$GITHUB_WORKSPACE/candidate-data" "$PR_NUMBER"
+          LUMA_SOLO_CI_RUN_ID: ${{ inputs.quality_run_id }}
+          GRAPH_HARNESS_ROOT: ${{ github.workspace }}/trusted-graph
+          SIGNING_RELEASE_MODE: ${{ inputs.release_mode }}
+        run: |
+          case "$SIGNING_RELEASE_MODE" in
+            solo-v3)
+              node protected-policy/scripts/release/protected-solo-signer.mjs "$GITHUB_WORKSPACE/candidate-data" "$PR_NUMBER"
+              ;;
+            external-v2)
+              node protected-policy/scripts/release/trusted-attestor.mjs "$GITHUB_WORKSPACE/candidate-data" "$PR_NUMBER"
+              ;;
+            *) echo 'Unknown release signer mode' >&2; exit 1 ;;
+          esac
       - name: Export signed approval without any private key material
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: luma-release-approval-${{ inputs.pr_number }}-${{ github.run_id }}
-          path: protected-policy/release-approval-signed.json
+          path: |
+            protected-policy/release-approval-signed.json
+            protected-policy/release-bundle/
           if-no-files-found: error
           retention-days: 30

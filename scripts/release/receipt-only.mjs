@@ -7,20 +7,29 @@ const SHA = /^[a-f0-9]{40}$/;
  * tree as an already reviewed and approved SHA. `compare` comes from GitHub's
  * authenticated REST API, not candidate source or Graph/PR JSON.
  */
-export function assertReceiptOnlyHeadAdvance(reviewedHead, currentHead, compare) {
+export function assertReceiptOnlyHeadAdvance(reviewedHead, currentHead, compare, policy = 'v2') {
   invariant(SHA.test(reviewedHead ?? '') && SHA.test(currentHead ?? ''),
     'Receipt-only head policy requires full source commit SHAs');
   if (reviewedHead === currentHead) return 'EXACT_REVIEWED_HEAD';
+  invariant(['v2','v3'].includes(policy), 'Unknown source-bound receipt import policy');
   const changed = compare?.files;
   const later = compare?.commits;
   invariant(compare?.status === 'ahead' && compare.ahead_by === 1 &&
     compare.behind_by === 0 && compare.base_commit?.sha === reviewedHead &&
     Array.isArray(later) && later.length === 1 &&
-    later[0]?.sha === currentHead &&
-    later[0]?.parents?.length === 1 && later[0].parents[0].sha === reviewedHead &&
-    Array.isArray(changed) && changed.length === 1 &&
-    changed[0]?.filename === 'evidence/cicd-enterprise/release-approval.json' &&
-    changed[0]?.status === 'modified',
+    later[0]?.sha === currentHead && later[0]?.parents?.length === 1 &&
+    later[0].parents[0].sha === reviewedHead,
+    'Unreviewed source or non-receipt changes after signed approval');
+  const receiptPaths = policy === 'v3' ? [
+    'graph-harness.events.jsonl',
+    'evidence/cicd-enterprise/granite-review.json',
+    'evidence/cicd-enterprise/independent-review.json',
+    'evidence/cicd-enterprise/release-ci.json',
+    'evidence/cicd-enterprise/release-approval.json',
+  ] : ['evidence/cicd-enterprise/release-approval.json'];
+  invariant(Array.isArray(changed) && changed.length === receiptPaths.length &&
+    receiptPaths.every(path => changed.some(f=>f.filename===path &&
+      f.status==='modified')),
     'Unreviewed source or non-receipt changes after signed approval');
   return 'SINGLE_SIGNED_RECEIPT_IMPORT';
 }

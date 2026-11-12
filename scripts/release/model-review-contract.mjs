@@ -47,14 +47,17 @@ export function validateGraniteModelReview(evidence, expected) {
  * main-only signer via authenticated GitHub API, not read from the PR checkout.
  */
 export function validateProtectedGraniteProvenance({ run, jobs, artifactSource,
-  expectedWorkflowId, expectedSourceSha, expectedSourceDigest, trustedModelDigest }) {
+  expectedWorkflowId, expectedSourceSha, expectedSourceDigest, trustedModelDigest,
+  expectedTrustedWorkflowCommit }) {
   requireCondition(Number.isSafeInteger(expectedWorkflowId) && expectedWorkflowId > 0,
     'Expected protected workflow registration is missing');
+  requireCondition(SHA40.test(expectedTrustedWorkflowCommit ?? ''),
+    'Expected protected policy commit is missing');
   requireCondition(run?.id > 0 && run.workflow_id === expectedWorkflowId &&
     run.path === WORKFLOW && run.repository?.full_name === REPO &&
     run.head_repository?.full_name === REPO && run.event === 'workflow_dispatch' &&
     run.head_branch === 'main' && run.status === 'completed' &&
-    run.conclusion === 'success' && SHA40.test(run.head_sha ?? ''),
+    run.conclusion === 'success' && run.head_sha === expectedTrustedWorkflowCommit,
     'Review must run in a successful registered protected-main workflow');
   requireCondition(Array.isArray(jobs) &&
     jobs.filter(j => j.name === 'granite-adversarial-review' && j.conclusion === 'success').length === 1,

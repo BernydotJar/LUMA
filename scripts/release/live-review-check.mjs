@@ -75,7 +75,9 @@ export function verifyCurrentIndependentReview(directory, prNumber, expectedHead
     invariant(artifact.length === 1, 'Missing or duplicated current model artifact');
     return assertCurrentSoloApproval({ approval,pr,expectedHead,commits,compare,
       comments,run,jobs,artifact:artifact[0],trustedWorkflowId:workflow.id,
-      trustedModelDigest:process.env.LUMA_GRANITE_MODEL_DIGEST });
+      trustedModelDigest:process.env.LUMA_GRANITE_MODEL_DIGEST,
+      expectedProtectedPolicySha:execFileSync('git',['rev-parse','HEAD'],{
+        cwd:resolve(import.meta.dirname,'../..'),encoding:'utf8'}).trim() });
   }
   return assertCurrentIndependentReview(approval, pr, expectedHead,
     comments, reviews, commits, process.env.LUMA_RELEASE_TRUSTED_REVIEWERS, compare);

@@ -69,7 +69,8 @@ export async function obtainProtectedGraniteReview({ prNumber, reviewedCommit,
     artifactSource:{kind:'github-actions-artifact',workflowRunId:runId,
       fromAuthenticatedGitHubApi:true,artifactDigestSha256:actual,evidence:report},
     expectedWorkflowId:workflow.id,expectedSourceSha:reviewedCommit,
-    expectedSourceDigest:sourceDigest,trustedModelDigest});
+    expectedSourceDigest:sourceDigest,trustedModelDigest,
+    expectedTrustedWorkflowCommit:process.env.GITHUB_SHA});
   invariant(['public-landing','owner-risk-exception-required'].includes(report.riskClassification),
     'Model risk classification is missing');
   return {provenance:prov,report,run,jobs,artifact,workflow};

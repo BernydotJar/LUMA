@@ -46,7 +46,7 @@ export function soloApprovalSigningBytes(approval) {
     'Solo approval requires actual CI run');
   invariant(typeof approval.graphEventId === 'string' && approval.graphEventId.length > 0 &&
     SHA256.test(approval.graphEventHash ?? '') && SHA256.test(approval.critic?.sha256 ?? '') &&
-    SHA256.test(approval.verifier?.sha256 ?? '') && approval.unresolvedCritical === 0 &&
+    SHA256.test(approval.verifier?.sha256 ?? '') && SHA256.test(approval.ci?.sha256 ?? '') && approval.unresolvedCritical === 0 &&
     approval.unresolvedHigh === 0, 'Solo approval requires Graph/critic/verifier evidence');
   const review = approval.review;
   invariant(review?.method === 'protected-granite-owner-v1' &&
@@ -54,6 +54,7 @@ export function soloApprovalSigningBytes(approval) {
     review.model === 'ibm/granite3.3:2b' &&
     review.humanIndependent === false &&
     review.commitSha === approval.testedCommit &&
+    COMMIT.test(review.trustedWorkflowCommit ?? '') &&
     SHA256.test(review.modelDigest ?? '') && SHA256.test(review.artifactDigestSha256 ?? '') &&
     Number.isSafeInteger(review.workflowRunId) && review.workflowRunId > 0,
     'Solo approval requires a protected model review on the exact commit');
@@ -70,10 +71,12 @@ export function soloApprovalSigningBytes(approval) {
     ['sourceDigest',approval.sourceDigest], ['testedCommit',approval.testedCommit],
     ['ciRunId',String(approval.ciRunId)], ['graphEventId',approval.graphEventId],
     ['graphEventHash',approval.graphEventHash], ['criticSha256',approval.critic.sha256],
-    ['verifierSha256',approval.verifier.sha256], ['unresolvedCritical','0'], ['unresolvedHigh','0'],
+    ['verifierSha256',approval.verifier.sha256], ['ciSha256',approval.ci.sha256],
+    ['unresolvedCritical','0'], ['unresolvedHigh','0'],
     ['reviewMethod',review.method], ['reviewerType',review.reviewerType],
     ['reviewModel',review.model], ['modelDigest',review.modelDigest],
     ['reviewCommitSha',review.commitSha], ['reviewWorkflowRunId',String(review.workflowRunId)],
+    ['trustedWorkflowCommit',review.trustedWorkflowCommit],
     ['reviewArtifactSha256',review.artifactDigestSha256], ['humanIndependent','false'],
     ['ownerMethod',owner.method], ['ownerLogin',owner.login],
     ['ownerCommentId',String(owner.commentId)], ['ownerCommitSha',owner.commitSha],
