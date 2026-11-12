@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "kind": "ai-adversarial-code-review",
+  "scope": "landing",
+  "sourceSHA": "dbe4acb8629c0bfb38a6010d7b824a273ef7992d",
+  "sourceDigest": "d05236ee7d1e21efccf552b96432a4ed3644353796809ef315a1aff003a8fc9c",
+  "model": "ibm/granite3.3:2b",
+  "modelDigest": "b7b711f14c0156353ebfcb24cda357ebed9c7f337172927d82fccdde597fb3ab",
+  "promptSha256": "2de5ac4e63c5d5a4b307083ce89bb03d28043abeaf6f02329b3616cbd5e839b2",
+  "inputSha256": "385b4ac51dd319f83e8c73036af99b146d64db6b3170250044e60ced417ff7d0",
+  "generatedAt": "2026-11-12T03:23:59Z",
+  "options": {
+    "temperature": 0,
+    "seed": 101,
+    "num_ctx": 8192,
+    "num_predict": 600
+  },
+  "independence": "model-only; no human independent reviewer",
+  "status": "BLOCKED",
+  "rawResponse": "{\"verdict\":\"PASS\"}",
+  "doneReason": "stop",
+  "promptEvalCount": 5672,
+  "evalCount": 7,
+  "error": "AssertionError: Bad JSON contract",
+  "elapsedSeconds": 9.0
+}

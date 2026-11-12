@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "kind": "ai-adversarial-code-review",
+  "scope": "governance",
+  "sourceSHA": "dbe4acb8629c0bfb38a6010d7b824a273ef7992d",
+  "sourceDigest": "d05236ee7d1e21efccf552b96432a4ed3644353796809ef315a1aff003a8fc9c",
+  "model": "ibm/granite3.3:2b",
+  "modelDigest": "b7b711f14c0156353ebfcb24cda357ebed9c7f337172927d82fccdde597fb3ab",
+  "promptSha256": "4b5dfe1188f76f58dd5588babcd0e2681646f4bad1e6ef1220d7b4f952765c88",
+  "inputSha256": "3d9fcec99e483e3f75a5aefb080cc7ff02b3e5734e906ef3811598103a07b6ae",
+  "generatedAt": "2026-11-12T03:25:13Z",
+  "options": {
+    "temperature": 0,
+    "seed": 101,
+    "num_ctx": 8192,
+    "num_predict": 600
+  },
+  "independence": "model-only; no human independent reviewer",
+  "status": "BLOCKED",
+  "rawResponse": "{\n  \"verdict\": \"BLOCKED\",\n  \"findings\": [\n    {\n      \"id\": \"G1\",\n      \"severity\": \"critical\",\n      \"path\": \"scripts/release/trusted-attestor.mjs\",\n      \"line\": 42,\n      \"quote\": \"invariant(latest.has_any_findings === false && latest.has_unresolved_findings === false, 'Completed independent Codex review has unresolved or undisposed findings');\",\n      \"risk\": \"impact\",\n      \"recommendation\": \"The invariant checks for unresolved findings in the Codex review are critical, as they could indicate that the review process did not fully address all potential security issues. This oversight could lead to security vulnerabilities being introduced into the codebase.\"\n    },\n    {\n      \"id\": \"G2\",\n      \"severity\": \"high\",\n      \"path\": \"scripts/release/trusted-attestor.mjs\",\n      \"line\": 138,\n      \"quote\": \"invariant(!latest || latest.status === 'failed', 'Independent Codex review is still running; wait for a final result');\",\n      \"risk\": \"impact\",\n      \"recommendation\": \"The invariant checks for the completion of the Codex review are high-risk, as it allows the execution of potentially unverified or untrusted code. This could introduce security risks if the review process fails or is compromised.\"\n    }\n  ],\n  \"limitations\": [\"The review is limited to the untrusted source code and does not account for potential external threats or vulnerabilities not captured by the code review process.\"]\n}",
+  "doneReason": "stop",
+  "promptEvalCount": 4421,
+  "evalCount": 349,
+  "error": "AssertionError: Finding quote not supported by cited line",
+  "elapsedSeconds": 9.1
+}

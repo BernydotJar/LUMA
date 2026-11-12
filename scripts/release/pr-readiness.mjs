@@ -37,9 +37,19 @@ export function evaluateProtectedSourceReadiness(directory, prNumber, expectedHe
   if (local.status !== 'PASS') return local;
   try {
     const review = (options.liveReview ?? verifyCurrentIndependentReview)(directory, prNumber, expectedHead);
-    if (!review || !Number.isSafeInteger(review.reviewId)) throw new Error('No current authenticated reviewer');
-    return { ...local, verified: [...local.verified, 'current-github-review'],
-      reviewer: { method: review.method, login: review.reviewer, reviewId: review.reviewId } };
+    if (!review || !(Number.isSafeInteger(review.reviewId) ||
+      review.reviewerType === 'automated-model-critic' &&
+      Number.isSafeInteger(review.modelReviewRunId) &&
+      Number.isSafeInteger(review.commentId))) {
+      throw new Error('No authenticated current reviewer or protected-model/owner decision');
+    }
+    return { ...local, verified: [...local.verified,
+      review.reviewerType === 'automated-model-critic'
+        ? 'current-protected-model-and-owner-authorization' : 'current-github-review'],
+      reviewer: review.reviewerType === 'automated-model-critic'
+        ? { type:'automated-model-critic',humanIndependent:false,
+          modelReviewRunId:review.modelReviewRunId,ownerCommentId:review.commentId }
+        : { method:review.method,login:review.reviewer,reviewId:review.reviewId } };
   } catch (error) {
     return { ...local, status: 'BLOCKED',
       reason: error instanceof Error ? error.message : 'Independent GitHub approval unavailable' };

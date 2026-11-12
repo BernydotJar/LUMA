@@ -40,6 +40,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
           LUMA_RELEASE_TRUSTED_REVIEWERS: ${{ vars.LUMA_RELEASE_TRUSTED_REVIEWERS }}
+          LUMA_GRANITE_MODEL_DIGEST: ${{ vars.LUMA_GRANITE_MODEL_DIGEST }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           EXPECTED_PR_HEAD: ${{ github.event.pull_request.head.sha }}
         run: node protected-policy/scripts/release/pr-readiness.mjs --candidate "$GITHUB_WORKSPACE/candidate-data" --pr "$PR_NUMBER" --head "$EXPECTED_PR_HEAD"

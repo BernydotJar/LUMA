@@ -1,0 +1,82 @@
+name: Protected Granite adversarial review
+
+# Only protected main can dispatch an independent *model* criticism of PR bytes.
+# The model is not a human reviewer and has no signing credentials.
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Open LUMA pull request number to review at exact head'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+  actions: read
+
+jobs:
+  granite-adversarial-review:
+    if: github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - name: Checkout trusted review policy from protected main
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          path: protected-policy
+          persist-credentials: false
+      - name: Checkout exact PR HEAD only as inert, untrusted source data
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: refs/pull/${{ inputs.pr_number }}/head
+          fetch-depth: 0
+          path: candidate-data
+          persist-credentials: false
+      - name: Install Node.js for trusted review policy only
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Run digest-pinned official Ollama container without repository secrets
+        run: |
+          docker run -d --name luma-granite --pull=always \
+            --publish 127.0.0.1:11434:11434 \
+            ollama/ollama:0.13.2@sha256:ceaad0844eda02ddc59d9b40551de7264a564ba7a16a90e241d1c582f0df992d
+          for i in $(seq 1 30); do
+            if curl --silent --show-error --fail http://127.0.0.1:11434/api/version >/dev/null; then exit 0; fi
+            sleep 2
+          done
+          exit 1
+      - name: Pull IBM Granite model; verify exact protected registry digest later
+        run: |
+          curl --fail --show-error --silent --max-time 1100 \
+            -H 'Content-Type: application/json' \
+            -d '{"model":"ibm/granite3.3:2b","stream":false}' \
+            http://127.0.0.1:11434/api/pull > "$RUNNER_TEMP/granite-pull.json"
+          node -e 'const fs=require("node:fs");let r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/granite-pull.json")); if(r.status!=="success")process.exit(1)'
+      - name: Review complete changed source with trusted read-only analyzer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_ACTIONS: "true"
+          GRANITE_EVIDENCE_DIR: ${{ runner.temp }}/granite-evidence
+          OLLAMA_HOST: http://127.0.0.1:11434
+          LUMA_GRANITE_MODEL_DIGEST: ${{ vars.LUMA_GRANITE_MODEL_DIGEST }}
+          REVIEW_PR_NUMBER: ${{ inputs.pr_number }}
+        run: >-
+          node protected-policy/scripts/release/protected-granite-review.mjs
+          "$GITHUB_WORKSPACE/candidate-data" "$REVIEW_PR_NUMBER"
+      - name: Upload real review result or rejection evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: granite-protected-${{ inputs.pr_number }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/granite-evidence
+          if-no-files-found: error
+          retention-days: 90
+      - name: Stop evaluator
+        if: always()
+        run: docker rm --force luma-granite || true
