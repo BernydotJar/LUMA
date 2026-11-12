@@ -182,13 +182,49 @@ export function protectedQualityJobNames(yaml) {
     'Protected main workflow is missing mandatory QA/release jobs');
   return result;
 }
-export function validateQualityRun(run,jobs,commit,registeredWorkflowId,protectedJobs) {
+/** Reject a candidate's attempt to replace protected technical CI steps with
+ * success-only stubs. Protected main workflow source is fetched by exact SHA.
+ */
+export function assertProtectedQualityCore(mainYaml,candidateYaml){
+  invariant(typeof mainYaml==='string'&&typeof candidateYaml==='string',
+    'Protected quality workflow source must be present');
+  const header=source=>{
+    const index=source.indexOf('\njobs:\n');
+    invariant(index>0,'Workflow jobs section is not valid');
+    return source.slice(0,index);
+  };
+  invariant(header(mainYaml)===header(candidateYaml),
+    'Untrusted candidate altered protected workflow triggers or permissions');
+  function coreJob(source,name){
+    const lines=source.split(/\r?\n/);
+    const start=lines.findIndex(line=>line==='  '+name+':');
+    invariant(start>=0,'Required protected technical job missing: '+name);
+    let end=start+1;
+    while(end<lines.length&&!/^  [a-z][a-z0-9-]*:\s*(?:#.*)?$/.test(lines[end]))end++;
+    return lines.slice(start,end).join('\n').trimEnd();
+  }
+  for(const name of CORE_TECHNICAL){
+    invariant(coreJob(mainYaml,name)===coreJob(candidateYaml,name),
+      'Untrusted quality workflow altered protected technical job: '+name);
+  }
+  return true;
+}
+export function assertQualityRunPr(run,prNumber,commit,policySha){
+  invariant(Number.isSafeInteger(prNumber)&&prNumber>0&&
+    /^[a-f0-9]{40}$/.test(policySha||'')&&
+    run.pull_requests?.some(pr=>pr.number===prNumber&&pr.head?.sha===commit&&
+      pr.base?.ref==='main'&&pr.base?.sha===policySha),
+    'Quality run does not belong to exact protected-main pull request');
+  return true;
+}
+export function validateQualityRun(run,jobs,commit,registeredWorkflowId,protectedJobs,prNumber,policySha) {
   invariant(Number.isSafeInteger(registeredWorkflowId)&&registeredWorkflowId>0&&
     run.workflow_id===registeredWorkflowId&&run.path==='.github/workflows/quality.yml'&&
     run.repository?.full_name===REPO&&run.head_repository?.full_name===REPO&&
     run.head_sha===commit&&run.event==='pull_request'&&
     ['failure','success'].includes(run.conclusion),
     'CI must use registered Product quality workflow on exact reviewed PR HEAD');
+  assertQualityRunPr(run,prNumber,commit,policySha);
   invariant(Array.isArray(protectedJobs)&&protectedJobs.length>=7&&
     protectedJobs.length===new Set(protectedJobs).size&&
     CORE_TECHNICAL.every(name=>protectedJobs.includes(name))&&
@@ -220,7 +256,8 @@ function protectedWorkflowJobsAtMain(policySha){
   const source=gh('repos/'+REPO+'/contents/.github/workflows/quality.yml?ref='+policySha);
   invariant(source.type==='file'&&source.encoding==='base64'&&
     typeof source.content==='string','Protected main workflow fetch failed');
-  return protectedQualityJobNames(Buffer.from(source.content,'base64').toString('utf8'));
+  const yaml=Buffer.from(source.content,'base64').toString('utf8');
+  return {names:protectedQualityJobNames(yaml),yaml};
 }
 
 /** Exact source and successful technical jobs are obtained from GitHub,
@@ -247,16 +284,24 @@ export function buildUnsignedProtectedApproval(template,source,head,run,criticSh
     review:{...review,commitSha:head},
   };
 }
-function findExactSuccessfulQualityRun(head,workflowId,protectedJobs) {
-  const discovered=gh('repos/'+REPO+'/actions/workflows/quality.yml/runs?event=pull_request&per_page=100');
-  const runs=(discovered.workflow_runs??[]).filter(run=>
-    run.head_sha===head && run.status==='completed' &&
-    run.workflow_id===workflowId && run.path==='.github/workflows/quality.yml')
+function findExactSuccessfulQualityRun(head,workflowId,protectedJobs,prNumber,policySha) {
+  const runs=[];
+  for(let page=1;page<=30;page++){
+    const discovered=gh('repos/'+REPO+'/actions/workflows/quality.yml/runs?event=pull_request&head_sha='+head+
+      '&per_page=100&page='+page);
+    const pageRuns=discovered.workflow_runs??[];
+    invariant(Array.isArray(pageRuns),'GitHub workflow runs pagination unavailable');
+    runs.push(...pageRuns);
+    if(pageRuns.length<100)break;
+    invariant(page<30,'Exact-head quality history exceeds safe pagination limit');
+  }
+  const matching=runs.filter(run=>run.head_sha===head&&run.status==='completed'&&
+    run.workflow_id===workflowId&&run.path==='.github/workflows/quality.yml')
     .sort((a,b)=>b.id-a.id);
-  for(const run of runs){
+  for(const run of matching){
     const jobs=gh('repos/'+REPO+'/actions/runs/'+run.id+'/jobs?filter=latest&per_page=100').jobs;
     try {
-      validateQualityRun(run,jobs,head,workflowId,protectedJobs);
+      validateQualityRun(run,jobs,head,workflowId,protectedJobs,prNumber,policySha);
       return run;
     }catch(error){ console.error('QUALITY_RUN_REJECTED',run.id,error.message); }
   }
@@ -320,7 +365,11 @@ async function main() {
     'Protected signer policy changed after workflow dispatch; refuse stale policy');
   const source=reviewedSourceDigest(directory);
   const workflow=gh('repos/'+REPO+'/actions/workflows/quality.yml');
-  const run=findExactSuccessfulQualityRun(head,workflow.id,protectedWorkflowJobsAtMain(mainHead));
+  const protectedQuality=protectedWorkflowJobsAtMain(mainHead);
+  const candidateQuality=readFileSync(resolve(directory,'.github/workflows/quality.yml'),'utf8');
+  assertProtectedQualityCore(protectedQuality.yaml,candidateQuality);
+  const run=findExactSuccessfulQualityRun(head,workflow.id,
+    protectedQuality.names,Number(prArg),mainHead);
   const comments=ghPages('repos/'+REPO+'/issues/'+prArg+'/comments?per_page=100');
   const reviews=ghPages('repos/'+REPO+'/pulls/'+prArg+'/reviews?per_page=100');
   const commits=ghPages('repos/'+REPO+'/pulls/'+prArg+'/commits?per_page=100');

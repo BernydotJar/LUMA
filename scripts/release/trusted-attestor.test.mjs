@@ -8,8 +8,9 @@ const needed=['verify','security','firestore','identity-roles','browser',
   'coach-rbac','institution-intake','institution-browser','institution-approval',
   'learning-auth-uat',
   'Operational acceptance contract self-test (not a release approval)'];
+const POLICY='c'.repeat(40);
 const checkQualityRun=(run,jobs,sha,workflowId)=>validateQualityRun(run,jobs,sha,workflowId,
-  [...needed,'release-readiness','product-acceptance-predeploy','deploy']);
+  [...needed,'release-readiness','product-acceptance-predeploy','deploy'],105,POLICY);
 const jobs=[...needed.map(name=>({name,conclusion:'success'})),
   {name:'release-readiness',conclusion:'failure'},
   {name:'product-acceptance-predeploy',conclusion:'skipped'},
@@ -36,7 +37,8 @@ test('protected attestor requires eleven completed technical checks and both PR-
   const workflowId=375119015;
   const run={head_sha:SHA,event:'pull_request',conclusion:'failure',workflow_id:workflowId,
     path:'.github/workflows/quality.yml',repository:{full_name:'BernydotJar/LUMA'},
-    head_repository:{full_name:'BernydotJar/LUMA'}};
+    head_repository:{full_name:'BernydotJar/LUMA'},
+    pull_requests:[{number:105,head:{sha:SHA},base:{ref:'main',sha:POLICY}}]};
   expect(checkQualityRun(run,jobs,SHA,workflowId)).toBe(true);
   expect(()=>checkQualityRun({...run,head_sha:'b'.repeat(40)},jobs,SHA,workflowId)).toThrow();
   expect(()=>checkQualityRun({...run,workflow_id:workflowId+1},jobs,SHA,workflowId)).toThrow();

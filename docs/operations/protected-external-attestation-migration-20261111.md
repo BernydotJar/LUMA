@@ -139,3 +139,30 @@ This contract permits the current protected seven-job baseline and refuses
 to downgrade a future protected sixteen-job enterprise pipeline to seven.
 It is backed by negative tests for missing protected jobs, failed candidate
 jobs, duplicates and skipped authenticated-learning checks.
+
+## Authenticated workflow execution, PR identity, and exact-head pagination
+
+An independent review identified three additional signed-CI provenance hazards,
+all fixed in the candidate governance workflow:
+
+- The official GitHub quality run is accepted only when authenticated run
+  metadata contains the exact requested PR number, candidate head SHA, main
+  base ref and the current trusted protected-main SHA. Reusing a run from a
+  different PR or base branch is rejected.
+- The signer fetches the trusted quality.yml at the protected policy SHA and
+  compares top-level workflow triggers/permissions plus every original
+  protected technical job block to the inert candidate source. Executing
+  modified, shortened or no-op technical validation is not sufficient just
+  because GitHub reports a success label. New contract checks are scheduled
+  as a separate additive attestation-contract job, preserving the exact
+  original five protected technical jobs.
+- Quality run discovery filters GitHub REST by exact head_sha and paginates
+  up to a bounded limit, rather than assuming the reviewed run appears
+  among the first 100 recent PR runs.
+
+The external signer demands successful technical checks for every protected
+main declared job and every extra candidate technical job. A new enterprise
+quality workflow cannot be reduced to a minimal legacy job list, and
+production-only jobs cannot run on an untrusted PR. The native test harness
+checks cross-PR replay, source workflow tampering, missing enterprise jobs,
+duplicate status labels and altered gate outcomes.
