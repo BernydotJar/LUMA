@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "kind": "ai-adversarial-code-review",
+  "scope": "qa",
+  "sourceSHA": "dbe4acb8629c0bfb38a6010d7b824a273ef7992d",
+  "sourceDigest": "d05236ee7d1e21efccf552b96432a4ed3644353796809ef315a1aff003a8fc9c",
+  "model": "ibm/granite3.3:2b",
+  "modelDigest": "b7b711f14c0156353ebfcb24cda357ebed9c7f337172927d82fccdde597fb3ab",
+  "promptSha256": "890aa453fe251a52272d95c422349540db6d0a1b083db0d9571d5069b63db897",
+  "inputSha256": "97d18ed32c47555fef413d4209a193c2ca2e33a28c225b6732f58ee2b007f878",
+  "generatedAt": "2026-11-12T03:24:08Z",
+  "options": {
+    "temperature": 0,
+    "seed": 101,
+    "num_ctx": 8192,
+    "num_predict": 600
+  },
+  "independence": "model-only; no human independent reviewer",
+  "status": "BLOCKED",
+  "rawResponse": "{\"verdict\":\"PASS\",\"findings\":[]}",
+  "doneReason": "stop",
+  "promptEvalCount": 4091,
+  "evalCount": 12,
+  "error": "AssertionError: Missing limitations",
+  "elapsedSeconds": 5.0
+}

@@ -12,7 +12,7 @@ test('rejects unstamped and invalid manifests', () => {
   assert.throws(() => assertManifest({ ...manifest, gitTree: '../main' }));
 });
 const success = REQUIRED_CHECKS.map(name => ({ name, conclusion: 'success' }));
-test('requires five successful nonduplicate checks', () => {
+test('requires all 13 successful nonduplicate production checks', () => {
   assert.doesNotThrow(() => assertQualityJobs(success));
   for (const name of REQUIRED_CHECKS) {
     assert.throws(() => assertQualityJobs(success.filter(job => job.name !== name)));

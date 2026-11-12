@@ -132,10 +132,8 @@ jobs:
   browser:
     needs: [verify]
     runs-on: ubuntu-24.04
-    # Playwright 1.63.0 ships with Chromium and its OS dependencies.
     container:
       image: mcr.microsoft.com/playwright:v1.63.0-noble@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27
-      options: --ipc=host
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -161,14 +159,179 @@ jobs:
           path: |
             evidence/playwright-report
             test-results
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
+
+  # These contexts were already protected in GitHub but did not exist as jobs.
+  # Every gate executes the corresponding real checks; none are success stubs.
+  coach-rbac:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Verify coach tenant scoping and restricted evidence boundaries
+        run: >-
+          npm run test:run --
+          src/lib/coach-access.test.ts
+          src/lib/coach-scoped-learning.test.ts
+          src/lib/coach-data-status.test.ts
+          src/lib/learning-server.auth.test.ts
+
+  institution-intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Verify restricted institutional application intake
+        run: >-
+          npm run test:run --
+          src/lib/institutions/config.test.ts
+          src/lib/institutions/draft-access.test.ts
+          src/lib/institutions/draft-input.test.ts
+
+  institution-browser:
+    needs: [verify]
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: production-build-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verified-build
+      - run: tar -xzf "$RUNNER_TEMP/verified-build/production-build.tgz"
+      - name: Verify disabled publication cannot be bypassed through HTTP API
+        run: npx playwright test e2e/institution-plan-disabled.spec.ts e2e/institution-preflight-disabled.spec.ts
+        env:
+          CI: "true"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: failure()
+        with:
+          name: institution-browser-failure-${{ github.run_attempt }}
+          path: test-results
+          if-no-files-found: warn
+
+  institution-approval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: "21"
+      - run: npm ci
+      - name: Verify publication and dual-control mutations in real emulators
+        run: >-
+          npx --yes firebase-tools@15.30.2
+          emulators:exec --project demo-luma-institution-gates --only auth,firestore
+          "npm run test:run --
+          src/lib/institutions/publication-preflight.emulator.test.ts
+          src/lib/institutions/publication-route.emulator.test.ts
+          src/lib/institutions/publication-plan-store.emulator.test.ts
+          src/lib/institutions/publication-plan-route.emulator.test.ts
+          --maxWorkers=1"
+
+  learning-auth-uat:
+    needs: [verify]
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: production-build-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verified-build
+      - run: tar -xzf "$RUNNER_TEMP/verified-build/production-build.tgz"
+      - name: Exercise guest login and deny live-classroom credentials
+        run: npx playwright test e2e/auth.spec.ts e2e/live-classroom-auth.spec.ts
+        env:
+          CI: "true"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: failure()
+        with:
+          name: learning-auth-failure-${{ github.run_attempt }}
+          path: test-results
+          if-no-files-found: warn
+
+  operational-acceptance:
+    name: Operational acceptance contract self-test (not a release approval)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Reject spoofed model approvals, stale source and wrong signer
+        run: node --test scripts/release/*.node.mjs
+
+  product-acceptance-predeploy:
+    needs: [verify, security, firestore, identity-roles, browser,
+      coach-rbac, institution-intake, institution-browser, institution-approval,
+      learning-auth-uat, operational-acceptance, release-readiness]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Reject unsigned or out-of-scope production acceptance
+        env:
+          LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
+        run: node scripts/release/product-acceptance-predeploy.mjs
 
   # Minimal trust-plane bootstrap: block every production rollout until a
   # trusted, exact-SHA Ed25519 release attestation exists. All source-review
   # scripts run fail-closed, and the protected signer is dispatched only on main.
   release-readiness:
-    needs: [verify, security, firestore, identity-roles, browser]
+    needs: [verify, security, firestore, identity-roles, browser,
+      coach-rbac, institution-intake, institution-browser, institution-approval,
+      learning-auth-uat, operational-acceptance]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -186,7 +349,9 @@ jobs:
         run: node scripts/release/pr-readiness.mjs
 
   deploy:
-    needs: [verify, security, firestore, identity-roles, browser, release-readiness]
+    needs: [verify, security, firestore, identity-roles, browser,
+      coach-rbac, institution-intake, institution-browser, institution-approval,
+      learning-auth-uat, operational-acceptance, release-readiness, product-acceptance-predeploy]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
     runs-on: ubuntu-latest
     timeout-minutes: 45

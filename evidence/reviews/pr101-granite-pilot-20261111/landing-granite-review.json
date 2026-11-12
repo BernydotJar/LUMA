@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "kind": "ai-adversarial-code-review",
+  "scope": "landing",
+  "sourceSHA": "dbe4acb8629c0bfb38a6010d7b824a273ef7992d",
+  "sourceDigest": "d05236ee7d1e21efccf552b96432a4ed3644353796809ef315a1aff003a8fc9c",
+  "model": "ibm/granite3.3:2b",
+  "modelDigest": "b7b711f14c0156353ebfcb24cda357ebed9c7f337172927d82fccdde597fb3ab",
+  "promptSha256": "1cf275a28996a620bb7e75c144c34b51e97746bc61a76982503f359cd957571c",
+  "inputSha256": "385b4ac51dd319f83e8c73036af99b146d64db6b3170250044e60ced417ff7d0",
+  "generatedAt": "2026-11-12T03:25:00Z",
+  "options": {
+    "temperature": 0,
+    "seed": 101,
+    "num_ctx": 8192,
+    "num_predict": 600
+  },
+  "independence": "model-only; no human independent reviewer",
+  "status": "REVIEW_COMPLETE",
+  "rawResponse": "{\"verdict\":\"PASS\",\"findings\":[],\"limitations\":[]}",
+  "doneReason": "stop",
+  "promptEvalCount": 5689,
+  "evalCount": 15,
+  "result": {
+    "verdict": "PASS",
+    "findings": [],
+    "limitations": []
+  },
+  "elapsedSeconds": 7.4
+}
