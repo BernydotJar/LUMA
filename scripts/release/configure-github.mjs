@@ -9,11 +9,18 @@ function api(path, body, method = 'GET') {
   return raw ? JSON.parse(raw) : null;
 }
 const apply = process.argv.includes('--apply');
-const checks = api('commits/63c7dc471df1807af6d63941b5a95af68e045623/check-runs').check_runs;
-for (const name of REQUIRED_CHECKS) {
-  const matching = checks.filter(check => check.name === name && check.app.id === 15368);
-  assert.equal(matching.length, 1);
-  assert.equal(matching[0].conclusion, 'success');
+// Only check a candidate SHA supplied by the operator. Historical 5-job CI
+// cannot justify updating modern protected contexts. A missing SHA blocks apply.
+const qualitySha = process.env.LUMA_QUALITY_APPROVED_SHA ?? '';
+if (apply) {
+  assert.match(qualitySha, /^[a-f0-9]{40}$/, 'Exact reviewed quality SHA required');
+  const checks = api('commits/' + qualitySha + '/check-runs').check_runs;
+  for (const name of REQUIRED_CHECKS.filter(x =>
+      x !== 'source-attestation' && x !== 'release-readiness')) {
+    const matching = checks.filter(check => check.name === name && check.app.id === 15368);
+    assert.equal(matching.length, 1, 'Missing authentic quality check: ' + name);
+    assert.equal(matching[0].conclusion, 'success', 'Failed quality check: ' + name);
+  }
 }
 const repo = JSON.parse(execFileSync('gh', ['api', `repos/${REPOSITORY}`], { encoding: 'utf8' }));
 assert.equal(repo.id, 1403901485);
@@ -38,6 +45,26 @@ if (!apply) {
 } else {
   // A rerun verifies an existing policy; it does not silently replace it.
   if (!branch.protected) api('branches/main/protection', protection, 'PUT');
+  else {
+    const current = api('branches/main/protection');
+    assert.equal(current.enforce_admins.enabled, true);
+    assert.equal(current.required_status_checks.strict, true);
+    const existing = current.required_status_checks.checks;
+    let next = [...existing];
+    for (const name of REQUIRED_CHECKS) {
+      if (!next.some(item => item.context === name && item.app_id === 15368)) {
+        // An entry with the correct context but a different app cannot
+        // satisfy the verified GitHub Actions required check.
+        next = next.filter(item => item.context !== name);
+        next.push({ context: name, app_id: 15368 });
+      }
+    }
+    // Preserve unrelated contexts and correct managed bindings only.
+    if (JSON.stringify(next) !== JSON.stringify(existing)) {
+      api('branches/main/protection/required_status_checks',
+          { strict: true, checks: next }, 'PATCH');
+    }
+  }
   const actual = api('branches/main/protection');
   assert.equal(actual.enforce_admins.enabled, true);
   assert.equal(actual.required_status_checks.strict, true);

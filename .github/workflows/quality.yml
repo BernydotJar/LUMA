@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: luma-product-quality-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -129,8 +133,9 @@ jobs:
           src/lib/institutions/publication-plan-route.emulator.test.ts
           --maxWorkers=1"
 
-  browser:
-    needs: [verify]
+
+  # Source QA checks match protected main contexts and run real regressions.
+  coach-rbac:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -142,7 +147,170 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - name: Verify role denial and coach-scoped learner evidence
+        run: >-
+          npm run test:run --
+          src/lib/coach-access.test.ts
+          src/lib/coach-scoped-learning.test.ts
+          src/lib/coach-data-status.test.ts
+
+  institution-intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: "21"
+      - run: npm ci
+      - name: Validate bulk admission, CSV and grant controls
+        run: >-
+          npm run test:run --
+          src/lib/commerce/institutional-bulk.test.ts
+          src/lib/commerce/institutional-csv.test.ts
+          src/lib/commerce/institutional-grants.test.ts
+      - name: Verify institutional grant persistence in an isolated emulator
+        run: >-
+          npx --yes firebase-tools@15.30.2
+          emulators:exec
+          --project demo-luma-ci-institution-intake
+          --only firestore
+          "npm run test:run -- src/lib/commerce/institutional-grant.emulator.test.ts --maxWorkers=1"
+
+  institution-approval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: "21"
+      - run: npm ci
+      - name: Verify institution scope and review plan inputs
+        run: >-
+          npm run test:run --
+          src/lib/institutions/draft-access.test.ts
+          src/lib/institutions/draft-input.test.ts
+          src/lib/institutions/publication-plan-input.test.ts
+      - name: Verify separate reviewer, stale revision and tenant denials
+        run: >-
+          npx --yes firebase-tools@15.30.2
+          emulators:exec
+          --project demo-luma-ci-institution-approval
+          --only auth,firestore
+          "npm run test:run --
+          src/lib/institutions/publication-plan-store.emulator.test.ts
+          src/lib/institutions/publication-plan-route.emulator.test.ts
+          --maxWorkers=1"
+
+  institution-browser:
+    needs: [verify]
+    runs-on: ubuntu-24.04
+    # Playwright 1.63.0 ships with Chromium and its OS dependencies.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27
+      options: --ipc=host
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: production-build-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verified-build
+      - name: Unpack exact verified Next.js build
+        run: tar -xzf "$RUNNER_TEMP/verified-build/production-build.tgz"
+      - name: Verify institutional UI and API authorization in Chromium
+        run: npx playwright test e2e/enterprise-boundary.spec.ts --project chromium
+        env:
+          CI: "true"
+
+  # This is a technical smoke, not authenticated customer/LiveKit Cloud UAT.
+  learning-auth-uat:
+    needs: [verify]
+    runs-on: ubuntu-24.04
+    # Playwright 1.63.0 ships with Chromium and its OS dependencies.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27
+      options: --ipc=host
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: "21"
+      - run: npm ci
+      - name: Exercise Auth/Firestore learning and identity controls
+        run: >-
+          npx --yes firebase-tools@15.30.2
+          emulators:exec
+          --project demo-luma-ci-learning-auth
+          --only auth,firestore
+          "npm run test:run --
+          src/lib/learning-store.emulator.test.ts
+          src/lib/program-delivery.emulator.test.ts
+          src/lib/tenant-admin-auth.emulator.test.ts
+          --maxWorkers=1"
+      - name: Check learner authorization and entitlement handling
+        run: >-
+          npm run test:run --
+          src/lib/learning-server.auth.test.ts
+          src/lib/learning-entitlement.test.ts
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: production-build-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verified-build
+      - name: Unpack exact verified Next.js build
+        run: tar -xzf "$RUNNER_TEMP/verified-build/production-build.tgz"
+      - name: Verify login and guest classroom boundaries in Chromium
+        run: npx playwright test e2e/auth.spec.ts e2e/live-classroom-auth.spec.ts --project chromium
+        env:
+          CI: "true"
+
+  browser:
+    needs: [verify]
+    runs-on: ubuntu-24.04
+    # Playwright 1.63.0 ships with Chromium and its OS dependencies.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27
+      options: --ipc=host
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: production-build-${{ github.run_attempt }}
@@ -158,14 +326,102 @@ jobs:
           path: |
             evidence/playwright-report
             test-results
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
 
   # Minimal trust-plane bootstrap: block every production rollout until a
   # trusted, exact-SHA Ed25519 release attestation exists. All source-review
   # scripts run fail-closed, and the protected signer is dispatched only on main.
+
+  product-acceptance-contract:
+    name: Operational acceptance contract self-test (not a release approval)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Adversarial product acceptance contract and artifact provenance tests
+        run: >-
+          node --test
+          scripts/qa/product-acceptance-contract-checks.mjs
+          scripts/qa/verify-acceptance-artifact-checks.mjs
+          scripts/qa/await-postdeploy-uat-checks.mjs
+          scripts/release/recovery-ledger-checks.mjs
+      - name: Run negative inventory to demonstrate customer journeys are not approved
+        run: node scripts/qa/product-acceptance-gate.mjs --phase inventory
+      - name: Confirm incomplete product is blocked even with CI green
+        run: |
+          node - <<'NODE'
+          const fs = require("node:fs");
+          const p = JSON.parse(fs.readFileSync("evidence/product-acceptance-2026-10-19/operational-readiness.json","utf8"));
+          if (p.phase !== "inventory" || p.verdict !== "BLOCKED" || p.releaseAllowed !== false ||
+              p.modules.length !== 9 || p.journeys.length !== 5) process.exit(1);
+          NODE
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: product-acceptance-inventory-${{ github.run_attempt }}
+          path: evidence/product-acceptance-2026-10-19/operational-readiness.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  product-acceptance-predeploy:
+    needs: [verify, product-acceptance-contract]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: enterprise-product-acceptance
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Verify independent UAT run, actor, SHA and artifact identity
+        id: uat
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LUMA_ACCEPTANCE_ARTIFACT_RUN_ID: ${{ vars.LUMA_ACCEPTANCE_ARTIFACT_RUN_ID }}
+          LUMA_ACCEPTANCE_WORKFLOW_ID: ${{ vars.LUMA_ACCEPTANCE_WORKFLOW_ID }}
+          LUMA_ACCEPTANCE_WORKFLOW_PATH: ${{ vars.LUMA_ACCEPTANCE_WORKFLOW_PATH }}
+          LUMA_ACCEPTANCE_TRUSTED_ACTORS: ${{ vars.LUMA_ACCEPTANCE_TRUSTED_ACTORS }}
+        run: node scripts/qa/verify-acceptance-artifact.mjs
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: luma-acceptance-private-evidence
+          repository: BernydotJar/LUMA
+          run-id: ${{ steps.uat.outputs.run_id }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/luma-protected-acceptance/artifacts
+      - name: Load independent acceptance trust and signed receipts from protected secrets
+        env:
+          LUMA_ACCEPTANCE_TRUST_STORE_B64: ${{ secrets.LUMA_ACCEPTANCE_TRUST_STORE_B64 }}
+          LUMA_ACCEPTANCE_SIGNED_RECEIPTS_B64: ${{ secrets.LUMA_ACCEPTANCE_SIGNED_RECEIPTS_B64 }}
+        run: node scripts/qa/protected-acceptance-inputs.mjs
+      - name: Fail closed unless the complete signed product acceptance is valid
+        run: >-
+          node scripts/qa/product-acceptance-gate.mjs
+          --phase predeploy
+          --receipts "$LUMA_ACCEPTANCE_RECEIPTS"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: enterprise-product-acceptance-${{ github.run_attempt }}
+          path: evidence/product-acceptance-2026-10-19/operational-readiness.json
+          if-no-files-found: warn
+          retention-days: 30
+
   release-readiness:
-    needs: [verify, security, firestore, identity-roles, browser]
+    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval, learning-auth-uat, product-acceptance-contract]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -183,7 +439,7 @@ jobs:
         run: node scripts/release/pr-readiness.mjs
 
   deploy:
-    needs: [verify, security, firestore, identity-roles, browser, release-readiness]
+    needs: [verify, security, firestore, identity-roles, browser, coach-rbac, institution-intake, institution-browser, institution-approval, learning-auth-uat, product-acceptance-contract, product-acceptance-predeploy, release-readiness]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -208,7 +464,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           name: release-source-${{ github.run_attempt }}
@@ -225,39 +480,184 @@ jobs:
           project_id: luma-learning-intelligence
           workload_identity_provider: ${{ vars.LUMA_WIF_PROVIDER }}
           service_account: ${{ vars.LUMA_DEPLOY_SERVICE_ACCOUNT }}
-      - name: Deploy the validated source to the existing backend
+      - name: Prepare and validate candidate build without changing traffic
+        id: prepare
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/release/apphosting.mjs prepare
+      # The previous serving build is durably recorded before any rollout.
+      # If artifact upload fails, the promotion step is never executed.
+      - name: Persist pre-promotion recovery ledger
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: release-prepromotion-ledger-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/release/release-result.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Promote only after the verified recovery ledger exists
         id: promote
         env:
           GH_TOKEN: ${{ github.token }}
-        run: node scripts/release/apphosting.mjs deploy
-      - name: Verify production SHA, routes, roles, appearance, and navigation
-        run: node scripts/release/smoke.mjs
-      - name: Validate rollback without changing live traffic
-        run: node scripts/release/apphosting.mjs rollback-validate
-      - name: Finalize verified release
-        run: node scripts/release/apphosting.mjs finalize
-      - name: Restore previous verified revision after failure when safe
-        if: failure() && steps.promote.outcome != 'skipped'
-        run: |
-          if test -f "$RELEASE_DIR/release-result.json"; then
-            node scripts/release/apphosting.mjs recover
-          fi
-      - name: Publish release decision
+        run: node scripts/release/apphosting.mjs promote
+      - name: Preserve exact promotion ledger for independent verification and rollback
         if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: release-promotion-ledger-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/release/release-result.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  postdeploy-acceptance:
+    needs: [deploy]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'BernydotJar/LUMA'
+    runs-on: ubuntu-24.04
+    # Playwright 1.63.0 ships with Chromium and its OS dependencies.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27
+      options: --ipc=host
+    timeout-minutes: 35
+    environment:
+      name: production
+      url: https://luma--luma-learning-intelligence.us-central1.hosted.app
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    steps:
+      - name: Initialize release state on independent runner
         run: |
-          if test -f "$RELEASE_DIR/release-result.json"; then
-            node -e 'const fs=require("node:fs"); const r=JSON.parse(fs.readFileSync(process.env.RELEASE_DIR+"/release-result.json"));fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,`## LUMA release\nStatus: ${r.status}\nCommit: ${r.gitSha}\nBuild: ${r.buildId ?? "not created"}\n`);'
-          else
-            echo '## Release blocked before promotion' >> "$GITHUB_STEP_SUMMARY"
-          fi
+          mkdir -p "$RUNNER_TEMP/release"
+          echo "RELEASE_DIR=$RUNNER_TEMP/release" >> "$GITHUB_ENV"
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: release-source-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/release
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: release-promotion-ledger-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/release
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093
+        with:
+          project_id: luma-learning-intelligence
+          workload_identity_provider: ${{ vars.LUMA_WIF_PROVIDER }}
+          service_account: ${{ vars.LUMA_DEPLOY_SERVICE_ACCOUNT }}
+      - name: Verify live production SHA, routes and auth denials
+        run: node scripts/release/smoke.mjs
+      - name: Await independently dispatched UAT for this exact promotion
+        id: awaited
+        timeout-minutes: 16
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LUMA_ACCEPTANCE_WORKFLOW_ID: ${{ vars.LUMA_ACCEPTANCE_WORKFLOW_ID }}
+          LUMA_ACCEPTANCE_WORKFLOW_PATH: ${{ vars.LUMA_ACCEPTANCE_WORKFLOW_PATH }}
+          LUMA_ACCEPTANCE_TRUSTED_ACTORS: ${{ vars.LUMA_ACCEPTANCE_TRUSTED_ACTORS }}
+        run: node scripts/qa/await-postdeploy-uat.mjs
+      - name: Verify post-promotion independent UAT source and artifact
+        id: uat
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LUMA_ACCEPTANCE_ARTIFACT_RUN_ID: ${{ steps.awaited.outputs.run_id }}
+          LUMA_ACCEPTANCE_WORKFLOW_ID: ${{ vars.LUMA_ACCEPTANCE_WORKFLOW_ID }}
+          LUMA_ACCEPTANCE_WORKFLOW_PATH: ${{ vars.LUMA_ACCEPTANCE_WORKFLOW_PATH }}
+          LUMA_ACCEPTANCE_TRUSTED_ACTORS: ${{ vars.LUMA_ACCEPTANCE_TRUSTED_ACTORS }}
+          LUMA_ACCEPTANCE_POSTDEPLOY: "true"
+        run: node scripts/qa/verify-acceptance-artifact.mjs
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: luma-acceptance-private-evidence
+          repository: BernydotJar/LUMA
+          run-id: ${{ steps.uat.outputs.run_id }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/luma-protected-acceptance/artifacts
+      - name: Read independent reviewer trust, signatures and customer proof
+        env:
+          LUMA_ACCEPTANCE_TRUST_STORE_B64: ${{ secrets.LUMA_ACCEPTANCE_TRUST_STORE_B64 }}
+          LUMA_ACCEPTANCE_SIGNED_RECEIPTS_B64: ${{ secrets.LUMA_ACCEPTANCE_SIGNED_RECEIPTS_B64 }}
+        run: node scripts/qa/protected-acceptance-inputs.mjs
+      - name: Observe actual live UI and serving SHA
+        timeout-minutes: 4
+        run: node scripts/qa/product-public-inventory.mjs
+      - name: Verify signed production journeys AFTER this promotion
+        timeout-minutes: 3
+        env:
+          LUMA_ACCEPTANCE_PROMOTION_LEDGER: ${{ runner.temp }}/release/release-result.json
+        run: >-
+          node scripts/qa/product-acceptance-gate.mjs
+          --phase postdeploy
+          --receipts "$LUMA_ACCEPTANCE_RECEIPTS"
+      - name: Validate rollback target without changing traffic
+        run: node scripts/release/apphosting.mjs rollback-validate
+      - name: Finalize only after production acceptance and independent evidence
+        run: node scripts/release/apphosting.mjs finalize
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: production-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          name: verified-production-evidence-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            ${{ runner.temp }}/release/manifest.json
             ${{ runner.temp }}/release/release-result.json
             ${{ runner.temp }}/release/smoke.json
-            ${{ runner.temp }}/release/screenshots
-          if-no-files-found: error
+            evidence/product-acceptance-2026-10-19/operational-readiness.json
+            evidence/product-acceptance-2026-10-19/public-ui-readonly.json
+            evidence/product-acceptance-2026-10-19/published-version.json
+          if-no-files-found: warn
+          retention-days: 90
+
+  rollback-on-failed-acceptance:
+    needs: [deploy, postdeploy-acceptance]
+    if: >-
+      always() && github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      github.repository == 'BernydotJar/LUMA' &&
+      (needs.deploy.result != 'success' || needs.postdeploy-acceptance.result != 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment:
+      name: production
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    steps:
+      - name: Initialize release state on independent runner
+        run: |
+          mkdir -p "$RUNNER_TEMP/release"
+          echo "RELEASE_DIR=$RUNNER_TEMP/release" >> "$GITHUB_ENV"
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: release-source-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/release
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: release-prepromotion-ledger-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/release
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093
+        with:
+          project_id: luma-learning-intelligence
+          workload_identity_provider: ${{ vars.LUMA_WIF_PROVIDER }}
+          service_account: ${{ vars.LUMA_DEPLOY_SERVICE_ACCOUNT }}
+      - name: Recover previously verified serving revision, reject untrusted targets
+        run: node scripts/release/apphosting.mjs recover
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: failed-release-recovery-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/release/release-result.json
+          if-no-files-found: warn
           retention-days: 90

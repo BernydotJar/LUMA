@@ -18,7 +18,7 @@ const REQUIRED = ['verify','security','firestore','identity-roles','browser',
   'coach-rbac','institution-intake','institution-browser','institution-approval',
   'learning-auth-uat',
   'Operational acceptance contract self-test (not a release approval)'];
-const SKIPPED_ON_PR = ['product-acceptance-predeploy','deploy'];
+const SKIPPED_ON_PR = ['product-acceptance-predeploy','deploy','postdeploy-acceptance','rollback-on-failed-acceptance'];
 function gh(path) {
   return JSON.parse(execFileSync('gh', ['api',path], { encoding:'utf8',timeout:20000,maxBuffer:8*1024*1024 }));
 }

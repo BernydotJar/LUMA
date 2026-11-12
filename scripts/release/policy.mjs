@@ -6,7 +6,21 @@ export const REPOSITORY = 'BernydotJar/LUMA';
 export const PRODUCTION_URL = 'https://luma--luma-learning-intelligence.us-central1.hosted.app';
 export const PARENT = `projects/${PROJECT}/locations/${REGION}/backends/${BACKEND}`;
 export const SOURCE_BUCKET = `firebaseapphosting-sources-${PROJECT_NUMBER}-${REGION}`;
-export const REQUIRED_CHECKS = ['verify', 'security', 'firestore', 'identity-roles', 'browser'];
+// Branch protection requires every source-quality check and external review.
+export const REQUIRED_CHECKS = [
+  'verify', 'security', 'firestore', 'identity-roles', 'browser',
+  'coach-rbac', 'institution-intake', 'institution-browser', 'institution-approval',
+  'learning-auth-uat',
+  'Operational acceptance contract self-test (not a release approval)',
+  'release-readiness', 'source-attestation',
+];
+// Deployment evaluates jobs in the quality workflow, not the separate protected
+// pull_request_target source-attestation workflow. It must also require the
+// separately protected production-only product acceptance job to have passed.
+export const REQUIRED_DEPLOY_CHECKS = [
+  ...REQUIRED_CHECKS.filter(name => name !== 'source-attestation'),
+  'product-acceptance-predeploy',
+];
 export function invariant(condition, message) {
   if (!condition) throw new Error(message);
 }
@@ -28,7 +42,7 @@ export function assertDeployContext(env, manifest) {
   invariant(manifest.runId === env.GITHUB_RUN_ID, 'Artifact belongs to another run');
 }
 export function assertQualityJobs(jobs) {
-  for (const name of REQUIRED_CHECKS) {
+  for (const name of REQUIRED_DEPLOY_CHECKS) {
     const matches = jobs.filter(job => job.name === name);
     invariant(matches.length === 1 && matches[0].conclusion === 'success', `Required check not successful: ${name}`);
   }
