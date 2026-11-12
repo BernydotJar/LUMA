@@ -1,8 +1,11 @@
 /** Source-bound PR and main release readiness. Never self-approves a review. */
 import { resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { reviewedSourceDigest, verifyReview } from './review-gate.mjs';
 import { verifyCurrentIndependentReview } from './live-review-check.mjs';
+import { findSignedReceipt, ghJson, REPOSITORY } from './remote-attestation.mjs';
 
 const root = resolve(import.meta.dirname, '../..');
 
@@ -46,26 +49,76 @@ export function evaluateProtectedSourceReadiness(directory, prNumber, expectedHe
   }
 }
 
+/** Resolves the exact reviewed SHA, never a candidate's self-asserted commit. */
+export function identifyGitHubSource(eventName,event,currentSha){
+  if(eventName==='pull_request'){
+    const number=event?.pull_request?.number ?? event?.number;
+    const head=event?.pull_request?.head?.sha;
+    if(!Number.isSafeInteger(number)||number<=0||!/^[a-f0-9]{40}$/.test(head||''))
+      throw Error('Authenticated pull request webhook is missing head identity');
+    return {prNumber:number,head,allowMerged:false};
+  }
+  if(eventName==='push'){
+    if(event?.ref!=='refs/heads/main'||!/^[a-f0-9]{40}$/.test(currentSha||''))
+      throw Error('Only a source-bound protected main push can release');
+    // The authenticated GitHub REST association must resolve exactly one
+    // merged PR whose merge commit equals this commit.
+    const matches=ghJson('repos/'+REPOSITORY+'/commits/'+currentSha+'/pulls')
+      .filter(pr=>pr.merged_at&&pr.base?.ref==='main'&&
+        pr.merge_commit_sha===currentSha&&/^[a-f0-9]{40}$/.test(pr.head?.sha||''));
+    if(matches.length!==1)throw Error('Main commit has no unique reviewed merge PR');
+    return {prNumber:matches[0].number,head:matches[0].head.sha,allowMerged:true};
+  }
+  throw Error('CI release readiness supports only pull_request or protected main push');
+}
+export function evaluateExternalReadiness(directory,source,options={}){
+  const publicKey=options.publicKey??process.env.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64;
+  const signed=(options.loadReceipt??findSignedReceipt)(
+    source.prNumber,source.head,publicKey).approval;
+  if(signed.testedCommit!==source.head)
+    throw Error('External attestation is not bound to the current PR head');
+  const verify=dir=>verifyReview(dir,{approval:signed});
+  const liveReview=(dir,number,head)=>verifyCurrentIndependentReview(dir,number,head,{
+    approval:signed,allowMerged:source.allowMerged===true,
+  });
+  return evaluateProtectedSourceReadiness(directory,source.prNumber,source.head,{
+    verify,liveReview,
+  });
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  // For pull_request_target, this trusted script runs from the protected base
-  // checkout while the PR merge checkout is only inert, never executed data.
-  const candidateArg = process.argv.indexOf('--candidate');
-  const candidate = candidateArg >= 0 ? process.argv[candidateArg + 1] : root;
-  if (!candidate) throw new Error('Missing candidate source directory');
-  const args = process.argv.slice(2);
-  const protectedMode = candidateArg >= 0;
-  if (protectedMode && (args.length !== 6 || args[0] !== '--candidate' ||
-      args[2] !== '--pr' || args[4] !== '--head' || !/^\d+$/.test(args[3]))) {
-    throw new Error('Expected --candidate <checkout-directory> --pr <number> --head <sha>');
+  const args=process.argv.slice(2);
+  const protectedMode=args.length>0;
+  let result;
+  try{
+    if(protectedMode){
+      if(args.length!==6||args[0]!=='--candidate'||args[2]!=='--pr'||args[4]!=='--head'||
+         !/^[0-9]+$/.test(args[3]))throw Error('Expected --candidate <dir> --pr <number> --head <SHA|empty>');
+      const dir=resolve(args[1]), prNumber=Number(args[3]);
+      const pr=ghJson('repos/'+REPOSITORY+'/pulls/'+prNumber);
+      const head=pr.head?.sha;
+      if(!/^[a-f0-9]{40}$/.test(head||'')||
+         args[5]&&args[5]!==head||pr.base?.ref!=='main'||pr.state!=='open')
+        throw Error('Webhook PR identity changed before protected review');
+      const checkoutHead=execFileSync('git',['rev-parse','HEAD'],{cwd:dir,encoding:'utf8'}).trim();
+      if(checkoutHead!==head)throw Error('Protected review checkout does not match current PR head');
+      result=evaluateExternalReadiness(dir,{prNumber,head,allowMerged:false});
+    }else if(process.env.GITHUB_ACTIONS==='true'){
+      if(!process.env.GH_TOKEN)throw Error('GitHub API read token required for external approval');
+      const payload=JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH,'utf8'));
+      const source=identifyGitHubSource(process.env.GITHUB_EVENT_NAME,payload,process.env.GITHUB_SHA);
+      const pr=ghJson('repos/'+REPOSITORY+'/pulls/'+source.prNumber);
+      if(pr.head?.sha!==source.head)throw Error('GitHub PR head changed since workflow event');
+      result=evaluateExternalReadiness(root,source);
+    }else{
+      result=evaluateReleaseReadiness(root);
+    }
+  }catch(error){
+    result={status:'BLOCKED',reason:error instanceof Error?error.message:'Unexpected protected review error'};
   }
-  const readiness = protectedMode
-    ? evaluateProtectedSourceReadiness(resolve(candidate), Number(args[3]), args[5])
-    : evaluateReleaseReadiness(root);
-  console.log(JSON.stringify(readiness));
-  if (readiness.status !== 'PASS') {
-    console.error('RELEASE_READINESS_BLOCKED: independently reviewed source approval is required before merging or deploying.');
-    process.exitCode = 1;
-  } else {
-    console.log('SOURCE_BOUND_PR_RELEASE_READINESS_PASS');
-  }
+  console.log(JSON.stringify(result));
+  if(result.status!=='PASS'){
+    console.error('RELEASE_READINESS_BLOCKED: current exact SHA requires a protected external Ed25519 receipt, live independent reviewer and verified Graph evidence.');
+    process.exitCode=1;
+  }else console.log('SOURCE_BOUND_PR_RELEASE_READINESS_PASS');
 }

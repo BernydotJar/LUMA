@@ -8,6 +8,7 @@ import { createHash } from 'node:crypto';
 import { reviewedSourceDigest, verifyReview } from './review-gate.mjs';
 import { signApproval, verifyApprovalSignature } from './approval-signature.mjs';
 import { invariant } from './policy.mjs';
+import { receiptCommentBody } from './remote-attestation.mjs';
 
 const ROOT = resolve(import.meta.dirname, '../..');
 const REPO = 'BernydotJar/LUMA';
@@ -19,6 +20,7 @@ const REQUIRED = ['verify','security','firestore','identity-roles','browser',
   'learning-auth-uat',
   'Operational acceptance contract self-test (not a release approval)'];
 const SKIPPED_ON_PR = ['product-acceptance-predeploy','deploy'];
+const EXTRA_POSTDEPLOY_PR_SKIPS=['postdeploy-acceptance','rollback-on-failed-acceptance'];
 function gh(path) {
   return JSON.parse(execFileSync('gh', ['api',path], { encoding:'utf8',timeout:20000,maxBuffer:8*1024*1024 }));
 }
@@ -170,79 +172,156 @@ export function validateQualityRun(run,jobs,commit,registeredWorkflowId) {
   const releaseJobs = jobs.filter(job => job.name === 'release-readiness');
   invariant(releaseJobs.length === 1 && ['failure','success'].includes(releaseJobs[0].conclusion),
     'Release-readiness must run and fail closed until independently signed');
-  for (const name of SKIPPED_ON_PR) {
+  const extra=jobs.some(job=>EXTRA_POSTDEPLOY_PR_SKIPS.includes(job.name))
+    ? EXTRA_POSTDEPLOY_PR_SKIPS: [];
+  for (const name of [...SKIPPED_ON_PR,...extra]) {
     const matches = jobs.filter(job => job.name === name);
     invariant(matches.length === 1 && matches[0].conclusion === 'skipped',
-      `Protected production-only job must stay skipped on a PR: ${name}`);
+      'Protected production-only job must stay skipped on a PR: '+name);
   }
-  invariant(jobs.length === REQUIRED.length + SKIPPED_ON_PR.length + 1,
+  invariant(jobs.length === REQUIRED.length + SKIPPED_ON_PR.length + extra.length + 1,
     'Unexpected or duplicated GitHub quality jobs');
   return true;
 }
 
+/** Exact source and successful technical jobs are obtained from GitHub,
+ * never from a PR-controlled claim about its own commit ID.
+ */
+export function buildUnsignedProtectedApproval(template,source,head,run,criticSha,verifierSha,verifier,review){
+  invariant(/^[a-f0-9]{64}$/.test(source)&&/^[a-f0-9]{40}$/.test(head),
+    'Signer must derive a concrete source digest and commit from GitHub');
+  invariant(Number.isSafeInteger(run?.id)&&run.id>0 &&
+    /^[a-f0-9]{64}$/.test(criticSha)&&/^[a-f0-9]{64}$/.test(verifierSha),
+    'Verified quality run and adversarial evidence are mandatory');
+  invariant(verifier?.status==='PASS' && verifier.unresolvedCritical===0 &&
+    verifier.unresolvedHigh===0,'Independent verifier cannot certify unresolved defects');
+  invariant(/^[a-f0-9]{64}$/.test(template?.graphEventHash||'') &&
+    typeof template.graphEventId==='string' && template.graphEventId.length>0,
+    'Current independently generated Graph evidence is required');
+  return {
+    schemaVersion:2,status:'PASS',sourceDigest:source,testedCommit:head,
+    ciRunId:String(run.id),graphEventId:template.graphEventId,
+    graphEventHash:template.graphEventHash,
+    critic:{sha256:criticSha},verifier:{sha256:verifierSha},
+    unresolvedCritical:0,unresolvedHigh:0,
+    review:{...review,commitSha:head},
+  };
+}
+function findExactSuccessfulQualityRun(head,workflowId) {
+  const discovered=gh('repos/'+REPO+'/actions/workflows/quality.yml/runs?event=pull_request&per_page=100');
+  const runs=(discovered.workflow_runs??[]).filter(run=>
+    run.head_sha===head && run.status==='completed' &&
+    run.workflow_id===workflowId && run.path==='.github/workflows/quality.yml')
+    .sort((a,b)=>b.id-a.id);
+  for(const run of runs){
+    const jobs=gh('repos/'+REPO+'/actions/runs/'+run.id+'/jobs?filter=latest&per_page=100').jobs;
+    try {
+      validateQualityRun(run,jobs,head,workflowId);
+      return run;
+    }catch(error){ console.error('QUALITY_RUN_REJECTED',run.id,error.message); }
+  }
+  throw Error('No authentic technical quality run covers the exact reviewed head');
+}
+/** Only re-run the exact protected GitHub-authenticated checks for the
+ * signed PR head. This is not a status bypass or a self-approved review.
+ */
+export function selectAuthenticSourceCheckRun(runs,workflowId,prNumber,head,mainSha){
+  invariant(/^[a-f0-9]{40}$/.test(mainSha||''),'Main policy SHA is required');
+  const matches=runs.filter(run=>run.workflow_id===workflowId &&
+    run.path==='.github/workflows/source-attestation.yml' &&
+    run.head_sha===head && run.status==='completed' &&
+    ['pull_request_target','pull_request_review'].includes(run.event) &&
+    run.pull_requests?.some(pr=>pr.number===prNumber && pr.head?.sha===head &&
+      pr.base?.ref==='main' && pr.base?.sha===mainSha));
+  invariant(matches.length>0,'No exact-head protected source-attestation run to rerun');
+  return matches.sort((a,b)=>b.id-a.id)[0];
+}
+function queueSourceAndQualityRechecks(prNumber,head,qualityRunId){
+  const meta=gh('repos/'+REPO+'/actions/workflows/source-attestation.yml');
+  const list=gh('repos/'+REPO+
+    '/actions/workflows/source-attestation.yml/runs?per_page=100');
+  const main=gh('repos/'+REPO+'/git/ref/heads/main').object.sha;
+  const source=selectAuthenticSourceCheckRun(list.workflow_runs??[],
+    meta.id,prNumber,head,main);
+  if(source.conclusion==='failure'){
+    execFileSync('gh',['api','-X','POST','repos/'+REPO+
+      '/actions/runs/'+source.id+'/rerun-failed-jobs'],
+      {encoding:'utf8',timeout:20000});
+  }else invariant(source.conclusion==='success',
+    'Protected source-attestation has an indeterminate conclusion');
+  execFileSync('gh',['api','-X','POST','repos/'+REPO+
+    '/actions/runs/'+qualityRunId+'/rerun-failed-jobs'],
+    {encoding:'utf8',timeout:20000});
+  return {sourceRunId:source.id,qualityRunId};
+}
 async function main() {
-  invariant(process.env.GITHUB_REF === 'refs/heads/main' && process.env.GITHUB_REPOSITORY === REPO,
-    'Trusted attestation must run on protected main');
-  const [candidate,prArg] = process.argv.slice(2);
-  invariant(candidate && /^\d+$/.test(prArg ?? '') && Number(prArg) > 0, 'Candidate directory and PR number required');
+  invariant(process.env.GITHUB_REF==='refs/heads/main'&&process.env.GITHUB_REPOSITORY===REPO &&
+    process.env.GITHUB_EVENT_NAME==='workflow_dispatch',
+    'Only a protected main workflow_dispatch may issue independent signatures');
+  const [candidate,prArg]=process.argv.slice(2);
+  invariant(candidate && /^[0-9]+$/.test(prArg??'')&&Number(prArg)>0,
+    'Protected signer requires candidate checkout and authorized PR number');
   const directory=resolve(candidate);
-  const approvalPath=resolve(directory,'evidence/cicd-enterprise/release-approval.json');
-  const approval=JSON.parse(readFileSync(approvalPath,'utf8'));
-  invariant(!approval.signature, 'Candidate must not supply a pre-signed approval');
+  const template=JSON.parse(readFileSync(resolve(directory,
+    'evidence/cicd-enterprise/release-approval.json'),'utf8'));
+  invariant(!template.signature,'Untrusted PR approval may not carry a private signature');
   const head=git(directory,'rev-parse','HEAD');
-  invariant(/^[a-f0-9]{40}$/.test(head) && /^[a-f0-9]{40}$/.test(approval.testedCommit),
-    'Missing verified source commit');
-  const pr=gh(`repos/${REPO}/pulls/${prArg}`);
-  requireExactReviewedHead(approval.testedCommit,head,pr.head.sha);
-  invariant(pr.base.ref === 'main' && pr.state === 'open' && pr.merged === false,
-    'PR changed since checkout or no longer open');
+  const pr=gh('repos/'+REPO+'/pulls/'+prArg);
+  requireExactReviewedHead(head,head,pr.head?.sha);
+  invariant(pr.base?.ref==='main'&&pr.state==='open'&&!pr.merged &&
+    pr.head?.repo?.full_name===REPO,
+    'Protected signer refuses an unrelated, closed or cross-repository PR');
   const source=reviewedSourceDigest(directory);
-  invariant(source === approval.sourceDigest,'Source digest differs from independently reviewed code');
-  const run=gh(`repos/${REPO}/actions/runs/${approval.ciRunId}`);
-  const jobs=gh(`repos/${REPO}/actions/runs/${approval.ciRunId}/jobs?filter=latest&per_page=100`).jobs;
-  const workflow=gh(`repos/${REPO}/actions/workflows/quality.yml`);
-  validateQualityRun(run,jobs,approval.testedCommit,workflow.id);
-  const comments=ghPages(`repos/${REPO}/issues/${prArg}/comments?per_page=100`);
-  const reviews=ghPages(`repos/${REPO}/pulls/${prArg}/reviews?per_page=100`);
-  const commits=ghPages(`repos/${REPO}/pulls/${prArg}/commits?per_page=100`);
-  const contributors=commits.flatMap(commit =>
+  const workflow=gh('repos/'+REPO+'/actions/workflows/quality.yml');
+  const run=findExactSuccessfulQualityRun(head,workflow.id);
+  const comments=ghPages('repos/'+REPO+'/issues/'+prArg+'/comments?per_page=100');
+  const reviews=ghPages('repos/'+REPO+'/pulls/'+prArg+'/reviews?per_page=100');
+  const commits=ghPages('repos/'+REPO+'/pulls/'+prArg+'/commits?per_page=100');
+  const contributors=commits.flatMap(commit=>
     [commit.author?.login,commit.committer?.login].filter(Boolean));
-  const independent=authenticateIndependentSourceReview(comments,reviews,
-    approval.testedCommit,pr.user.login,process.env.LUMA_RELEASE_TRUSTED_REVIEWERS,
-    contributors);
-  console.log('EXTERNAL_REVIEW_VERIFIED',JSON.stringify(independent));
+  const independent=authenticateIndependentSourceReview(comments,reviews,head,
+    pr.user?.login,process.env.LUMA_RELEASE_TRUSTED_REVIEWERS,contributors);
   const criticPath=resolve(directory,'evidence/cicd-enterprise/granite-review.json');
   const verifierPath=resolve(directory,'evidence/cicd-enterprise/independent-review.json');
-  invariant(sha(criticPath) === approval.critic?.sha256 && sha(verifierPath) === approval.verifier?.sha256,
-    'Independent evidence was modified');
+  const criticSha=sha(criticPath),verifierSha=sha(verifierPath);
   const critic=JSON.parse(readFileSync(criticPath,'utf8'));
   const verifier=JSON.parse(readFileSync(verifierPath,'utf8'));
-  invariant(critic.complete === true && critic.reviewedSourceDigest === source &&
-    verifier.status === 'PASS' && verifier.reviewedSourceDigest === source &&
-    verifier.unresolvedCritical === 0 && verifier.unresolvedHigh === 0 &&
-    approval.unresolvedCritical === 0 && approval.unresolvedHigh === 0,
-    'Critic/verifier evidence incomplete or stale');
-  const dispositions = new Map((verifier.dispositions ?? []).map(item => [item.id,item]));
-  for (const finding of critic.evaluation?.findings ?? []) {
-    if (finding.severity === 'critical' || finding.severity === 'high') {
-      const decision = dispositions.get(finding.id);
-      invariant(decision && ['resolved','false-positive'].includes(decision.status) &&
-        Array.isArray(decision.evidence) && decision.evidence.length > 0,
-        `Unresolved adversarial finding: ${finding.id}`);
+  invariant(critic.complete===true&&critic.reviewedSourceDigest===source&&
+    verifier.status==='PASS'&&verifier.reviewedSourceDigest===source &&
+    verifier.unresolvedCritical===0&&verifier.unresolvedHigh===0,
+    'Current source does not have independent critic and verifier approval');
+  const dispositions=new Map((verifier.dispositions??[]).map(item=>[item.id,item]));
+  for(const finding of critic.evaluation?.findings??[]){
+    if(['critical','high'].includes(finding.severity)){
+      const decision=dispositions.get(finding.id);
+      invariant(decision&&['resolved','false-positive'].includes(decision.status)&&
+        Array.isArray(decision.evidence)&&decision.evidence.length>0,
+        'Unresolved independent adversarial finding: '+finding.id);
     }
   }
-  // PR-owned critic text cannot grant permission; the Codex app's real review
-  // identity/status was independently authenticated from GitHub above.
-  const signed=signApproval({ ...approval,
-    review: { ...independent, commitSha: approval.testedCommit },
-  },process.env.LUMA_RELEASE_ATTESTATION_PRIVATE_KEY_B64);
+  // The candidate can supply Graph references and unsigned evidence, but no
+  // source SHA, CI-run ID, approval identity or signature is trusted from it.
+  const unsigned=buildUnsignedProtectedApproval(template,source,head,run,
+    criticSha,verifierSha,verifier,independent);
+  const signed=signApproval(unsigned,process.env.LUMA_RELEASE_ATTESTATION_PRIVATE_KEY_B64);
   verifyApprovalSignature(signed,process.env.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64);
-  writeFileSync(approvalPath,JSON.stringify(signed,null,2)+'\n');
-  // Reuse the protected-base source/Graph verifier over the inert candidate.
-  verifyReview(directory);
-  writeFileSync(resolve(ROOT,'release-approval-signed.json'),JSON.stringify(signed,null,2)+'\n');
-  process.stdout.write(JSON.stringify({status:'SIGNED',sourceDigest:source,sourceCommit:approval.testedCommit,
-    signedArtifact:'release-approval-signed.json',pr:Number(prArg)})+'\n');
+  verifyReview(directory,{approval:signed}); // Authenticates append-only Graph history.
+  writeFileSync(resolve(ROOT,'release-approval-signed.json'),
+    JSON.stringify(signed,null,2)+'\n');
+  // Publish the receipt to a GitHub-owned channel, never modify the candidate
+  // checkout or create a self-referential commit. Public key verifies contents.
+  const body=receiptCommentBody(Number(prArg),signed);
+  const published=JSON.parse(execFileSync('gh',['api','-X','POST',
+    'repos/'+REPO+'/issues/'+prArg+'/comments','-f','body='+body],
+    {encoding:'utf8',timeout:20000,maxBuffer:8*1024*1024}));
+  invariant(published?.user?.login==='github-actions[bot]' &&
+    Number.isSafeInteger(published.id),'Protected workflow failed to publish signed receipt');
+  // GitHub checks are attached to the PR HEAD by their original PR events,
+  // not to the default branch as an issue_comment workflow would be.
+  const rechecks=queueSourceAndQualityRechecks(Number(prArg),head,run.id);
+  console.log(JSON.stringify({status:'SIGNED_EXTERNALLY',sourceDigest:source,
+    sourceCommit:head,runId:run.id,receiptCommentId:published.id,
+    signedArtifact:'release-approval-signed.json',prNumber:Number(prArg),rechecks}));
 }
 
 if (process.argv[1] && /trusted-attestor\.mjs$/.test(process.argv[1])) {

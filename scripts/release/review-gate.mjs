@@ -31,8 +31,13 @@ export function assertReviewAttestation(attestation, digest) {
   invariant(typeof attestation.graphEventId === 'string' && /^[a-f0-9]{64}$/.test(attestation.graphEventHash ?? ''), 'Missing Graph gate receipt');
   for (const item of ['critic', 'verifier']) invariant(/^[a-f0-9]{64}$/.test(attestation[item]?.sha256 ?? ''), `Missing ${item} evidence digest`);
 }
-export function verifyReview(directory = root) {
-  const attestation = JSON.parse(readFileSync(resolve(directory, 'evidence/cicd-enterprise/release-approval.json'), 'utf8'));
+export function verifyReview(directory = root, options = {}) {
+  // Protected CI accepts only a separately signed, externally retrieved
+  // receipt. A candidate-authored JSON file can never approve its own SHA.
+  invariant(process.env.GITHUB_ACTIONS !== 'true' || options.approval,
+    'Protected CI requires an external independently signed release receipt');
+  const attestation = options.approval ?? JSON.parse(readFileSync(resolve(directory,
+    'evidence/cicd-enterprise/release-approval.json'), 'utf8'));
   assertReviewAttestation(attestation, reviewedSourceDigest(directory));
   // PR-owned files and Graph hashes are NOT authoritative by themselves.
   // A protected signer must attest the exact source, GitHub run, reviews, and gate.
