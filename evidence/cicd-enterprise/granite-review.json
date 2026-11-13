@@ -1,55 +1,29 @@
 {
+  "schemaVersion": 3,
   "model": "ibm/granite3.3:2b",
   "complete": true,
-  "reviewedSourceDigest": "7a52d3323e6fe905e9dbe39352bd5f443372e7f1958e3154167df550b3a16a52",
-  "sourceSha256": "e5e2e27f07a5db568ff9ea2335a117105b2712e5a3519f621d6f0f793ad7cfb8",
-  "reviewedAt": "2026-10-10T23:39:50.601Z",
-  "reviewMode": "cumulative-security-baseline-plus-exact-ui-delta",
-  "priorReview": {
-    "path": "evidence/cicd-enterprise/granite-review-pre-v4.json",
-    "sha256": "29d633fd024a375e32163b2b76ef8710f08821441ef08e313fec3bf304bda694"
-  },
-  "materialDelta": [
-    "e2e/enterprise-boundary.spec.ts",
-    "e2e/seres-liquid-glass.spec.ts",
-    "scripts/audit-seres-glass.mjs",
-    "scripts/audit-seres-webkit.mjs",
-    "scripts/finalize_se_liquid_glass_graph.py",
-    "scripts/finalize_studio_ci_graph.py",
-    "src/app/library/library.module.css",
-    "src/components/app-shell.module.css",
-    "src/components/experience-console.module.css",
-    "src/components/experience-console.tsx",
-    "src/components/twin-detail.module.css",
-    "src/lib/themes.ts"
-  ],
-  "fullPatchSha256": "10cc52974f775d9483677b9d4a88e0a77546652443b480479f63aa69a754a871",
+  "reviewerType": "automated-model-critic",
+  "humanIndependent": false,
+  "reviewedSourceDigest": "c5eb620d0daf5f1c9271c7d1193071a1d262835ab8a6b9745408431f19efdbe7",
+  "reviewedCommit": "61fe533b414407d74e44f41ece098e47ddb17030",
+  "sourceSha256": "3feecb9bf65725ff73ebb891523c7b4a9b402e405e6badc3fdb3177952ba6cf3",
+  "authenticatedProtectedRunId": 43369152580,
+  "authenticatedArtifactSha256": "53aead6971914b02a4e218929127aea7d35410cc9e406a11db9f039a667cbb3b",
+  "trustedWorkflowCommit": "4011c9379dba9b6dd0258acc4ffe2778a2ba69ac",
+  "modelDigest": "b7b711f14c0156353ebfcb24cda357ebed9c7f337172927d82fccdde597fb3ab",
   "evaluation": {
-    "verdict": "BLOCKED",
-    "findings": [
-      {
-        "id": "G1",
-        "severity": "high",
-        "file": "src/app/library/library.module.css",
-        "evidence": "min-width: 0; in .qualityScore > strong",
-        "risk": "auth weakening",
-        "fix": "remove min-width: 0; from .qualityScore > strong"
-      },
-      {
-        "id": "G2",
-        "severity": "high",
-        "file": "src/components/experience-console.module.css",
-        "evidence": "linear-gradient(145deg, rgba(255,255,255,.48), rgba(255,255,255,.06) 56%, rgba(255,255,255,.19))",
-        "risk": "glass opacity regression",
-        "fix": "adjust linear-gradient to maintain consistent opacity"
-      }
-    ],
-    "limitations": "Scope to CSS changes only, no JavaScript or backend analysis.",
-    "scope": "CSS changes affecting theme preview and glass lens appearance"
+    "verdict": "NEEDS_REVIEW",
+    "findings": [],
+    "limitations": [
+      "Technical model opinion is advisory; no independent human review occurred",
+      "Material model uncertainty requires authenticated Codex clean review and owner acceptance"
+    ]
   },
-  "metadata": {
-    "doneReason": "stop",
-    "promptEvalCount": 3506,
-    "evalCount": 269
+  "adjudication": {
+    "needed": true,
+    "codexReviewCommentId": 6547056634,
+    "ownerCommentId": 6844749651,
+    "sourceSha": "61fe533b414407d74e44f41ece098e47ddb17030",
+    "note": "Advisory Granite warning accepted only after authenticated clean Codex and sole-owner risk approval"
   }
 }

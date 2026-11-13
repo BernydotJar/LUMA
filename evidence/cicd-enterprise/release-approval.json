@@ -1,16 +1,46 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 3,
   "status": "PASS",
-  "sourceDigest": "7a52d3323e6fe905e9dbe39352bd5f443372e7f1958e3154167df550b3a16a52",
-  "testedCommit": "d2053fdc047e9b868dc90fe04687ccadd98afd01",
+  "sourceDigest": "c5eb620d0daf5f1c9271c7d1193071a1d262835ab8a6b9745408431f19efdbe7",
+  "testedCommit": "61fe533b414407d74e44f41ece098e47ddb17030",
+  "ciRunId": 43369133522,
+  "graphEventId": "a5fabed6-20c6-4acd-a14f-fb7d0deb11e2",
+  "graphEventHash": "2b1edd196bd9771a12992b1337205c2f8aa5425d6fed2ad8185d55438277629d",
   "unresolvedCritical": 0,
   "unresolvedHigh": 0,
-  "graphEventId": "efc1c6b8-4813-4537-8b26-38413b308a44",
-  "graphEventHash": "6f194a91390e19cfcda8ec3cd542e065dac9293b9268712b14d32000927b1b90",
   "critic": {
-    "sha256": "14c179fb5a9e5673dd48a52b2a28c27be30722457b4704d8765334cbe08899ca"
+    "sha256": "43f517227873ac6db05cf87ded9174d599ff899d36b11f9d0d546ab905dfa436"
   },
   "verifier": {
-    "sha256": "60034ef29ace902dcf14c749c594affbdf0dec002f3edf22472574013b831006"
+    "sha256": "dba094d4e1d94c81440333f2be534666205a7cd8bb4288e15fc97950bd2499cf"
+  },
+  "ci": {
+    "sha256": "56b958825071541e22879f22f0653990b74d4c4ac710188cc41d8fa6abbcba14"
+  },
+  "review": {
+    "method": "protected-granite-owner-v1",
+    "reviewerType": "automated-model-critic",
+    "humanIndependent": false,
+    "model": "ibm/granite3.3:2b",
+    "modelVerdict": "NEEDS_REVIEW",
+    "codexReviewCommentId": 6547056634,
+    "modelDigest": "b7b711f14c0156353ebfcb24cda357ebed9c7f337172927d82fccdde597fb3ab",
+    "commitSha": "61fe533b414407d74e44f41ece098e47ddb17030",
+    "workflowRunId": 43369152580,
+    "trustedWorkflowCommit": "4011c9379dba9b6dd0258acc4ffe2778a2ba69ac",
+    "artifactDigestSha256": "53aead6971914b02a4e218929127aea7d35410cc9e406a11db9f039a667cbb3b"
+  },
+  "ownerAuthorization": {
+    "method": "github-issue-comment",
+    "login": "BernydotJar",
+    "commentId": 6844749651,
+    "commitSha": "61fe533b414407d74e44f41ece098e47ddb17030",
+    "scope": "public-landing",
+    "humanIndependent": false
+  },
+  "signature": {
+    "algorithm": "Ed25519",
+    "keyId": "luma-solo-maintainer-attestor-v3",
+    "value": "Jxt8R+1ZSvQV9eQZOgfiPhjzCcI4637mjFbGfbfpXZpKv3NhE9miCvIH2Ot8nRPE5QcSCbX862l7sJ8UuR6RBw=="
   }
 }
