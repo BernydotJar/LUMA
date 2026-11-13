@@ -15,3 +15,13 @@ test('no untrusted runner, wrong source, external repo or non-issue event can st
   {...args(),policySha:'bad'}, {...args(),verified:'true'}, {...args(),prNumber:0},
  ])assert.throws(()=>createLiveCheckPayload(invalid));
 });
+
+test('comment revocation marks PR head pending, never early success',()=>{
+ const pending=createLiveCheckPayload({...args(),verified:undefined,phase:'start'});
+ assert.equal(pending.name,'source-attestation');
+ assert.equal(pending.head_sha,s);
+ assert.equal(pending.status,'in_progress');
+ assert.equal(Object.hasOwn(pending,'conclusion'),false);
+ assert.throws(()=>createLiveCheckPayload({...args(),phase:'start'}));
+ assert.throws(()=>createLiveCheckPayload({...args(),phase:'other'}));
+});

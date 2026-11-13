@@ -53,6 +53,14 @@ jobs:
           [[ "$actual" =~ ^[0-9a-f]{40}$ ]]
           if test -n "$EVENT_SHA"; then test "$EVENT_SHA" = "$actual"; fi
           printf 'number=%s\nsha=%s\n' "$EVENT_PR" "$actual" >> "$GITHUB_OUTPUT"
+      - name: Mark PR-head source-attestation pending before comment verification
+        if: github.event_name == 'issue_comment'
+        id: pending
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REVIEW_PR_NUMBER: ${{ steps.pr.outputs.number }}
+          REVIEW_PR_SHA: ${{ steps.pr.outputs.sha }}
+        run: node protected-policy/scripts/release/post-live-check.mjs start
       - name: Checkout candidate merge as untrusted data only
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -73,11 +81,12 @@ jobs:
           PR_NUMBER: ${{ steps.pr.outputs.number }}
           EXPECTED_PR_HEAD: ${{ steps.pr.outputs.sha }}
         run: node protected-policy/scripts/release/pr-readiness.mjs --candidate "$GITHUB_WORKSPACE/candidate-data" --pr "$PR_NUMBER" --head "$EXPECTED_PR_HEAD"
-      - name: Publish actual comment-recheck result onto the candidate PR HEAD
-        if: github.event_name == 'issue_comment' && always()
+      - name: Complete original pending PR-head source-attestation check
+        if: github.event_name == 'issue_comment' && always() && steps.pending.outcome == 'success'
         env:
           GH_TOKEN: ${{ github.token }}
           REVIEW_PR_NUMBER: ${{ steps.pr.outputs.number }}
           REVIEW_PR_SHA: ${{ steps.pr.outputs.sha }}
+          REVIEW_CHECK_RUN_ID: ${{ steps.pending.outputs.id }}
           REVIEW_VERIFIED: ${{ steps.verification.outcome == 'success' }}
-        run: node protected-policy/scripts/release/post-live-check.mjs
+        run: node protected-policy/scripts/release/post-live-check.mjs finish
