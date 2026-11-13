@@ -32,6 +32,9 @@ export function assertReviewAttestation(attestation, digest) {
     invariant(review?.method === 'protected-granite-owner-v1' &&
       review.reviewerType === 'automated-model-critic' && review.humanIndependent === false &&
       review.model === 'ibm/granite3.3:2b' &&
+      ['PASS','NEEDS_REVIEW'].includes(review.modelVerdict) &&
+      Number.isSafeInteger(review.codexReviewCommentId) &&
+      (review.modelVerdict === 'PASS' ? review.codexReviewCommentId === 0 : review.codexReviewCommentId > 0) &&
       review.commitSha === attestation.testedCommit &&
       Number.isSafeInteger(review.workflowRunId) && review.workflowRunId > 0 &&
       /^[a-f0-9]{40}$/.test(review.trustedWorkflowCommit ?? '') &&
@@ -90,6 +93,7 @@ assert gate['actor']==('automated-evidence-verifier' if sys.argv[3]=='3' else 'i
 if sys.argv[3]=='3':
     assert f'sourceDigest={sys.argv[4]}' in gate['payload'].get('note',''), 'Model Graph gate is not source digest-bound'
     assert f'reviewedCommit={sys.argv[5]}' in gate['payload'].get('note',''), 'Model Graph gate lacks reviewed SHA'
+    assert f'modelVerdict={sys.argv[9]}' in gate['payload'].get('note',''), 'Graph gate lacks true Granite model verdict'
 assert not any(e['node_id']==gate['node_id'] and e['sequence']>gate['sequence'] and e['event_type'] in ('node.invalidated','failure.recorded') for e in events), 'Release was invalidated'
 proofs=[e for e in events if e['event_id'] in gate['payload']['evidence_ids']]
 assert {'critic','verification','ci'}.issubset({e['payload'].get('kind') for e in proofs}), 'Required Graph evidence missing'
@@ -106,7 +110,8 @@ if sys.argv[3]=='3':
 print(gate['event_hash'])
 `, directory, attestation.graphEventId, String(attestation.schemaVersion),
     attestation.sourceDigest, attestation.testedCommit, attestation.critic.sha256,
-    attestation.verifier.sha256, attestation.ci?.sha256 ?? ''], { encoding: 'utf8' }).trim();
+    attestation.verifier.sha256, attestation.ci?.sha256 ?? '',
+    attestation.review?.modelVerdict ?? ''], { encoding: 'utf8' }).trim();
   invariant(proof === attestation.graphEventHash, 'Graph gate digest differs from approval');
   return attestation;
 }

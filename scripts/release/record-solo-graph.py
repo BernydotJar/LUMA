@@ -26,10 +26,13 @@ def main() -> None:
     parser.add_argument('--ci-run-id', type=int, required=True)
     parser.add_argument('--model-run-id', type=int, required=True)
     parser.add_argument('--owner-comment-id', type=int, required=True)
+    parser.add_argument('--model-verdict', choices=['PASS','NEEDS_REVIEW'], required=True)
+    parser.add_argument('--codex-comment-id', type=int, required=True)
     args = parser.parse_args()
     root = Path(args.candidate).resolve()
     assert len(args.source_digest) == 64 and len(args.source_commit) == 40
     assert args.ci_run_id > 0 and args.model_run_id > 0 and args.owner_comment_id > 0
+    assert (args.model_verdict == 'PASS' and args.codex_comment_id == 0) or (args.model_verdict == 'NEEDS_REVIEW' and args.codex_comment_id > 0)
     assert os.environ.get('GITHUB_REPOSITORY') == 'BernydotJar/LUMA'
     assert os.environ.get('GITHUB_REF') == 'refs/heads/main'
     assert os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch'
@@ -63,6 +66,8 @@ def main() -> None:
         'human_independent':False,
         'model_review_run_id':args.model_run_id,
         'owner_comment_id':args.owner_comment_id,
+        'model_verdict':args.model_verdict,
+        'codex_comment_id':args.codex_comment_id,
         'ci_run_id':args.ci_run_id,
     }
     evidence_ids = []
@@ -78,7 +83,8 @@ def main() -> None:
         evidence_ids.append(record.event_id)
     note = (f'SOLO_OWNER_MODEL_V3 sourceDigest={args.source_digest} '
             f'reviewedCommit={args.source_commit} CI={args.ci_run_id} '
-            f'modelRun={args.model_run_id} ownerComment={args.owner_comment_id}; '
+            f'modelRun={args.model_run_id} ownerComment={args.owner_comment_id} '
+            f'modelVerdict={args.model_verdict} codexComment={args.codex_comment_id}; '
             'automated adversarial criticism, no independent human approval')
     gate = runtime.evaluate_gate(node_id, actor='automated-evidence-verifier',
                                  gate_id='cicd-release', result=GateResult.PASS,

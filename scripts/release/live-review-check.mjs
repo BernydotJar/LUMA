@@ -1,3 +1,4 @@
+import { authenticateCodexSummaryEdits } from './codex-comment-edit.mjs';
 /** Protected-base admission control: a signed historical approval is valid
  * only while its exact GitHub reviewer decision remains in force. Do not run
  * candidate-owned policy or trust an actor claim from Graph/PR JSON. */
@@ -52,7 +53,7 @@ export function verifyCurrentIndependentReview(directory, prNumber, expectedHead
   const approval = JSON.parse(readFileSync(resolve(directory,
     'evidence/cicd-enterprise/release-approval.json'), 'utf8'));
   const pr = gh(`repos/${REPO}/pulls/${prNumber}`);
-  const comments = ghPages(`repos/${REPO}/issues/${prNumber}/comments?per_page=100`);
+  const comments = authenticateCodexSummaryEdits(ghPages(`repos/${REPO}/issues/${prNumber}/comments?per_page=100`));
   const reviews = ghPages(`repos/${REPO}/pulls/${prNumber}/reviews?per_page=100`);
   const commits = ghPages(`repos/${REPO}/pulls/${prNumber}/commits?per_page=100`);
   invariant(SHA.test(approval?.review?.commitSha ?? ''),

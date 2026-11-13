@@ -9,6 +9,9 @@ const base = () => ({
   promptSha256: h, inputSha256: h, status: 'REVIEW_COMPLETE',
   doneReason: 'stop', options: { temperature: 0 },
   independence: 'model-only; no human independent reviewer',
+  riskClassification:'public-landing',
+  fileReviews:[{path:'src/app/page.tsx',chunkIndex:0,sourceChunkHash:h,
+    opinion:'PASS',attempts:[{status:'VALID',rawResponse:'{\"result\":\"PASS\"}'}]}],
   result: { verdict: 'PASS', findings: [], limitations: ['Model review only'] },
 });
 const expected = () => ({ sourceSha: s, sourceDigest: d, modelDigest: m });
@@ -30,8 +33,8 @@ test('rejects stale source, model swaps and missing model digest', () => {
 test('rejects inconclusive, fake PASS, and fabricated human independence', () => {
   assert.throws(() => checked({ status: 'BLOCKED' }), /did not finish/);
   assert.throws(() => checked({ doneReason: 'length' }), /did not finish/);
-  assert.throws(() => checked({ result: { verdict: 'PASS', findings: [{ severity: 'high' }], limitations: [] } }), /critical\/high/);
-  assert.throws(() => checked({ result: { verdict: 'NEEDS_REVIEW', findings: [], limitations: [] } }), /inconclusive/);
+  assert.throws(() => checked({ result: { verdict: 'PASS', findings: [{ severity: 'high' }], limitations: [] } }), /Model technical opinion contract malformed/);
+  assert.throws(() => checked({ result: { verdict: 'NEEDS_REVIEW', findings: [], limitations: [] } }), /Model technical opinion contract malformed/);
   assert.throws(() => checked({ independence: 'independent-human-approval' }), /Never represent AI/);
 });
 const run = () => ({ id: 456, workflow_id: 789, path: '.github/workflows/granite-protected-review.yml',
@@ -58,4 +61,17 @@ test('rejects untrusted workflow, PR jobs, wrong GitHub run and unsigned provena
   assert.throws(() => proven({ artifact: { ...artifactSource(), workflowRunId: 111 } }), /exact trusted workflow artifact/);
   assert.throws(() => proven({ artifact: { ...artifactSource(), fromAuthenticatedGitHubApi: false } }), /exact trusted workflow artifact/);
   assert.throws(() => proven({ workflowId: 123 }), /protected-main workflow/);
+});
+
+test('advisory Granite is not a fabricated PASS and only eligible for public-scope Codex adjudication',()=>{
+  const evidence=base();
+  evidence.status='ADVISORY_REVIEW_COMPLETE';
+  evidence.result.verdict='NEEDS_REVIEW';
+  evidence.fileReviews[0].opinion='REVIEW';
+  const outcome=validateGraniteModelReview(evidence,expected());
+  assert.equal(outcome.verdict,'NEEDS_REVIEW');
+  assert.equal(outcome.requiresCodex,true);
+  assert.throws(()=>validateGraniteModelReview({...evidence,riskClassification:'owner-risk-exception-required'},expected()));
+  assert.throws(()=>validateGraniteModelReview({...evidence,result:{...evidence.result,verdict:'PASS'}},expected()));
+  assert.throws(()=>validateGraniteModelReview({...evidence,fileReviews:[{...evidence.fileReviews[0],attempts:[]}]},expected()));
 });

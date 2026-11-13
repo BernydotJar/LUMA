@@ -1,3 +1,4 @@
+import { authenticateCodexSummaryEdits } from './codex-comment-edit.mjs';
 /** Runs ONLY from a protected-main workflow_dispatch with a main-only environment.
  * It reads PR files as inert data and checks GitHub's independent reviewer identity.
  * No candidate JS, shell, npm scripts or approval self-claims are executed. */
@@ -43,6 +44,9 @@ export function authenticateExternalCodexReview(comments,sourceCommit) {
     comment.user?.login === 'chatgpt-codex-connector[bot]' &&
     comment.body?.includes('<!-- codex-review-state:v1 '));
   const current = verified.flatMap(comment => {
+    invariant(comment.created_at===comment.updated_at ||
+      comment._authenticatedBotEditHistory===true,
+      'Externally authored bot review was edited by an unverified actor');
     try {
       const match = comment.body.match(/<!-- codex-review-state:v1 (\{[^\n]*\}) -->/);
       if (!match) return [];
@@ -127,6 +131,9 @@ export function authenticateIndependentSourceReview(comments, reviews, sourceCom
     .flatMap(comment => {
       const match = comment.body?.match(/<!-- codex-review-state:v1 (\{[^\n]*\}) -->/);
       if (!match) return [];
+      invariant(comment.created_at===comment.updated_at ||
+        comment._authenticatedBotEditHistory===true,
+        'Edited Codex summary lacks authenticated GitHub bot edit history');
       try {
         const state = JSON.parse(match[1]).code_review;
         return state?.commit_sha === sourceCommit
@@ -202,7 +209,7 @@ async function main() {
   const jobs=gh(`repos/${REPO}/actions/runs/${approval.ciRunId}/jobs?filter=latest&per_page=100`).jobs;
   const workflow=gh(`repos/${REPO}/actions/workflows/quality.yml`);
   validateQualityRun(run,jobs,approval.testedCommit,workflow.id);
-  const comments=ghPages(`repos/${REPO}/issues/${prArg}/comments?per_page=100`);
+  const comments=authenticateCodexSummaryEdits(ghPages(`repos/${REPO}/issues/${prArg}/comments?per_page=100`));
   const reviews=ghPages(`repos/${REPO}/pulls/${prArg}/reviews?per_page=100`);
   const commits=ghPages(`repos/${REPO}/pulls/${prArg}/commits?per_page=100`);
   const contributors=commits.flatMap(commit =>
