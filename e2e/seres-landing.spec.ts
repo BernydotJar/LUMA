@@ -80,13 +80,18 @@ test.describe("Seres de Excelencia public landing", () => {
 
   test("fits mobile and desktop viewports without horizontal overflow", async ({ page }, testInfo) => {
     await page.goto("/");
+    const hero = page.locator('img[src*="seres-violet-hero"]');
+    await expect(hero).toBeVisible();
+    // A nonempty src does not prove Next/Image successfully fetched and decoded.
+    await expect.poll(
+      () => hero.evaluate((image) => image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0),
+      { timeout: 10000 },
+    ).toBe(true);
     const dimensions = await page.evaluate(() => ({
       scrollWidth: document.documentElement.scrollWidth,
       innerWidth: window.innerWidth,
-      imageLoaded: Boolean(document.querySelector('img[src*="seres-violet-hero"]')?.getAttribute("src")),
     }));
     expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.innerWidth + 2);
-    expect(dimensions.imageLoaded).toBe(true);
     await expect(page.getByRole("link", { name: /^Ingresar/ }).first()).toBeVisible();
     if (testInfo.project.name === "mobile") {
       await expect(page.getByRole("navigation", { name: "Navegación principal" })).toBeHidden();
