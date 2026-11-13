@@ -41,6 +41,7 @@ test('changing the PR head, source repository, signed SHA or signed reviewer fai
 
 test('a later Codex report with findings cannot be overridden by a prior signed human review', () => {
   const comment={id:61,user:{login:'chatgpt-codex-connector[bot]'},
+    created_at:'2026-10-20T20:00:00Z',
     updated_at:'2026-10-20T20:00:00Z',body:'<!-- codex-review-state:v1 '+
       JSON.stringify({code_review:{commit_sha:REVIEWED,status:'completed',
         has_any_findings:true,has_unresolved_findings:true}})+' -->'};
