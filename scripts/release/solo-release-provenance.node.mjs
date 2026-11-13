@@ -102,6 +102,7 @@ test('receipt-only C1 may use latest clean Codex review on identical source with
     'evidence/cicd-enterprise/release-approval.json'];
   const comment={id:951,user:{login:'chatgpt-codex-connector[bot]',type:'Bot'},
     created_at:'2026-11-11T16:00:00Z',updated_at:'2026-11-11T16:05:00Z',
+    _authenticatedBotEditHistory:true,
     body:`<!-- codex-review-state:v1 ${JSON.stringify({code_review:{commit_sha:C1,status:'completed',has_any_findings:false,has_unresolved_findings:false}})} -->`};
   const compare={status:'ahead',ahead_by:1,behind_by:0,base_commit:{sha:SHA},
     commits:[{sha:C1,parents:[{sha:SHA}]}],files:paths.map(filename=>({filename,status:'modified'}))};

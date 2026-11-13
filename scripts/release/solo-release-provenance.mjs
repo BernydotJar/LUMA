@@ -46,6 +46,10 @@ export function authenticateCodexModelAdjudication(comments,sourceCommit,comment
       if(!match)return [];
       try{
         const state=JSON.parse(match[1]).code_review;
+        if(state && [sourceCommit,receiptHead].filter(Boolean).includes(state.commit_sha))
+          block(c.created_at===c.updated_at ||
+            c._authenticatedBotEditHistory===true,
+            'Latest edited Codex review has unverified editor history');
         return state && [sourceCommit,receiptHead].filter(Boolean).includes(state.commit_sha)
           ? [{comment:c,state,at:c.updated_at??c.created_at??''}] : [];
       }catch{return [];}
