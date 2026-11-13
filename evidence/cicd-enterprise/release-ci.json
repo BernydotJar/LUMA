@@ -1,38 +1,67 @@
 {
-  "runId": "38094698864",
-  "gitSha": "d2053fdc047e9b868dc90fe04687ccadd98afd01",
-  "conclusion": "success",
-  "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864",
-  "jobs": [
+  "schemaVersion": 3,
+  "status": "TECHNICAL_GATES_PASS_RELEASE_PENDING",
+  "reviewedSourceDigest": "c5eb620d0daf5f1c9271c7d1193071a1d262835ab8a6b9745408431f19efdbe7",
+  "testedCommit": "61fe533b414407d74e44f41ece098e47ddb17030",
+  "runId": 43369133522,
+  "githubWorkflowId": 375119015,
+  "githubRunConclusion": "failure",
+  "qualityJobs": [
     {
-      "name": "security",
-      "conclusion": "success",
-      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864/job/114338095333"
+      "name": "Operational acceptance contract self-test (not a release approval)",
+      "conclusion": "success"
     },
     {
-      "name": "verify",
-      "conclusion": "success",
-      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864/job/114338095436"
-    },
-    {
-      "name": "firestore",
-      "conclusion": "success",
-      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864/job/114338095454"
+      "name": "institution-approval",
+      "conclusion": "success"
     },
     {
       "name": "identity-roles",
-      "conclusion": "success",
-      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864/job/114338095464"
+      "conclusion": "success"
+    },
+    {
+      "name": "coach-rbac",
+      "conclusion": "success"
+    },
+    {
+      "name": "institution-intake",
+      "conclusion": "success"
+    },
+    {
+      "name": "firestore",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify",
+      "conclusion": "success"
+    },
+    {
+      "name": "security",
+      "conclusion": "success"
+    },
+    {
+      "name": "institution-browser",
+      "conclusion": "success"
+    },
+    {
+      "name": "learning-auth-uat",
+      "conclusion": "success"
     },
     {
       "name": "browser",
-      "conclusion": "success",
-      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864/job/114338518660"
+      "conclusion": "success"
+    },
+    {
+      "name": "release-readiness",
+      "conclusion": "failure"
+    },
+    {
+      "name": "product-acceptance-predeploy",
+      "conclusion": "skipped"
     },
     {
       "name": "deploy",
-      "conclusion": "skipped",
-      "url": "https://github.com/BernydotJar/LUMA/actions/runs/38094698864/job/114339012258"
+      "conclusion": "skipped"
     }
   ]
 }

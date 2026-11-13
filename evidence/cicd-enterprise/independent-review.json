@@ -1,118 +1,31 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 3,
   "status": "PASS",
-  "reviewedSourceDigest": "7a52d3323e6fe905e9dbe39352bd5f443372e7f1958e3154167df550b3a16a52",
-  "reviewer": "Independent deterministic source, GitHub CI, Graph ledger and model-output verifier; not separate human approval",
-  "reviewScope": "Cumulative changed-source gate after last valid approval; production rollout remains a separate mandatory gate",
+  "reviewedSourceDigest": "c5eb620d0daf5f1c9271c7d1193071a1d262835ab8a6b9745408431f19efdbe7",
+  "reviewedCommit": "61fe533b414407d74e44f41ece098e47ddb17030",
   "unresolvedCritical": 0,
   "unresolvedHigh": 0,
-  "dispositions": [
-    {
-      "id": "G1",
-      "status": "false-positive",
-      "evidence": [
-        "The actual min-width:0 is on the mobile .qualityScore parent in src/app/library/library.module.css, not on .qualityScore > strong as Granite claims; the strong rules only control typography and wrapping.",
-        "The change is a responsive content sizing rule; src/components/studio-dashboard.tsx and authentication implementation are byte-identical to the previous baseline.",
-        "The scoped unauthenticated Studio test still requires a visible access heading, the /login link and no fabricated metrics: 24/24 repeated tests and all five GitHub-hosted quality jobs passed."
-      ],
-      "reason": "An unrelated Library layout rule cannot weaken authentication; Granite supplied no auth flow or code path connecting these properties."
-    },
-    {
-      "id": "G2",
-      "status": "false-positive",
-      "evidence": [
-        "The cited partial-opacity gradient is intentionally part of a bounded decorative optical pane behind the unchanged logo; .seOpticalLens uses z-index:1/pointer-events:none while .previewBrand has z-index:2.",
-        "The lens has unsupported-filter and prefers-reduced-transparency solid fallbacks; reading-heavy content surfaces are not moved into the lens.",
-        "Full adversarial glass + WCAG audit passed 72/72, WebKit 10/10, and desktop/mobile E2E tests verified logo visibility and lens layering. No concrete contrast or interception regression is demonstrated."
-      ],
-      "reason": "The gradient is an intentional visual material, not a supported high-severity accessibility or release-control defect. Brand owner and native Safari parity remain limitations."
-    }
-  ],
-  "rawCriticVerdict": "BLOCKED",
-  "criticFindings": [
-    {
-      "id": "G1",
-      "severity": "high",
-      "file": "src/app/library/library.module.css",
-      "evidence": "min-width: 0; in .qualityScore > strong",
-      "risk": "auth weakening",
-      "fix": "remove min-width: 0; from .qualityScore > strong"
-    },
-    {
-      "id": "G2",
-      "severity": "high",
-      "file": "src/components/experience-console.module.css",
-      "evidence": "linear-gradient(145deg, rgba(255,255,255,.48), rgba(255,255,255,.06) 56%, rgba(255,255,255,.19))",
-      "risk": "glass opacity regression",
-      "fix": "adjust linear-gradient to maintain consistent opacity"
-    }
-  ],
-  "independentChecks": {
-    "sourceHash": "7a52d3323e6fe905e9dbe39352bd5f443372e7f1958e3154167df550b3a16a52",
-    "priorSourceHash": "4b0fc2faa433f2698d022a452690a1bcb6181b5976ba0ff82c1ad408cc90f9dd",
-    "securityBaselineSha256": "e5e2e27f07a5db568ff9ea2335a117105b2712e5a3519f621d6f0f793ad7cfb8",
-    "materialPatchSha256": "10cc52974f775d9483677b9d4a88e0a77546652443b480479f63aa69a754a871",
-    "materialFiles": [
-      "e2e/enterprise-boundary.spec.ts",
-      "e2e/seres-liquid-glass.spec.ts",
-      "scripts/audit-seres-glass.mjs",
-      "scripts/audit-seres-webkit.mjs",
-      "scripts/finalize_se_liquid_glass_graph.py",
-      "scripts/finalize_studio_ci_graph.py",
-      "src/app/library/library.module.css",
-      "src/components/app-shell.module.css",
-      "src/components/experience-console.module.css",
-      "src/components/experience-console.tsx",
-      "src/components/twin-detail.module.css",
-      "src/lib/themes.ts"
-    ],
-    "exactCurrentMainTree": true,
-    "requiredChecks": [
-      {
-        "name": "verify",
-        "conclusion": "success"
-      },
-      {
-        "name": "security",
-        "conclusion": "success"
-      },
-      {
-        "name": "firestore",
-        "conclusion": "success"
-      },
-      {
-        "name": "identity-roles",
-        "conclusion": "success"
-      },
-      {
-        "name": "browser",
-        "conclusion": "success"
-      }
-    ],
-    "ciRunId": "38094698864",
-    "ciHeadSha": "d2053fdc047e9b868dc90fe04687ccadd98afd01",
-    "graphChainEvents": 680,
-    "graphOpticalNode": "done",
-    "graphCIHotfixNode": "done",
-    "localBrowserSuite": "117 E2E passed, 7 skipped; separate 24 repeated Studio gate tests passed",
-    "opticalSuite": "72 full glass checks, 10 WebKit and 14 combined optical E2E passed",
-    "localUnitSuite": "291 unit tests passed; emulator-only tests run in GitHub CI"
-  },
-  "limitations": [
-    "Software-source approval is not a successful Firebase rollout; production still serves the prior stable commit until deployment verification.",
-    "The Seres corporate palette is provisional; external brand owner approval is not implied.",
-    "The Linux WebKit test does not establish pixel-identical rendering on native macOS Safari.",
-    "Stateful authorization and Firestore tests passed in emulators, not using private real learner accounts in production.",
-    "Independent review is model-assisted and deterministic; no separate two-person human approval is claimed."
-  ],
-  "primaryReferences": [
-    "https://github.com/BernydotJar/LUMA/actions/runs/38094698864",
-    "https://github.com/BernydotJar/LUMA/actions/runs/38095030727",
-    "specs/067-seres-liquid-glass-optical-layer.md",
-    "specs/068-ci-studio-auth-gate.md",
-    "evidence/cicd-enterprise/granite-input-v4.json"
-  ],
-  "ciRunId": "38094698864",
-  "testedCommit": "d2053fdc047e9b868dc90fe04687ccadd98afd01",
-  "mergeCommit": "cabeae9029ca56aac468584394b1e19f64ce1339"
+  "dispositions": [],
+  "reviewerType": "deterministic-protected-source-verifier",
+  "humanIndependent": false,
+  "modelWorkflowRunId": 43369152580,
+  "modelArtifactSha256": "53aead6971914b02a4e218929127aea7d35410cc9e406a11db9f039a667cbb3b",
+  "modelDigest": "b7b711f14c0156353ebfcb24cda357ebed9c7f337172927d82fccdde597fb3ab",
+  "ownerCommentId": 6844749651,
+  "modelVerdict": "NEEDS_REVIEW",
+  "codexReviewCommentId": 6547056634,
+  "ciRunId": 43369133522,
+  "verifiedChecks": [
+    "Operational acceptance contract self-test (not a release approval)",
+    "institution-approval",
+    "identity-roles",
+    "coach-rbac",
+    "institution-intake",
+    "firestore",
+    "verify",
+    "security",
+    "institution-browser",
+    "learning-auth-uat",
+    "browser"
+  ]
 }
