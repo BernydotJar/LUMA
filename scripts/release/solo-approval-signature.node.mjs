@@ -15,6 +15,7 @@ const approval = () => ({
   unresolvedCritical: 0, unresolvedHigh: 0,
   review: { method: 'protected-granite-owner-v1', reviewerType: 'automated-model-critic',
     model: 'ibm/granite3.3:2b', humanIndependent: false,
+    modelVerdict:'PASS',codexReviewCommentId:0,
     commitSha: SHA, modelDigest: DIGEST, artifactDigestSha256: DIGEST,
     workflowRunId: 8839, trustedWorkflowCommit: SHA },
   ownerAuthorization: { method: 'github-issue-comment', login: 'BernydotJar',
@@ -35,6 +36,7 @@ test('v3 rejects model or owner impersonation or unsigned changes', () => {
     { ...r, review: { ...r.review, commitSha: 'c'.repeat(40) } },
     { ...r, review: { ...r.review, modelDigest: 'c'.repeat(64) } },
     { ...r, review: { ...r.review, workflowRunId: 8840 } },
+    { ...r, review: { ...r.review, modelVerdict:'NEEDS_REVIEW',codexReviewCommentId:981 } },
     { ...r, review: { ...r.review, trustedWorkflowCommit: 'c'.repeat(40) } },
     { ...r, review: { ...r.review, artifactDigestSha256: 'c'.repeat(64) } },
     { ...r, ownerAuthorization: { ...r.ownerAuthorization, commentId: 9102 } },
@@ -56,4 +58,13 @@ test('v3 cannot be signed when owner or model evidence is missing', () => {
     { ...approval(), ownerAuthorization: { ...approval().ownerAuthorization, scope: 'any' } },
     { ...approval(), unresolvedCritical: 1 },
   ]) assert.throws(() => signApproval(item, SECRET));
+});
+
+test('adjudicated model REVIEW binds actual Codex receipt ID rather than forging model PASS',()=>{
+  const receipt=approval();receipt.review.modelVerdict='NEEDS_REVIEW';
+  receipt.review.codexReviewCommentId=8123;
+  const signed=signApproval(receipt,SECRET);
+  assert.equal(verifyApprovalSignature(signed,PUBLIC),true);
+  assert.throws(()=>verifyApprovalSignature({...signed,review:{...signed.review,codexReviewCommentId:8124}},PUBLIC));
+  assert.throws(()=>signApproval({...receipt,review:{...receipt.review,codexReviewCommentId:0}},SECRET));
 });
