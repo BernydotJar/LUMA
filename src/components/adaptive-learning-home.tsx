@@ -108,8 +108,12 @@ export function AdaptiveLearningHome() {
                 <ArrowRight size={15} aria-hidden="true" />
               </Link>
             )}
+            <WeeklyPracticeIntent
+              key={user?.uid ?? "anonymous"}
+              uid={loading ? null : user?.uid ?? null}
+              nextMinutes={plan.nextAction.minutes}
+            />
           </div>
-          <WeeklyPracticeIntent uid={loading ? null : user?.uid ?? null} nextMinutes={plan.nextAction.minutes} />
           <NextActionCard action={plan.nextAction} personalized={hasProfile} variant="hero" />
         </section>
 
