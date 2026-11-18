@@ -19,6 +19,7 @@ import { LiveProgramSchedule } from "@/components/live-program-schedule";
 import { NextActionCard } from "@/components/next-action-card";
 import { ProgressStory } from "@/components/progress-story";
 import { TutorPanel } from "@/components/tutor-panel";
+import { WeeklyPracticeIntent } from "@/components/weekly-practice-intent";
 import { useLumaAuth } from "@/components/auth-provider";
 import { fetchPersistentLearningPlan, syncPendingLearningEvent } from "@/lib/learning-api-client";
 import { createAdaptiveLearningPlan, parseStoredLearningEvent, parseStoredOnboarding, type AdaptiveLearningPlan } from "@/lib/learner-projection";
@@ -107,6 +108,11 @@ export function AdaptiveLearningHome() {
                 <ArrowRight size={15} aria-hidden="true" />
               </Link>
             )}
+            <WeeklyPracticeIntent
+              key={user?.uid ?? "anonymous"}
+              uid={loading ? null : user?.uid ?? null}
+              nextMinutes={plan.nextAction.minutes}
+            />
           </div>
           <NextActionCard action={plan.nextAction} personalized={hasProfile} variant="hero" />
         </section>
