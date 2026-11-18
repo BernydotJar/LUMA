@@ -50,3 +50,9 @@ test.describe("learner-first editorial CX", () => {
     await expect(page.getByRole("textbox", { name: "Pregunta a LUMA" })).toBeVisible();
   });
 });
+
+test("anonymous learners never see another account's weekly intention", async ({ page }) => {
+  await page.goto("/learn");
+  await expect(page.getByTestId("weekly-practice-intent")).toHaveCount(0);
+  await expect(page.locator('section[data-variant="hero"]')).toHaveCount(1);
+});
