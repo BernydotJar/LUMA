@@ -358,6 +358,10 @@ jobs:
     environment:
       name: production
       url: https://luma--luma-learning-intelligence.us-central1.hosted.app
+    env:
+      # Public verifier key already used by release-readiness and predeploy.
+      # Deploy must receive the identical trusted key for verifyReview().
+      LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64: ${{ vars.LUMA_RELEASE_ATTESTATION_PUBLIC_KEY_B64 }}
     concurrency:
       group: luma-production
       cancel-in-progress: false
