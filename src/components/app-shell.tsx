@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useId, useState } from "react";
 import {
   Award,
   BookOpen,
@@ -69,6 +70,9 @@ export function AppShell({
   actions?: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const mobileMoreId = useId();
+  const [mobileMoreState, setMobileMoreState] = useState({ pathname, open: false });
+  const mobileMoreOpen = mobileMoreState.pathname === pathname && mobileMoreState.open;
   const navigation = mode === "studio" ? studioNavigation : learnerNavigation;
   const activeHref = activeNavigationHref(pathname, navigation.map((item) => item.href));
   const studio = mode === "studio";
@@ -144,26 +148,52 @@ export function AppShell({
         {mobilePrimary.map(({ href, label, icon: Icon }) => {
           const active = href === activeHref;
           return (
-            <Link href={href} key={href} aria-label={label} className={active ? styles.mobileActive : undefined} aria-current={active ? "page" : undefined}>
+            <Link href={href} key={href} aria-label={label} onClick={() => setMobileMoreState({ pathname, open: false })} className={active ? styles.mobileActive : undefined} aria-current={active ? "page" : undefined}>
               <Icon size={20} />
               <span>{label}</span>
             </Link>
           );
         })}
-        <details className={styles.mobileMore}>
-          <summary aria-label="Más secciones">
+        <div
+          className={styles.mobileMore}
+          onKeyDown={(event) => {
+            if (event.key === "Escape" && mobileMoreOpen) {
+              setMobileMoreState({ pathname, open: false });
+              event.currentTarget.querySelector("button")?.focus();
+            }
+          }}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+              setMobileMoreState({ pathname, open: false });
+            }
+          }}
+        >
+          <button
+            className={styles.mobileMoreTrigger}
+            type="button"
+            aria-label="Más secciones"
+            aria-controls={mobileMoreId}
+            aria-expanded={mobileMoreOpen}
+            onClick={() => setMobileMoreState({ pathname, open: !mobileMoreOpen })}
+          >
             <Menu size={20} aria-hidden="true" />
             <span>Más</span>
-          </summary>
-          <div className={styles.mobileMoreMenu} aria-label="Otras secciones">
+          </button>
+          <div
+            id={mobileMoreId}
+            className={styles.mobileMoreMenu}
+            role="group"
+            aria-label="Otras secciones"
+            hidden={!mobileMoreOpen}
+          >
             {mobileSecondary.map(({ href, label, icon: Icon }) => (
-              <Link href={href} key={href} aria-label={label} className={href === activeHref ? styles.mobileActive : undefined} aria-current={href === activeHref ? "page" : undefined}>
+              <Link href={href} key={href} aria-label={label} onClick={() => setMobileMoreState({ pathname, open: false })} className={href === activeHref ? styles.mobileActive : undefined} aria-current={href === activeHref ? "page" : undefined}>
                 <Icon size={19} aria-hidden="true" />
                 <span>{label}</span>
               </Link>
             ))}
           </div>
-        </details>
+        </div>
       </nav>
     </div>
   );
