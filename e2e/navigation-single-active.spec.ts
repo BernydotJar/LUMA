@@ -11,7 +11,7 @@ test("studio navigation selects one most-specific destination", async ({ page },
     const mobile = testInfo.project.name === "mobile";
     const nav = page.getByRole("navigation", { name: mobile ? "Navegación móvil" : "Navegación del entrenador" });
     if (mobile && route === "/studio/reflections") {
-      await nav.locator("summary").click();
+      await nav.getByRole("button", { name: "Más secciones" }).click();
     }
     await expect(nav).toBeVisible();
     await expect(nav.locator('[aria-current="page"]')).toHaveCount(1);
