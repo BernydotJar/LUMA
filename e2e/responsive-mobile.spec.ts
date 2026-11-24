@@ -36,7 +36,10 @@ test.describe("responsive mobile product", () => {
     await expect(nav.getByRole("link", { name: "Hoy", exact: true })).toBeVisible();
     await expect(nav.getByRole("link", { name: "Ruta", exact: true })).toBeVisible();
     await expect(nav.getByRole("link", { name: "Programa", exact: true })).toBeVisible();
-    await nav.locator("summary").click();
+    const moreButton = nav.getByRole("button", { name: "Más secciones" });
+    await expect(moreButton).toHaveAttribute("aria-expanded", "false");
+    await moreButton.click();
+    await expect(moreButton).toHaveAttribute("aria-expanded", "true");
     await expect(nav.getByRole("link", { name: "Certificados", exact: true })).toBeVisible();
     await expect(nav.getByRole("link", { name: "LUMA", exact: true })).toBeVisible();
     await expect(nav.getByRole("link")).toHaveCount(5);
@@ -93,4 +96,19 @@ test.describe("responsive mobile product", () => {
     expect(behavior!.snap).toContain("x");
     expect(behavior!.scrollable).toBe(true);
   });
+});
+
+test("mobile secondary navigation supports Escape and focus return", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile", "Mobile-specific keyboard check.");
+  await page.goto("/learn");
+  const nav = page.getByRole("navigation", { name: "Navegación móvil" });
+  const trigger = nav.getByRole("button", { name: "Más secciones" });
+  await trigger.focus();
+  await page.keyboard.press("Enter");
+  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+  await expect(nav.getByRole("link", { name: "Certificados", exact: true })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(trigger).toBeFocused();
+  await expect(trigger).toHaveAttribute("aria-expanded", "false");
+  await expect(nav.getByRole("link", { name: "Certificados", exact: true })).toBeHidden();
 });
