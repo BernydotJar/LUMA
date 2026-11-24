@@ -54,8 +54,9 @@ test.describe("responsive mobile product", () => {
 
     await nav.getByRole("link", { name: "Certificados", exact: true }).click();
     await expect(page).toHaveURL(/\/learn\/certificates$/);
-    await expect(page.getByRole("navigation", { name: "Navegación móvil" })
-      .getByRole("link", { name: "LUMA", exact: true })).toBeVisible();
+    const nextNav = page.getByRole("navigation", { name: "Navegación móvil" });
+    await nextNav.getByRole("button", { name: "Más secciones" }).click();
+    await expect(nextNav.getByRole("link", { name: "LUMA", exact: true })).toBeVisible();
   });
 
   test("all seven program modules are selectable on mobile", async ({ page }, testInfo) => {
